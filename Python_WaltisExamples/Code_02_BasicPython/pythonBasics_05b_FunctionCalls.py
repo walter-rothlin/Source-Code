@@ -8,7 +8,8 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 26-Sep-2020   Walter Rothlin      Initial Version
+# 25-Sep-2020   Walter Rothlin      Initial Version
+# 26-Sep-2020   Walter Rothlin      Added to GitHub
 #
 # ------------------------------------------------------------------
 import math
@@ -19,7 +20,7 @@ def sayHelloTo(firstname=None, lastname="Unknown", hellostr="Guten Morgen"):
     if firstname is not None:
         return "1:" + hellostr + " " + firstname + " " + lastname
     else:
-        return "1:" + 'Hey you!'
+        return "1:" + 'Hey you!!'
 
 
 # =============
