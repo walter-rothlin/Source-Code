@@ -1,0 +1,37 @@
+Hoi Andi,
+
+diese Lösung sollte für den automatischen Start des Programms funktionieren. Habs auf meinem Raspi mit einem Dummy-Programm getestet:
+
+pi@raspberrypi:~/kaeltemacher $ nano startup.sh
+
+folgende Zeile eingeben:
+screen -dmS "kaeltemacher" bash -c 'python3 /home/pi/kaeltemacher/KM_Main.py'
+
+mit Ctrl-x beenden
+und mit Shift-j oder Shift-y speichern (abhängig von der eingestellten Sprache des Systems)
+
+pi@raspberrypi:~/kaeltemacher $ chmod +x startup.sh
+macht das startup.sh script ausführbar
+
+pi@raspberrypi:~/kaeltemacher $ crontab -e
+
+sämtliche aktuellen Zeilen müssen mit # beginnen! (Zeilen die so beginnen, sind auskommentiert.)
+
+ganz unten folgende Zeile (ohne # !!!) einfügen:
+@reboot /home/pi/kaeltemacher/startup.sh
+
+mit Ctrl-x beenden
+und mit Shift-j oder Shift-y speichern (abhängig von der eingestellten Sprache des Systems)
+
+pi@raspberrypi:~/kaeltemacher $ sudo reboot
+startet das System neu...warten...warten...warten...
+...das Python-Script KM_Main.py sollte nun automatisch gestartet werden.
+
+...neue ssh Verbindung aufbauen
+
+
+pi@raspberrypi:~/kaeltemacher $ screen -r
+öffnet eine screen-Session zum laufenden KM_Main.py Programm
+
+mit Ctrl-a -d kann man die Session verlassen ohne das Programm zu beenden
+

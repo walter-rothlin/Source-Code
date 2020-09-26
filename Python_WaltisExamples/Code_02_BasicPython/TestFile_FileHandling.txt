@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name: bzu_scratch.py
+#
+# Description: Demo
+#
+# Autor: Walter Rothlin
+#
+# History:
+# ------------------------------------------------------------------
+
+from waltisLibrary import *
+waltisPythonLib_Version()
+

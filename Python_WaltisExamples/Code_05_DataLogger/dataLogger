@@ -1,0 +1,130 @@
+#!/usr/bin/python3
+
+from __future__ import print_function
+from sense_hat import SenseHat
+import os
+import sys
+import time
+import datetime
+
+
+sense = SenseHat()
+
+
+print("\n\n")
+print("# Data-Logger ")
+print("# ----------- ")
+
+displayMsg = "Logging..."
+sense.show_message(displayMsg, text_colour=(0,125,125))
+print(displayMsg)
+
+
+X = [125, 0, 0]   # Red
+O = [0,125, 0]    # Green
+B = [0,0,125]     # Blue
+
+plus_mark = [
+O, O, O, X, X, O, O, O,
+O, O, O, X, X, O, O, O,
+O, O, O, X, X, O, O, O,
+X, X, X, X, X, X, X, X,
+X, X, X, X, X, X, X, X,
+O, O, O, X, X, O, O, O,
+O, O, O, X, X, O, O, O,
+O, O, O, X, X, O, O, O
+]
+
+dot_mark = [
+O, O, O, O, O, O, O, O,
+O, O, O, O, O, O, O, O,
+O, O, O, O, O, O, O, O,
+O, O, O, X, X, O, O, O,
+O, O, O, X, X, O, O, O,
+O, O, O, O, O, O, O, O,
+O, O, O, O, O, O, O, O,
+O, O, O, O, O, O, O, O,
+]
+
+dotInv_mark = [
+O, O, O, O, O, O, O, O,
+O, O, O, O, O, O, O, O,
+O, O, X, X, X, X, O, O,
+O, O, X, B, B, X, O, O,
+O, O, X, B, B, X, O, O,
+O, O, X, X, X, X, O, O,
+O, O, O, O, O, O, O, O,
+O, O, O, O, O, O, O, O,
+]
+
+question_gt = [
+O, O, O, X, O, O, O, O,
+O, O, O, O, X, O, O, O,
+O, O, O, O, O, X, O, O,
+O, O, O, O, O, O, X, O,
+O, O, O, O, O, X, O, O,
+O, O, O, O, X, O, O, O,
+O, O, O, X, O, O, O, O,
+O, O, O, O, O, O, O, O
+]
+
+finished = False
+pastTemp = -300
+pastHum  = 1
+pastPres = 1
+
+tolTemp = 1
+tolHum  = 5
+tolPres = 1
+
+dataFileName = "DataFile.txt"
+logFileName  = "DataFile.log"
+
+
+doFlip = True
+while not finished:
+    if (doFlip):
+        sense.set_pixels(dot_mark)
+        doFlip = False
+    else:
+        sense.set_pixels(dotInv_mark)
+        doFlip = True
+
+    currentTemp = sense.temp
+    deltaTemp = abs((pastTemp-currentTemp)*100/pastTemp)
+
+    currentHum = sense.humidity
+    deltaHum = abs((pastHum-currentHum)*100/pastHum)
+
+    currentPres = sense.pressure
+    deltaPres = abs((pastPres-currentPres)*100/pastPres)
+
+    logstr_1 = "Old:{pastTemp:10.2f}, New:{newTemp:8.2f},".format(pastTemp=pastTemp,newTemp=currentTemp)
+    logFile = open(logFileName, "a+")
+    # logFile.write(logstr_1+"\n")
+    logFile.close()
+    if ((deltaTemp > tolTemp) or (deltaHum > tolHum) or (deltaPres > tolPres)):
+        logstr_2 = '-->{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+        logstr_2 = logstr_2 + " Temp:{Temp:10.2f},".format(Temp=currentTemp)
+        logstr_2 = logstr_2 + " Druck:{Druck:10.2f},".format(Druck=currentPres)
+        logstr_2 = logstr_2 + " Feuchtigkeit:{Feuchtigkeit:10.2f},".format(Feuchtigkeit=currentHum)
+        if (deltaTemp > tolTemp):
+            logstr_2 = logstr_2 + " Temp"
+        if (deltaHum > tolHum):
+            logstr_2 = logstr_2 + " Hum"
+        if (deltaPres > tolPres):
+            logstr_2 = logstr_2 + " Pres"
+        print(logstr_2)
+        dataFile = open(dataFileName, "a+")
+        dataFile.write(logstr_2 + "\n")
+        dataFile.close()
+
+        pastTemp = currentTemp
+        pastHum  = currentHum
+        pastPres = currentPres
+
+        sense.set_pixels(question_gt)
+        time.sleep(1)  # sleeps for 1s
+    time.sleep(1)  # sleeps for 1s
+
+sense.show_message("Closed!!!", text_colour=(0,125,125))

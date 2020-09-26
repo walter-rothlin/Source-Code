@@ -1,0 +1,160 @@
+#!/usr/bin/python3
+
+#@author Walter Rothlin
+#@version 1.0
+#@since 03-Aug-2017
+#@help
+#Help of command 'pythonBasics_01'
+#
+#
+#
+#@history:
+#03-Aug-2017  Walter Rothlin        Initial Version
+#19-Sep-2017  Walter Rothlin        Added more format string
+#26-Dec-2017  Walter Rothlin        String formats
+#
+#End of help for command 'pythonBasics_01_VarStringPrint'
+print("pythonBasics_01_VarStringPrint.py.........")
+print("# print")
+print("# -----")
+print("Hallo world")             # first statement
+print("Hallo","world","!!!")     # mehrere Argumente / Parameter
+print("Hallo\n\nWorld")          # line-feed
+print("Radius:",5," --> ","Umfang:",2*5*3.141592)      # Zahlenwerte
+print("Radius:",5," --> ","Umfang:",2*5*3.141592,sep="")
+print("Radius:",5," --> ","Umfang:",2*5*3.141592,sep="::")
+print("Radius:",5," --> ","Umfang:",2*5*3.141592,sep="\t")
+print("Radius:",5,end="", flush=True)
+print(" --> ","Umfang:",2*5*3.141592,sep="\t")
+print("\n\n")
+
+print("# print mit variables and string conncationation ")
+print("# ---------------------------------------------- ")
+name    = "Rothlin"       # String
+vorname = "Tobias"
+a, b, isFinished    = 100, 5.56, False                                # int, float, boolean
+print(name,vorname,a,b,isFinished)                                    # einzelne Argumente Default of sep is " "
+print(name + " " + vorname +  " " + str(a) + " " + str(b) + " " + str(isFinished))       # string conncatination
+
+count   = 50 * 2                      # Integer type
+print("Count:",count, sep=" :: ")     # einzelne Argumente Default of sep is " "
+print("Count: " + str(count))         # type conversion
+
+betrag  = 2008.55                     # Float type
+print("Betrag:",betrag)
+print("Betrag: " + str(betrag))
+print("\n\n")
+
+print("# format ")
+print("# ------ ")
+betrag2 = 123476.78
+print(name, count, betrag, betrag2/count, sep=" ; ")
+print("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+print("{p_s:8s}; ;{p_i:4d}; --> ;{p_f:12.2f};  ==> ;{p_ff:12.3f}; = ;{p_b:8s}".format(p_s=name, p_i=count, p_f=betrag, p_ff=betrag2/count, p_b=str(isFinished)))
+print("\n")
+print("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+print("{p_s:10s}; ;{p_i:7d}; --> ;{p_f:12.2f};".format(p_s=name, p_i=count, p_f=betrag))
+print("{p_s:<10s}; ;{p_i:<7d}; --> ;{p_f:<12.2f};".format(p_s=name, p_i=count, p_f=betrag))
+print("{p_s:>10s}; ;{p_i:>7d}; --> ;{p_f:>12.2f};".format(p_s=name, p_i=count, p_f=betrag))
+print("{p_s:^10s}; ;{p_i:^7d}; --> ;{p_f:^12.2f};".format(p_s=name, p_i=count, p_f=betrag))
+print("\n")
+strOut = "Art: {0:5d}, Price per Unit: {1:8.2f}, {{".format(4523,59.058)               # position parameter; escape { is {{
+print(strOut)  # Art:  4523, Price per Unit:    59.06,
+strOut1 = "Art: {art:5d}, Price per Unit: {price:8.2f},".format(art=53,price=1259.058) # named parameter
+print(strOut1) # Art:    53, Price per Unit:  1259.06,
+print("\n")
+# rjust, ljust, center
+s = "Python"
+print(s.center(10))      # '  Python  '
+print(s.center(10, "*"))  # '**Python**'
+print("\n")
+s = "Training"
+print(s.ljust(12))       # 'Training    '
+print(s.ljust(12, ":"))  # 'Training::::'
+print("\n")
+s = "Programming"
+print(s.rjust(15))       # '    Programming'
+print(s.rjust(15, "~"))  # '~~~~Programming'
+print("\n")
+
+print("# Hex, Bin, Octal ")
+print("# --------------- ")
+h0 = 0xAB
+h1str = hex(10)
+retType = type(h1str)
+print("HEX:", h1str, retType)
+print("HEX:{hex1:4X}    DEC: {hex2:10}\n".format(hex1=h0, hex2=h0))
+
+b0 = 0b11111
+b1str = bin(10)
+retType = type(b1str)
+print("BIN:", b1str, retType)
+print("BIN: {bin1:10b}    DEC: {bin2:10}\n".format(bin1=b0, bin2=b0))
+
+o0 = 0o12
+o1str = oct(10)
+retType = type(o1str)
+print("OCT:", o1str, retType)
+print("OCT: {oct1:10o}    DEC: {oct2:10}\n".format(oct1=o0, oct2=o0))
+
+print("h0 * b0 * o0 = ",h0*b0*o0)
+print("\n")
+
+print("# Complexe Zahlen ")
+print("# --------------- ")
+r = 1-2j
+r2 = 5+2j
+print(r, "+", r2, "=", r + r2)
+print(r, "*", r2, "=", r * r2)
+print("\n")
+
+
+print("# Uebung Einkaufsliste ")
+print("# -------------------- ")
+anz_Bananen = 500
+preis_Bananen = 4.2
+bez_Bananen = "Bananen"
+artNr_Bananen = "(01-234-123)"
+
+anz_Nektarinen = 18
+preis_Nektarinen = 0.2
+bez_Nektarinen = "Nektarinen"
+artNr_Nektarinen = "(11-445-123)"
+
+anz_Weine = 46
+preis_Weine =  32.50
+bez_Weine = "Weine"
+artNr_Weine = "(44-444-231)"
+
+gPreis = 0
+pPreis = 0
+
+print("Quittung")
+print("| Anzahl | Artikel      | Art.Nr         | Stueckpreis | Preis      |")
+print("| -------+--------------+----------------+-------------+------------|")
+pPreis = anz_Bananen * preis_Bananen
+gPreis = gPreis + pPreis
+print("| {anz:6d} | {art:12s} | {an:14s} | {sPreis:11.2f} | {totP:10.2f} |".format(anz=anz_Bananen,art=bez_Bananen,an=artNr_Bananen,sPreis=preis_Bananen,totP=pPreis))
+
+pPreis = anz_Nektarinen * preis_Nektarinen
+gPreis = gPreis + pPreis
+print("| {anz:6d} | {art:12s} | {an:14s} | {sPreis:11.2f} | {totP:10.2f} |".format(anz=anz_Nektarinen,art=bez_Nektarinen,an=artNr_Nektarinen,sPreis=preis_Nektarinen,totP=pPreis))
+
+
+pPreis = anz_Weine * preis_Weine
+gPreis = gPreis + pPreis
+print("| {anz:6d} | {art:12s} | {an:14s} | {sPreis:11.2f} | {totP:10.2f} |".format(anz=anz_Weine,art=bez_Weine,an=artNr_Weine,sPreis=preis_Weine,totP=pPreis))
+print("                                                         ----------")
+print("                                      Rechnungsbetrag:{gPreis:13.2f}".format(gPreis=gPreis))
+print("                                                         ==========")
+print("\n\n")
+
+print("........ pythonBasics_01_VarStringPrint.py")
+
+
+
+
+
+
+
+
