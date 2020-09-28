@@ -75,7 +75,9 @@ class Kreissektor:
     # Ctr (Konstruktor)
     # -----------------
     def __str__(self):
-        return ("r=" + str(self.radius) + "  d=" + str(self.durchmesser)+ "  A=" + str(self.flaeche)+ "  alpha=" + str(self.zentrieWinkel))
+        # return ("r=" + str(self.radius) + "  d=" + str(self.durchmesser)+ "  A=" + str(self.flaeche)+ "  alpha=" + str(self.zentrieWinkel))
+        return ("r={r:5.2f}  d={d:5.2f} A={A:6.2f} alpfa={ag:5.2f}° ({ar:5.2f})".format(r=self.radius, d=self.durchmesser, A=self.flaeche, ag=self.zentrieWinkel, ar=self.getZentrieWinkel(inGrad=False)))
+
 
     # getter Methoden
     # ---------------
@@ -88,8 +90,11 @@ class Kreissektor:
     def getFlaeche(self):
         return self.flaeche
 
-    def getZentrieWinkel(self):
-        return self.zentrieWinkel
+    def getZentrieWinkel(self, inGrad=True):
+        if inGrad:
+            return self.zentrieWinkel
+        else:
+            return self.zentrieWinkel * math.pi / 180
 
 
 
