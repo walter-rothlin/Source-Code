@@ -9,7 +9,7 @@
 #
 # History:
 # 25-Sep-2020   Walter Rothlin      Initial Version
-# 26-Sep-2020   Walter Rothlin      Added to GitHub
+# 27-Sep-2020   Walter Rothlin      Added to GitHub
 #
 # ------------------------------------------------------------------
 import math
