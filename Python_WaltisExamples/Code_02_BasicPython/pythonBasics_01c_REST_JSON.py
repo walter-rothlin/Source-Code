@@ -5,7 +5,9 @@ import requests
 # see https://realpython.com/python-json/
 
 # Original response = requests.get("https://jsonplaceholder.typicode.com/todos")
-response = requests.get("https://jsonplaceholder.typicode.com/todos")
+# response = requests.get("http://hwz.peterliwiese.ch/DatenSaetze/todos.json")
+response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_10_IoT/todos.json")
+
 todos = json.loads(response.text)
 expectedAnswer = [
   {
