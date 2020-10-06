@@ -6,35 +6,9 @@ import requests
 
 # Original response = requests.get("https://jsonplaceholder.typicode.com/todos")
 # response = requests.get("http://hwz.peterliwiese.ch/DatenSaetze/todos.json")
-response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_10_IoT/todos.json")
+response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_10_IoT/todos_Small.json")
 
 todos = json.loads(response.text)
-expectedAnswer = [
-  {
-    "userId": 1,
-    "id": 1,
-    "title": "delectus aut autem",
-    "completed": False
-  },
-  {
-    "userId": 1,
-    "id": 2,
-    "title": "quis ut nam facilis et officia qui",
-    "completed": False
-  },
-  {
-    "userId": 1,
-    "id": 3,
-    "title": "fugiat veniam minus",
-    "completed": True
-  },
-  {
-    "userId": 1,
-    "id": 4,
-    "title": "et porro tempora",
-    "completed": True
-  }
-]
 
 # Zugriff auf bestimmte Daten-Elemente
 print(todos)
