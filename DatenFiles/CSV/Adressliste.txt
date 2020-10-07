@@ -253,13 +253,5 @@ Hash;Geschlecht;Nachname;Vorname;Strasse;PLZ;Ort;Land;Email;TEL_P;Home-Page;Port
 396;Frau;Gyr;Alfons;Ziegelhuettenstrasse 16;8832;Wollerau;CH;alfons.gyr@gmail.ch;044 687 86 83;www.20min.ch;http://hwz.brunnenhoefli.ch/GenPortraet/Bild_12.jpg;;;;;;;;;;;
 397;Frau;Faeh;Albert;Zuercherstrasse 18 b;8852;Altendorf;CH;albert.faeh@gmail.ch;055 462 26 52;www.nzz.ch;http://hwz.brunnenhoefli.ch/GenPortraet/Bild_1.jpg;;;;;;;;;;;
 399;Frau;Faeh;Agnes;Zuercherstrasse 272;8852;Altendorf;CH;agnes.faeh@gmail.ch;055 462 26 52;www.20min.ch;http://hwz.brunnenhoefli.ch/GenPortraet/Bild_2.jpg;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;
+
+
