@@ -6,7 +6,7 @@ import requests
 
 # Original response = requests.get("https://jsonplaceholder.typicode.com/todos")
 # response = requests.get("http://hwz.peterliwiese.ch/DatenSaetze/todos.json")
-response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_10_IoT/todos_Small.json")
+response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JSON/todos_Small.json")
 
 todos = json.loads(response.text)
 
@@ -39,3 +39,8 @@ for i in range(len(todos)):
 print("--Sub Listen")
 subToDos = todos[4:6]
 print("len(subToDos):", len(subToDos))
+
+
+response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/CSV/Adressliste.json")
+adressListe = json.loads(response.text)
+print(adressListe)
