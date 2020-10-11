@@ -44,3 +44,6 @@ print("len(subToDos):", len(subToDos))
 response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/CSV/Adressliste.json")
 adressListe = json.loads(response.text)
 print(adressListe)
+# Alle Keys from Dict
+for c in adressListe[4]:
+    print("Key:", c, "    Value:", adressListe[4][c])

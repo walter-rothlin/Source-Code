@@ -15,9 +15,9 @@ capital_country = {"United States": "Washington",
 print("dict capital_country:", capital_country)
 print("\n")
 
-print("capital_country: Alle Keys auflisten")
-for c in capital_country:
-    print("    {country:20s}".format(country=c))
+print("-->  capital_country: Alle Keys auflisten")
+for c in capital_country.keys():
+    print("-->    {country:20s}".format(country=c))
 print("\n")
 
 print("capital_country: Alle Values auflisten")

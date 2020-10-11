@@ -36,4 +36,4 @@ print("data from JSON-String:",data)
 
 with open("data_file.json", "r") as read_file:
     data = json.load(read_file)
-print("data from File:",data)
+print("data from File:", data)
