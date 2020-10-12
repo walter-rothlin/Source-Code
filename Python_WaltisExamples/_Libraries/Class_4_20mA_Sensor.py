@@ -14,11 +14,42 @@
 import math
 
 class CurrentLoop_4_20mA_Sensor:
+   # print(CurrentLoop_4_20mA_Sensor.__doc__)
+   """
+   A class for 4 to 20mA Sensor types.
 
+   ...
+
+   Attributes
+   ----------
+   name : str
+       first name of the person
+   surname : str
+       family name of the person
+   age : int
+       age of the person
+
+   Methods
+   -------
+   info(additional=""):
+       Prints the person's name and age.
+   """
 
    # Ctr (Konstruktor)
    # -----------------
    def __init__(self, sensorName, measurementUnit, valueAt_4mA, valueAt_20mA, R_shunt = 200, maxVoltageHigh = 4.092):
+      """
+      Constructs all the necessary attributes for the person object.
+
+      Parameters
+      ----------
+          name : str
+              first name of the person
+          surname : str
+              family name of the person
+          age : int
+              age of the person
+      """
       self.val4mA             = 0.004
       self.val20mA            = 0.020
       self.sensorName         = sensorName
@@ -29,7 +60,7 @@ class CurrentLoop_4_20mA_Sensor:
       self.R_shuntSoll        = self.maxVoltageHigh / self.val20mA    # R=U/I
       self.P_shuntSoll        = self.maxVoltageHigh * self.val20mA    # P=U*I
       self.R_shunt            = R_shunt                               # the closest in the resitor series
-      self.voltageHigh        = self.val20mA * self.R_shunt 
+      self.voltageHigh        = self.val20mA * self.R_shunt
       self.voltageLow         = self.val4mA  * self.R_shunt         # Umin = IMin * RShunt
       self.a                  = (self.voltageHigh - self.voltageLow)/(valueAt_20mA - valueAt_4mA)  # U = f(physicalValue) = a*physicalValue + c
       self.c                  = self.voltageHigh - (self.a * self.valueAt_20mA)

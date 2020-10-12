@@ -71,6 +71,15 @@ def celsius2Fahrenheit(celsius):
 # Primzahlen Functions
 # --------------------
 def isPrimzahl(aZahl):
+    '''
+    Returns True/False if a given integer is a prime figure (only dividable by 1 or itself.
+
+            Parameters:
+                    aZahl (int): A positive Integer
+
+            Returns:
+                    True / False
+    '''
     isPrim = False
     if ((aZahl == 1) or (aZahl == 2)):
         isPrim = True

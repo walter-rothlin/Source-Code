@@ -22,8 +22,10 @@ from waltisLibrary import *
 # Hauptprogramm
 # =============
 doLoop = True
+print(isPrimzahl.__doc__)  # docstring similar to java doc
 while doLoop:
     VT52_cls_home()
+
     print("  Umrechnungen")
     print("  ============")
     print("  1: Grad in Bogenmass")  # rad  = grad*pi/180
