@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+'''pruefung_0d_Menu.py'''
 
 doStop = False
 while (not doStop):

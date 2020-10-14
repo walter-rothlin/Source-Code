@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+
+'''pruefung_0c_Menu.py'''
+
 doLoop = True
 while doLoop:
     print("Geometrische Flaechen")

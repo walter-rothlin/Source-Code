@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+'''pruefung_4a_FormatStr.py'''
+
 ''' Expected Result:
 123456789012345678901234567890
      5 Stueck

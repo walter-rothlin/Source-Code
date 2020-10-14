@@ -14,11 +14,18 @@
 #26-Dec-2017  Walter Rothlin        String formats
 #
 #End of help for command 'pythonBasics_01_VarStringPrint'
+
+import sys
+import os
+
 print("pythonBasics_01_VarStringPrint.py.........")
+print("-->", sys.argv[0])
+print("==>", os.path.basename(__file__))
+
 print("# print")
 print("# -----")
 print("Hallo world")             # first statement
-print("Hallo","world","!!!")     # mehrere Argumente / Parameter
+print("Hallo", "world", "!!!")     # mehrere Argumente / Parameter
 print("Hallo\n\nWorld")          # line-feed
 print("Radius:",5," --> ","Umfang:",2*5*3.141592)      # Zahlenwerte
 print("Radius:",5," --> ","Umfang:",2*5*3.141592,sep="")
@@ -108,46 +115,6 @@ print(r, "+", r2, "=", r + r2)
 print(r, "*", r2, "=", r * r2)
 print("\n")
 
-
-print("# Uebung Einkaufsliste ")
-print("# -------------------- ")
-anz_Bananen = 500
-preis_Bananen = 4.2
-bez_Bananen = "Bananen"
-artNr_Bananen = "(01-234-123)"
-
-anz_Nektarinen = 18
-preis_Nektarinen = 0.2
-bez_Nektarinen = "Nektarinen"
-artNr_Nektarinen = "(11-445-123)"
-
-anz_Weine = 46
-preis_Weine =  32.50
-bez_Weine = "Weine"
-artNr_Weine = "(44-444-231)"
-
-gPreis = 0
-pPreis = 0
-
-print("Quittung")
-print("| Anzahl | Artikel      | Art.Nr         | Stueckpreis | Preis      |")
-print("| -------+--------------+----------------+-------------+------------|")
-pPreis = anz_Bananen * preis_Bananen
-gPreis = gPreis + pPreis
-print("| {anz:6d} | {art:12s} | {an:14s} | {sPreis:11.2f} | {totP:10.2f} |".format(anz=anz_Bananen,art=bez_Bananen,an=artNr_Bananen,sPreis=preis_Bananen,totP=pPreis))
-
-pPreis = anz_Nektarinen * preis_Nektarinen
-gPreis = gPreis + pPreis
-print("| {anz:6d} | {art:12s} | {an:14s} | {sPreis:11.2f} | {totP:10.2f} |".format(anz=anz_Nektarinen,art=bez_Nektarinen,an=artNr_Nektarinen,sPreis=preis_Nektarinen,totP=pPreis))
-
-
-pPreis = anz_Weine * preis_Weine
-gPreis = gPreis + pPreis
-print("| {anz:6d} | {art:12s} | {an:14s} | {sPreis:11.2f} | {totP:10.2f} |".format(anz=anz_Weine,art=bez_Weine,an=artNr_Weine,sPreis=preis_Weine,totP=pPreis))
-print("                                                         ----------")
-print("                                      Rechnungsbetrag:{gPreis:13.2f}".format(gPreis=gPreis))
-print("                                                         ==========")
-print("\n\n")
 
 print("........ pythonBasics_01_VarStringPrint.py")
 

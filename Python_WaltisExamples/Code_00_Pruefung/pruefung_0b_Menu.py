@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+
+'''pruefung_0b_Menu.py'''
+
 pi = 3.1415926
 
 
