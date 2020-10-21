@@ -7,7 +7,6 @@ import requests
 # Original response = requests.get("https://jsonplaceholder.typicode.com/todos")
 # response = requests.get("http://hwz.peterliwiese.ch/DatenSaetze/todos.json")
 response = requests.get("https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JSON/todos_Small.json")
-
 todos = json.loads(response.text)
 
 # Zugriff auf bestimmte Daten-Elemente
