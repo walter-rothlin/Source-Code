@@ -9,6 +9,7 @@ import sys
 x = "hello"
 # via assert: if condition returns True, then nothing happens:
 assert x == "hello"
+assert x == "hello", "You have entred not 'hello'"   # this will be passed to the Ctr of the exception
 
 # via raise: calls Ctr from an exception and string
 if not type(x) is int:
