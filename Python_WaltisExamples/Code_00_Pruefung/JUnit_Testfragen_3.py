@@ -78,7 +78,7 @@ test_cases = [
         "param": {
             "array": [6]
         },
-        "expectedResult": 36, # 36,
+        "expectedResult": 30, # Fails, correct 36,
         "feedback": "(6)*6=36"
     },
     {
@@ -92,7 +92,7 @@ test_cases = [
         "feedback": "Eine leere Liste = 0"
     },
     {
-        "executeTest": False,
+        "executeTest": True,
         "id": 5,
         "fct": "addElements",
         "param": {
@@ -165,8 +165,8 @@ if __name__ == '__main__':
                     if (type(testResult)  == float):
                         testResult = round(testResult, 2)
                         expectedResult = round(expectedResult, 2)
-                        print("Rounded!!!!")
-                    print(type(testResult), testResult, expectedResult)
+                        # print("Rounded!!!!")
+                    # print(type(testResult), testResult, expectedResult)
                     assert testResult == expectedResult, aTestCase["feedback"]
             except AssertionError as error:
                 print("--> ERROR:   Testcase failed!   id:", aTestCase["id"], "  Fct:", fctCall, " = ?", sep="")
