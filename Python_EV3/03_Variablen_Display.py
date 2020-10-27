@@ -1,3 +1,5 @@
+# Python_EV3: 03_Variablen_Display.py
+
 from grobot import *
 
 thisIsA_String = "Walti's"
