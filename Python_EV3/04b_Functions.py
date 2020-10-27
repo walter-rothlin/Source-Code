@@ -28,13 +28,13 @@ def blink(color=1, anzahl=1, blinkRate=500, withTone=False, onFreq=440, offFreq=
     repeat anzahl:
         setLED(color)
         if withTone:
-            playTone(onFreq, onTime)
+            playTone(onFreq, onTime)   # Cis ==> 1108.73Hz
         else:
             delay(blinkRate)
 
         setLED(offColor)
         if withTone:
-            playTone(offFreq, offTime)
+            playTone(offFreq, offTime)  # Gis ==> 830.609Hz
         else:
             delay(blinkRate)
 
