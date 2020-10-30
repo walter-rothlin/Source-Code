@@ -1,48 +1,88 @@
 e-Mail Adressen
 ---------------------------------------------------------------
-RegEx:
 1) [a-zA-Z.\d]+@[a-zA-Z.-]+
 2) (\w+\.)+(\w+@)(\w|-|\.)+
 3) [a-zA-Z][a-zA-Z0-9\.]{4,}@[a-zA-Z0-9\.-]{1,}\.[a-z]{2,3}
 
-walter.rothlin@bzu.ch					ok
-walter@rothlin.com						ok
-walter.rothlin@credit-suisse.com		ok
-walter60.rothlin@bzu.ch					ok
-walter@rothlin.com						ok
-claudia@collet.com						ok
+walter.rothlin@bzu.ch                   ok
+walter@rothlin.com                      ok
+walter.rothlin@credit-suisse.com        ok
+walter60.rothlin@bzu.ch                 ok
+walter@rothlin.com                      ok
+claudia@collet.com                      ok
 walter@bruhin.peterliwiese.ch           ok
-wal@com									nok
-60walter.rothlin@bzu.ch					nok
-claudia-rothlin@collet.com				nok
-claudia.rothlin@collet.c				nok
-claudia.rothlin@collet.csss				nok
+wal@com                                 nok
+60walter.rothlin@bzu.ch                 nok
+claudia-rothlin@collet.com              nok
+claudia.rothlin@collet.c                nok
+claudia.rothlin@collet.csss             nok
 
 
 Platzhalter
 -----------
-RegEx: 
 1) {[a-zA-Z\\]+}
 
-{email}						ok
-{a}							ok
-{}							nok
-{Bet  rag}					nok
-{email\n}					ok
+{email}                     ok
+{a}                         ok
+{}                          nok
+{Bet  rag}                  nok
+{email\n}                   ok
 
 
 Python Platzhalter für Format-Strings
 --------------------------------------
-RegEx:
 1) {[a-zA-Z\d]+:(\d+(d|s)|\d+\.\d+f)}
 
-{alt:12.3f}			ok
-{1:12.3f}			ok
-{alt12:12.3f}		ok
-{a:123d}			ok
-{axxx:13s}			ok
-{alter::12.3f}		nok
-{1:12.3d}			nok
+{alt:12.3f}                 ok
+{1:12.3f}                   ok
+{alt12:12.3f}               ok
+{a:123d}                    ok
+{axxx:13s}                  ok
+{alter::12.3f}              nok
+{1:12.3d}                   nok
+
+
+Datum
+-----
+1) (\d{4}|[0-2][0-9]|3[01])([-/.])((0[1-9]|1[012])|([0-2][0-9]|3[01]))([-/.])((\d{4})|(0[1-9]|1[012])|([0-2][0-9]|3[01]))
+
+12.10.2020                  ok
+1.9.20                      ok
+31.1.1960                   ok
+12/06/1999                  ok
+9.13.20                     nok
+30.2.1867                   nok
+
+Time
+----
+1) (([0-2][0-9]:)?[0-5]?[0-9]:[0-5][0-9](\.[0-9]+)?)
+2) ([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](.[\d]+)?)?
+
+12:06:13                    ok
+
+Integer
+-------
+1) \d+
+2) (-)?\d+
+
+
+Float
+-----
+1) \d+((\.|,)\d+)?
+2) (-)?\d+((\.|,)\d+)?
+3) \d+(\.\d+)?
+4) \d+(,\d+)?
+5) (-)?\d+(\.\d+)?
+6) (-)?\d+(\.\d+)?(E(-)?\d+)?
+7) (-)?\d+(,\d+)?
+
+
+
+CIF-No
+------
+1) (\d){4}-(\d){7}-\d
+2) (\d){4}(-)?(\d){7}(-)?\d
+
 
 
 
