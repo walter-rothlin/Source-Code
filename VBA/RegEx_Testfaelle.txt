@@ -1,0 +1,48 @@
+e-Mail Adressen
+---------------------------------------------------------------
+RegEx:
+1) [a-zA-Z.\d]+@[a-zA-Z.-]+
+2) (\w+\.)+(\w+@)(\w|-|\.)+
+3) [a-zA-Z][a-zA-Z0-9\.]{4,}@[a-zA-Z0-9\.-]{1,}\.[a-z]{2,3}
+
+walter.rothlin@bzu.ch					ok
+walter@rothlin.com						ok
+walter.rothlin@credit-suisse.com		ok
+walter60.rothlin@bzu.ch					ok
+walter@rothlin.com						ok
+claudia@collet.com						ok
+walter@bruhin.peterliwiese.ch           ok
+wal@com									nok
+60walter.rothlin@bzu.ch					nok
+claudia-rothlin@collet.com				nok
+claudia.rothlin@collet.c				nok
+claudia.rothlin@collet.csss				nok
+
+
+Platzhalter
+-----------
+RegEx: 
+1) {[a-zA-Z\\]+}
+
+{email}						ok
+{a}							ok
+{}							nok
+{Bet  rag}					nok
+{email\n}					ok
+
+
+Python Platzhalter für Format-Strings
+--------------------------------------
+RegEx:
+1) {[a-zA-Z\d]+:(\d+(d|s)|\d+\.\d+f)}
+
+{alt:12.3f}			ok
+{1:12.3f}			ok
+{alt12:12.3f}		ok
+{a:123d}			ok
+{axxx:13s}			ok
+{alter::12.3f}		nok
+{1:12.3d}			nok
+
+
+
