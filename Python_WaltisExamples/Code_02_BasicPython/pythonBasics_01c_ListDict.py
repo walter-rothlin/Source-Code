@@ -238,4 +238,16 @@ meteoDaten = [
 # ? Zeigen Sie die Temp mit Einheit auf dem Bildschirm in der Form --> Temp in Wangen : 32 Celsius
 print("Temp in", meteoDaten[0]["Standort"], ":", meteoDaten[0]["Temp"], meteoDaten[0]["Einheit"])
 
+# ? Berechnen Sie die Durchschnittstemperatur aller in Celsius gemessenen
+average = 0
+anzahl = 0
+for messOrt in meteoDaten:
+    if messOrt["Einheit"] == "Celsius":
+        average += messOrt["Temp"]
+        anzahl += 1
+average = average/anzahl
+print(average)
+
+
+
 print(__doc__)
