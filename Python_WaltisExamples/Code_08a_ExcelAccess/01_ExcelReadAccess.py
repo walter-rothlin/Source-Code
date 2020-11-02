@@ -2,7 +2,7 @@
 from openpyxl import load_workbook
 
 # Load in the workbook
-wb = load_workbook('G:\_WaltisDaten\SourceCode\Python_Raspberry\BZU_Code_2020_03_11\ExamplesPython\Code_08a_ExcelAccess\TestPythonReadAccess.xlsx')
+wb = load_workbook('G:\_WaltisDaten\SourceCode\GitHosted\Python_WaltisExamples\Code_08a_ExcelAccess\TestPythonReadAccess.xlsx')
 
 # Get sheet names
 print(wb.sheetnames)
