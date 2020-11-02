@@ -1,4 +1,4 @@
-# Import `load_workbook` module from `openpyxl`
+
 from openpyxl import load_workbook
 
 # Load in the workbook

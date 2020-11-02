@@ -8,7 +8,7 @@ def hello(firstName,lastName):
 delayTime = float(input("Delay-Time [s]:"))
 fName = input("Vorname :")
 lName = input("Nachname:")
-print("Timer set to {dT:3.1f}".format(dT=delayTime))
+print("Timer set to {dT:3.1f}s".format(dT=delayTime))
 
 t = Timer(delayTime, hello, args=[fName,lName])
 t.start() # after 30 seconds, "hello, world" will be printed
