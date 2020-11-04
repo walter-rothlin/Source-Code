@@ -10,21 +10,21 @@ print("\n")
 
 print("--> for aNumber in [1,5,5.5]:")
 for aNumber in [1,5,5.5]:
-	print(aNumber)
+    print(aNumber)
 print("\n")
 
 for i in ["walti",True,5*3,"Claudia",9,1,33,3.1415926]:
-   print(i)
+    print(i)
 print("\n")
 
 print("--> for aNumber in [1,5,5.5]:")
 for aNumber in [1,5,5.5]:
-	print(aNumber)
+    print(aNumber)
 print("\n")
 
 print("--> for aName in [\"walti\",\"claudia\",\"fritz\"]:")
 for aName in ["walti","claudia","fritz"]:
-	print(aName)
+    print(aName)
 print("\n")
 	
 print("--> for aChar in \"BINGO\":")
@@ -86,7 +86,7 @@ for num in range(2, 10):
         continue
     print("Found a number", num)
 print("\n")
-	
+
 print("\n\n")
 print("# while-loops")
 print("# ------------")
@@ -112,10 +112,3 @@ while doLoop:
 else:
     print("else in while loop (will not executed in case you break)")
     print("THERE IS NO DO-WHILE LOOP IN PYTHON!!!!")
-	
-	
-
-
-
-
-

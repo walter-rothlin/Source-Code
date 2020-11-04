@@ -4,8 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-# img = mpimg.imread('C:/Users/admin/Pictures/stinkbug.png')
-img = mpimg.imread('./stinkbug.png')
+imgFileName = 'C:/Users/admin/Pictures/stinkbug.png'
+imgFileName = 'G:\\_WaltisDaten\\SourceCode\\GitHosted\\BWI-A19\\stinkbug.png'
+imgFileName = 'G:\\_WaltisDaten\\SourceCode\\GitHosted\\Python_WaltisExamples\\Code_07_MatPlotLib\\stinkbug.png'
+imgFileName = './stinkbug.png'
+img = mpimg.imread(imgFileName)
 height = len(img)
 width = len(img[1])
 

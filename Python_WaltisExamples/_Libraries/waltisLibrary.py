@@ -13,6 +13,7 @@
 # 07-Jun-2019   Walter Rothlin      Merged with littlePythonLib.py
 # 09-Apr-2020   Walter Rothlin      Refactoring isPrimezahl()
 # 28-Sep-2020   Walter Rothlin      Added equalsWithinTolerance
+# 04-Nov-2020   Walter Rothlin      Added underline
 # ------------------------------------------------------------------
 import math
 import os
@@ -169,14 +170,30 @@ def TEST_Primzahlen():
 
 # String Functions
 # ----------------
-def left(s,amount):
+def left(s, amount):
     return s[:amount]
 
-def right(s,amount):
+def right(s, amount):
     return s[-amount:]
 
 def mid(s, offset, amount):
     return s[offset:offset+amount]
+
+def placer(strichArt="-", laenge=30):
+    return strichArt * laenge
+
+def printPlacer(strichArt="-", laenge=30):
+    print(placer(strichArt, laenge))
+
+def underline(titleStr, strichArt="="):
+    return titleStr + "\n" + placer(strichArt=strichArt, laenge=len(titleStr))
+
+def TEST_placer():
+    print(placer())
+    print(placer(laenge=50, strichArt="="))
+    printPlacer(strichArt="+")
+    print(underline("Hallo"))
+    print(underline("Hallo  iii", "*"))
 
 # Date and Timestamp
 # ------------------    
@@ -211,3 +228,7 @@ def equalsWithinTolerance(ist,soll,abweichungProzent=0.001):
             return False
         else:
             return True
+
+if __name__ == '__main__':
+    TEST_placer()
+    TEST_Primzahlen()

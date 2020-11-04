@@ -84,7 +84,8 @@ class TransitionError(Error):
 def func():
     raise TransitionError("Old value", 55, "Next value")
 
-try:
-    func()
-except TransitionError as transError:
-    print(transError)
+if __name__ == '__main__':
+    try:
+        func()
+    except TransitionError as transError:
+        print(transError)
