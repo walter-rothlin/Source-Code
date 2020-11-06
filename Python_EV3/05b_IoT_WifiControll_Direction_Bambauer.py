@@ -1,4 +1,4 @@
-# Python_EV3: 05b_IoT_WifiControll_Bambauer.py
+# Python_EV3: 05b_IoT_WifiControll_Direction_Bambauer.py
 
 # Code von Julian Bambauer <julian.bambauer@bluewin.ch> vom 6.11.20
 
