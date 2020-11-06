@@ -1,4 +1,4 @@
-# Python_EV3: 05b_IoT_WifiControll2.py
+# Python_EV3: 05b_IoT_WifiControll.py
 
 from grobot import *
 
