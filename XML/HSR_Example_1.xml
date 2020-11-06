@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE body [
+       <!ELEMENT body   		(#PCDATA | datum | betreff)*>
+       <!ELEMENT datum  		(#PCDATA)>
+       <!ELEMENT betreff       (#PCDATA)>
+] >
+<body>
+  Content
+  <datum>5.5.95</datum>
+  <betreff>Hallo</betreff>
+  fdssfdfsd
+</body>

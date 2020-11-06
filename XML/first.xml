@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="first.xsl"?>
+
+<book>
+  <title>My Life</title>
+  <author>
+    <name>Walter Rothlin</name>
+  </author>
+  <publisher>WR Publishing Wangen</publisher>
+  <name>Claudia</name>
+  <UnknownTag/>
+</book>

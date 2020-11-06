@@ -1,0 +1,19 @@
+<source>
+
+<employee>
+     <firstName home="Brunnenhof">Joe</firstName>
+     <surname>Smith</surname>
+</employee>
+
+<employee>
+     <firstName home="Peterliwiese">Walti</firstName>
+     <surname>Rothlin</surname>
+</employee>
+
+</source>
+
+<!-- 
+
+<?xml version="1.0" encoding="UTF-8"?><p></p><p>Walti</p>
+
+-->

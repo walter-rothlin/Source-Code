@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bank>
+  <kunde id="1234" name="Rothlin">
+       <konto id="222" currency="CHF">12.89</konto>  
+  </kunde>
+</bank>

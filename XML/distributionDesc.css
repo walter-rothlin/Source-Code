@@ -1,0 +1,62 @@
+* {
+   font-family:arial;
+}
+
+
+DestinationDescription {
+   display:block;
+   background-color: #000000;
+   color: #ff0000;
+}
+
+FileTransfer
+{
+	display:block;
+	margin-top:2cm;
+	color=blue;
+}
+
+Command {
+      display:block;
+}
+
+Renameing {
+      color=white;
+}
+
+Printing
+{
+	display:block;
+	margin-top:2cm;
+	color=green;
+}
+
+PrinterName  {
+      display:block;
+      color:brown;
+}
+
+PrinterName[convertion="PDF"]:before  {
+      display:block;
+      content:"PDF-Printer: "
+      color:brown;
+}
+
+PrinterName[convertion="ASC"]:before  {
+      display:block;
+      content:"PDF-Printer: "
+      color:white;
+}
+
+
+Email
+{
+	display:block;
+	margin-top:2cm;
+	color=red;
+}
+
+Name:before {
+   display:block;
+   content:"Name: "
+}

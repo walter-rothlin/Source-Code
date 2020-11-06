@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="people">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="person" type="personType" minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	
+		<xs:complexType name="personType">
+			<xs:sequence>
+			     <!-- /xs:schema/xs:complexType[@name='personType']/xs:sequence/xs:element[@name='name'] -->
+				<xs:element name="name" type="xs:string"/>  
+				<xs:element name="firstname" type="nameType"/>
+				<xs:element name="plz" type="plzType" />
+				<xs:element name="city" type="xs:string"/>
+				<xs:element name="phone" type="xs:string" maxOccurs="5"/>
+				<xs:element name="pet" type="petType" />
+			</xs:sequence>
+		</xs:complexType>
+		
+		<xs:simpleType name="nameType">
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="10" />
+				<xs:minLength value="3" />
+				<xs:pattern value="\D*" />
+			</xs:restriction>
+		</xs:simpleType>
+		
+		<xs:complexType name="petType">
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="species" type="speciesType" use="required"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+		
+		<xs:simpleType name="plzType">
+			<xs:restriction base="xs:int">
+				<xs:minInclusive value="1000" />
+				<xs:maxExclusive value="10000" />
+			</xs:restriction>
+		</xs:simpleType >
+
+		<xs:simpleType name="speciesType">
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="cat" />
+				<xs:enumeration value="dog" />
+			</xs:restriction>
+		</xs:simpleType>
+
+
+</xs:schema>
+
+

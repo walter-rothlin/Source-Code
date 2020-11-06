@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="application/xml" url=" leute.xsl"?>
+<leute xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Y:\Data\SourceCode\XML\leute.xsd">
+
+	<!-- 1.Person -->
+	<person geboren="1912" gestorben="1954">
+		<name>
+			<vorname>Alan</vorname>
+			<nachname>Turing</nachname>
+		</name>
+		<beruf>Informatiker</beruf>
+		<beruf>Mathematiker</beruf>
+		<beruf>Kryptograph</beruf>
+	</person>
+	
+	<!-- 2.Person -->
+	<person geboren="1918" gestorben="1988">
+		<name>
+		    <!--- Kommentar -->
+			<vorname>Richard</vorname>
+			<mittelinitial>P</mittelinitial>
+			<nachname>Feynman</nachname>
+		</name>
+		<beruf>Physiker</beruf>
+		<hobby>Spielt Bongos</hobby>
+	</person>
+	
+	<!-- 3.Person -->
+	<person geboren="1960">
+		<name>
+			<vorname>Walter</vorname>
+			<mittelinitial>M</mittelinitial>
+			<nachname>Rothlin</nachname>
+		</name>
+		<beruf>El. Ing HTL / FH</beruf>
+		<hobby>Sport</hobby>
+	</person>
+</leute>
