@@ -1,0 +1,54 @@
+﻿
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+   <Document>
+      <name>Zeichnung</name>
+      <Placemark id="annotation_1604911119708">
+         <ExtendedData>
+            <Data name="type">
+               <value>annotation</value>
+            </Data>
+         </ExtendedData>
+         <name>Nuoler Ried (Naturschutzgebiet)</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <scale>0</scale>
+            </IconStyle>
+            <LabelStyle>
+               <color>ff00a5ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.877541236069806,47.20598571312142</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="linepolygon_1604911395358">
+         <ExtendedData>
+            <Data name="type">
+               <value>linepolygon</value>
+            </Data>
+         </ExtendedData>
+         <description />
+         <Style>
+            <LineStyle>
+               <color>ff0000ff</color>
+               <width>3</width>
+            </LineStyle>
+            <PolyStyle>
+               <color>660000ff</color>
+            </PolyStyle>
+         </Style>
+         <Polygon>
+            <outerBoundaryIs>
+               <LinearRing>
+                  <coordinates>8.863077541779592,47.20541441462476 8.863687479867744,47.20452524161717 8.865461536154347,47.20471917401097 8.866055579539648,47.20323643739317 8.869025011887409,47.20469294225429 8.87053661204393,47.204944034702514 8.871913723374176,47.204117240282756 8.875279551158792,47.20459706163651 8.875499391984,47.204918180539416 8.879856107703567,47.204935686569755 8.883911539007272,47.206504157845764 8.885124659045998,47.206452936063336 8.8861129948356,47.205900740497746 8.88647811324762,47.20573421709848 8.887457576604996,47.20582984839415 8.887196829765902,47.2088738478427 8.863077541779592,47.20541441462476</coordinates>
+               </LinearRing>
+            </outerBoundaryIs>
+         </Polygon>
+      </Placemark>
+   </Document>
+</kml>
+

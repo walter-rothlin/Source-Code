@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+   <Document>
+      <name>Zeichnung</name>
+      <Placemark id="linepolygon_1604912582979">
+         <ExtendedData>
+            <Data name="type">
+               <value>linepolygon</value>
+            </Data>
+         </ExtendedData>
+         <description>Brutgebiet</description>
+         <Style>
+            <LineStyle>
+               <color>ff00ffff</color>
+               <width>3</width>
+            </LineStyle>
+            <PolyStyle>
+               <color>6600ffff</color>
+            </PolyStyle>
+         </Style>
+         <Polygon>
+            <outerBoundaryIs>
+               <LinearRing>
+                  <coordinates>8.864497980856529,47.20323774935484 8.868259628122129,47.2047024502712 8.87144312081012,47.20527460991526 8.874286125441309,47.20397972247839 8.868835791304784,47.20255420315577 8.864838678687015,47.20215398815222 8.864497980856529,47.20323774935484</coordinates>
+               </LinearRing>
+            </outerBoundaryIs>
+         </Polygon>
+      </Placemark>
+      <Placemark id="annotation_1604912651306">
+         <ExtendedData>
+            <Data name="type">
+               <value>annotation</value>
+            </Data>
+         </ExtendedData>
+         <name>Durch Kiebitz 
+bevorzugtes Brutgebiet</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <scale>0</scale>
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.869313324487482,47.20362781047269</coordinates>
+         </Point>
+      </Placemark>
+   </Document>
+</kml>
