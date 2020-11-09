@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+   <Document>
+      <name>Zeichnung</name>
+      <Placemark id="marker_1578562210400">
+         <ExtendedData>
+            <Data name="htmlpopup">
+               <value>&lt;div id="KML||https://public.geo.admin.ch/ErKun17oR3SBOc0fuSXCZQ#marker_1578562210400" class="htmlpopup-container"&gt;&lt;div class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung &amp;nbsp;&lt;/span&gt;(Turnhalle)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Ist in der Zwischenzeit abgebrochen!&lt;/div&gt;&lt;/div&gt;</value>
+            </Data>
+            <Data name="layerId">
+               <value>KML||https://public.geo.admin.ch/ErKun17oR3SBOc0fuSXCZQ</value>
+            </Data>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Turnhalle!!!!</name>
+         <description>Ist in der Zwischenzeit abgebrochen!</description>
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ffff0000</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.707384563944833,47.351</coordinates>
+         </Point>
+      </Placemark>
+	  
+	        <Placemark id="marker_1578562210401">
+         <ExtendedData>
+            <Data name="htmlpopup">
+               <value>&lt;div id="KML||https://public.geo.admin.ch/ErKun17oR3SBOc0fuSXCZQ#marker_1578562210400" class="htmlpopup-container"&gt;&lt;div class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung &amp;nbsp;&lt;/span&gt;(Turnhalle)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Ist in der Zwischenzeit abgebrochen!&lt;/div&gt;&lt;/div&gt;</value>
+            </Data>
+            <Data name="layerId">
+               <value>KML||https://public.geo.admin.ch/ErKun17oR3SBOc0fuSXCZQ</value>
+            </Data>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Kopie<BR/>der Turnhalle</name>
+         <description>LabelStyle tranparency factor</description>
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>00ff0000</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.70,47.351</coordinates>
+         </Point>
+      </Placemark>
+   </Document>
+</kml>

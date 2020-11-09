@@ -1,0 +1,52 @@
+<kml
+	xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+	<Document>
+		<name>Zeichnung</name>
+		<Placemark id="linepolygon_1578384625786">
+			<ExtendedData>
+				<Data name="type">
+					<value>linepolygon</value>
+				</Data>
+			</ExtendedData>
+			<description />
+			<Style>
+				<LineStyle>
+					<color>ff0000ff</color>
+					<width>3</width>
+				</LineStyle>
+				<PolyStyle>
+					<color>660000ff</color>
+				</PolyStyle>
+			</Style>
+			<LineString>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>
+					8.31147277112565,46.928395049947014 8.316468538456155,46.928752694716515
+				</coordinates>
+			</LineString>
+		</Placemark>
+		<Placemark id="annotation_1578384633274">
+			<ExtendedData>
+				<Data name="type">
+					<value>annotation</value>
+				</Data>
+			</ExtendedData>
+			<name>Ein Text</name>
+			<description />
+			<Style>
+				<IconStyle>
+					<scale>0</scale>
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.311023021732728,46.93143004700534</coordinates>
+			</Point>
+		</Placemark>
+	</Document>
+</kml>

@@ -1,0 +1,1175 @@
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+    <Document>
+        <name>Bachtellen</name>
+        <Placemark id="marker_1514281072540">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>39</name>
+            <description>Abzweigung Lochgasse</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.902051907797242,47.19114327027557</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514281251832">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>40</name>
+            <description>Schiffsanlegesteg Bad Nuolen</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/240,96,96/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>f06060ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.890977361570963,47.20710793894237</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277333640">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>12</name>
+            <description>Schwarz (Chef Kies AG)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.906814392140234,47.19828862908111</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277530334">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>30</name>
+            <description>Stall Bamert Walti</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.910309540675549,47.197713211586304</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277637204">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>31</name>
+            <description>Wohnhaus Bamert Walti</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.910375415073686,47.19674976734564</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277670676">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>32</name>
+            <description>Bruhin Chäpp</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.910703640003078,47.197645197808384</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277723581">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>13</name>
+            <description>Wohnhaus Mächler Kaspar (Gemeindeschreibers)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.906041835815998,47.19851439160744</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277783810">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>14</name>
+            <description>Stall Mächler Kaspar (Gemeindeschreibers)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.905509116161781,47.19834125678727</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277814205">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>33</name>
+            <description>Heutige Einfahrt Guntliweid</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.90692181863683,47.1988360311237</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277899147">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>1</name>
+            <description>Schnellmann Röbi</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.89568341956009,47.197170601911196</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514277977652">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>2</name>
+            <description>Bruhin Pius (Hüppin Wisi's (Kunstmaler) Frau war Tochter
+                hier)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.896132271846827,47.19717391506411</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278016386">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>3</name>
+            <description>Satll von Bruhin Pius (Kuster's Röbi)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.896434515438717,47.19712510600149</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278081596">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>4</name>
+            <description>Schilter (Grossbauer) Daniel's Laib Mutter wuchs hier
+                auf</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.895796081566113,47.197430066819756</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278127721">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>5</name>
+            <description>Hof von Winet Noldi. KIBAG hat ein Wohnhaus unten am See
+                angebaut und die Winet's umgesiedelt (5a).</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.896254686261798,47.19851730391129</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278198282">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>5a</name>
+            <description>Winet Noldi nach Umzug von 5</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.8940845313708,47.20340723220625</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278249631">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>6</name>
+            <description>Vogt Ferdinand (Grossvater vom Päuli)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.897820502441382,47.196887134548994</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278319903">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>7</name>
+            <description>Stall Rothlin Albert (Grossvater von Walti Rothlin 1960)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.900460088109103,47.19615642917574</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278354815">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>8</name>
+            <description>Haus von Albert Rothlin (Grossvater von Walti Rothlin
+                1960</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.900814360432362,47.196079958845004</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278756885">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>9</name>
+            <description>Wohnhaus Hüppin Michaeli's (Grossvater Mutters Seite von
+                Bea Waltenspühl)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.898360876548033,47.19516649546464</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278910195">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>10</name>
+            <description>Stall Hüppin Michaeli's (Grossvater Mutters Seite von
+                Bea Waltenspühl)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.900635622932098,47.19533553967749</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514278946295">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>11</name>
+            <description>Wohnhaus gehörte Hüppin Michaeli's (Hier wohnte Hüppin
+                Anton (Vater von Eugen, Fredi, Willy,...)
+                Später dann Hunger Paul
+                (Urgrassvater vom Hunger Thomas Feuerwehr)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.900026090326476,47.19428172188823</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279130786">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>15</name>
+            <description>Peter Bruhin (Stuel Peter) Vater vom Bruhin Willy Nuoler
+                Schützenmeister</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.901629258788295,47.19884944768967</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279221593">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>34</name>
+            <description>Elternhaus von Diethelm Berti und Lina (Berti's Paul ist
+                Onkel vom Bruhin Willy Schütze, des Stuel Peter's (15)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.90367831695656,47.196556325792585</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279361067">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>18</name>
+            <description>Stall von Vogt Leo (Vater vom Werni und Walti Vogt)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.905004144129245,47.196773344553996</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279449334">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>17</name>
+            <description>Wohnhaus von Vogt Leo (Vater vom Werni und Walti Vogt)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.90491116854437,47.19627073798609</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279465868">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>16</name>
+            <description>Briefträger Schäfer</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.904149116156182,47.19639739541805</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279499782">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>19</name>
+            <description>Hoggeries (Vater vom Wisel)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.903042322647867,47.1955028602097</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279549501">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>20</name>
+            <description>Schlössli. Blitz eingeschlagen in den 60iger Jahren</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.89952809911486,47.19392819371009</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279622135">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>21</name>
+            <description>Sepp Schnellmann (Briefträgers) Vater der Monika
+                (Namlensch) Beim Autobahnbau Umzug an die Schürwiesstrasse (heute
+                Koller Judith's)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.893665540750678,47.19431733028053</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279862780">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>B</name>
+            <description>Schnyderwäldli</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.904278240652381,47.194848392694155</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279905163">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>22</name>
+            <description>Gusti Rüegg-Züger</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.891245476975863,47.19754156648543</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279949163">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>23</name>
+            <description>von Niederhäusern</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.892590319763952,47.19700280365873</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514279969367">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>24</name>
+            <description>Höli</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.894118874488884,47.19642571663362</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280005378">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>25</name>
+            <description>Schnyder Liseli</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.896707382045625,47.19406292313966</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280141538">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>26</name>
+            <description>Schützenstand</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.893321754753948,47.19380888983371</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280184329">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>27</name>
+            <description>Züger Walti (Werni) Deckerhof</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.905556519032373,47.19189032411949</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280246522">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>28</name>
+            <description>Walti Stähli (vorher Anton ?)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.907912884509892,47.19407335026952</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280292161">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>29</name>
+            <description>Dobler Anton (der Vreni)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.907152806761545,47.193309371168716</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280357183">
+            <ExtendedData>
+                <Data name="htmlpopup">
+                    <value>&lt;div id="KML||https://public.geo.admin.ch/X1XWsiNmRQK9ohBbZIgsQg#marker_1514280357183" class="htmlpopup-container"&gt;&lt;div class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung &amp;nbsp;&lt;/span&gt;(36)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Kreuzung Wangen&lt;/div&gt;&lt;/div&gt;</value>
+                </Data>
+                <Data name="layerId">
+                    <value>KML||https://public.geo.admin.ch/X1XWsiNmRQK9ohBbZIgsQg</value>
+                </Data>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>36</name>
+            <description>Kreuzung Wangen</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/140,190,178/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>8cbeb200</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.895668532762285,47.191296235837065</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280472103">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>37</name>
+            <description>Wohnhaus Rothlin Johann (Grossvater von Daniel Rothlin)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.895046042506815,47.20405629385</coordinates>
+            </Point>
+        </Placemark>
+        <Placemark id="marker_1514280542198">
+            <ExtendedData>
+                <Data name="type">
+                    <value>marker</value>
+                </Data>
+            </ExtendedData>
+            <name>38</name>
+            <description>Stall Rothlin Johann (Grossvater von Daniel Rothlin)</description>
+            <Style>
+                <IconStyle>
+                    <Icon>
+                        <href>https://api3.geo.admin.ch/color/0,0,255/marker-24@2x.png</href>
+                        <gx:w>48</gx:w>
+                        <gx:h>48</gx:h>
+                    </Icon>
+                    <hotSpot x="24" y="4.799999999999997" xunits="pixels"
+                             yunits="pixels" />
+                </IconStyle>
+                <LabelStyle>
+                    <color>ff0000ff</color>
+                </LabelStyle>
+            </Style>
+            <Point>
+                <tessellate>1</tessellate>
+                <altitudeMode>clampToGround</altitudeMode>
+                <coordinates>8.895466336451795,47.2037361072744</coordinates>
+            </Point>
+        </Placemark>
+
+    </Document>
+</kml>
