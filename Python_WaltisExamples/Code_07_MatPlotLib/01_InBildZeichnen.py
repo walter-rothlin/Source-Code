@@ -1,10 +1,15 @@
 #!/usr/bin/python3
 
+# !!!! Falls Fehler “runtimeError: package fails to pass a sanity check”
+# 1.19.4 hat auf Windows einen Fehler!
+#    pip install numpy==1.19.3
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-imgFileName = 'C:/Users/admin/Pictures/stinkbug.png'
+# imgFileName = 'C:/Users/admin/Pictures/stinkbug.png'
 imgFileName = 'G:\\_WaltisDaten\\SourceCode\\GitHosted\\BWI-A19\\stinkbug.png'
 imgFileName = 'G:\\_WaltisDaten\\SourceCode\\GitHosted\\Python_WaltisExamples\\Code_07_MatPlotLib\\stinkbug.png'
 imgFileName = './stinkbug.png'
