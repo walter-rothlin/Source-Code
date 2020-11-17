@@ -19,8 +19,8 @@ https://www.youtube.com/watch?v=41IO4Qe5Jzw LED ein und ausschalten
 
 """
 
-# https://docs.python.org/3/tutorial/controlflow.html (Kapitel 4)
 
+# https://docs.python.org/3/tutorial/controlflow.html (Kapitel 4)
 
 print("\n\n")
 print("# functions")

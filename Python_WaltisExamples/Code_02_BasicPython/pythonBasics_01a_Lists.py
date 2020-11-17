@@ -37,9 +37,10 @@ if (not (50 in squares)):
     print("50 ist keine Quadratzahl!")
 
 squares_1 = squares.copy()
-print("squares_1          -->", squares_1)    # slicing returns a new list [1, 4]
+print("squares_1          -->", squares_1)
+##  squares_1[3:5] = 99    # geht nicht! ERROR: TypeError: can only assign an iterable
 squares_1.clear()
-print("squares_1.clear()  -->", squares_1)    # slicing returns a new list [1, 4]
+print("squares_1.clear()  -->", squares_1)
 squares_1 = squares.copy()
 del squares_1     # variable existiert nicht mehr
 print("\n")
