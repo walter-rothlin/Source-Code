@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: Primzahlenrechner.py
+# Name: pythonBasics_06a_PrimzahlenRechner.py
 #
 # Description: Rechnet mit Primzahlen.
 #

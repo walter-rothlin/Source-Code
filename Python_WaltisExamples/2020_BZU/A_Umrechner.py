@@ -72,6 +72,7 @@ while doLoop:
 
         A = (radius**2) * pi
         U = 2 * radius * pi
+        print("r=", radius, "d=", 2*radius)
         print("r={r:3.2f} d={d:3.2f}  Kreisfläche A={A:3.2f}   Umfang U={U:3.2f}".format(r=radius, A=A, U=U, d=2*radius))
 
     if antwort == "0":
