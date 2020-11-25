@@ -9,16 +9,26 @@
 #
 # History:
 # 29-Oct-2020   Walter Rothlin      Initial Version
-# 05-Nov-2020   Walter Rothlin      Added Kreisberechnungen
+#
 # ------------------------------------------------------------------
-
 import math
 
 pi = math.pi
 
-def celsiusToFahrenheit(celsiusValueParam):
-    return (celsiusValueParam * 1.8) + 32
+def celsiusToFahrenheit(aCelsiusValue):
+    return (aCelsiusValue * 1.8) + 32
 
+def fahrenheitToCelsius(aFahrenheitValue):
+    return (aFahrenheitValue - 32) / 1.8
+
+def radToGrad(radVal):
+    return radVal * 180 / pi
+
+def gardToRad(gradVal):
+    return gradVal * pi / 180
+
+def halt(prompt = "Weiter?"):
+    nop = input(prompt)
 
 doLoop = True
 while doLoop:
@@ -34,30 +44,25 @@ while doLoop:
     print()
     print("  0: Schluss")
 
-    antwort = input("\n  Wähle:")
-    if antwort == "1":
-        print("Grad --> Radianten")
-        gradValue = float(input("Grad:"))
-        radValue = gradValue * pi / 180
-        print("Lösung: ", radValue)
+    choice = input("\n   Wähle:")
 
-    if antwort == "2":
-        print("Bogenmass --> Grad")
-        radValue = float(input("Rad:"))
-        gradValue = radValue * 180 / pi
-        print("Lösung: ", gradValue)
+    if choice == "1":
+        inVal = float(input("Grad:"))
+        print("{g:3.2f}Grad --> {r:3.2f}Radianten".format(g=inVal, r=gardToRad(inVal)))
 
-    if antwort == "3":
-        print("Fahrenheit in Celsius")
-        fahrenheitValue = float(input("Fahrenheit:"))
-        celsiusValue = (fahrenheitValue - 32) / 1.8
-        print("Lösung: ", celsiusValue)
+    if choice == "2":
+        inVal = float(input("Rad:"))
+        print("{r:3.2f}Radianten --> {g:3.2f}Grad".format(r=inVal, g=radToGrad(inVal)))
 
-    if antwort == "4":
-        print("Celsius in Fahrenheit")
-        print("Lösung: ", celsiusToFahrenheit(float(input("Celsius:"))))
+    if choice == "3":
+        inVal = float(input("Fahrenheit:"))
+        print("{f:3.2f}Fahrenheit --> {g:3.2f}Celsius".format(f=inVal, g=fahrenheitToCelsius(inVal)))
 
-    if antwort == "5":
+    if choice == "4":
+        inVal = float(input("Celsius:"))
+        print("{g:3.2f}Celsius --> {f:3.2f}Fahrenheit".format(g=inVal, f=celsiusToFahrenheit(inVal)))
+
+    if choice == "5":
         print("Berechnungen am Kreis")
         radius = float(input("Radius:"))
         if radius == 0:
@@ -72,10 +77,13 @@ while doLoop:
 
         A = (radius**2) * pi
         U = 2 * radius * pi
-        print("r=", radius, "d=", 2*radius)
         print("r={r:3.2f} d={d:3.2f}  Kreisfläche A={A:3.2f}   Umfang U={U:3.2f}".format(r=radius, A=A, U=U, d=2*radius))
 
-    if antwort == "0":
+    if choice == "0":
         doLoop = False
+        print("Schade, dass du aufhörst!!!!!")
+    else:
+        print()
+        halt()
+print("Danke für deinen Besuch")
 
-print("Vielen Dank für deinen Besuch")
