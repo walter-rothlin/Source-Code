@@ -1,0 +1,15 @@
+[
+  {
+    "Artikel": "Gelb",
+    "Anzahl": 6
+  },
+  {
+    "Artikel": "Gruen",
+    "Anzahl": 5
+  },
+  {
+    "Artikel": "Blau",
+    "Anzahl": 0,
+    "Lieferung": "27. Dec. 2021"
+  }
+]

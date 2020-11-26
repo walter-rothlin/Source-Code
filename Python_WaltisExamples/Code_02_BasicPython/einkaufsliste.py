@@ -31,9 +31,9 @@ artNr_Weine = "(44-444-231)"
 gPreis = 0
 pPreis = 0
 
-
 print("Quittung     ", DateTime.now().strftime('%d.%m.%Y %H:%M:%S'))
 print("========\n")
+
 print("| Anzahl | Artikel      | Art.Nr         | Stueckpreis | Preis      |")
 print("| -------+--------------+----------------+-------------+------------|")
 
