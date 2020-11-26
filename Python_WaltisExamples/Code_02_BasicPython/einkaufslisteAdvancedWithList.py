@@ -59,15 +59,15 @@ nachkommastellen = 2
 
 columnWithList = {
     "Anzahl": 12,
-    "Artikel": 20,
-    "Art.Nr": 20,
+    "Bezeichnung": 20,
+    "ArtNr": 20,
     "Stueckpreis": 11,
     "Preis": 10
 }
 
 lbl_Anzahl = "Anzahl"
 lbl_Artikel = "Artikel"
-lbl_ArtNo = "Art.Nr"
+lbl_ArtNo = "ArtNr"
 lbl_Stueckpreis = "Stueckpreis"
 lbl_Preis = "Preis"
 
@@ -98,7 +98,12 @@ for einkaufsPos in shoppingList:
     gPreis += einkaufsPos['Preis']
     rowStr = "|"
     for cellWithKey in columnWithList:
-        posStrFm = "{0:" + str(columnWithList[cellWithKey]) + "d} |"
+        placeHolderType = "s"
+        if (type(einkaufsPos[cellWithKey]) is int):
+            placeHolderType = "d"
+        elif (type(einkaufsPos[cellWithKey]) is float):
+            placeHolderType = "f"
+        posStrFm = "{0:" + str(columnWithList[cellWithKey]) + placeHolderType + "} |"   #TBA TBA TBA TBA!!!!!!!!!!!!!!!!
         print(einkaufsPos, cellWithKey, einkaufsPos[cellWithKey], posStrFm)
         posStr = posStrFm.format(einkaufsPos[cellWithKey])
         rowStr += posStr
