@@ -31,7 +31,9 @@ artNr_Weine = "(44-444-231)"
 gPreis = 0
 pPreis = 0
 
+# ---------------
 # Config Elemente
+# ---------------
 title = "Quittung"
 lbl_Total = "Rechnungsbetrag"
 
@@ -54,10 +56,9 @@ sb_Preis = 10
 
 
 
-
+# -------------------
 # Code ohne hardcodes
-# ===================
-
+# -------------------
 tabellenBreite = sb_Anzahl + sb_Artikel + sb_ArtNr + sb_StueckPreis + sb_Preis
 print(title + "     ", DateTime.now().strftime('%d.%m.%Y %H:%M:%S'))
 print("=" * len(title) + "\n")
