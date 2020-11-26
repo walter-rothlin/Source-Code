@@ -14,10 +14,11 @@
 # ------------------------------------------------------------------
 from datetime import datetime as DateTime
 
-def addPositionsPreis(liste, anzahlFN="Anzahl", preisFN="Einzelpreis", positionsPreisFN = "Preis"):
+def addPositionsPreis(liste, anzahlFN="", preisFN="", positionsPreisFN=""):
     for listItem in liste:
         listItem.update({positionsPreisFN: listItem[anzahlFN] * listItem[preisFN]})
     return liste
+
 
 shoppingList = [
     {"Anzahl": 500,
@@ -35,18 +36,24 @@ shoppingList = [
      "Bezeichnung": "Wein",
      "ArtNo": "(44-444-231)"
      },
+    {"Anzahl": 100,
+     "Einzelpreis": 22.50,
+     "Bezeichnung": "Mineralwasser",
+     "ArtNo": "(00-007-007)"
+     },
 ]
 
-shoppingList = addPositionsPreis(shoppingList)
+lbl_Anzahl = "Anzahl"
+lbl_Einzelpreis = "Einzelpreis"
+lbl_Preis = "Preis"
+
+shoppingList = addPositionsPreis(shoppingList, anzahlFN=lbl_Anzahl, preisFN=lbl_Einzelpreis, positionsPreisFN=lbl_Preis)
 
 # for einkaufsPos in shoppingList:
 #     print(einkaufsPos)
 #     print(einkaufsPos['Bezeichnung'])
 #     for k in einkaufsPos:
 #         print(k, ":", einkaufsPos[k])
-
-
-gPreis = 0
 
 
 # ---------------
@@ -58,25 +65,17 @@ lbl_Total = "Rechnungsbetrag"
 nachkommastellen = 2
 
 columnWithList = {
-    "Anzahl": 12,
-    "Bezeichnung": 20,
-    "ArtNr": 20,
-    "Stueckpreis": 11,
+    "Anzahl": 8,
+    "Bezeichnung": 25,
+    "ArtNo": 20,
+    "Einzelpreis": 11,
     "Preis": 10
 }
-
-lbl_Anzahl = "Anzahl"
-lbl_Artikel = "Artikel"
-lbl_ArtNo = "ArtNr"
-lbl_Stueckpreis = "Stueckpreis"
-lbl_Preis = "Preis"
-
-
 
 # -------------------
 # Code ohne hardcodes
 # -------------------
-
+gPreis = 0
 tableWith = 0
 for cellWithKey in columnWithList:
     tableWith += columnWithList[cellWithKey]
@@ -95,25 +94,28 @@ for cellWithKey in columnWithList:
 print(titleUnderline)
 
 for einkaufsPos in shoppingList:
-    gPreis += einkaufsPos['Preis']
-    rowStr = "|"
+    gPreis += einkaufsPos[lbl_Preis]
+    rowStr = "| "
     for cellWithKey in columnWithList:
         placeHolderType = "s"
         if (type(einkaufsPos[cellWithKey]) is int):
             placeHolderType = "d"
         elif (type(einkaufsPos[cellWithKey]) is float):
             placeHolderType = "f"
-        posStrFm = "{0:" + str(columnWithList[cellWithKey]) + placeHolderType + "} |"   #TBA TBA TBA TBA!!!!!!!!!!!!!!!!
-        print(einkaufsPos, cellWithKey, einkaufsPos[cellWithKey], posStrFm)
+
+        if (placeHolderType == "f"):
+            posStrFm = "{0:" + str(columnWithList[cellWithKey]) + "." + str(nachkommastellen) + placeHolderType + "} | "
+        else:
+            posStrFm = "{0:" + str(columnWithList[cellWithKey]) + placeHolderType + "} | "
         posStr = posStrFm.format(einkaufsPos[cellWithKey])
         rowStr += posStr
     print(rowStr)
 
 
-print(" " * (tableWith + 4) + "-" * columnWithList['Preis'])
-fmStrRechnungsbetrag = "{gPreis:" + str(columnWithList['Preis']) + "." + str(nachkommastellen) + "f}"
+print(" " * (tableWith + 4) + "-" * columnWithList[lbl_Preis])
+fmStrRechnungsbetrag = "{gPreis:" + str(columnWithList[lbl_Preis]) + "." + str(nachkommastellen) + "f}"
 print(" " * (tableWith - len(lbl_Total)) + lbl_Total + ":   " + fmStrRechnungsbetrag.format(gPreis=gPreis))
-print(" " * (tableWith + 4) + "=" * columnWithList['Preis'])
+print(" " * (tableWith + 4) + "=" * columnWithList[lbl_Preis])
 print("\n\n")
 
 
