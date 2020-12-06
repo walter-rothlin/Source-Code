@@ -5,7 +5,7 @@ def File_getCountOfLines(sourceFileFN):
     return len(lines)
 
 
-def File_deleteLines(sourceFileFN, destinationFileFN = None, deleteLineFrom = None, deleteLineTo = None  ):
+def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, deleteLineTo=None, verbal=False):
     if destinationFileFN is None:
         destinationFileFN = sourceFileFN
 
@@ -19,7 +19,8 @@ def File_deleteLines(sourceFileFN, destinationFileFN = None, deleteLineFrom = No
     else:
         pass  # NOP
 
-    print("Delete from", deleteLineFrom, "to", deleteLineTo)
+    if verbal:
+        print("    Delete from", deleteLineFrom, "to", deleteLineTo, end="")
     with open(sourceFileFN, "r") as f:
         lines = f.readlines()
 
@@ -29,7 +30,6 @@ def File_deleteLines(sourceFileFN, destinationFileFN = None, deleteLineFrom = No
             if (i < deleteLineFrom) or (i > deleteLineTo):
                 f.write(line)
             i += 1
-
 
 
 if __name__ == '__main__':
