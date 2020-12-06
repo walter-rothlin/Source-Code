@@ -11,7 +11,6 @@
 # 13-Aug-2019	Initial Version
 #
 # ------------------------------------------------------------------
-import math
 
 class WR_Logfile:
 

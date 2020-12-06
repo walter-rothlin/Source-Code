@@ -1,0 +1,25 @@
+{
+   "candidates" : [
+      {
+         "formatted_address" : "Peterliwiese 33, 8855 Wangen, Schweiz",
+         "geometry" : {
+            "location" : {
+               "lat" : 47.1944994,
+               "lng" : 8.8872765
+            },
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 47.19590537989272,
+                  "lng" : 8.88867652989272
+               },
+               "southwest" : {
+                  "lat" : 47.19320572010728,
+                  "lng" : 8.885976870107276
+               }
+            }
+         },
+         "name" : "Peterliwiese 33"
+      }
+   ],
+   "status" : "OK"
+}
