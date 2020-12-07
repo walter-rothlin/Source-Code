@@ -212,6 +212,7 @@ if __name__ == '__main__':
     for aKey in weatherFields:
         titleStr += ("{pl:" + str(weatherFields[aKey]["cWidth"]) + "s}").format(pl=aKey) + delimiter
     restLogger = WR_Logger("weatherLog.txt", titleStr=titleStr, delimiter=delimiter, onlyChanges=logOnlyChanges, ringbufferSize=ringbufferSize)
+    print(restLogger)
 
     # Main polling loop
     # -----------------
