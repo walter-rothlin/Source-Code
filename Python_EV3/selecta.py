@@ -1,6 +1,18 @@
 from grobot import *
 
-# run on console: ssh root (passowrd: "") pyrun 
+# START------------------------------------------------------------------------
+# Author:        Robin Marty
+# Description:   selecta.py
+#
+#
+# Calling:       selecta.py
+# run on console: ssh root (password: "") pyrun select.py
+#
+# History:
+# 08-Dec-2020    V1.0   Robin Marty	Initial Version
+#
+# END--------------------------------------------------------------------------
+
 
 html = """<!DOCTYPE html>
 <html>
