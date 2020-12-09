@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>GeoAdminLocation</title>
+
+	<script>
+	function EingabeFeld_2_Changed() {
+		console.log("EingabeFeld_2_Changed called!");
+		document.getElementById('HTML_Abschnitt').innerHTML = document.getElementById("EingabeFeld_2").value.toUpperCase();
+	}
+
+	function CheckboxChanged() {
+		console.log("CheckboxChanged called!");
+		console.log(document.getElementById("showDiv").checked);
+		if (document.getElementById("showDiv").checked) {
+			console.log("CheckboxChanged to True!");
+			document.getElementById('HTML_Abschnitt').style.visibility  = "visible"
+		} else {
+			console.log("CheckboxChanged to False!");
+			document.getElementById('HTML_Abschnitt').style.visibility  = "hidden"
+		}
+	}
+
+	function EingabeFeld_1_Changed() {
+		var xhr = new XMLHttpRequest();
+		console.log(xhr);
+		adrPatternEncoded = encodeURI(document.getElementById("EingabeFeld_1").value);
+		xhr.open("GET", "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText="+ adrPatternEncoded + "&lang=en&type=locations" , true);
+
+		xhr.onload = function() {
+			console.log(this.responseText);
+			var response = JSON.parse(this.responseText);
+			console.log(response);
+			document.getElementById('ResultSetView').innerHTML = "";
+			response.results.forEach(element => appendTo('ResultSetView',element.attrs));
+		}
+		xhr.send();
+	}
+
+	function appendTo(id, aAttr){
+		document.getElementById(id).innerHTML = document.getElementById(id).innerHTML + "<TR><TD>" + aAttr.label + "</TD>" + "<TD>" + aAttr.lon + "</TD>" + "<TD>" + aAttr.lat + "</TD></TR>";
+	}
+	</script>
+
+</head>
+<body>
+	<h1>Formular Elemente Changes DOM</h1>
+		<input type="text" id="EingabeFeld_1"  value="peterliwiese" size="30"  >
+		<HR/>
+
+		Table: ResultSetView<BR/>
+		<table id="ResultSetView" >
+			<tr><td>Peterliwiese 33 8855</td><td>8.88730239868164</td><td>47.194541931152344</td></tr>
+			<tr><td>Etzelstr. 7 8855</td>    <td>8.89638900756836</td><td>47.18674087524414</td></tr>
+		</table>
+
+		<HR/>
+		<input type="text" id="EingabeFeld_2"  value="Walti" size="30"  >
+		<input type="checkbox" id="showDiv" name="scales" checked>
+		<HR/>
+		<div id="HTML_Abschnitt">
+			<p>Hallo</p>
+			<HR/>
+		</div>
+
+		<HR/>
+</body>
+
+<script>
+	document.getElementById("EingabeFeld_1").addEventListener('keyup', EingabeFeld_1_Changed);
+	document.getElementById("EingabeFeld_2").addEventListener('keyup', EingabeFeld_2_Changed);
+	document.getElementById("showDiv").addEventListener('change', CheckboxChanged);
+</script>
+</html>

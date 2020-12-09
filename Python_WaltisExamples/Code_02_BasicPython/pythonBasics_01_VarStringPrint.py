@@ -84,6 +84,7 @@ print(s.rjust(15))       # '    Programming'
 print(s.rjust(15, "~"))  # '~~~~Programming'
 print("\n")
 
+
 print("# Hex, Bin, Octal ")
 print("# --------------- ")
 h0 = 0xAB
@@ -119,9 +120,16 @@ print("\n")
 print("........ pythonBasics_01_VarStringPrint.py")
 
 
+print("==============================================")
+
+def getMp3Name(nr):
+    return str(nr).rjust(3, "0") + ".mp3"
 
 
-
-
-
+print(getMp3Name(3))
+print(getMp3Name(12))
+print(getMp3Name(123))
+anyNr = int(input("Nr:"))
+print(getMp3Name(anyNr))
+print("==============================================")
 
