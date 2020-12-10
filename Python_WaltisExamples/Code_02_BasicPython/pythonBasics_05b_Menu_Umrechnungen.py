@@ -21,10 +21,10 @@ halbBogen = 180
 # Bildschirmsteuerung
 # ===================
 def VT52_cls():
-	print("\033[2J",end="", flush=True)
+    print("\033[2J",end="", flush=True)
 
 def VT52_home():
-	print("\033[H",end="", flush=True)
+    print("\033[H",end="", flush=True)
 
 def VT52_cls_home():
     VT52_cls()
@@ -58,7 +58,7 @@ def rad2Grad(rad):
 
 def fahrenheit2Celsius(fahrenheit):
     return (fahrenheit-32)/1.8
-	
+
 def celsius2Fahrenheit(celsius):
     return (celsius*1.8)+32
 

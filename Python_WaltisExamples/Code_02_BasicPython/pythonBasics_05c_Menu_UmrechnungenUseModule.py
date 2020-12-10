@@ -11,7 +11,7 @@
 # 24-Oct-2017   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-import sys
+
 from waltisLibrary import *
 
 
