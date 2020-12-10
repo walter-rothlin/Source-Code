@@ -68,6 +68,17 @@ def fahrenheit2Celsius(fahrenheit):
 def celsius2Fahrenheit(celsius):
     return (celsius*1.8)+32
 
+# Fakultät berechnen
+# ==================
+def fakultaet(obergrenze, untergrenze=1):
+    fakultaet = -1
+    if (obergrenze > 0):
+        fakultaet = 1
+        while obergrenze >= untergrenze:
+            fakultaet = fakultaet * obergrenze
+            obergrenze = obergrenze - 1
+    return fakultaet
+
 
 # Primzahlen Functions
 # ====================

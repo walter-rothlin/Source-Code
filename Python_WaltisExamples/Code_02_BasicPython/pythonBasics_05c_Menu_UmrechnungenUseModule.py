@@ -31,6 +31,8 @@ while doLoop:
     print("  3: Fahrenheit in Celsius")  #32F -> 0°C    100F -> 38.8°C     °C = (°F - 32) / 1.8
     print("  4: Celsius in Fahrenheit")  #32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
     print()
+    print("  5: Fakultät")
+    print()
     print("  0: Schluss")
 
 
@@ -61,7 +63,15 @@ while doLoop:
         print("Celsius in Fahrenheit")
         celsiusValue = float(input("Celsius:"))
         print("Celsius={celsius:1.2f}  ==> Fahrenheit={fahrenheit:1.2f}".format(celsius=celsiusValue,fahrenheit=celsius2Fahrenheit(celsiusValue)))
-        halt()			
+        halt()
+
+    if (antwort == "5"):
+        VT52_cls_home()
+        print("Berechnet die Fakultät")
+        upperLimit = int(input("Obergrenze:"))
+        lowerLimit = int(input("Untergrenze:"))
+        print("{upper:5d}!  = {fak:7d}".format(upper=upperLimit, fak=fakultaet(obergrenze=upperLimit, untergrenze=lowerLimit)))
+        halt()
 
     if (antwort == "0"):
         doLoop = False
