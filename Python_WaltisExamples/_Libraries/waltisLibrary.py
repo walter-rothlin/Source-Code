@@ -14,6 +14,7 @@
 # 09-Apr-2020   Walter Rothlin      Refactoring isPrimezahl()
 # 28-Sep-2020   Walter Rothlin      Added equalsWithinTolerance
 # 19-Nov-2020   Walter Rothlin      Added calcCircle mit None parameter
+# 10-Dec-2020   Walter Rothlin      Added fakultaet
 # ------------------------------------------------------------------
 import math
 import os
