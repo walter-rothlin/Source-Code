@@ -17,6 +17,8 @@
 name      = "Rothlin"         # String variable
 vorname   = "Tobias"          # String variable
 zweitName = "Max"             # String variable
+gName     = "Max\nMeier"      # String auf mit Zeilenumbruch
+gNameRow  = r"Max\nMeier"     # String auf mit einem \ und einem n drin (escapen)  r-Flag (raw string)
 aInt      = 9                 # Integer variable
 bInt      = 2                 # Integer variable
 aFloat    = 3.1415926         # Float variable

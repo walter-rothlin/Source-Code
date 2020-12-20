@@ -15,12 +15,16 @@
 # 28-Sep-2020   Walter Rothlin      Added equalsWithinTolerance
 # 19-Nov-2020   Walter Rothlin      Added calcCircle mit None parameter
 # 10-Dec-2020   Walter Rothlin      Added fakultaet
+# 18-Dec-2020   Walter Rothlin      Added
+
 # ------------------------------------------------------------------
+import inspect
 import math
 import os
 import sys
 import time
 import datetime
+from pathlib import Path
 
 from time import sleep
 
@@ -225,6 +229,161 @@ def equalsWithinTolerance(ist,soll,abweichungProzent=0.001):
         else:
             return True
 
+# Inspection functions
+# ====================
+def getMyFctName():
+    return inspect.stack()[1][3]
+
+
+# REST / JSON functions
+# =====================
+# https://stackoverflow.com/questions/7320319/xpath-like-query-for-nested-python-dictionaries
+def xPath_Get(mydict, path):
+     elem = mydict
+     try:
+         for x in path.strip("/").split("/"):
+             try:
+                 x = int(x)
+                 elem = elem[x]
+             except ValueError:
+                 elem = elem.get(x)
+     except:
+         pass
+     return elem
+
+
+def AUTO_TEST_xPath_Get(verbal=False):
+    if verbal:
+        print("==> ", getMyFctName())
+
+    foo = {
+         'spam': 'eggs',
+         'morefoo': [{
+             'bar': 'soap',
+             'morebar': {
+                 'bacon': {
+                     'bla': '12345'
+                 }
+             }
+         },
+             'Walt'
+         ]
+    }
+
+    testCasesExecuted = 5
+    testCasesFailed   = 2
+    testCases = """"
+    Expected | Param_1                     
+    1234     | /morefoo/0/morebar/bacon/bla
+    Walti    | /morefoo/1
+    """
+    param1 = "/morefoo/0/morebar/bacon/bla"
+    expextedVal1 = "1234"
+    retVal = xPath_Get(foo, param1)
+    if ( retVal != expextedVal1):
+        print("   ERROR in TEST: xPath_Get(foo, ", param1, ") = ", retVal, "    ==> expected: ", expextedVal1, sep="")
+
+    param1 = "morefoo/1"
+    expextedVal1 = "Walti"
+    retVal = xPath_Get(foo, param1)
+    if ( retVal != expextedVal1):
+        print("   ERROR in TEST: xPath_Get(foo, ", param1, ") = ", retVal, "    ==> expected: ", expextedVal1, sep="")
+
+    if verbal:
+        print("--> Test Cases Executed: {a:4d}".format(a=testCasesExecuted))
+        print("--> Test Cases Failed  : {a:4d}".format(a=testCasesFailed))
+    return {"TestName": getMyFctName(), "testCasesExecuted": testCasesExecuted, "testCasesFailed": testCasesFailed}
+
+# File operationen
+# ================
+#    TBC verallgemeinern start
+# Cleanup - Rule N°1 : Verzeichnis wird durchsucht und alle Files mit .csv werden gelöscht
+def file_cleanup1():
+    logfiles = Path('C:\\Users\charl\PycharmProjects\Python_HWZ\programming_tools\projektarbeit_python')
+    for file in logfiles.glob('*.csv'):
+        if file.is_file():
+            try:
+                file.unlink()
+                print("Files gelöscht")
+            except OSError as error:
+                print("File {} konnte nicht gelöscht werden: {}".format(file, error))
+
+# Cleanup - Rule N°2 : Verzeichnis wird durchsucht und alle Files(.csv) älter als 7 Tage werden gelöscht
+def File_cleanup2():
+    logfiles = Path('C:\\Users\charl\PycharmProjects\Python_HWZ\programming_tools\projektarbeit_python')
+    for file in logfiles.glob('*.csv'):
+        create_time = os.path.getctime(file)
+        if (time.time() - create_time) // (24 * 3600) >= 7:
+            os.unlink(file)
+            print('{} removed'.format(file))
+
+def File_getAllLogFiles(path):
+    files = os.listdir(path)
+    files = list(filter(lambda file: file.endswith('.csv'), files))
+    return [path + file for file in files]  # append path to the file to delete it later
+
+
+def File_removeOldLogs(files,maxLogFiles=10):
+    while len(files) > maxLogFiles:
+        oldestFile = min(files, key=os.path.getctime)
+        os.remove(oldestFile)
+        files = File_getAllLogFiles(".")
+
+def File_cleanup(filename, directory, path_sign):
+    """Cleanup Funktion löscht angegebene Dateien aus angegebenen Verzeichnisse"""
+    path_sign = path_sign
+    if directory == "":
+        directory = os.curdir + path_sign
+    if not filename == "":
+        filename = str(directory) + path_sign + str(filename)
+        if os.path.exists(filename):
+            print("Datei {} löschen".format(filename))
+            os.remove(filename)
+        else:
+            print("Die Datei {} existiert nicht".format(filename))
+    else:
+        for file in os.listdir(directory):
+            if file.startswith("logger"):
+                os.chdir(directory)
+                print("Datei {} löschen".format(file))
+                os.remove(file)
+
+#    TBC verallgemeinern start
+
+
+def File_getCountOfLines(sourceFileFN):
+    lines = []
+    with open(sourceFileFN, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    return len(lines)
+
+def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, deleteLineTo=None, verbal=False):
+    if destinationFileFN is None:
+        destinationFileFN = sourceFileFN
+
+    if (deleteLineFrom is None) and (deleteLineTo is None):
+        deleteLineFrom = 0
+        deleteLineTo = 0
+    elif (deleteLineFrom is not None) and (deleteLineTo is None):
+        deleteLineTo = 1000000
+    elif (deleteLineFrom is None) and (deleteLineTo is not None):
+        deleteLineFrom = 0
+    else:
+        pass  # NOP
+
+    if verbal:
+        print("    Delete from", deleteLineFrom, "to", deleteLineTo, end="")
+    with open(sourceFileFN, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    with open(destinationFileFN, "w", encoding="utf-8") as f:
+        i = 1
+        for line in lines:
+            if (i < deleteLineFrom) or (i > deleteLineTo):
+                f.write(line)
+            i += 1
+
+
 # Geometrische Formen berechnen
 # =============================
 
@@ -315,4 +474,4 @@ def TEST_CircleFct():
 
 
 if __name__ == '__main__':
-    TEST_CircleFct()
+    AUTO_TEST_xPath_Get(verbal=True)
