@@ -78,6 +78,41 @@ print(preisListe[2]+preisListe[3])
 
 cubes = []
 n = int(input("n="))
-for basis in range(1,n+1):
+for basis in range(1, n+1):
     cubes.append(3**basis)
 print(cubes)
+
+adresse = {
+        "name": "Pütz",
+        "vorname": "Jean",
+        "land": "Schweiz",
+        "strasse": "Hauptstrasse",
+        "Plz": 8655,
+        "Ort": "Elm"
+}
+
+print(adresse['Plz'], '<U>' + adresse['Ort'] + '</U>')
+print(str(adresse['Plz']) + "<U>" + adresse['Ort'] + "</U>")
+
+adresse_1 = {
+    "Forscher": {
+        "name": "Pütz",
+        "vorname": "Jean",
+        "land": "Schweiz",
+        "verwandte": [
+            {
+                "name": "Pütz",
+                "vorname": "Hans",
+                "verwandtschaft": "Onkel"
+            },
+            {
+                "name": "Pütz",
+                "vorname": "Anna",
+                "Verwandtschaft": "Tante"
+            }
+        ]
+    }
+}
+
+print(adresse_1['Forscher']['verwandte'][1]['Verwandtschaft'], adresse_1['Forscher']['verwandte'][1]['vorname'])
+
