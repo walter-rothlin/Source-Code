@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from io import StringIO
 
 # https://pandas.pydata.org/docs/user_guide/10min.html
 
@@ -52,15 +53,39 @@ print(df.to_json(), "\n")
 
 
 
-exit(1)
+
 
 # https://pandas.pydata.org/docs/user_guide/io.html#index-columns-and-trailing-delimiters
-import pandas as pd
-from io import StringIO
 
-data = "col1,col2,col3\na,b,1\na,b,2\nc,d,3"
-pd.read_csv(StringIO(data))
-print(pd)
 
-pd.read_csv(StringIO(data), usecols=lambda x: x.upper() in ["COL1", "COL3"])
-print(pd)
+data = "a,b,c,d\n1.0,2.0,3.0,4.0\n1.1,2.1,3.1,4.1\n1.2,2.2,3.2"
+print(data, "\n")
+print(pd.read_csv(StringIO(data), dtype=object), "\n")
+print(pd.read_csv(StringIO(data), dtype=object)["b"][0:2], "\n")
+
+data = """
+      a,   b,   c,   d
+#  Real Data
+    1.0, 2.0, 3.0, 4.0
+    1.1, 2.1, 3.1, 4.1
+    1.2, 2.2, 3.2
+"""
+print(data, "\n")
+print(pd.read_csv(StringIO(data), dtype=object), "\n")
+print(pd.read_csv(StringIO(data), dtype=object, skipinitialspace=True), "\n")
+print(pd.read_csv(StringIO(data), names=["foo", "bar", "baz", "daz"], header=None), "\n")
+print(pd.read_csv(StringIO(data), names=["foo", "bar", "baz", "daz"], header=0, skipinitialspace=True, comment="#", sep=","), "\n")
+
+data = """
+       a|    b|    c|    d
+    10.0| 20.0| 30.0| 40.0
+    10.1| 20.1| 30.1| 40.1
+    10.2| 20.2| 30.2| 123456.0
+"""
+print(data, "\n")
+df = pd.read_csv(StringIO(data), names=["foo", "bar", "baz", "daz"], header=0, skipinitialspace=True, comment="#", sep="|")
+print(df, "\n")
+print(len(df))
+print(df, "\n")
+
+exit(1)

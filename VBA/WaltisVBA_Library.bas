@@ -201,11 +201,13 @@ Attribute VB_Name = "WaltisVBA_Library"
 ' 02-Aug-2020    V1.124 Walter Rothlin      Added selectFromTable
 ' 03-Sep-2020    V1.125 Walter Rothlin      Added istPrimzahl
 ' 28-Sep-2020    V1.126 Walter Rothlin      Added equalsWithinTolerance, MyProper
+' 07-Oct-2020    V1.127 Walter Rothlin      Added tojson
+' 05-Jan-2021    V1.128 Walter Rothlin      Added convert_AsciiToUnicode
 ' END-----------------------------------------------------------------------
 
 Dim PrimMaxColums
 
-Public Const Version_WaltisVBA_Library As String = "V1.126"
+Public Const Version_WaltisVBA_Library As String = "V1.128"
 
 Public Const Pi As Double = 3.14159265358979
 Public Const e  As Double = 2.71828182845905
@@ -1758,6 +1760,58 @@ Public Function CreateCalendarEntry(ByVal startDateAndTime As String, _
     CreateCalendarEntry = retVal
 End Function
 
+' JSON functions
+' ======================================================
+Public Sub tojson()
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    jsonFilename = fso.GetBaseName(ActiveWorkbook.name) & ".json"
+    fullFilePath = Application.ActiveWorkbook.Path & "\" & jsonFilename
+
+    Dim fileStream As Object
+    Set fileStream = CreateObject("ADODB.Stream")
+    fileStream.Type = 2 'Specify stream type - we want To save text/string data.
+    fileStream.Charset = "utf-8" 'Specify charset For the source text data.
+    fileStream.Open 'Open the stream And write binary data To the object
+
+    Dim wkb As Workbook
+    Set wkb = ThisWorkbook
+
+    Dim wks As Worksheet
+    Set wks = wkb.Sheets(1)
+
+    lcolumn = wks.Cells(1, Columns.Count).End(xlToLeft).column
+    lrow = wks.Cells(Rows.Count, "A").End(xlUp).row
+    Dim titles() As String
+    ReDim titles(lcolumn)
+    For i = 1 To lcolumn
+        titles(i) = wks.Cells(1, i)
+    Next i
+    fileStream.WriteText "["
+    dq = """"
+    escapedDq = "\"""
+    For j = 2 To lrow
+        For i = 1 To lcolumn
+            If i = 1 Then
+                fileStream.WriteText "{"
+            End If
+            cellValue = Replace(wks.Cells(j, i), dq, escapedDq)
+            fileStream.WriteText dq & titles(i) & dq & ":" & dq & cellValue & dq
+            If i <> lcolumn Then
+                fileStream.WriteText ","
+            End If
+        Next i
+        fileStream.WriteText "}"
+        If j <> lrow Then
+            fileStream.WriteText ","
+        End If
+    Next j
+    fileStream.WriteText "]"
+    fileStream.SaveToFile fullFilePath, 2 'Save binary data To disk
+    a = MsgBox("Saved to " & fullFilePath, vbOKOnly)
+End Sub
+
+
 ' Ftp functions
 ' ======================================================
 Public Function ftpFileFct(tmpFN As String, sourceFN As String, serverName As String, userName As String, Password As String, targetDir As String, Optional ByVal transferMode As String = "ascii", Optional ByVal targetFN As String = "")
@@ -1874,6 +1928,23 @@ Function MyProper(aString As String) As String
     MyProper = WorksheetFunction.Proper(aString)
     ' MyProper = StrConv(aString, vbProperCase)    ' geht auch
 End Function
+
+
+Public Function convert_AsciiToUnicode(ByVal inStr1 As String) As String
+    Dim retStr As String
+    
+    retStr = ""
+    For i = 1 To Len(inStr1)
+      If (Asc(Mid(inStr1, i, 1)) > 128) Then
+         retStr = retStr & "&#" & Asc(Mid(inStr1, i, 1)) & ";"
+      Else
+         retStr = retStr & Mid(inStr1, i, 1)
+      End If
+    Next
+
+    convert_AsciiToUnicode = retStr
+End Function
+
 
 Public Function formatTelnr(ByVal telnr As String) As String
     Dim returnStr As String
