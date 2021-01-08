@@ -24,7 +24,10 @@ while doLoop:
     temp = jsonResponse['main']['temp']
     pressure = jsonResponse['main']['pressure']
     humidity = jsonResponse['main']['humidity']
+    clouds = jsonResponse['weather'][0]['description']
+    lon = jsonResponse['coord']['lon']
+    lat = jsonResponse['coord']['lat']
 
-    print(temp, pressure, humidity)
+    print(temp, pressure, humidity, clouds, lon, lat)
     i += 1
     time.sleep(pollingTime)
