@@ -10,6 +10,7 @@
 # -----------------------------------------------------------------
 
 squares = [1, 4, 9]
+
 print(squares)
 print(squares[1], " * ", squares[2], " = ", squares[1] * squares[2])
 
@@ -25,8 +26,8 @@ print(subliste)
 for artikel in einkaufsListe:
     print(artikel)
 
-neueEinkaufsliste = [['Brot', 'Milch', 'Wurst'],[1,5,6],3.1415]
-print(neueEinkaufsliste[1][1])
+neueEinkaufsliste = [['Brot', 'Milch', 'Wurst'], [1, 5, 6, "8"], 3.1415]
+print(neueEinkaufsliste[1][2])
 
 print("einkaufsListe:", einkaufsListe)
 print("subliste     :", subliste)

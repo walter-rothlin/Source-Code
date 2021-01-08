@@ -29,15 +29,15 @@ print("SubListe:", einkaufsListe[3:], "Ende")
 for artikel in einkaufsListe:
     print(artikel)
 
-einkaufsListe = [['Brot', 'Milch', 'Wurst'], [12, 13.45], True]
+einkaufsListe = [['Brot', 'Milch', 'Wurst'], [12, 13.45], True, 16, 12]
 print(einkaufsListe)
 print(einkaufsListe[1][1])
 print(einkaufsListe[1])
 
 print(squares)
-squares.append(16)
-squares.extend([25, 36])
-squares.insert(0,1)
+squares.append([16, 12])
+squares.extend([16, 12])
+squares.insert(0, 1)
 print(squares)
 squares.remove(9)
 squares.pop(0)
