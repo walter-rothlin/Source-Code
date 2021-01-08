@@ -15,9 +15,9 @@ import time
 
 pollingTime = float(input("Polling-Time [s]:"))
 doLoop = True
-i = 0;
+i = 0
 while doLoop:
-    responseStr = requests.get("http://api.openweathermap.org/data/2.5/weather?q=Munich&appid=144747fd356c86e7926ca91ce78ce170")
+    responseStr = requests.get("http://api.openweathermap.org/data/2.5/weather?q=Munich&units=metric&lang=de&appid=144747fd356c86e7926ca91ce78ce170")
     jsonResponse = json.loads(responseStr.text)
     # print(jsonResponse, "\n\n")
     # print(jsonResponse['main'], "\n\n")
