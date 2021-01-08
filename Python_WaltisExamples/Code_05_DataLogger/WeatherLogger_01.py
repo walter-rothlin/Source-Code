@@ -14,20 +14,17 @@ import json
 import time
 
 pollingTime = float(input("Polling-Time [s]:"))
-doLoop = True
-i = 0
-while doLoop:
-    responseStr = requests.get("http://api.openweathermap.org/data/2.5/weather?q=Munich&units=metric&lang=de&appid=144747fd356c86e7926ca91ce78ce170")
+
+while True:
+    responseStr = requests.get("https://api.openweathermap.org/data/2.5/weather?q=Munich&units=metric&lang=de&appid=144747fd356c86e7926ca91ce78ce170")
     jsonResponse = json.loads(responseStr.text)
-    # print(jsonResponse, "\n\n")
-    # print(jsonResponse['main'], "\n\n")
+
     temp = jsonResponse['main']['temp']
     pressure = jsonResponse['main']['pressure']
     humidity = jsonResponse['main']['humidity']
-    clouds = jsonResponse['weather'][0]['description']
     lon = jsonResponse['coord']['lon']
     lat = jsonResponse['coord']['lat']
+    cloud = jsonResponse['weather'][0]['description']
 
-    print(temp, pressure, humidity, clouds, lon, lat)
-    i += 1
+    print(temp, pressure, humidity, lon, lat, cloud)
     time.sleep(pollingTime)
