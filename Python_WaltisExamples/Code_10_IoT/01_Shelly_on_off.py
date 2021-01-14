@@ -17,7 +17,7 @@ import json
 # http://192.168.1.114/settings/relay/0?schedule_rules=1430-0123456-on
 # http://192.168.1.114/settings/relay/0?schedule_rules=1430-0123456-on%2C1435-0123456-off
 
-defaultIp = '192.168.1.114'
+defaultIp = '192.168.1.137'
 def getShellyStatusDetail(respI, what):
     resp = json.loads(respI.text)
     if what == 'ip':
@@ -59,9 +59,9 @@ def setShellyOff(ip = defaultIp, relay = 0):
 
 
 response = getShellyStatus()
-print(getShellyStatusDetail(response,'ip'))
-print(getShellyStatusDetail(response,'ssid'))
-if getShellyStatusDetail(response,'ison'):
+print(getShellyStatusDetail(response, 'ip'))
+print(getShellyStatusDetail(response, 'ssid'))
+if getShellyStatusDetail(response, 'ison'):
     if (setShellyOff()):
         print("Lampe is now off!")
     else:

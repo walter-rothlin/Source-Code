@@ -2,6 +2,19 @@
 
 from grobot import *
 
+'''
+schaltet LEDs: 
+    0: aus,
+    1: rot,
+    2: grün,
+    3: orange,
+    4: grün blinkend,
+    5: rot blinkend,
+    6: rot blinkend hell,
+    7: grün doppelblinkend,
+    8: rot doppelblinkend,
+    9: rot doppelblinkend hell
+'''
 def warnBlink():
     setLED(1)
     delay(500)
