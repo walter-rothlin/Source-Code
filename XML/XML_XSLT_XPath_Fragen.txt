@@ -1,0 +1,67 @@
+XPath
+-----
+
+Sie haben ein XML-File und müssen die Koordinaten (ohne Tags) der 2. Placemark mittels XPath selektieren.
+
+Gewünschtes Resultat: 
+
+Text='8.88867652989272,47.19590537989272'
+Wie heisst der entsprechende XPath. Sie können die Web-Applikation verwenden.
+
+
+100%
+/kml/Document/Placemark[2]/Point/coordinates/text()
+//Document/Placemark[2]/Point/coordinates/text()       ------
+//Placemark[2]/Point/coordinates/text()         ------
+/kml/Document/Placemark[@id="marker_16002"]/Point/coordinates/text()
+/kml/Document/Placemark[@id='marker_16002']/Point/coordinates/text()
+//*[@id="marker_16002"]/Point/coordinates/text()
+//*[@id='marker_16002']/Point/coordinates/text()
+
+90%
+/kml/Document/Placemark[2]/Point/coordinates
+//Placemark[2]/Point/coordinates
+/kml/Document/Placemark[@id="marker_16002"]/Point/coordinates
+/kml/Document/Placemark[@id='marker_16002']/Point/coordinates
+//*[@id="marker_16002"]/Point/coordinates
+//*[@id='marker_16002']/Point/coordinates
+//Document/Placemark[position() = 2]/Point/coordinates
+
+60%
+/kml/Document/Placemark[2]/Point
+/kml/Document/Placemark[@id="marker_16002"]/Point
+/kml/Document/Placemark[@id='marker_16002']/Point
+//*[@id="marker_16002"]/Point
+//*[@id='marker_16002']/Point
+
+50%
+/kml/Document/Placemark[2]
+/kml/Document/Placemark[@id="marker_16002"]
+/kml/Document/Placemark[@id='marker_16002']
+//Placemark[@id='marker_16002']
+//Placemark[@id="marker_16002"]
+//*[@id="marker_16002"]
+//*[@id='marker_16002']
+
+
+
+
+KML-Transformation
+------------------
+id|name|description|coordinates|
+marker_16001|Location||8.8872765,47.1944994|
+marker_16002|NE||8.88867652989272,47.19590537989272|
+marker_16003|SW||8.885976870107276,47.19320572010728|
+
+100%
+marker_16002|NE||8.88867652989272,47.19590537989272|
+marker_16002|NE||8.88867652989272,47.19590537989272
+
+70%
+marker_16001|Location||8.8872765,47.1944994|
+marker_16003|SW||8.885976870107276,47.19320572010728|
+
+50%
+id|name|description|coordinates| marker_16001|Location||8.8872765,47.1944994| marker_16002|NE||8.88867652989272,47.19590537989272| marker_16003|SW||8.885976870107276,47.19320572010728|
+id|name|description|coordinates| marker_16001|Location||8.8872765,47.1944994| marker_16002|NE||8.88867652989272,47.19590537989272| marker_16003|SW||8.885976870107276,4
+marker_16001|Location||8.8872765,47.1944994| marker_16002|NE||8.88867652989272,47.19590537989272| marker_16003|SW||8.885976870107276,47.19320572010728|

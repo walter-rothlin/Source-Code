@@ -8,10 +8,7 @@ exif_data = img._getexif()
 print(exif_data)
 
 
-
-# JSON besser formatieren
 for anEntryKey in exif_data:
     print(anEntryKey, "-->", exif_data[anEntryKey])
-
 
 img.rotate(45).show()

@@ -15,8 +15,7 @@
 # 28-Sep-2020   Walter Rothlin      Added equalsWithinTolerance
 # 19-Nov-2020   Walter Rothlin      Added calcCircle mit None parameter
 # 10-Dec-2020   Walter Rothlin      Added fakultaet
-# 18-Dec-2020   Walter Rothlin      Added
-
+# 21-Jan-2021   Walter Rothlin      Added ASCII Fct
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -186,14 +185,75 @@ def TEST_Primzahlen():
 
 # String Functions
 # ================
-def left(s,amount):
+def addParity(binStr, oddParity=True):
+    anzOne = 0
+    for aBit in binStr:
+        if aBit == "1":
+            anzOne += 1
+    if anzOne % 2 == 0:
+        if oddParity:
+            binStr = "0" + binStr
+        else:
+            binStr = "1" + binStr
+    else:
+        if oddParity:
+            binStr = "1" + binStr
+        else:
+            binStr = "0" + binStr
+    return binStr
+
+def showASCII_Table(firstVal = 33, lastVal = 126, sep = " --> ", end = "\n"):
+    print("{z:5s} {sep:1s} {ordDec:3s}     {ordHex:5s} {ordOct:6s} {ordBin:5s}".format(z="ASCII", sep=sep, ordDec="Dez", ordHex="Hex", ordOct="Oct", ordBin="Bin"), sep="")
+    for i in range(firstVal, lastVal+1):
+        print("{z:5s} {sep:1s} {ordDec:3d}     {ordHex:5s} {ordOct:6s} {ordBin:5s}".format(z=chr(i), sep=sep, ordDec=i, ordHex=hex(i)[2:].upper(), ordOct=oct(i)[2:].upper().rjust(3, "0"), ordBin=bin(i)[2:].upper().rjust(7, "0")),"   ", addParity(bin(i)[2:].upper().rjust(7, "0")),"   ",addParity(bin(i)[2:].upper().rjust(7, "0"),False), sep="")
+
+def left(s, amount):
     return s[:amount]
 
-def right(s,amount):
+def right(s, amount):
     return s[-amount:]
 
 def mid(s, offset, amount):
     return s[offset:offset+amount]
+
+def toUpperCase(inString):
+    retString = ""
+    for aChar in inString:
+        if (aChar >= 'a') and (aChar <= 'z'):
+            retString = retString + chr(ord(aChar) - (ord('a') - ord('A')))
+        else:
+            retString = retString + aChar
+    return retString
+
+def toLowerCase(inString):
+    retString = ""
+    for aChar in inString:
+        if (aChar >= 'A') and (aChar <= 'Z'):
+            retString = retString + chr(ord(aChar) + (ord('a') - ord('A')))
+        else:
+            retString = retString + aChar
+    return retString
+
+def toFirstUpperCase(inString):
+    firstPart = inString[:1]
+    endPart   = inString[1:]
+    return toUpperCase(firstPart) + toLowerCase(endPart)
+
+
+def TEST_stringFct():
+
+
+    showASCII_Table()
+
+    print("1000111", addParity("1000111", oddParity=True))
+    print("1010111", addParity("1010111", oddParity=True))
+
+    eingabeString = input("String:")
+    print("toUpperCase(", eingabeString, ")           --> ", toUpperCase(eingabeString), sep="")
+    print("toLowerCase(", eingabeString, ")           --> ", toLowerCase(eingabeString), sep="")
+    print("toFirstUpperCase(", eingabeString, ")      --> ", toFirstUpperCase(eingabeString), sep="")
+
+
 
 # Date and Timestamp
 # ==================
@@ -474,4 +534,5 @@ def TEST_CircleFct():
 
 
 if __name__ == '__main__':
-    AUTO_TEST_xPath_Get(verbal=True)
+    # AUTO_TEST_xPath_Get(verbal=True)
+    TEST_stringFct()

@@ -9,29 +9,32 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 27-Sep-2021	Initial Version
+# 27-Sep-2020	Initial Version
 #
 # ------------------------------------------------------------------
-import math
 from waltisLibrary import *
 
 class Kreissektor:
 
-    # Ctr (Konstruktor)
-    # -----------------
+    """
+    Ctr (Konstruktor)
+    -----------------
+
+    | r | d | A | z | CASE |
+    +---+---+---+---+------+
+    | x |   | x |   |   1  |
+    +---+---+---+---+------+
+    | x |   |   | x |   2  |
+    +---+---+---+---+------+
+    |   | x | x |   |   3  |
+    +---+---+---+---+------+
+    |   | x |   | x |   4  |
+    +---+---+---+---+------+
+    |   |   | x | x |   5  |
+    +---+---+---+---+------+
+    """
     def __init__(self, radius=None, durchmesser=None, flaeche=None, zentrieWinkel=None):
-        #  | r | d | A | z | CASE |
-        #  +---+---+---+---+------+
-        #  | x |   | x |   |   1  |
-        #  +---+---+---+---+------+
-        #  | x |   |   | x |   2  |
-        #  +---+---+---+---+------+
-        #  |   | x | x |   |   3  |
-        #  +---+---+---+---+------+
-        #  |   | x |   | x |   4  |
-        #  +---+---+---+---+------+
-        #  |   |   | x | x |   5  |
-        #  +---+---+---+---+------+
+
 
         if (durchmesser is None) and (radius is None):
             self.case = 5
@@ -110,38 +113,38 @@ class Kreissektor:
 
 
 
+if __name__ == '__main__':
+    # Test Program
+    # ============
+    print("Kreissektor Test")
+    k1 = Kreissektor(radius=5, flaeche=157.079)
+    print("Fall 1   k1:", k1)
 
-# Test Program
-# ============
-print("Kreissektor Test")
-k1 = Kreissektor(radius=5, flaeche=157.079)
-print("Fall 1   k1:", k1)
+    k2 = Kreissektor(radius=5, zentrieWinkel=180)
+    print("Fall 2   k2:", k2)
 
-k2 = Kreissektor(radius=5, zentrieWinkel=180)
-print("Fall 2   k2:", k2)
+    k3 = Kreissektor(durchmesser=10, flaeche=157.079)
+    print("Fall 3   k3:", k3)
 
-k3 = Kreissektor(durchmesser=10, flaeche=157.079)
-print("Fall 3   k3:", k3)
+    k4 = Kreissektor(radius=5, flaeche=157.079)
+    print("Fall 4   k4:", k4)
 
-k4 = Kreissektor(radius=5, flaeche=157.079)
-print("Fall 4   k4:", k4)
+    k5 = Kreissektor(flaeche=157.079, zentrieWinkel=180)
+    print("Fall 5   k5:", k5)
 
-k5 = Kreissektor(flaeche=157.079, zentrieWinkel=180)
-print("Fall 5   k5:", k5)
+    if k1 == k2:
+        print("k1 == k2")
+    else:
+        print("k1 != k2")
 
-if k1 == k2:
-    print("k1 == k2")
-else:
-    print("k1 != k2")
-
-if k1 != k2:
-    print("k1 != k2")
-else:
-    print("k1 == k2")
-# asciiRingbuffer.shiftRight()
-# print(">", asciiRingbuffer.getAsList(), "\n")
-# asciiRingbuffer.shiftRight()
-# print(">", asciiRingbuffer.getAsList(), "\n")
-#
-# asciiRingbuffer.shiftLeft()
-# print("<", asciiRingbuffer.getAsList(), "\n")
+    if k1 != k2:
+        print("k1 != k2")
+    else:
+        print("k1 == k2")
+    # asciiRingbuffer.shiftRight()
+    # print(">", asciiRingbuffer.getAsList(), "\n")
+    # asciiRingbuffer.shiftRight()
+    # print(">", asciiRingbuffer.getAsList(), "\n")
+    #
+    # asciiRingbuffer.shiftLeft()
+    # print("<", asciiRingbuffer.getAsList(), "\n")
