@@ -239,6 +239,11 @@ def toFirstUpperCase(inString):
     endPart   = inString[1:]
     return toUpperCase(firstPart) + toLowerCase(endPart)
 
+def generateStringRepeats(len, aChar = " "):
+    return (aChar*len)[:len]
+
+def unterstreichen(title, aChar="=", end="\n"):
+    return title + end + generateStringRepeats(len(title), aChar)
 
 def TEST_stringFct():
 

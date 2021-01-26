@@ -12,12 +12,12 @@
 # 25-Jan-2021	Initial Version
 #
 # ------------------------------------------------------------------
-from Class_Bruch import *
+from Class_Bruch_40 import *
 
 help(Bruch)
 
-
+print(unterstreichen("Test-Cases from Bruch_Rechner"))
 bruch1 = Bruch()
 print(bruch1)
 print(bruch1.toDecimal.__doc__)
-print(bruch1.__name)
+print(bruch1)

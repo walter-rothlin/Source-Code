@@ -62,6 +62,7 @@ class Bruch:
 
 
 if __name__ == '__main__':
+    print(unterstreichen("Test-Cases from Class_Bruch_40"))
     # Test Ctr and toString()
     bruch1 = Bruch()
     print(bruch1)
