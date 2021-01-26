@@ -14,6 +14,7 @@
 # 25-Jan-2021	Added toDecimal()
 # 25-Jan-2021	Make Class ready for reference application (re-use) and docstring
 # 26-Jan-2021	Introduced automated testing
+# 26-Jan-2021	Refactoring automated testing (reduce redundanted code)
 # ------------------------------------------------------------------
 from waltisLibrary import *
 
@@ -70,28 +71,27 @@ if __name__ == '__main__':
     # Test Ctr and toString()
     testsPerformed = 0
     testsFailed = 0
+    testCases = """
+    Type|Zaehler |Nenner |bStr  |Expected
+    Ctr |1       |2      |      |[1/2]
+    Ctr |3       |4      |      |[3/4]
+    Ctr |6       |7      |      |[3/4]
+    """
 
-    testsPerformed += 1
-    param_1 = 1
-    param_2 = 2
-    expectedResult = "[1/20]"
-    bruch_1 = Bruch(zaehler=param_1, nenner=param_2)
-    if str(bruch_1) != expectedResult:
-        testsFailed += 1
-        print("Error: Testcase ", testsPerformed)
-        print("Bruch(", param_1, ",", param_2, ") = ", str(bruch_1), "    Expected:", expectedResult, sep="")
-        print()
-
-    testsPerformed += 1
-    param_1 = 3
-    param_2 = 4
-    expectedResult = "[3/4]"
-    bruch_1 = Bruch(zaehler=param_1, nenner=param_2)
-    if str(bruch_1) != expectedResult:
-        testsFailed += 1
-        print("Error: Testcase ", testsPerformed)
-        print("Bruch(", param_1, ",", param_2, ") = ", str(bruch_1), "    Expected:", expectedResult, sep="")
-        print()
+    listOfTestCases = testCases.split("\n")
+    for aTestCase in listOfTestCases[2:-1]:
+        testsPerformed += 1
+        listOfTestValues = aTestCase.split("|")
+        param_1 = int(listOfTestValues[1].strip())
+        param_2 = int(listOfTestValues[2].strip())
+        param_3 = listOfTestValues[3].strip()
+        expectedResult = listOfTestValues[4].strip()
+        bruch_1 = Bruch(zaehler=param_1, nenner=param_2)
+        if str(bruch_1) != expectedResult:
+            testsFailed += 1
+            print("Error: Testcase ", testsPerformed)
+            print("Bruch(", param_1, ",", param_2, ") = ", str(bruch_1), "    Expected:", expectedResult, sep="")
+            print()
     print("\n\n")
     print("==> Test-Statistics Class_Bruch: Tests Performed:", testsPerformed, "   Tests Failed:", testsFailed, "    Passed:", round(100-(100 * testsFailed / testsPerformed),1), "%", sep="" )
 
