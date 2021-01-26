@@ -16,6 +16,9 @@ from Class_Bruch import *
 
 help(Bruch)
 
+print(unterstreichen("Test-Cases from Bruch_Rechner"))
 bruch1 = Bruch()
+print(bruch1)
+print(bruch1.toDecimal.__doc__)
 print(bruch1)
 

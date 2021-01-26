@@ -202,6 +202,8 @@ def addParity(binStr, oddParity=True):
             binStr = "0" + binStr
     return binStr
 
+
+
 def showASCII_Table(firstVal = 33, lastVal = 126, sep = " --> ", end = "\n"):
     print("{z:5s} {sep:1s} {ordDec:3s}     {ordHex:5s} {ordOct:6s} {ordBin:5s}".format(z="ASCII", sep=sep, ordDec="Dez", ordHex="Hex", ordOct="Oct", ordBin="Bin"), sep="")
     for i in range(firstVal, lastVal+1):

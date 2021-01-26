@@ -21,7 +21,7 @@ class Bruch:
     def __init__(self, zaehler=0, nenner=1):
         self.__zaehler = zaehler
         self.__nenner = nenner
-        self.name = "Bruch"        # compiler 
+        self.name = "Bruch"        # compiler
 
     def add(self, summand):
         return self
@@ -75,26 +75,15 @@ if __name__ == '__main__':
     Ctr |1       |2      |      |[1/20]
     Ctr |3       |4      |      |[3/40]
     Ctr |6       |7      |      |[3/40]
-    Ctr |        |       |      |[3/40]
     """
 
     listOfTestCases = testCases.split("\n")
     for aTestCase in listOfTestCases[2:-1]:
         testsPerformed += 1
         listOfTestValues = aTestCase.split("|")
-        try:
-            param_1 = int(listOfTestValues[1].strip())
-            param_2 = int(listOfTestValues[2].strip())
-        except ValueError as error:
-            param_1_ok = False
-            param_2_ok = False
-
+        param_1 = int(listOfTestValues[1].strip())
+        param_2 = int(listOfTestValues[2].strip())
         param_3 = listOfTestValues[3].strip()
-        if len(param_3) >= 1:
-            param_3_ok = True
-        else:
-            param
-
         expectedResult = listOfTestValues[4].strip()
         bruch_1 = Bruch(zaehler=param_1, nenner=param_2)
         if str(bruch_1) != expectedResult:
@@ -105,10 +94,3 @@ if __name__ == '__main__':
     print("\n\n")
     print("==> Test-Statistics Class_Bruch: Tests Performed:", testsPerformed, "   Tests Failed:", testsFailed, "    Passed:", round(100 * testsFailed / testsPerformed,1), "%", sep="" )
 
-
-
-    # Test business methods
-    # bruch3 = Bruch(nenner=3, zaehler=1)
-    # print(bruch3)
-    # print(bruch3.toDecimal())
-    # print(bruch3.toDecimal(2))
