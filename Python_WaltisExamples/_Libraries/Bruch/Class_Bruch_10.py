@@ -16,6 +16,11 @@ from waltisLibrary import *
 
 class Bruch:
     def __init__(self, zaehler=0, nenner=1):
+        """
+        - Check if nenner is not 0
+        - only one sign
+        - only Integers no floats nor string,....
+        """
         self.__zaehler = zaehler
         self.__nenner = nenner
 
