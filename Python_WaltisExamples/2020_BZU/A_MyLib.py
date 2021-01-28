@@ -30,3 +30,12 @@ def gardToRad(gradVal):
 
 def halt(prompt = "Weiter?"):
     nop = input(prompt)
+
+print(celsiusToFahrenheit(37.8))   # --> 100
+print(celsiusToFahrenheit(0))      # --> 32
+
+print(fahrenheitToCelsius(100))    # --> 37.8
+print(fahrenheitToCelsius(32))     # --> 0
+
+
+

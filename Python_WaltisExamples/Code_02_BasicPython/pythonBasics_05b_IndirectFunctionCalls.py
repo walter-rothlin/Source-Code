@@ -31,6 +31,7 @@ print(sayHelloTo())
 print(eval("sayHelloTo('Meier')"))   # mittels eval
 
 possibles = globals().copy()
+print("possibles:", possibles)
 possibles.update(locals())
 # print(possibles)
 method = possibles.get("sayHelloTo")

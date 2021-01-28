@@ -24,7 +24,6 @@ import sys
 import time
 import datetime
 from pathlib import Path
-
 from time import sleep
 
 # Add dir to PYTHONPATH in a program
@@ -37,6 +36,14 @@ from time import sleep
 # --------------------------------
 # Click an directory in project folders. Than Rigth Click in Project-Explorer  --> Mark Directory as --> Source Root
 # https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000782850-How-to-set-up-working-directory-in-PyCharm-and-package-import-
+
+# Constants
+# =========
+auto_test_suiteNameLength = 40
+auto_test_testStatistics_anzStellen = 4
+auto_test_testStatistics_totalLength = 107
+auto_test_fct_prefix = "AUTO_TEST_"
+auto_test_fct_prefix_len = len(auto_test_fct_prefix)
 
 # Library fucntions
 # =================
@@ -71,6 +78,166 @@ def fahrenheit2Celsius(fahrenheit):
 
 def celsius2Fahrenheit(celsius):
     return (celsius*1.8)+32
+
+def AUTO_TEST_pysikalische_umrechnungen_1(verbal=False):
+    print(celsius2Fahrenheit(37.8))  # --> 100
+    print(celsius2Fahrenheit(0))  # --> 32
+
+    print(fahrenheit2Celsius(100))  # --> 37.8
+    print(fahrenheit2Celsius(32))  # --> 0
+
+def AUTO_TEST_pysikalische_umrechnungen_1a(verbal=False):
+    print("celsius2Fahrenheit(37.8)) = ", celsius2Fahrenheit(37.8), "   Expected: 100")
+    print("celsius2Fahrenheit(0))    = ", celsius2Fahrenheit(0),    "   Expected: 32")
+
+    print("fahrenheit2Celsius(100))  = ", fahrenheit2Celsius(100), "    Expected: 37.8")
+    print("fahrenheit2Celsius(32))   = ", fahrenheit2Celsius(32),  "    Expected: 32")
+
+
+def AUTO_TEST_pysikalische_umrechnungen_2(verbal=False):
+    inVal = 37.8
+    expected = 100.04
+    print(round(celsius2Fahrenheit(inVal), 2) == expected)
+
+    inVal = 0
+    expected = 32
+    print(round(celsius2Fahrenheit(inVal), 2) == expected)
+
+    inVal = 100
+    expected = 37.8
+    print(round(fahrenheit2Celsius(inVal), 2) == expected)
+
+    inVal = 32
+    expected = 0
+    print(round(fahrenheit2Celsius(inVal), 2) == expected)
+
+def AUTO_TEST_pysikalische_umrechnungen_3(verbal=False):
+    inVal = 37.8
+    expected = 100.05
+    if round(celsius2Fahrenheit(inVal), 2) != expected:
+        print("ERROR (1):", end="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(celsius2Fahrenheit(inVal), 2), "   Expected:", expected, sep="")
+
+    inVal = 0
+    expected = 32.0
+    if round(celsius2Fahrenheit(inVal), 2) != expected:
+        print("ERROR (2):", end="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(celsius2Fahrenheit(inVal), 2), "   Expected:", expected, sep="")
+
+    inVal = 100
+    expected = 37.78
+    if round(fahrenheit2Celsius(inVal), 2) != expected:
+        print("ERROR (3):", end="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(fahrenheit2Celsius(inVal), 2), "   Expected:", expected, sep="")
+
+    inVal = 32
+    expected = 0.1
+    if round(fahrenheit2Celsius(inVal), 2) != expected:
+        print("ERROR (4):", end="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(fahrenheit2Celsius(inVal), 2), "   Expected:", expected, sep="")
+
+def AUTO_TEST_pysikalische_umrechnungen_4(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+
+    testSuite = "pysikalische_umrechnungen"
+    testCases = """
+    Nr    |Fct                   |Param1       |Param2       |Param3       |Expected
+         1|celsius2Fahrenheit    |37.8         |0            |0            |100.04
+         2|celsius2Fahrenheit    |0            |0            |0            |32.0
+         3|fahrenheit2Celsius    |100          |0            |0            |37.78
+         4|rad2Grad              |0            |0            |0            |0
+    """
+
+    listOfTestCases = testCases.split("\n")
+    for aTestCase in listOfTestCases[2:-1]:
+        testsPerformed += 1
+        listOfTestValues = aTestCase.split("|")
+        case = listOfTestValues[0].strip()
+        fct = listOfTestValues[1].strip()
+        param_1 = float(listOfTestValues[2].strip())
+        param_2 = float(listOfTestValues[3].strip())
+        param_3 = float(listOfTestValues[4].strip())
+        expectedResult = float(listOfTestValues[5].strip())
+        # print(case, fct, param_1, param_2, param_3, expectedResult)
+        if fct == "celsius2Fahrenheit":
+            result = round(celsius2Fahrenheit(param_1), 2)
+        elif fct == "fahrenheit2Celsius":
+            result = round(fahrenheit2Celsius(param_1), 2)
+        if result != expectedResult:
+            testsFailed += 1
+            print("Error in ", fct, "  ->", case, " (", testsPerformed, ")", sep="")
+            print("   celsius2Fahrenheit(", param_1,  ") = ", result, "    Expected:", expectedResult, sep="")
+            print()
+    print("\n")
+    print("==> ", testSuite, ": Tests Performed:", testsPerformed, "   Tests Failed:", testsFailed, "    Passed:", round(100-(100 * testsFailed / testsPerformed),1), "%", sep="" )
+
+def AUTO_TEST_pysikalische_umrechnungen_5(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+
+    testSuite = getMyFctName()[auto_test_fct_prefix_len:]
+    testCases = """
+    Nr    |Fct                   |Param1       |Param2       |Param3       |Expected
+         1|celsius2Fahrenheit    |37.8         |0            |0            |100.04
+         2|celsius2Fahrenheit    |0            |0            |0            |32.0
+         3|fahrenheit2Celsius    |100          |0            |0            |37.78
+         4|fahrenheit2Celsius    |32           |0            |0            |0
+         5|rad2Grad              |3.141562     |0            |0            |180
+         6|grad2Rad              |180          |0            |0            |3.14
+    """
+
+    listOfTestCases = testCases.split("\n")
+    for aTestCase in listOfTestCases[2:-1]:
+        testsPerformed += 1
+        listOfTestValues = aTestCase.split("|")
+        case = listOfTestValues[0].strip()
+        fct = listOfTestValues[1].strip()
+        param_1 = float(listOfTestValues[2].strip())
+
+        expectedResult = float(listOfTestValues[5].strip())
+        # print(case, fct, param_1, param_2, param_3, expectedResult)
+        possibles = globals().copy()
+        possibles.update(locals())
+        method = possibles.get(fct)
+        result = None
+        if method:
+            result = round(method(param_1), 2)
+        else:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+        if result != expectedResult:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
+            print("   celsius2Fahrenheit(", param_1,  ") = ", result, "    Expected:", expectedResult, sep="")
+            print()
+    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
+def AUTO_TEST_pysikalische_umrechnungen(verbal=False):
+    # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen", "="))
+    # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_1", "-"))
+    # AUTO_TEST_pysikalische_umrechnungen_1(verbal)
+
+    # print()
+    # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_1a", "-"))
+    # AUTO_TEST_pysikalische_umrechnungen_1a(verbal)
+
+    # print()
+    # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_2", "-"))
+    # AUTO_TEST_pysikalische_umrechnungen_2(verbal)
+
+    # print()
+    # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_3", "-"))
+    # AUTO_TEST_pysikalische_umrechnungen_3(verbal)
+
+    # print()
+    # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_4", "-"))
+    # AUTO_TEST_pysikalische_umrechnungen_4(verbal)
+
+    # print()
+    # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_5", "-"))
+    return AUTO_TEST_pysikalische_umrechnungen_5(verbal)
 
 # Fakultät berechnen
 # ==================
@@ -192,22 +359,64 @@ def addParity(binStr, oddParity=True):
             anzOne += 1
     if anzOne % 2 == 0:
         if oddParity:
-            binStr = "0" + binStr
-        else:
             binStr = "1" + binStr
+        else:
+            binStr = "0" + binStr
     else:
         if oddParity:
-            binStr = "1" + binStr
-        else:
             binStr = "0" + binStr
+        else:
+            binStr = "1" + binStr
     return binStr
 
 
+def AUTO_TEST_addParity(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+
+    testSuite = getMyFctName()[auto_test_fct_prefix_len:]
+    testCases = """
+    Nr    |Fct                |Bitmuster    |Odd_Parity   |Param3       |Expected
+         1|addParity          |1101110      |True         |0            |01101110
+         2|addParity          |0101110      |True         |0            |10101110
+         3|addParity          |110          |True         |0            |1110
+         4|addParity          |1101110      |False        |0            |11101110
+         5|addParity          |0101110      |False        |0            |00101110
+         6|addParity          |110          |False        |0            |0110
+    """
+
+    listOfTestCases = testCases.split("\n")
+    for aTestCase in listOfTestCases[2:-1]:
+        testsPerformed += 1
+        listOfTestValues = aTestCase.split("|")
+        case = listOfTestValues[0].strip()
+        fct = listOfTestValues[1].strip()
+        param_1 = listOfTestValues[2].strip()
+        param_2 = (listOfTestValues[3].strip() == "True")
+        expectedResult = listOfTestValues[5].strip()
+        # print(case, fct, param_1, param_2, expectedResult)
+
+        possibles = globals().copy()
+        possibles.update(locals())
+        method = possibles.get(fct)
+        result = None
+        if method:
+            result = method(param_1, param_2)
+        else:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+        if result != expectedResult:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
+            print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
+            print()
+    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
 
 def showASCII_Table(firstVal = 33, lastVal = 126, sep = " --> ", end = "\n"):
-    print("{z:5s} {sep:1s} {ordDec:3s}     {ordHex:5s} {ordOct:6s} {ordBin:5s}".format(z="ASCII", sep=sep, ordDec="Dez", ordHex="Hex", ordOct="Oct", ordBin="Bin"), sep="")
+    print("{z:5s} {sep:1s} {ordDec:3s}     {ordHex:5s} {ordOct:6s} {ordBin:8s}   {odd:8s}   {even:8s}".format(z="ASCII", sep=sep, ordDec="Dez", ordHex="Hex", ordOct="Oct", ordBin="Bin", even="Even", odd="Odd"), sep="")
     for i in range(firstVal, lastVal+1):
-        print("{z:5s} {sep:1s} {ordDec:3d}     {ordHex:5s} {ordOct:6s} {ordBin:5s}".format(z=chr(i), sep=sep, ordDec=i, ordHex=hex(i)[2:].upper(), ordOct=oct(i)[2:].upper().rjust(3, "0"), ordBin=bin(i)[2:].upper().rjust(7, "0")),"   ", addParity(bin(i)[2:].upper().rjust(7, "0")),"   ",addParity(bin(i)[2:].upper().rjust(7, "0"),False), sep="")
+        print("{z:5s} {sep:1s} {ordDec:3d}     {ordHex:5s} {ordOct:6s} {ordBin:8s}".format(z=chr(i), sep=sep, ordDec=i, ordHex=hex(i)[2:].upper(), ordOct=oct(i)[2:].upper().rjust(3, "0"), ordBin=bin(i)[2:].upper().rjust(7, "0")), "   ", addParity(bin(i)[2:].upper().rjust(7, "0")), "   ", addParity(bin(i)[2:].upper().rjust(7, "0"), False), sep="")
 
 def left(s, amount):
     return s[:amount]
@@ -247,13 +456,9 @@ def generateStringRepeats(len, aChar = " "):
 def unterstreichen(title, aChar="=", end="\n"):
     return title + end + generateStringRepeats(len(title), aChar)
 
+
 def TEST_stringFct():
-
-
     showASCII_Table()
-
-    print("1000111", addParity("1000111", oddParity=True))
-    print("1010111", addParity("1010111", oddParity=True))
 
     eingabeString = input("String:")
     print("toUpperCase(", eingabeString, ")           --> ", toUpperCase(eingabeString), sep="")
@@ -299,6 +504,10 @@ def equalsWithinTolerance(ist,soll,abweichungProzent=0.001):
 # Inspection functions
 # ====================
 def getMyFctName():
+    # liste = inspect.stack()[1]
+    # for aItem in liste:
+    #     print("   --> ", aItem)
+    # print(inspect.stack()[1][4])
     return inspect.stack()[1][3]
 
 
@@ -542,4 +751,19 @@ def TEST_CircleFct():
 
 if __name__ == '__main__':
     # AUTO_TEST_xPath_Get(verbal=True)
-    TEST_stringFct()
+    # TEST_stringFct()
+
+    # Automated Tests
+    # ===============
+    totalTests = 0
+    totalFails = 0
+    testStat = AUTO_TEST_pysikalische_umrechnungen(verbal=True)
+    totalTests += testStat[0]
+    totalFails += testStat[1]
+
+    testStat = AUTO_TEST_addParity(verbal=True)
+    totalTests += testStat[0]
+    totalFails += testStat[1]
+    print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
+    print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalFails), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalFails / totalTests), 1)), "%", sep="")
+    print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
