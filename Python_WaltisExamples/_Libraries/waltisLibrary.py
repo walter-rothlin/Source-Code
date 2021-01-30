@@ -467,6 +467,69 @@ def TEST_stringFct():
 
 
 
+def hexStrToURLEncoded(inStr):
+    # https://www.quora.com/How-do-I-convert-hex-into-a-string-using-Python
+    retStr = ""
+    instr = "".join(inStr.split())
+    print("instr:", instr)
+    listOfDoubleHexStr  = []
+
+    i = 0
+    while i < len(instr):
+        listOfDoubleHexStr.append(instr[i] + instr[i+1])
+        i += 2
+
+    print("listOfDoubleHexStr:", listOfDoubleHexStr)
+    for aDHex in listOfDoubleHexStr:
+        print(aDHex, ":", end="")
+        aChrOrd = ord(bytes.fromhex(aDHex))
+        print(aChrOrd, ":", end="")
+        partRetStr = ""
+        if (aChrOrd > 32) and (aChrOrd < 127):
+            partRetStr = bytes.fromhex(aDHex).decode('utf-8')
+        else:
+            partRetStr = "%" + aDHex + ""
+        retStr += partRetStr
+        print(partRetStr, ":")
+    return retStr
+
+def TEST_hexStrToURLEncoded():
+    testStr_0 = "5350430d0a303230300d0a31"
+    testStr_1 = """53 50 43 0d   0a 30 32 30 30 0d 0a 31
+        0d 0a 43 48 39 33 33 30   30 30 30 30 30 31 39 30"""
+
+    testStr_2 = """
+        71 a4 00 e2 53 50 43 0d   0a 30 32 30 30 0d 0a 31
+        0d 0a 43 48 39 33 33 30   30 30 30 30 30 31 39 30
+        37 36 31 36 34 30 35 0d   0a 4b 0d 0a 4e 6f 76 61
+        54 72 65 6e 64 20 53 65   72 76 69 63 65 73 20 47
+        6d 62 48 0d 0a 42 61 68   6e 68 6f 66 73 74 72 61
+        73 73 65 20 31 38 0d 0a   36 33 34 30 20 42 61 61
+        72 0d 0a 0d 0a 0d 0a 43   48 0d 0a 0d 0a 0d 0a 0d
+        0a 0d 0a 0d 0a 0d 0a 0d   0a 36 2e 30 35 0d 0a 43
+        48 46 0d 0a 4b 0d 0a 57   61 6c 74 65 72 20 52 6f
+        74 68 6c 69 6e 0d 0a 50   65 74 65 72 6c 69 77 69
+        65 73 65 20 33 33 0d 0a   38 38 35 35 20 57 61 6e
+        67 65 6e 0d 0a 0d 0a 0d   0a 43 48 0d 0a 51 52 52
+        0d 0a 30 30 30 30 30 30   30 30 30 30 30 30 30 30
+        30 34 30 34 34 33 30 33   38 32 39 39 35 0d 0a 0d
+        0a 45 50 44 0d 0a 00 ec   11 ec 11 ec 11 ec 11 ec
+        11 ec 11 ec 11 ec 11 ec   11 ec 11 ec 11 ec
+    """
+
+    testStr_3 = """
+            00 01 02 03 04 05 06 07   08 09 0A 0B 0C 0d 0e 0f
+            10 11 12 13 14 15 16 17   18 19 1A 1B 1C 1d 1e 1f
+            20 21 22 23 24 25 26 27   28 29 2A 2B 2C 2d 2e 2f
+            30 31 32 33 34 35 36 37   38 39 3A 3B 3C 3d 3e 3f
+            40 41 42 43 44 45 46 47   48 49 4A 4B 4C 4d 4e 4f
+            50 51 52 53 54 55 56 57   58 59 5A 5B 5C 5d 5e 5f
+            60 61 62 63 64 65 66 67   68 69 6A 6B 6C 6d 6e 6f
+            70 71 72 73 74 75 76 77   78 79 7A 7B 7C 7d 7e 7f
+            80 81 82 83 84 85 86 87   88 89 8A 8B 8C 8d 8e 8f
+            f0 f1 f2 f3 f4 f5 f6 f7   f8 f9 fA fB fC fd fe ff
+    """
+    print(hexStrToURLEncoded(testStr_3))
 # Date and Timestamp
 # ==================
 def getTimestamp(preStr = "", postStr="", formatString="nice"):
@@ -752,6 +815,8 @@ def TEST_CircleFct():
 if __name__ == '__main__':
     # AUTO_TEST_xPath_Get(verbal=True)
     # TEST_stringFct()
+
+    TEST_hexStrToURLEncoded()
 
     # Automated Tests
     # ===============
