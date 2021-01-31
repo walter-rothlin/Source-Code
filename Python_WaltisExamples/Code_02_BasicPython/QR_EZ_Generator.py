@@ -17,38 +17,60 @@ headers = {
     'Referer': 'https://kmuqr.quickapps.mx/create-qr'
 }
 
-
 # data to be sent to api
-cred_name = "Rothlin"
+sprache = "de"
+additionalInfo = ""
+mitteilung = "Ist mal ein Test mit einer selbst erstellten QR-Rechnung von Claudia"
+waehrung = "CHF"
+betrag = 2
+betragStr = "{b:1.2f}".format(b=betrag)
+reference = ""
+
+for_firstname = "Walter"
+for_name = "Rothlin"
+for_street = "Peterliwiese"
+for_no = 33
+for_plz = "8855"
+for_city = "Wangen SZ"
+for_iban = "CH3904835056306331000"
+for_country = for_iban[0:2]
+
+from_firstname = "Claudia"
+from_name = "Collet Rothlin"
+from_street = "Peakplace"
+from_no = 55
+from_plz = "8000"
+from_city = "Laax GR"
+from_country = "CH"
 
 data = {
     "UID": "",
-    "language": "eng",
-    "AdditionalInformationString": "",
-    "unstructuredMessage": "Ist mal ein Test mit einer selbst erstellten QR-Rechnung von Tobias",
-    "currency": "CHF",
-    "amount": 1000,
-    "reference": "",
+    "language": sprache,
+    "AdditionalInformationString": additionalInfo,
+    "unstructuredMessage": mitteilung,
+    "currency": waehrung,
+    "amount": betrag,
+    "reference": reference,
     "creditor": {
-        "name": "Walter",
-        "last_name": cred_name,
-        "address": "Peterliwiese 33",
-        "street": "Peterliwiese",
-        "number": 33,
-        "zip": "8855",
-        "city": "Wangen",
-        "account": "CH3904835056306331000",
-        "country": "CH"
+        "name": for_firstname,
+        "last_name": for_name,
+        "address": for_street + " " + str(for_no),
+        "street": for_street,
+        "number": for_no,
+        "zip": for_plz,
+        "city": for_city,
+        "account": for_iban,
+        "country": for_country
     },
     "debitor": {
-        "name": "Tobias",
-        "last_name": "Rothlin",
-        "address": "Peterliwiese 33",
-        "street": "Peterliwiese",
-        "number": "33",
-        "zip": "8855",
-        "city": "Wangen",
-        "country": "CH"
+        "name": from_firstname,
+        "last_name": from_name,
+        "address": from_street + " " + str(from_no),
+        "street": from_street,
+        "number": from_no,
+        "zip": from_plz,
+        "city": from_city,
+        "country": from_country
     },
     "additionalInformation": {
         "VAT_Date": {
@@ -69,12 +91,15 @@ r = requests.post(url=ApiEndpoint, json=data, headers=headers)
 pastebin_url = r.text
 
 ezResponse = json.loads(pastebin_url)
-# print(pdfGetterBase + ezResponse['file'])
-
+pdfFilePath = pdfGetterBase + ezResponse['file']
+print(pdfGetterBase + ezResponse['file'])
+pdfResponse = requests.get(pdfGetterBase + ezResponse['file'])
+with open('Gen_EZ.pdf', 'wb') as f:
+    f.write(pdfResponse.content)
 
 # print(ezResponse["qrSvg"])
 svgQRPath = ezResponse["qrSvg"].split("\n")[0]
-# print("svgPath:", svgPath)
+print("svgPath:", svgQRPath)
 
 svgHeader = """<?xml version='1.0' encoding='UTF-8'?>"""
 
@@ -94,9 +119,9 @@ schere = '✂'
 ezSVG = '''<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-v-223f4b97="" version="1.2" width="210mm" height="110mm">
    <line y1="5mm" y2="5mm" x1="0mm" x2="210mm" stroke="black" height="0.5mm" stroke-dasharray="5,5" d="M5 20 l215 0" />
-   <text x="25mm" y="5mm" text-anchor="middle" style="transform: rotate(45deg) rotate(-41.8deg); transform-origin: 0% 0%;">S</text>
+   <text x="25mm" y="5mm" text-anchor="middle" style="transform: rotate(45deg) rotate(-41.8deg); transform-origin: 0% 0%;">xx</text>
    <line x1="62mm" x2="62mm" y1="5mm" y2="110mm" stroke="black" height="0.5mm" stroke-dasharray="5,5" d="M5 20 l215 0" />
-   <text x="3mm" y="50mm" text-anchor="middle" style="transform: rotate(45deg) rotate(-136.5deg); transform-origin: 21% 28.9%;">S</text>
+   <text x="3mm" y="50mm" text-anchor="middle" style="transform: rotate(45deg) rotate(-136.5deg); transform-origin: 21% 28.9%;">xx</text>
    <svg x="5mm" y="10mm" width="52mm" height="63mm">
       <text dy="5mm" class="title-r/p">Empfangsschein</text>
       <text y="9mm" x="0mm">
@@ -151,11 +176,11 @@ ezSVG = '''<?xml version="1.0" encoding="UTF-8"?>
    <svg id="amount-section" y="80mm" x="5mm" width="52mm" height="14mm">
       <text x="0mm" dy="15pt">
          <tspan x="0mm" dy="9pt" class="heading-r">Wahrung</tspan>
-         <tspan x="0mm" dy="9pt" class="value-p">CHF</tspan>
+         <tspan x="0mm" dy="9pt" class="value-p">''' + waehrung + '''</tspan>
       </text>
       <text x="0mm" y="9pt">
          <tspan x="21.5mm" dy="0pt" class="heading-r">Betrag</tspan>
-         <tspan x="21.5mm" dy="9pt" class="value-p">0.00</tspan>
+         <tspan x="21.5mm" dy="9pt" class="value-p">''' + betragStr + '''</tspan>
       </text>
    </svg>
    <svg id="acceptance" y="95mm" x="5mm" width="52mm" height="18mm">
@@ -172,11 +197,11 @@ ezSVG = '''<?xml version="1.0" encoding="UTF-8"?>
    <svg x="67mm" y="73mm" width="46mm" height="22mm">
       <text>
          <tspan x="0mm" dy="9pt" class="heading-p">Wahrung</tspan>
-         <tspan x="0mm" dy="13pt" class="amount-p">CHF</tspan>
+         <tspan x="0mm" dy="13pt" class="amount-p">''' + waehrung + '''</tspan>
       </text>
       <text>
          <tspan x="20mm" dy="9pt" class="heading-p">Betrag</tspan>
-         <tspan x="20mm" dy="13pt" class="amount-p">0.00</tspan>
+         <tspan x="20mm" dy="13pt" class="amount-p">''' + betragStr + '''</tspan>
       </text>
    </svg>
    <svg x="118mm" y="10mm" width="87mm" height="85mm">
@@ -239,11 +264,24 @@ ezSVG = '''<?xml version="1.0" encoding="UTF-8"?>
 </svg>
 '''
 
+with open('../../QR_Code/QR_Rechnung/Gen_EZ.pdf', 'wb') as f:
+    f.write(pdfResponse.content)
 
-f = open("./QR_XXX.svg", "w")
+f = open("../../QR_Code/QR_Rechnung/Gen_QR.svg", "w")
 f.write(qrCodeSvg)
 f.close()
 
-f = open("./EZ_XXX.svg", "w")
+f = open("../../QR_Code/QR_Rechnung/Gen_EZ.svg", "w")
+f.write(ezSVG)
+f.close()
+
+with open('Gen_EZ.pdf', 'wb') as f:
+    f.write(pdfResponse.content)
+
+f = open("Gen_QR.svg", "w")
+f.write(qrCodeSvg)
+f.close()
+
+f = open("Gen_EZ.svg", "w")
 f.write(ezSVG)
 f.close()
