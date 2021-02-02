@@ -22,7 +22,7 @@ sprache = "de"
 additionalInfo = ""
 mitteilung = "Ist mal ein Test mit einer selbst erstellten QR-Rechnung von Claudia"
 waehrung = "CHF"
-betrag = 2
+betrag = 20
 betragStr = "{b:1.2f}".format(b=betrag)
 reference = ""
 
@@ -35,7 +35,7 @@ for_city = "Wangen SZ"
 for_iban = "CH3904835056306331000"
 for_country = for_iban[0:2]
 
-from_firstname = "Claudia"
+from_firstname = "Remo"
 from_name = "Collet Rothlin"
 from_street = "Peakplace"
 from_no = 55
