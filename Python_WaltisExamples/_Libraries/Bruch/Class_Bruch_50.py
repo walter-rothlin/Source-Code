@@ -89,7 +89,7 @@ if __name__ == '__main__':
     testsPerformed += 1
     param_1 = 3
     param_2 = 4
-    expectedResult = "[3/4]"
+    expectedResult = "[3/40]"
     bruch_1 = Bruch(zaehler=param_1, nenner=param_2)
     if str(bruch_1) != expectedResult:
         testsFailed += 1

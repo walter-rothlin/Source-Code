@@ -79,7 +79,9 @@ if __name__ == '__main__':
     Type|Zaehler |Nenner |bStr  |Expected
     Ctr |1       |2      |      |[1/2]
     Ctr |3       |4      |      |[3/4]
-    Ctr |6       |7      |      |[3/4]
+    Ctr |6       |7      |      |[6/7]
+    Ctr |1       |4      |      |[1/4]
+    Ctr |2       |7      |      |[2/7]
     """
 
     listOfTestCases = testCases.split("\n")
