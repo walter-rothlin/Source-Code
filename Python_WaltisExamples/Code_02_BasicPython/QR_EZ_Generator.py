@@ -26,14 +26,14 @@ betrag = 20
 betragStr = "{b:1.2f}".format(b=betrag)
 reference = ""
 
-for_firstname = "Walter"
-for_name = "Rothlin"
-for_street = "Peterliwiese"
-for_no = 33
-for_plz = "8855"
-for_city = "Wangen SZ"
-for_iban = "CH3904835056306331000"
-for_country = for_iban[0:2]
+recipient_firstname = "Walter"
+recipient_name = "Rothlin"
+recipient_street = "Peterliwiese"
+recipient_no = 33
+recipient_plz = "8855"
+recipient_city = "Wangen SZ"
+recipient_iban = "CH3904835056306331000"
+recipient_country = recipient_iban[0:2]
 
 from_firstname = "Remo"
 from_name = "Collet Rothlin"
@@ -52,15 +52,15 @@ data = {
     "amount": betrag,
     "reference": reference,
     "creditor": {
-        "name": for_firstname,
-        "last_name": for_name,
-        "address": for_street + " " + str(for_no),
-        "street": for_street,
-        "number": for_no,
-        "zip": for_plz,
-        "city": for_city,
-        "account": for_iban,
-        "country": for_country
+        "name": recipient_firstname,
+        "last_name": recipient_name,
+        "address": recipient_street + " " + str(recipient_no),
+        "street": recipient_street,
+        "number": recipient_no,
+        "zip": recipient_plz,
+        "city": recipient_city,
+        "account": recipient_iban,
+        "country": recipient_country
     },
     "debitor": {
         "name": from_firstname,
