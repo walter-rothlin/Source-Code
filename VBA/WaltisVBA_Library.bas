@@ -203,11 +203,13 @@ Attribute VB_Name = "WaltisVBA_Library"
 ' 28-Sep-2020    V1.126 Walter Rothlin      Added equalsWithinTolerance, MyProper
 ' 07-Oct-2020    V1.127 Walter Rothlin      Added tojson
 ' 05-Jan-2021    V1.128 Walter Rothlin      Added convert_AsciiToUnicode
+' 08-Feb-2021    V1.129 Walter Rothlin      Added Moodle Questions generator
+' 08-Feb-2021    V1.130 Walter Rothlin      Added Bruch functions
 ' END-----------------------------------------------------------------------
 
 Dim PrimMaxColums
 
-Public Const Version_WaltisVBA_Library As String = "V1.128"
+Public Const Version_WaltisVBA_Library As String = "V1.129"
 
 Public Const Pi As Double = 3.14159265358979
 Public Const e  As Double = 2.71828182845905
@@ -240,6 +242,9 @@ Public Const daytime_RegEx As String = "([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-
 ' Public Const einheitInTitle_RegEx As String = "\[\s?\w+\s?\]"
 Public Const einheitInTitle_RegEx As String = "\[\s?.+\s?\]"
 
+Public Const aGanzeZahl_RegEx As String = "\d+"
+Public Const aBruch_RegEx As String = "([0-9]+/[0-9]+)"
+Public Const aGemischterBruch_RegEx As String = "(\d+ [0-9]+/[0-9]+)"
 
 ' Constants
 ' ======================================================
@@ -2245,229 +2250,8 @@ Public Function removeSeparator(ByVal inStr1 As String, ByVal sepStr As String) 
    removeSeparator = retValFinal
 End Function
 
-' fieldNr starts with 0
-Public Function getFieldFromString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String, _
-        ByVal fieldNr As Integer, _
-        Optional ByVal doTrim As Boolean = True, _
-        Optional ByVal defaultRetVal As String = "") As String
-        
-   Dim resArray
-   resArray = Split(inputString, splitStr, -1, 1)
-
-   If ((fieldNr > UBound(resArray)) Or (fieldNr < LBound(resArray))) Then
-        If (defaultRetVal = "TakeInputString") Then
-            getFieldFromString = inputString
-        Else
-            getFieldFromString = defaultRetVal
-        End If
-   Else
-        If (doTrim) Then
-            getFieldFromString = RTrim(LTrim(resArray(fieldNr)))
-        Else
-            getFieldFromString = resArray(fieldNr)
-        End If
-   End If
-End Function
-
-Public Function getLastFieldFromString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String, _
-        Optional ByVal doTrim As Boolean = True, _
-        Optional ByVal defaultRetVal As String = "") As String
-
-    Dim fieldCount As Integer
-    Dim tmpStr As String
-    fieldCount = getCountOfFieldsInString(inputString, splitStr)
-    tmpStr = getFieldFromString(inputString, splitStr, fieldCount - 1, doTrim, defaultRetVal)
-    getLastFieldFromString = tmpStr
-End Function
-        
-Public Function removeLastFieldFromString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String, _
-        Optional ByVal doTrim As Boolean = True) As String
-        
-    Dim fieldCount As Integer
-    Dim tmpStr As String
-    fieldCount = getCountOfFieldsInString(inputString, splitStr)
-    tmpStr = removeFieldFromString(inputString, splitStr, fieldCount - 1, doTrim)
-    removeLastFieldFromString = tmpStr
-End Function
-
-' fieldNr starts with 0
-Public Function removeFieldFromString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String, _
-        Optional ByVal fieldNr As Integer = 0, _
-        Optional ByVal doTrim As Boolean = True) As String
-        
-   Dim resArray
-   resArray = Split(inputString, splitStr, -1, 1)
-   Dim retStr As String
-   retStr = ""
-
-   If ((fieldNr > UBound(resArray)) Or (fieldNr < LBound(resArray))) Then
-        removeFieldFromString = inputString
-   Else
-        For i = LBound(resArray) To UBound(resArray)
-            If (i <> fieldNr) Then
-                Dim aValue As String
-                aValue = resArray(i)
-                If (doTrim) Then
-                    aValue = RTrim(LTrim(aValue))
-                End If
-        
-                If (retStr = "") Then
-                    retStr = aValue
-                Else
-                    retStr = retStr & splitStr & aValue
-                End If
-            End If
-        Next i
-   End If
-   removeFieldFromString = retStr
-End Function
-
-Public Function removeFieldValueFromString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String, _
-        ByVal fieldValue As String, _
-        Optional ByVal doTrim As Boolean = True) As String
-        
-    Dim resArray
-    Dim retStr As String
-    Dim aValue As String
-        
-    resArray = Split(inputString, splitStr, -1, 1)
-
-    retStr = ""
-
-    For i = LBound(resArray) To UBound(resArray)
-        aValue = resArray(i)
-        If (fieldValue <> aValue) Then
-            If (doTrim) Then
-                aValue = RTrim(LTrim(aValue))
-            End If
-    
-            If (retStr = "") Then
-                retStr = aValue
-            Else
-                retStr = retStr & splitStr & aValue
-            End If
-        End If
-    Next i
-    removeFieldValueFromString = retStr
-End Function
-Public Function areAllFieldsEqualInString(ByVal inputString As String, ByVal splitStr As String, Optional ByVal doTrim As Boolean = True) As Boolean
-    Dim retVal As Boolean
-    Dim lastFieldVal As String
-    
-    Dim resArray
-    
-    retVal = True
-    resArray = Split(inputString, splitStr, -1, 1)
-    If (doTrim) Then
-        lastFieldVal = RTrim(LTrim(resArray(LBound(resArray))))
-    Else
-        lastFieldVal = resArray(LBound(resArray))
-    End If
-    
-    For i = LBound(resArray) To UBound(resArray)
-        Dim aValue As String
-        aValue = resArray(i)
-        If (doTrim) Then
-            aValue = RTrim(LTrim(aValue))
-        End If
-        If (aValue <> lastFieldVal) Then
-            retVal = False
-        End If
-    Next i
-        
-    areAllFieldsEqualInString = retVal
-End Function
-
-Public Function turnFieldsInString(ByVal inputString As String, ByVal splitStr As String) As String
-   Dim retStr As String
-   Dim resArray
-   resArray = Split(inputString, splitStr, -1, 1)
-   For i = LBound(resArray) To UBound(resArray)
-        retStr = resArray(i) & splitStr & retStr
-   Next i
-   retStr = left(retStr, Len(retStr) - 1)
-   turnFieldsInString = retStr
-End Function
-
-Public Function replaceFieldFromString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String, _
-        ByVal fieldNr As Integer, _
-        ByVal replaceStr As String, _
-        Optional ByVal doTrim As Boolean = True) As String
-        
-    Dim retStr As String
-    Dim resArray
-    resArray = Split(inputString, splitStr, -1, 1)
-    For i = LBound(resArray) To UBound(resArray)
-        Dim fieldStr As String
-        If (i = fieldNr) Then
-            fieldStr = replaceStr
-        Else
-            fieldStr = resArray(i)
-        End If
-        If (doTrim) Then
-            RTrim (LTrim(fieldStr))
-        End If
-        If (retStr = "") Then
-            retStr = fieldStr
-        Else
-            retStr = retStr & splitStr & fieldStr
-        End If
-    Next i
 
 
-    replaceFieldFromString = retStr
-End Function
-
-Public Function swapFieldsFromString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String, _
-        ByVal fieldNr_1 As Integer, _
-        ByVal fieldNr_2 As Integer, _
-        Optional ByVal doTrim As Boolean = True, _
-        Optional ByVal defaultRetVal As String = "") As String
-        
-        
-    Dim retStr As String
-    Dim field_1 As String
-    Dim preStr As String
-    Dim postStr As String
-    Dim tmp As Integer
-        
-    If (fieldNr_1 > fieldNr_2) Then
-        tmp = fieldNr_1
-        fieldNr_1 = fieldNr_2
-        fieldNr_2 = tmp
-    End If
-    field_1 = getFieldFromString(inputString, splitStr, fieldNr_1)
-    field_2 = getFieldFromString(inputString, splitStr, fieldNr_2)
-    preStr = getFieldFromString(inputString, field_1, 0)
-    postStr = getFieldFromString(inputString, field_2, 1)
-    
-    retStr = preStr & field_2 & splitStr & field_1 & postStr
-    swapFieldsFromString = retStr
-End Function
-
-
-Public Function getCountOfFieldsInString( _
-        ByVal inputString As String, _
-        ByVal splitStr As String) As Integer
-
-    Dim resArray
-    resArray = Split(inputString, splitStr, -1, 1)
-    getCountOfFieldsInString = UBound(resArray) - LBound(resArray) + 1
-End Function
         
         
 Public Function IsIN(x, StringSetElementsAsArray)
@@ -3161,6 +2945,234 @@ Public Function sortSeats(ByVal inString As String, Optional ByVal sepStr As Str
     End If
     
     sortSeats = retStr
+End Function
+
+
+' csv String functions
+' ======================================================
+
+' fieldNr starts with 0
+Public Function getFieldFromString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String, _
+        ByVal fieldNr As Integer, _
+        Optional ByVal doTrim As Boolean = True, _
+        Optional ByVal defaultRetVal As String = "") As String
+        
+   Dim resArray
+   resArray = Split(inputString, splitStr, -1, 1)
+
+   If ((fieldNr > UBound(resArray)) Or (fieldNr < LBound(resArray))) Then
+        If (defaultRetVal = "TakeInputString") Then
+            getFieldFromString = inputString
+        Else
+            getFieldFromString = defaultRetVal
+        End If
+   Else
+        If (doTrim) Then
+            getFieldFromString = RTrim(LTrim(resArray(fieldNr)))
+        Else
+            getFieldFromString = resArray(fieldNr)
+        End If
+   End If
+End Function
+
+Public Function getLastFieldFromString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String, _
+        Optional ByVal doTrim As Boolean = True, _
+        Optional ByVal defaultRetVal As String = "") As String
+
+    Dim fieldCount As Integer
+    Dim tmpStr As String
+    fieldCount = getCountOfFieldsInString(inputString, splitStr)
+    tmpStr = getFieldFromString(inputString, splitStr, fieldCount - 1, doTrim, defaultRetVal)
+    getLastFieldFromString = tmpStr
+End Function
+        
+Public Function removeLastFieldFromString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String, _
+        Optional ByVal doTrim As Boolean = True) As String
+        
+    Dim fieldCount As Integer
+    Dim tmpStr As String
+    fieldCount = getCountOfFieldsInString(inputString, splitStr)
+    tmpStr = removeFieldFromString(inputString, splitStr, fieldCount - 1, doTrim)
+    removeLastFieldFromString = tmpStr
+End Function
+
+' fieldNr starts with 0
+Public Function removeFieldFromString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String, _
+        Optional ByVal fieldNr As Integer = 0, _
+        Optional ByVal doTrim As Boolean = True) As String
+        
+   Dim resArray
+   resArray = Split(inputString, splitStr, -1, 1)
+   Dim retStr As String
+   retStr = ""
+
+   If ((fieldNr > UBound(resArray)) Or (fieldNr < LBound(resArray))) Then
+        removeFieldFromString = inputString
+   Else
+        For i = LBound(resArray) To UBound(resArray)
+            If (i <> fieldNr) Then
+                Dim aValue As String
+                aValue = resArray(i)
+                If (doTrim) Then
+                    aValue = RTrim(LTrim(aValue))
+                End If
+        
+                If (retStr = "") Then
+                    retStr = aValue
+                Else
+                    retStr = retStr & splitStr & aValue
+                End If
+            End If
+        Next i
+   End If
+   removeFieldFromString = retStr
+End Function
+
+Public Function removeFieldValueFromString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String, _
+        ByVal fieldValue As String, _
+        Optional ByVal doTrim As Boolean = True) As String
+        
+    Dim resArray
+    Dim retStr As String
+    Dim aValue As String
+        
+    resArray = Split(inputString, splitStr, -1, 1)
+
+    retStr = ""
+
+    For i = LBound(resArray) To UBound(resArray)
+        aValue = resArray(i)
+        If (fieldValue <> aValue) Then
+            If (doTrim) Then
+                aValue = RTrim(LTrim(aValue))
+            End If
+    
+            If (retStr = "") Then
+                retStr = aValue
+            Else
+                retStr = retStr & splitStr & aValue
+            End If
+        End If
+    Next i
+    removeFieldValueFromString = retStr
+End Function
+
+Public Function areAllFieldsEqualInString(ByVal inputString As String, ByVal splitStr As String, Optional ByVal doTrim As Boolean = True) As Boolean
+    Dim retVal As Boolean
+    Dim lastFieldVal As String
+    
+    Dim resArray
+    
+    retVal = True
+    resArray = Split(inputString, splitStr, -1, 1)
+    If (doTrim) Then
+        lastFieldVal = RTrim(LTrim(resArray(LBound(resArray))))
+    Else
+        lastFieldVal = resArray(LBound(resArray))
+    End If
+    
+    For i = LBound(resArray) To UBound(resArray)
+        Dim aValue As String
+        aValue = resArray(i)
+        If (doTrim) Then
+            aValue = RTrim(LTrim(aValue))
+        End If
+        If (aValue <> lastFieldVal) Then
+            retVal = False
+        End If
+    Next i
+        
+    areAllFieldsEqualInString = retVal
+End Function
+
+Public Function turnFieldsInString(ByVal inputString As String, ByVal splitStr As String) As String
+   Dim retStr As String
+   Dim resArray
+   resArray = Split(inputString, splitStr, -1, 1)
+   For i = LBound(resArray) To UBound(resArray)
+        retStr = resArray(i) & splitStr & retStr
+   Next i
+   retStr = left(retStr, Len(retStr) - 1)
+   turnFieldsInString = retStr
+End Function
+
+Public Function replaceFieldFromString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String, _
+        ByVal fieldNr As Integer, _
+        ByVal replaceStr As String, _
+        Optional ByVal doTrim As Boolean = True) As String
+        
+    Dim retStr As String
+    Dim resArray
+    resArray = Split(inputString, splitStr, -1, 1)
+    For i = LBound(resArray) To UBound(resArray)
+        Dim fieldStr As String
+        If (i = fieldNr) Then
+            fieldStr = replaceStr
+        Else
+            fieldStr = resArray(i)
+        End If
+        If (doTrim) Then
+            RTrim (LTrim(fieldStr))
+        End If
+        If (retStr = "") Then
+            retStr = fieldStr
+        Else
+            retStr = retStr & splitStr & fieldStr
+        End If
+    Next i
+
+
+    replaceFieldFromString = retStr
+End Function
+
+Public Function swapFieldsFromString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String, _
+        ByVal fieldNr_1 As Integer, _
+        ByVal fieldNr_2 As Integer, _
+        Optional ByVal doTrim As Boolean = True, _
+        Optional ByVal defaultRetVal As String = "") As String
+        
+        
+    Dim retStr As String
+    Dim field_1 As String
+    Dim preStr As String
+    Dim postStr As String
+    Dim tmp As Integer
+        
+    If (fieldNr_1 > fieldNr_2) Then
+        tmp = fieldNr_1
+        fieldNr_1 = fieldNr_2
+        fieldNr_2 = tmp
+    End If
+    field_1 = getFieldFromString(inputString, splitStr, fieldNr_1)
+    field_2 = getFieldFromString(inputString, splitStr, fieldNr_2)
+    preStr = getFieldFromString(inputString, field_1, 0)
+    postStr = getFieldFromString(inputString, field_2, 1)
+    
+    retStr = preStr & field_2 & splitStr & field_1 & postStr
+    swapFieldsFromString = retStr
+End Function
+
+Public Function getCountOfFieldsInString( _
+        ByVal inputString As String, _
+        ByVal splitStr As String) As Integer
+
+    Dim resArray
+    resArray = Split(inputString, splitStr, -1, 1)
+    getCountOfFieldsInString = UBound(resArray) - LBound(resArray) + 1
 End Function
 
 ' functions for Ranges
@@ -4733,6 +4745,183 @@ Function RemoveFormatsFromWorksheet(Optional ByVal sheetName As String = "")
     RemoveFormatsFromWorksheet = True
 End Function
 
+' functions calculating fractions (Bruch)
+' ======================================================
+
+
+Function Bruch_cleanIt(ByVal inBruchStr As String) As String
+    inBruchStr = RTrim(LTrim(inBruchStr))
+    inBruchStr = replaceStringInStringRegEx(inBruchStr, "\s+", " ")
+    Bruch_cleanIt = inBruchStr
+End Function
+
+Function Bruch_getBruchSign(ByVal inBruchStr As String) As Integer
+    inBruchStr = Bruch_cleanIt(inBruchStr)
+    retVal = 1
+    If strStarts(inBruchStr, "-") Then
+        retVal = -1
+    End If
+    Bruch_getBruchSign = retVal
+End Function
+
+Function Bruch_RemoveSign(ByVal inBruchStr As String) As String
+    inBruchStr = replaceStringInStringRegEx(inBruchStr, "^(-|\+)", "")
+    Bruch_RemoveSign = RTrim(LTrim(inBruchStr))
+    
+End Function
+
+Function Bruch_getBruchType(ByVal inBruchStr As String) As String
+    inBruchStr = Bruch_cleanIt(inBruchStr)
+    
+    Dim bruchSign As Integer
+    bruchSign = Bruch_getBruchSign(inBruchStr)
+    inBruchStr = Bruch_RemoveSign(inBruchStr)
+    
+    retString = ""
+    If (inBruchStr = "") Then
+        retString = "0"
+    ElseIf isStringMatchesRegEx(inBruchStr, aBruch_RegEx) Then
+        retString = "z/n"    ' 23/12
+    ElseIf isStringMatchesRegEx(inBruchStr, aGanzeZahl_RegEx) Then
+        retString = "g"    ' 23
+    ElseIf isStringMatchesRegEx(inBruchStr, aGemischterBruch_RegEx) Then
+        retString = "g z/n"    ' 23 4/5
+    Else
+        retString = inBruchStr & "   Not a valid fraction!"
+    End If
+    
+    If (bruchSign = -1) Then
+        Bruch_getBruchType = "-" & retString
+    Else
+        Bruch_getBruchType = retString
+    End If
+End Function
+
+Function Bruch_getGanzahligerTeil(ByVal inBruchStr As String) As Integer
+    inBruchStr = Bruch_cleanIt(inBruchStr)
+    
+    Dim bruchSign As Integer
+    bruchSign = Bruch_getBruchSign(inBruchStr)
+    inBruchStr = Bruch_RemoveSign(inBruchStr)
+    
+    Dim bruchType As String
+    bruchType = Bruch_getBruchType(inBruchStr)
+    
+    Dim ganzzahligerTeil As Integer
+    If (bruchType = "g") Then
+        ganzzahligerTeil = inBruchStr * bruchSign
+    ElseIf (bruchType = "g z/n") Then
+        gstr = getFieldFromString(inBruchStr, " ", 0)
+        ganzzahligerTeil = gstr * bruchSign
+    Else
+        ganzzahligerTeil = 0
+    End If
+    Bruch_getGanzahligerTeil = ganzzahligerTeil
+End Function
+
+Function Bruch_getZaehler(ByVal inBruchStr As String) As Integer
+    inBruchStr = Bruch_cleanIt(inBruchStr)
+    
+    Dim bruchSign As Integer
+    bruchSign = Bruch_getBruchSign(inBruchStr)
+    inBruchStr = Bruch_RemoveSign(inBruchStr)
+    
+    Dim bruchType As String
+    bruchType = Bruch_getBruchType(inBruchStr)
+    
+    Dim bruchPart As String
+    bruchPart = ""
+    Dim zaehler As Integer
+    If (bruchType = "g z/n") Then
+        bruchPart = getFieldFromString(inBruchStr, " ", 1)
+        zaehler = getFieldFromString(bruchPart, "/", 0)
+        zaehler = zaehler * 1
+    ElseIf (bruchType = "z/n") Then
+        bruchPart = inBruchStr
+        zaehler = getFieldFromString(bruchPart, "/", 0)
+        zaehler = zaehler * bruchSign
+    Else
+        zaehler = 0
+    End If
+    Bruch_getZaehler = zaehler
+End Function
+
+Function Bruch_getNenner(ByVal inBruchStr As String) As Integer
+    inBruchStr = Bruch_cleanIt(inBruchStr)
+    
+    Dim bruchSign As Integer
+    bruchSign = Bruch_getBruchSign(inBruchStr)
+    inBruchStr = Bruch_RemoveSign(inBruchStr)
+    
+    Dim bruchType As String
+    bruchType = Bruch_getBruchType(inBruchStr)
+    
+    Dim bruchPart As String
+    bruchPart = ""
+    Dim zaehler As Integer
+    If (bruchType = "g z/n") Then
+        bruchPart = getFieldFromString(inBruchStr, " ", 1)
+        nenner = getFieldFromString(bruchPart, "/", 1)
+        nenner = nenner * 1
+    ElseIf (bruchType = "z/n") Then
+        bruchPart = inBruchStr
+        nenner = getFieldFromString(bruchPart, "/", 1)
+        nenner = nenner * 1
+    Else
+        nenner = 1
+    End If
+    Bruch_getNenner = nenner
+End Function
+
+Function Bruch_getUnechter(ByVal factor_1 As String) As String
+    Bruch_getUnechter = ((Bruch_getGanzahligerTeil(factor_1) * Bruch_getNenner(factor_1)) + Bruch_getZaehler(factor_1)) & "/" & Bruch_getNenner(factor_1)
+End Function
+
+Function Bruch_add(ByVal summand_1 As String, ByVal summand_2 As String) As String
+    bruch_1 = Bruch_getUnechter(summand_1)
+    bruch_2 = Bruch_getUnechter(summand_2)
+    Bruch_add = Bruch_getZaehler(bruch_1) * Bruch_getNenner(bruch_2) + Bruch_getZaehler(bruch_2) * Bruch_getNenner(bruch_1) & "/" & Bruch_getNenner(bruch_1) * Bruch_getNenner(bruch_2)
+End Function
+
+Function Bruch_mul(ByVal factor_1 As String, ByVal factor_2 As String) As String
+    bruch_1 = Bruch_getUnechter(factor_1)
+    bruch_2 = Bruch_getUnechter(factor_2)
+    Bruch_mul = Bruch_getZaehler(bruch_1) * Bruch_getZaehler(bruch_2) & "/" & Bruch_getNenner(bruch_1) * Bruch_getNenner(bruch_2)
+End Function
+
+Function Bruch_div(ByVal dividend As String, ByVal divisor As String) As String
+    bruch_1 = Bruch_getUnechter(dividend)
+    bruch_2 = Bruch_getUnechter(divisor)
+    Bruch_div = Bruch_getZaehler(bruch_1) * Bruch_getNenner(bruch_2) & "/" & Bruch_getNenner(bruch_1) * Bruch_getZaehler(bruch_2)
+End Function
+
+Function Bruch_sub(ByVal minuend As String, ByVal subtrahend As String) As String
+    bruch_1 = Bruch_getUnechter(minuend)
+    bruch_2 = Bruch_getUnechter(subtrahend)
+    Bruch_sub = Bruch_getZaehler(bruch_1) * Bruch_getNenner(bruch_2) - Bruch_getZaehler(bruch_2) * Bruch_getNenner(bruch_1) & "/" & Bruch_getNenner(bruch_1) * Bruch_getNenner(bruch_2)
+End Function
+
+Function Bruch_eval(ByVal bruchTerm As String) As String
+    bruchTerm = RTrim(LTrim(bruchTerm))
+    If strContains(bruchTerm, "+") Then
+        bruch_1 = RTrim(LTrim(getFieldFromString(bruchTerm, "+", 0)))
+        bruch_2 = RTrim(LTrim(getFieldFromString(bruchTerm, "+", 1)))
+        Bruch_eval = Bruch_add(bruch_1, bruch_2)
+    ElseIf strContains(bruchTerm, "-") Then
+        bruch_1 = RTrim(LTrim(getFieldFromString(bruchTerm, "-", 0)))
+        bruch_2 = RTrim(LTrim(getFieldFromString(bruchTerm, "-", 1)))
+        Bruch_eval = Bruch_sub(bruch_1, bruch_2)
+    ElseIf strContains(bruchTerm, "*") Then
+        bruch_1 = RTrim(LTrim(getFieldFromString(bruchTerm, "*", 0)))
+        bruch_2 = RTrim(LTrim(getFieldFromString(bruchTerm, "*", 1)))
+        Bruch_eval = Bruch_mul(bruch_1, bruch_2)
+    ElseIf strContains(bruchTerm, ":") Then
+        bruch_1 = RTrim(LTrim(getFieldFromString(bruchTerm, ":", 0)))
+        bruch_2 = RTrim(LTrim(getFieldFromString(bruchTerm, ":", 1)))
+        Bruch_eval = Bruch_div(bruch_1, bruch_2)
+    End If
+End Function
+
 ' functions for ranges as string
 ' ======================================================
 
@@ -5174,14 +5363,15 @@ Public Function getPlaceholderFromString( _
     ByVal inString1 As String, _
     Optional ByVal startPattern As String = "{", _
     Optional ByVal endPattern As String = "}", _
-    Optional ByVal nothingFound As String = "") As String
+    Optional ByVal nothingFound As String = "", _
+    Optional ByVal startPoint As Integer = 1) As String
    
     Dim retVal As String
     Dim startPos As Long
     Dim endPos As Long
     
-    startPos = InStr(1, inString1, startPattern)
-    endPos = InStr(1, inString1, endPattern)
+    startPos = InStr(startPoint, inString1, startPattern)
+    endPos = InStr(startPoint, inString1, endPattern)
     
     If (endPos > startPos) Then
         retVal = Mid(inString1, startPos, endPos - startPos + 1)
@@ -5190,6 +5380,37 @@ Public Function getPlaceholderFromString( _
     End If
    
     getPlaceholderFromString = retVal
+End Function
+
+' returns palceholder including the start- and end-pattern (If no placeholder found ==> returns nothingFound
+Public Function getAllPlaceholdersFromString( _
+    ByVal inString1 As String, _
+    Optional ByVal startPattern As String = "{", _
+    Optional ByVal endPattern As String = "}", _
+    Optional ByVal nothingFound As String = "", _
+    Optional ByVal returnValSep As String = ";") As String
+   
+    Dim retVal As String
+    Dim tmpVal As String
+    Dim startPos As Integer
+    Dim doSearch As Boolean
+    doSearch = True
+    startPos = 1
+    
+    Do While doSearch
+        tempVal = getPlaceholderFromString(inString1, startPattern, endPattern, nothingFound, startPos)
+        If (tempVal = nothingFound) Then
+            doSearch = False
+        Else
+            If (retVal = "") Then
+                retVal = tempVal
+            Else
+                retVal = retVal & returnValSep & tempVal
+            End If
+            startPos = InStr(1, inString1, tempVal) + Len(tempVal) + 1
+        End If
+    Loop
+    getAllPlaceholdersFromString = retVal
 End Function
 
 Function selectFromTable( _
@@ -7699,12 +7920,12 @@ End Function
 Public Function DecTo_X(decString As Double, basisX As Integer) As String
    Dim result As String
    Dim rest As Integer
-   Dim ganzZahligerTeil As Integer
-   ganzZahligerTeil = decString
-   Do While ganzZahligerTeil > 0
-      rest = ganzZahligerTeil Mod basisX
+   Dim ganzzahligerTeil As Integer
+   ganzzahligerTeil = decString
+   Do While ganzzahligerTeil > 0
+      rest = ganzzahligerTeil Mod basisX
       result = valueToChar(rest) & result
-      ganzZahligerTeil = ganzZahligerTeil \ basisX
+      ganzzahligerTeil = ganzzahligerTeil \ basisX
    Loop
    DecTo_X = result
 End Function
@@ -11550,3 +11771,5 @@ Public Function decodeHammingBits(ByVal transmittedBits As String, Optional ByVa
       dataBits = Mid(transmittedBits, 1, 1) & Mid(transmittedBits, 2, 1) & Mid(transmittedBits, 3, 1) & Mid(transmittedBits, 4, 1) & Mid(transmittedBits, 6, 1) & Mid(transmittedBits, 7, 1) & Mid(transmittedBits, 8, 1) & Mid(transmittedBits, 10, 1)
       decodeHammingBits = Chr(BinToDec(dataBits))
 End Function
+
+
