@@ -10,8 +10,8 @@ if __name__ == '__main__':
   testfile_2 = "./TestFile_FileHandling_tmp.txt"
 
   print("\n")
-  print("File operations")
-  print("===============")
+  print("File write and append operations")
+  print("================================")
 
   # testen ob file exists and than copy it
   if (os.path.exists(testfile_1)):
@@ -27,6 +27,11 @@ if __name__ == '__main__':
   print("current  :", os.getcwd())
 
   # list directory
+  filesInDir = os.listdir(".")
+  print(filesInDir)
+  for aFile in filesInDir:
+    print(aFile)
+
   filesInDir = os.listdir("./Code_02_BasicPython")
   print(filesInDir)
 
@@ -59,3 +64,4 @@ if __name__ == '__main__':
   # old_file = os.path.join("directory", "a.txt")
   # new_file = os.path.join("directory", "b.kml")
   # os.rename(old_file, new_file)
+

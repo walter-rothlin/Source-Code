@@ -1,16 +1,8 @@
-#!/usr/bin/python3
-
-# ------------------------------------------------------------------
-# Name: bzu_scratch.py
-#
-# Description: Demo
-#
-# Autor: Walter Rothlin
-#
-# History:
-# ------------------------------------------------------------------
-
-from waltisLibrary import *
-waltisPythonLib_Version()
-
-Now the file has more content!Now the file has more content!
+Dies ist die eine Zeile!!
+und dies ist auf einer neuen Zeile1.Zeile     text_2
+  2.Zeile     text_2
+  3.Zeile     text_2
+  4.Zeile     text_2
+  1.Zeile     text_3
+  2.Zeile     text_3
+  
