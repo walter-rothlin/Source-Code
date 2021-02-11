@@ -24,6 +24,7 @@ import sys
 import time
 import datetime
 from pathlib import Path
+import re
 from time import sleep
 
 # Add dir to PYTHONPATH in a program
@@ -689,6 +690,16 @@ def File_cleanup(filename, directory, path_sign):
 
 #    TBC verallgemeinern start
 
+def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFooter="", aContent=""):
+    aTestFile = open(aFileFN, "w")
+    if (aHeader != ""):
+        aTestFile.write(aHeader + "\n")
+    for lNr in range(startLineNr, endLineNr+1):
+        aTestFile.write(str(lNr) + aContent + "\n")
+
+    if (aFooter != ""):
+        aTestFile.write(aFooter + "\n")
+    aTestFile.close()
 
 def File_getCountOfLines(sourceFileFN):
     lines = []
@@ -721,6 +732,53 @@ def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, 
             if (i < deleteLineFrom) or (i > deleteLineTo):
                 f.write(line)
             i += 1
+
+def getRegExMatches(inString, regEx):
+    matches = re.findall(regEx, inString)
+    return matches
+
+def getIncludeFileName(aTextLine, includePattern='# include:\S+'):
+    aFilename = ""
+    listOfMatches = getRegExMatches(aTextLine, includePattern)
+    if len(listOfMatches) > 0:
+        aFilename = listOfMatches[0][10:]   # hard codiert len('# include:')
+    return aFilename
+
+
+def TEST_getIncludeFileName():
+    print(getIncludeFileName("3   # include:Test_1_With_Include_2.txt   kkkkkkkk"))
+    print(getIncludeFileName("   4   # include:./hhhh/Test_1_With_Include_22.txt   "))
+
+def File_readWithInludes(sourceFileFN, includePattern='# include:\S+', includeSearchPath = "./", recLevel = 0):
+    '''
+    returns a list of lines and resolves the includes
+    Default include pattern is: <include:filename>
+    Don't pass $recLevel. It is used internaly for recursion
+    The function doesn't read any other character on the same line as the include command
+    '''
+    f = open(sourceFileFN, "r")
+    fileContent = f.readlines()
+    f.close()
+    for aLine in fileContent:
+        includeFileName = getIncludeFileName(aLine, includePattern)
+        if includeFileName != "" and recLevel < 3:
+            File_readWithInludes(includeFileName, includePattern, includeSearchPath, recLevel=recLevel+1)
+        print(fileContent)
+
+def TEST_FileFunctions():
+
+    File_createTestFile("./TestData/Test_1.txt")
+    print("lineCount(./TestData/Test_1.txt)", File_getCountOfLines("./TestData/Test_1.txt"))
+    File_createTestFile("./TestData/Test_2.txt", aHeader="Nr |", aContent=" | Content", aFooter="File Ende")
+    print("lineCount(./TestData/Test_2.txt)", File_getCountOfLines("./TestData/Test_1.txt"))
+
+    File_deleteLines("./TestData/Test_1.txt","./TestData/Test_1a.txt", deleteLineFrom=None, deleteLineTo=None, verbal=False)
+    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1b.txt", deleteLineFrom=2, deleteLineTo=4)
+    print("\n")
+
+    TEST_getIncludeFileName()
+    #### File_readWithInludes("./TestData/Test_1_With_Include_1.txt")
+    print("\n\n")
 
 
 # Geometrische Formen berechnen
@@ -815,8 +873,8 @@ def TEST_CircleFct():
 if __name__ == '__main__':
     # AUTO_TEST_xPath_Get(verbal=True)
     # TEST_stringFct()
-
-    TEST_hexStrToURLEncoded()
+    TEST_FileFunctions()
+    # TEST_hexStrToURLEncoded()
 
     # Automated Tests
     # ===============
