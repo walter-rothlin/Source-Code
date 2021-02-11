@@ -1,0 +1,17 @@
+from waltisLibrary import *
+
+
+
+if __name__ == '__main__':
+    testfile_1 = "./pythonBasics_09b_FileHandlig.py"
+    testfile_2 = "./weatherLogCopy.txt"
+
+    deleteLineFrom = 3
+    deleteLineTo   = 5
+
+    print(File_getCountOfLines(testfile_1))
+    File_deleteLines(testfile_1, destinationFileFN=testfile_2)
+    # File_deleteLines(testfile_1, destinationFileFN=testfile_2,                                deleteLineTo=deleteLineTo)
+    # File_deleteLines(testfile_1, destinationFileFN=testfile_2, deleteLineFrom=deleteLineFrom)
+    File_deleteLines(testfile_1, destinationFileFN=testfile_2, deleteLineFrom=deleteLineFrom, deleteLineTo=deleteLineTo)
+    print(File_getCountOfLines(testfile_2))
