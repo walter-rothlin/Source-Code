@@ -1,6 +1,8 @@
 from djitellopy import tello
 import cv2 as cv
 
+# Für Video-Streaming: Firewall ausschalten!!!!!!
+# Settings --> Update & Security --> Windows Security --> firewall & Network Protection --> Public Netwerk --> Microsoft Defender Firewall auf off schalten!
 
 mySpeed = 30
 
