@@ -16,6 +16,7 @@
 # 19-Nov-2020   Walter Rothlin      Added calcCircle mit None parameter
 # 10-Dec-2020   Walter Rothlin      Added fakultaet
 # 21-Jan-2021   Walter Rothlin      Added ASCII Fct
+# 17-Feb-2021   Walter Rothlin      File Operationen implementiert
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -384,6 +385,8 @@ def AUTO_TEST_addParity(verbal=False):
          4|addParity          |1101110      |False        |0            |11101110
          5|addParity          |0101110      |False        |0            |00101110
          6|addParity          |110          |False        |0            |0110
+         7|addParity          |110          |True         |0            |1110
+         8|addParity          |111          |True         |0            |0111
     """
 
     listOfTestCases = testCases.split("\n")
@@ -712,26 +715,36 @@ def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, 
         destinationFileFN = sourceFileFN
 
     if (deleteLineFrom is None) and (deleteLineTo is None):
-        deleteLineFrom = 0
+        deleteLineFrom = 1
         deleteLineTo = 0
     elif (deleteLineFrom is not None) and (deleteLineTo is None):
         deleteLineTo = 1000000
     elif (deleteLineFrom is None) and (deleteLineTo is not None):
-        deleteLineFrom = 0
+        deleteLineFrom = 1
     else:
         pass  # NOP
 
     if verbal:
         print("    Delete from", deleteLineFrom, "to", deleteLineTo, end="")
+
+    # File lesen in eine Liste
     with open(sourceFileFN, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
+    # In Liste Range löschen
+    del lines[deleteLineFrom-1:deleteLineTo]
+
+    # Liste in File schreiben
     with open(destinationFileFN, "w", encoding="utf-8") as f:
-        i = 1
-        for line in lines:
-            if (i < deleteLineFrom) or (i > deleteLineTo):
-                f.write(line)
-            i += 1
+        f.writelines(lines)
+
+
+    # with open(destinationFileFN, "w", encoding="utf-8") as f:
+    #     i = 1
+    #     for line in lines:
+    #         if (i < deleteLineFrom) or (i > deleteLineTo):
+    #             f.write(line)
+    #         i += 1
 
 def getRegExMatches(inString, regEx):
     matches = re.findall(regEx, inString)
@@ -766,19 +779,29 @@ def File_readWithInludes(sourceFileFN, includePattern='# include:\S+', includeSe
         print(fileContent)
 
 def TEST_FileFunctions():
-
+    # Test-Cases: File_getCountOfLines()
     File_createTestFile("./TestData/Test_1.txt")
-    print("lineCount(./TestData/Test_1.txt)", File_getCountOfLines("./TestData/Test_1.txt"))
-    File_createTestFile("./TestData/Test_2.txt", aHeader="Nr |", aContent=" | Content", aFooter="File Ende")
-    print("lineCount(./TestData/Test_2.txt)", File_getCountOfLines("./TestData/Test_1.txt"))
+    countOfLine = File_getCountOfLines("./TestData/Test_1.txt")
+    expectedResult = 20
+    if (countOfLine != expectedResult):
+        print("Test Failed: File_getCountOfLines(./TestData/Test_1.txt)", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult)
 
-    File_deleteLines("./TestData/Test_1.txt","./TestData/Test_1a.txt", deleteLineFrom=None, deleteLineTo=None, verbal=False)
-    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1b.txt", deleteLineFrom=2, deleteLineTo=4)
+    File_createTestFile("./TestData/Test_2.txt", aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5, endLineNr=45)
+    countOfLine = File_getCountOfLines("./TestData/Test_2.txt")
+    expectedResult = 43
+    if (countOfLine != expectedResult):
+        print("Test Failed: File_getCountOfLines(./TestData/Test_2.txt)", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult)
+
+    # Test-Cases: File_deleteLines()
+    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1a.txt", deleteLineFrom=None, deleteLineTo=None, verbal=False)
+    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1b.txt", deleteLineFrom=2, deleteLineTo=7)
+    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1c.txt", deleteLineFrom=5)
+    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1d.txt", deleteLineTo=7)
     print("\n")
 
-    TEST_getIncludeFileName()
+
+    #### TEST_getIncludeFileName()
     #### File_readWithInludes("./TestData/Test_1_With_Include_1.txt")
-    print("\n\n")
 
 
 # Geometrische Formen berechnen
@@ -890,3 +913,5 @@ if __name__ == '__main__':
     print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
     print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalFails), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalFails / totalTests), 1)), "%", sep="")
     print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
+
+
