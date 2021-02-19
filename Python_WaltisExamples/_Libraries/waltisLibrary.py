@@ -727,24 +727,16 @@ def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, 
     if verbal:
         print("    Delete from", deleteLineFrom, "to", deleteLineTo, end="")
 
-    # File lesen in eine Liste
+    # File in eine Liste lesen
     with open(sourceFileFN, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     # In Liste Range löschen
     del lines[deleteLineFrom-1:deleteLineTo]
 
-    # Liste in File schreiben
+    # Liste in ein File schreiben
     with open(destinationFileFN, "w", encoding="utf-8") as f:
         f.writelines(lines)
-
-
-    # with open(destinationFileFN, "w", encoding="utf-8") as f:
-    #     i = 1
-    #     for line in lines:
-    #         if (i < deleteLineFrom) or (i > deleteLineTo):
-    #             f.write(line)
-    #         i += 1
 
 def getRegExMatches(inString, regEx):
     matches = re.findall(regEx, inString)
@@ -756,7 +748,6 @@ def getIncludeFileName(aTextLine, includePattern='# include:\S+'):
     if len(listOfMatches) > 0:
         aFilename = listOfMatches[0][10:]   # hard codiert len('# include:')
     return aFilename
-
 
 def TEST_getIncludeFileName():
     print(getIncludeFileName("3   # include:Test_1_With_Include_2.txt   kkkkkkkk"))
