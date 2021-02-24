@@ -7,7 +7,7 @@ import os
 import sys
 import time
 import datetime
-from littlePythonLib import *
+from waltisLibrary import *
 
 import piplates.DAQCplate      as DAQC 
 import piplates.RELAYplate     as RELAY 

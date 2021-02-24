@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from sense_emu import SenseHat
+from sense_hat import SenseHat
 import os, sys, thread, math
 
 hat = SenseHat()
