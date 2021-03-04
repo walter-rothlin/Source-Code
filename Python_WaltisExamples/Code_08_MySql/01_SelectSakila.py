@@ -12,15 +12,15 @@ mydb = mysql.connector.connect(
 print("completed!")
 stm_selectCities = "SELECT * FROM city"
 
-stm_selectCities = """\
-SELECT
-   city_id    AS ID,
-   city       AS Name,
-   country_id AS Country
-FROM 
-   city
-WHERE 
-   city like 'O%'
+stm_selectCities = """
+    SELECT
+       city_id    AS ID,
+       city       AS Name,
+       country_id AS Country
+    FROM 
+       city
+    WHERE 
+       city like 'O%'
 """
 
 mycursor = mydb.cursor()

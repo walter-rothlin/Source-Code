@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 
 # !!!! Falls Fehler “runtimeError: package fails to pass a sanity check”
+
+#   check File | Settings | Python Interpreter
+
+
 # 1.19.4 hat auf Windows einen Fehler!
 #    pip install numpy==1.19.3
 

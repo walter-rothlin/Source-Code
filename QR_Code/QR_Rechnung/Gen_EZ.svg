@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-v-223f4b97="" version="1.2" width="210mm" height="110mm">
-   <style>
-	body {
-		background-color: powderblue;
-	}
-   </style>
    <line y1="5mm" y2="5mm" x1="0mm" x2="210mm" stroke="black" height="0.5mm" stroke-dasharray="5,5" d="M5 20 l215 0" />
    <text x="25mm" y="5mm" text-anchor="middle" style="transform: rotate(45deg) rotate(-41.8deg); transform-origin: 0% 0%;">xx</text>
    <line x1="62mm" x2="62mm" y1="5mm" y2="110mm" stroke="black" height="0.5mm" stroke-dasharray="5,5" d="M5 20 l215 0" />
