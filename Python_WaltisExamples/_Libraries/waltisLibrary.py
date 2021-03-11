@@ -17,6 +17,7 @@
 # 10-Dec-2020   Walter Rothlin      Added fakultaet
 # 21-Jan-2021   Walter Rothlin      Added ASCII Fct
 # 17-Feb-2021   Walter Rothlin      File Operationen implementiert
+# 11-Mar-2021   Walter Rothlin      More automated testing
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -244,6 +245,13 @@ def AUTO_TEST_pysikalische_umrechnungen(verbal=False):
 # Fakultät berechnen
 # ==================
 def fakultaet(obergrenze, untergrenze=1):
+    # Test-Cases
+    # ----------
+    # fakultaet(10, 1) = 3628800
+    # fakultaet(15, 13) = 2730
+    # fakultaet(8, 3) = 20160
+    # fakultaet(99, 98) = 9702
+
     fakultaet = -1
     if (obergrenze > 0):
         fakultaet = 1
@@ -252,6 +260,46 @@ def fakultaet(obergrenze, untergrenze=1):
             obergrenze = obergrenze - 1
     return fakultaet
 
+def AUTO_TEST_fakultaet(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+
+    testSuite = getMyFctName()[auto_test_fct_prefix_len:]
+    testCases = """
+    Nr    |Fct                |Obergrenze    |Untergrenze   |Expected
+         1|fakultaet          |10            |1             |3628800
+         2|fakultaet          |15            |13            |2730
+         3|fakultaet          |8             |3             |20160
+         4|fakultaet          |99            |98            |9702
+    """
+
+    listOfTestCases = testCases.split("\n")
+    for aTestCase in listOfTestCases[2:-1]:
+        testsPerformed += 1
+        listOfTestValues = aTestCase.split("|")
+        case = listOfTestValues[0].strip()
+        fct = listOfTestValues[1].strip()
+        param_1 = int(listOfTestValues[2].strip())
+        param_2 = int(listOfTestValues[3].strip())
+        expectedResult = int(listOfTestValues[4].strip())
+        # print(case, fct, param_1, param_2, expectedResult)
+
+        possibles = globals().copy()
+        possibles.update(locals())
+        method = possibles.get(fct)
+        result = None
+        if method:
+            result = method(param_1, param_2)
+        else:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+        if result != expectedResult:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
+            print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
+            print()
+    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
 
 # Primzahlen Functions
 # ====================
@@ -769,30 +817,81 @@ def File_readWithInludes(sourceFileFN, includePattern='# include:\S+', includeSe
             File_readWithInludes(includeFileName, includePattern, includeSearchPath, recLevel=recLevel+1)
         print(fileContent)
 
-def TEST_FileFunctions():
-    # Test-Cases: File_getCountOfLines()
+
+def AUTO_TEST_FileFunctions(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+
+    testSuite = getMyFctName()[auto_test_fct_prefix_len:]
+
+    fct = "File_getCountOfLines()"
+
+    case = 1
+    testsPerformed += 1
     File_createTestFile("./TestData/Test_1.txt")
     countOfLine = File_getCountOfLines("./TestData/Test_1.txt")
     expectedResult = 20
     if (countOfLine != expectedResult):
-        print("Test Failed: File_getCountOfLines(./TestData/Test_1.txt)", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult)
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(./TestData/Test_1.txt)", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult)
+        testsFailed += 1
 
+    case = 2
+    testsPerformed += 1
     File_createTestFile("./TestData/Test_2.txt", aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5, endLineNr=45)
     countOfLine = File_getCountOfLines("./TestData/Test_2.txt")
     expectedResult = 43
     if (countOfLine != expectedResult):
-        print("Test Failed: File_getCountOfLines(./TestData/Test_2.txt)", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult)
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(./TestData/Test_2.txt)", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult)
+        testsFailed += 1
 
-    # Test-Cases: File_deleteLines()
-    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1a.txt", deleteLineFrom=None, deleteLineTo=None, verbal=False)
-    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1b.txt", deleteLineFrom=2, deleteLineTo=7)
-    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1c.txt", deleteLineFrom=5)
-    File_deleteLines("./TestData/Test_1.txt", "./TestData/Test_1d.txt", deleteLineTo=7)
-    print("\n")
+    fct = "File_deleteLines()"
 
+    case = 1
+    testsPerformed += 1
+    testFileName = "./TestData/Test_1a.txt"
+    expectedResult = 20
+    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=None, deleteLineTo=None, verbal=False)
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    case = 2
+    testsPerformed += 1
+    testFileName = "./TestData/Test_1b.txt"
+    expectedResult = 14
+    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=2, deleteLineTo=7)
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    case = 3
+    testsPerformed += 1
+    testFileName = "./TestData/Test_1c.txt"
+    expectedResult = 4
+    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=5)
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    case = 4
+    testsPerformed += 1
+    testFileName = "./TestData/Test_1d.txt"
+    expectedResult = 13
+    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineTo=7)
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
 
     #### TEST_getIncludeFileName()
     #### File_readWithInludes("./TestData/Test_1_With_Include_1.txt")
+    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
 
 
 # Geometrische Formen berechnen
@@ -887,7 +986,6 @@ def TEST_CircleFct():
 if __name__ == '__main__':
     # AUTO_TEST_xPath_Get(verbal=True)
     # TEST_stringFct()
-    TEST_FileFunctions()
     # TEST_hexStrToURLEncoded()
 
     # Automated Tests
@@ -895,6 +993,14 @@ if __name__ == '__main__':
     totalTests = 0
     totalFails = 0
     testStat = AUTO_TEST_pysikalische_umrechnungen(verbal=True)
+    totalTests += testStat[0]
+    totalFails += testStat[1]
+
+    testStat = AUTO_TEST_fakultaet(verbal=True)
+    totalTests += testStat[0]
+    totalFails += testStat[1]
+
+    testStat = AUTO_TEST_FileFunctions(verbal=True)
     totalTests += testStat[0]
     totalFails += testStat[1]
 
