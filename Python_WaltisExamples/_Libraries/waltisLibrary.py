@@ -598,20 +598,20 @@ def getTimestamp(preStr = "", postStr="", formatString="nice"):
 
 # True if (old-young > limit)
 def checkTimeDifference(oldTimestamp, youngTimestamp, limit, gt=True):
-    timeDiff =  youngTimestamp - oldTimestamp
+    timeDiff = youngTimestamp - oldTimestamp
     secStr = str(timeDiff)[:7]
     if (gt):
-        return (secStr > limit)
+        return secStr > limit
     else:
-        return (secStr < limit)
+        return secStr < limit
 
 # Math functions
 # --------------
-def equalsWithinTolerance(ist,soll,abweichungProzent=0.001):
-    if (soll==0) and (ist==0):
+def equalsWithinTolerance(ist, soll, abweichungProzent=0.001):
+    if (soll == 0) and (ist == 0):
         return True
     else:
-        if (abs(100-(ist*100/soll)) > abweichungProzent):
+        if abs(100 - (ist * 100 / soll)) > abweichungProzent:
             return False
         else:
             return True
@@ -743,12 +743,12 @@ def File_cleanup(filename, directory, path_sign):
 
 def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFooter="", aContent=""):
     aTestFile = open(aFileFN, "w")
-    if (aHeader != ""):
+    if aHeader != "":
         aTestFile.write(aHeader + "\n")
     for lNr in range(startLineNr, endLineNr+1):
         aTestFile.write(str(lNr) + aContent + "\n")
 
-    if (aFooter != ""):
+    if aFooter != "":
         aTestFile.write(aFooter + "\n")
     aTestFile.close()
 
@@ -781,6 +781,36 @@ def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, 
 
     # In Liste Range löschen
     del lines[deleteLineFrom-1:deleteLineTo]
+
+    # Liste in ein File schreiben
+    with open(destinationFileFN, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+
+def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr= ""):
+    if destinationFileFN is None:
+        destinationFileFN = sourceFileFN
+
+    # File in eine Liste lesen
+    with open(sourceFileFN, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    # Header an Liste anhängen
+    lines.insert(0, headerStr)
+
+    # Liste in ein File schreiben
+    with open(destinationFileFN, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+
+def File_addFooter(sourceFileFN, destinationFileFN=None, footerStr=""):
+    if destinationFileFN is None:
+        destinationFileFN = sourceFileFN
+
+    # File in eine Liste lesen
+    with open(sourceFileFN, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    # Footer an Liste anhängen
+    lines.append(footerStr)
 
     # Liste in ein File schreiben
     with open(destinationFileFN, "w", encoding="utf-8") as f:
@@ -824,8 +854,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     testSuite = getMyFctName()[auto_test_fct_prefix_len:]
 
+    # -------------------------------------------------------------------------------
     fct = "File_getCountOfLines()"
-
+    # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
     File_createTestFile("./TestData/Test_1.txt")
@@ -845,9 +876,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(./TestData/Test_2.txt)", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult)
         testsFailed += 1
-
+    # -------------------------------------------------------------------------------
     fct = "File_deleteLines()"
-
+    # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
     testFileName = "./TestData/Test_1a.txt"
@@ -886,6 +917,35 @@ def AUTO_TEST_FileFunctions(verbal=False):
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    # -------------------------------------------------------------------------------
+    fct = "File_addHeader()"
+    # -------------------------------------------------------------------------------
+    case = 1
+    testsPerformed += 1
+    testFileName = "./TestData/Test_1a.txt"
+    expectedResult = 21
+    File_addHeader(testFileName, headerStr="Hallo this ist ein \nHeader")
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+
+    # -------------------------------------------------------------------------------
+    fct = "File_addFooter()"
+    # -------------------------------------------------------------------------------
+    case = 1
+    testsPerformed += 1
+    testFileName = "./TestData/Test_1a.txt"
+    expectedResult = 23
+    File_addFooter(testFileName, footerStr="Hier ist ein \nFooter")
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     #### TEST_getIncludeFileName()
