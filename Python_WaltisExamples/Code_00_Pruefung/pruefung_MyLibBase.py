@@ -18,12 +18,15 @@ def celsius2Fahrenheit(celsius):
 # Math Functionen
 # ---------------
 def fakultaet(obergrenze, untergrenze=1):
+    # Spezifikation: untergrenze*..*5*6*...*obergrenze
     # Test-Cases
     # ----------
     # fakultaet(10, 1) = 3628800
     # fakultaet(15, 13) = 2730
     # fakultaet(8, 3) = 20160
     # fakultaet(99, 98) = 9702
+    # fakultaet(3) = 6
+    # fakultaet(5) = 120
 
     fakultaet = -1
     if (obergrenze > 0):
