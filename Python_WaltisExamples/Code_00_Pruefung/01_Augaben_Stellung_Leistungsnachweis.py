@@ -1,9 +1,16 @@
 #!/usr/bin/python3
 import math
+import os
+import shutil
 
 # ================================================================================================================
 # START: Aufgabenstellung
 # ================================================================================================================
+
+# Kreieren Sie ein neues Python-File mit dem Namen: 01_IhrVorname_IhrNachname_Leistungsnachweis.py
+# Kopieren Sie alle Zeilen in diesem File in dies neu erstellte File und bringen Sie es ohne run-time Fehler zum Laufen.
+
+# Danach machen sie folgende Schritte
 
 # 1) Unten finden Sie Prototypen von Funktionen mit Spezifikation und Testcases.
 # 2) Für jede Funktion hat es ebenfalls einen Protoype einer AUTO_TEST_ Funktion, welche im main bereits aufgerufen wird.
@@ -86,6 +93,7 @@ def unterstreichen(title, aChar="=", end="\n"):
 # Testfunktionen für ihre in diesem Test erstellten Funktionen
 # ==> Implementieren Sie hier alle vorgegebenen Testfälle
 def AUTO_TEST_a_summeBis_MitFormel(verbal=False):
+    # In dieser Testfunktion sind schon alle Test-Fälle implementiert. Gehen Sie gleich zur nächsten Funktion
     testsPerformed = 0
     testsFailed = 0
     testSuite = "a_summeBis_MitFormel"
@@ -102,6 +110,11 @@ def AUTO_TEST_a_summeBis_MitFormel(verbal=False):
 
     testsPerformed += 1
     if summeBis_MitFormel(4) != 10:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summeBis_MitFormel(20) != 210:
         print("Failed in ", testSuite, "  Case:", testsPerformed)
         testsFailed += 1
 
@@ -151,6 +164,7 @@ def AUTO_TEST_a_summe(verbal=False):
         print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
+
 def AUTO_TEST_a_generateStringRepeats(verbal=False):
     testsPerformed = 0
     testsFailed = 0
@@ -190,7 +204,7 @@ def AUTO_TEST_a_unterstreichen(verbal=False):
         print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
-# BONUS-Aufgabe
+# 1) BONUS-Aufgaben
 def isFloatEquals(ist, soll, roundDezimals=3):
     # Test-Cases
     # ----------
@@ -200,6 +214,22 @@ def isFloatEquals(ist, soll, roundDezimals=3):
 
 # ==> Implementieren Sie hier eine AUTO_TEST_a_isFloatEquals Funktion und fügen Sie diese im Main dazu
 
+# 2) BONUS-Aufgabe
+def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr= ""):
+
+    if destinationFileFN is None:
+        destinationFileFN = sourceFileFN
+
+    # File in eine Liste lesen
+    with open(sourceFileFN, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    # Liste in ein File schreiben
+    aTestFile = open(destinationFileFN, "w")
+    aTestFile.writelines(lines)
+    aTestFile.close()
+
+# ==> Fixen Sie den Fehler (Eine AUTO_TEST_FileFunctions besteht bereits!)
 
 # ================================================================================================================
 # Ende: Aufgabenstellung
@@ -238,8 +268,32 @@ def fakultaet(obergrenze, untergrenze=1):
             obergrenze = obergrenze - 1
     return fakultaet
 
-# File Functionen
-# ---------------
+# File and Directory operations
+# =============================
+def createDirIfNotExists(dir_path= "./TestData", access_rights=0o755, verbal=False):
+    try:
+        ## os.mkdir(dir_path, access_rights)
+        os.makedirs(dir_path, access_rights)
+    except OSError:
+        if verbal:
+            print("Creation of the directory %s failed" % dir_path)
+    else:
+        if verbal:
+            print("Successfully created the directory %s " % dir_path)
+
+def deleteDir(dir_path= "./TestData", verbal=False):
+    try:
+        shutil.rmtree(dir_path)  # does it even if it contains files
+        ## os.rmdir(dir_path)    # only if the director is empty
+    except OSError:
+        if verbal:
+            print("Deletion of the directory %s failed" % dir_path)
+    else:
+        if verbal:
+            print("Successfully deleted the directory %s " % dir_path)
+
+# File Mainpulation Functionen
+# ----------------------------
 def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFooter="", aContent=""):
     aTestFile = open(aFileFN, "w")
     if (aHeader != ""):
@@ -285,42 +339,82 @@ def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, 
     with open(destinationFileFN, "w", encoding="utf-8") as f:
         f.writelines(lines)
 
+def AUTO_TEST_a_File_addHeader(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_File_addHeader"
+
+    testPath="./TestData/AUTO_TEST_a_File_addHeader"
+    createDirIfNotExists(dir_path=testPath)
+
+    testsPerformed += 1
+    baseTestFile = testPath + "/Test_3.txt"
+    testFileName = testPath + "/Test_3a.txt"
+
+    File_createTestFile(baseTestFile)
+    expectedResult = 22
+    File_addHeader(baseTestFile, testFileName, headerStr="This is \na multiline String")
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":     case:", testsPerformed, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    testsPerformed += 1
+    testFileName = testPath + "/Test_2b.txt"
+    expectedResult = 21
+    File_addHeader(baseTestFile, testFileName, headerStr="This is a singleline String")
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":     case:", testsPerformed, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    deleteDir(testPath)
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
 
 def AUTO_TEST_FileFunctions(verbal=False):
     testsPerformed = 0
     testsFailed = 0
 
-    testSuite = "FileFunctions"
+    testSuite = "AUTO_TEST_FileFunctions"
 
+    testPath = "./TestData/AUTO_TEST_FileFunctions"
+    createDirIfNotExists(dir_path=testPath)
+
+    # -------------------------------------------------------------------------------
     fct = "File_getCountOfLines()"
-
+    # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
-    File_createTestFile("./TestData/Test_1.txt")
-    countOfLine = File_getCountOfLines("./TestData/Test_1.txt")
+    testFileName = testPath + "/Test_1.txt"
+    File_createTestFile(testPath + "/Test_1.txt")
+    countOfLine = File_getCountOfLines(testFileName)
     expectedResult = 20
     if (countOfLine != expectedResult):
-        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(./TestData/Test_1.txt)", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult)
+        print("Error in testSuite:   ", testSuite, "(1):   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     case = 2
     testsPerformed += 1
-    File_createTestFile("./TestData/Test_2.txt", aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5, endLineNr=45)
-    countOfLine = File_getCountOfLines("./TestData/Test_2.txt")
+    testFileName = testPath + "/Test_2.txt"
+    File_createTestFile(testFileName, aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5, endLineNr=45)
+    countOfLine = File_getCountOfLines(testPath + "/Test_2.txt")
     expectedResult = 43
     if (countOfLine != expectedResult):
-        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(./TestData/Test_2.txt)", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult)
+        print("Error in testSuite:   ", testSuite, "(2):   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
-
+    # -------------------------------------------------------------------------------
     fct = "File_deleteLines()"
-
+    # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
-    testFileName = "./TestData/Test_1a.txt"
+    testFileName = testPath + "/Test_1a.txt"
     expectedResult = 20
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=None, deleteLineTo=None, verbal=False)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=None, deleteLineTo=None, verbal=False)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
@@ -328,9 +422,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     case = 2
     testsPerformed += 1
-    testFileName = "./TestData/Test_1b.txt"
+    testFileName = testPath + "/Test_1b.txt"
     expectedResult = 14
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=2, deleteLineTo=7)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=2, deleteLineTo=7)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
@@ -338,9 +432,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     case = 3
     testsPerformed += 1
-    testFileName = "./TestData/Test_1c.txt"
+    testFileName = testPath + "/Test_1c.txt"
     expectedResult = 4
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=5)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=5)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
@@ -348,17 +442,35 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     case = 4
     testsPerformed += 1
-    testFileName = "./TestData/Test_1d.txt"
+    testFileName = testPath + "/Test_1d.txt"
     expectedResult = 13
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineTo=7)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineTo=7)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
+    # -------------------------------------------------------------------------------
+    fct = "File_addHeader()"
+    # -------------------------------------------------------------------------------
+    case = 1
+    testsPerformed += 1
+    testFileName = testPath + "/Test_1a.txt"
+    expectedResult = 22
+    File_addHeader(testFileName, headerStr="Hallo this ist ein \nHeader")
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    #### TEST_getIncludeFileName()
+    #### File_readWithInludes("./TestData/Test_1_With_Include_1.txt")
+    deleteDir(testPath)
     if verbal:
         print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 if __name__ == '__main__':
     # Automated Tests
@@ -391,8 +503,30 @@ if __name__ == '__main__':
     totalTests[0] += testStat[0]
     totalTests[1] += testStat[1]
 
+    testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
 
+    deleteDir("./TestData")
     if doVerbal:
         print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
         print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
         print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
+
+
+    print("\n\n")
+    ex_TestFaelle = 23
+    print("Ihre provisorisches Prüfungsbewertung:")
+    print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
+    print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
+    print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
+    p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
+    p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
+    p_TotalPunkte = p_testabdeckung+p_implement
+    print("\n")
+    print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
+    print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
+    print("\n")
+    print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
+    print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
+    print("                            =======")
