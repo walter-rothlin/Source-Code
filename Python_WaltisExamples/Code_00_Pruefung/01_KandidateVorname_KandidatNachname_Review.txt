@@ -7,8 +7,8 @@
 
 # Provisorische Note:
 
-# Findings:
-# -
+# Findings (Abzüge):
+# - 
 # -
 
 # Note:
