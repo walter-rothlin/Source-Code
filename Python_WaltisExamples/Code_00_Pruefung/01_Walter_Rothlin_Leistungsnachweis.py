@@ -1,4 +1,15 @@
 #!/usr/bin/python3
+# ------------------------------------------------------------------
+# Name: 01_Augaben_Stellung_Leistungsnachweis.py
+#
+# Description: Handlungsorientierte Prüfung
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 11-Mar-2021   Walter Rothlin      Initial Version
+# 18-Mar-2021   Walter Rothlin      Mögliche Lösung
+# ------------------------------------------------------------------
 import math
 import os
 import shutil
@@ -6,12 +17,15 @@ import shutil
 # ================================================================================================================
 # START: Aufgabenstellung
 # ================================================================================================================
+# A) Kreieren Sie ein neues Python-File mit dem Namen: 01_IhrVorname_IhrNachname_Leistungsnachweis.py
+# B) Kopieren Sie alle Zeilen in diesem File in dies neu erstellte File.
+# C) Ersetzen Sie unten den namen Felix Muster durch Ihren Namen
+meinName = "Felix Muster"
 
-# Kreieren Sie ein neues Python-File mit dem Namen: 01_IhrVorname_IhrNachname_Test.py
-# Kopieren Sie alle Zeilen in diesem File in dies neu erstellte File und bringen Sie es ohne run-time Fehler zum Laufen.
+# Lassen Sie dieses Programm nun laufen. Wenn es läuft, setzen die die folgende Variable auf True
+testGestartet = False
 
 # Danach machen sie folgende Schritte
-
 # 1) Unten finden Sie Prototypen von Funktionen mit Spezifikation und Testcases.
 # 2) Für jede Funktion hat es ebenfalls einen Protoype einer AUTO_TEST_ Funktion, welche im main bereits aufgerufen wird.
 # 3) Führen Sie die Tests aus und implementieren (am Besten in dieser Reihenfolge) Sie nun alle Funktionen und

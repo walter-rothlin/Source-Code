@@ -1,4 +1,15 @@
 #!/usr/bin/python3
+# ------------------------------------------------------------------
+# Name: 01_Augaben_Stellung_Leistungsnachweis.py
+#
+# Description: Handlungsorientierte Prüfung
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 11-Mar-2021   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 import math
 import os
 import shutil
@@ -6,12 +17,15 @@ import shutil
 # ================================================================================================================
 # START: Aufgabenstellung
 # ================================================================================================================
+# A) Kreieren Sie ein neues Python-File mit dem Namen: 01_IhrVorname_IhrNachname_Leistungsnachweis.py
+# B) Kopieren Sie alle Zeilen in diesem File in dies neu erstellte File.
+# C) Ersetzen Sie unten den namen Felix Muster durch Ihren Namen
+meinName = "Felix Muster"
 
-# Kreieren Sie ein neues Python-File mit dem Namen: 01_IhrVorname_IhrNachname_Leistungsnachweis.py
-# Kopieren Sie alle Zeilen in diesem File in dies neu erstellte File und bringen Sie es ohne run-time Fehler zum Laufen.
+# D) Lassen Sie dieses Programm nun laufen. Wenn es läuft, setzen die die folgende Variable auf True
+testGestartet = False
 
 # Danach machen sie folgende Schritte
-
 # 1) Unten finden Sie Prototypen von Funktionen mit Spezifikation und Testcases.
 # 2) Für jede Funktion hat es ebenfalls einen Protoype einer AUTO_TEST_ Funktion, welche im main bereits aufgerufen wird.
 # 3) Führen Sie die Tests aus und implementieren (am Besten in dieser Reihenfolge) Sie nun alle Funktionen und
@@ -473,60 +487,63 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
 
 if __name__ == '__main__':
-    # Automated Tests
-    # ===============
-    auto_test_suiteNameLength = 40
-    auto_test_testStatistics_anzStellen = 4
-    auto_test_testStatistics_totalLength = 107
-    auto_test_fct_prefix = "AUTO_TEST_"
-    auto_test_fct_prefix_len = len(auto_test_fct_prefix)
+    if testGestartet:
+        # Automated Tests
+        # ===============
+        auto_test_suiteNameLength = 40
+        auto_test_testStatistics_anzStellen = 4
+        auto_test_testStatistics_totalLength = 107
+        auto_test_fct_prefix = "AUTO_TEST_"
+        auto_test_fct_prefix_len = len(auto_test_fct_prefix)
 
-    doVerbal = True
-    totalTests = [0, 0]
-    testStat = AUTO_TEST_a_summeBis_MitFormel(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        doVerbal = True
+        totalTests = [0, 0]
+        testStat = AUTO_TEST_a_summeBis_MitFormel(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_summeBis_MitLoop(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_summeBis_MitLoop(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_summe(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_summe(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_generateStringRepeats(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_generateStringRepeats(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_unterstreichen(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_unterstreichen(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    deleteDir("./TestData")
-    if doVerbal:
-        print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
-        print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
-        print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
+        deleteDir("./TestData")
+        if doVerbal:
+            print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
+            print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
+            print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
 
 
-    print("\n\n")
-    ex_TestFaelle = 23
-    print("Ihre provisorisches Prüfungsbewertung:")
-    print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
-    print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
-    print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
-    p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
-    p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
-    p_TotalPunkte = p_testabdeckung+p_implement
-    print("\n")
-    print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
-    print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
-    print("\n")
-    print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
-    print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
-    print("                            =======")
+        print("\n\n")
+        ex_TestFaelle = 23
+        print("Ihre provisorisches Prüfungsbewertung:")
+        print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
+        print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
+        print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
+        p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
+        p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
+        p_TotalPunkte = p_testabdeckung+p_implement
+        print("\n")
+        print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
+        print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
+        print("\n")
+        print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
+        print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
+        print("                            =======")
+    else:
+        print("Herzliche Gratulation ", meinName, "! Nun können Sie mit dem Test beginnen!", sep="")
