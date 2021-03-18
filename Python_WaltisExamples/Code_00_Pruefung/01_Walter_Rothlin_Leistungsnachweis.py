@@ -17,10 +17,11 @@ import shutil
 # ================================================================================================================
 # START: Aufgabenstellung
 # ================================================================================================================
-# A) Kreieren Sie ein neues Python-File mit dem Namen: 01_IhrVorname_IhrNachname_Leistungsnachweis.py
+# A) Oeffnen Sie PyCharm (oder Ihrer Entwicklungsumgebung) und kreieren Sie ein neues Python-File mit dem
+#    Namen: 01_IhrVorname_IhrNachname_Leistungsnachweis.py
 # B) Kopieren Sie alle Zeilen in diesem File in dies neu erstellte File.
-# C) Ersetzen Sie unten den namen Felix Muster durch Ihren Namen
-meinName = "Felix Muster"
+# C) Ersetzen Sie unten den Namen Felix Muster durch Ihren Namen
+meinName = "Muster Lösung"
 
 # Lassen Sie dieses Programm nun laufen. Wenn es läuft, setzen die die folgende Variable auf True
 testGestartet = False
