@@ -20,19 +20,27 @@ import shutil
 # A) Oeffnen Sie PyCharm (oder Ihrer Entwicklungsumgebung) und kreieren Sie ein neues Python-File mit dem
 #    Namen: 01_IhrVorname_IhrNachname_Leistungsnachweis.py
 # B) Kopieren Sie alle Zeilen in diesem File in dies neu erstellte File.
-# C) Ersetzen Sie unten den Namen Felix Muster durch Ihren Namen
-meinName = "Felix Muster"
 
-# D) Lassen Sie dieses Programm nun laufen. Wenn es läuft, setzen die die folgende Variable auf True
-testGestartet = False
+
+# Lassen Sie dieses Programm nun laufen. Wenn es läuft müssen Sie folgende ehrenwörtliche Erklärung noch bestätigen:
+# Ehrenwörtliche Erklärung
+# ------------------------
+# Hiermit bestätige ich:
+meinName = "Muster Lösung"   # Ersetzen Sie unten den Namen Felix Muster durch Ihren Namen
+# diesen Test ohne unerlaubte Mittel selber gemacht zu haben. Dazu gehören vorallem, dass ich während und nach der Prüfung
+# mit Niemandem über irgend einen Kanal über den Inhalt dieser Prüfung spreche und mir keine Unterstützung geholt habe.
+# Eine Widerhalndlung wird als Betrug geandet und muss der Schulleitung, wie dem Lehrbetrieb gemeldet werden
+
+stimmeZu = False  # Setzen Sie diese Variable auf True und bestätigen Sie damit die Ehrenwörtliche Erklärung
+
 
 # Danach machen sie folgende Schritte
+testBeginnt = False  # Setzen Sie diese Variable auf True sobald Sie mit der Prüfung beginnen
 # 1) Unten finden Sie Prototypen von Funktionen mit Spezifikation und Testcases.
 # 2) Für jede Funktion hat es ebenfalls einen Protoype einer AUTO_TEST_ Funktion, welche im main bereits aufgerufen wird.
 # 3) Führen Sie die Tests aus und implementieren (am Besten in dieser Reihenfolge) Sie nun alle Funktionen und
 #    kontrollieren immer wieder durch Testen, wie weit Sie sind (Test-Driven Approach)
 # 4) Lösen Sie wenn Sie alles gelöst haben die Bonus-Aufgabe
-
 
 
 # Summen Reihen-Functionen
@@ -488,63 +496,66 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
 
 if __name__ == '__main__':
-    if testGestartet:
-        # Automated Tests
-        # ===============
-        auto_test_suiteNameLength = 40
-        auto_test_testStatistics_anzStellen = 4
-        auto_test_testStatistics_totalLength = 107
-        auto_test_fct_prefix = "AUTO_TEST_"
-        auto_test_fct_prefix_len = len(auto_test_fct_prefix)
+    if stimmeZu:
+        if testBeginnt:
+            # Automated Tests
+            # ===============
+            auto_test_suiteNameLength = 40
+            auto_test_testStatistics_anzStellen = 4
+            auto_test_testStatistics_totalLength = 107
+            auto_test_fct_prefix = "AUTO_TEST_"
+            auto_test_fct_prefix_len = len(auto_test_fct_prefix)
 
-        doVerbal = True
-        totalTests = [0, 0]
-        testStat = AUTO_TEST_a_summeBis_MitFormel(verbal=doVerbal)
-        totalTests[0] += testStat[0]
-        totalTests[1] += testStat[1]
+            doVerbal = True
+            totalTests = [0, 0]
+            testStat = AUTO_TEST_a_summeBis_MitFormel(verbal=doVerbal)
+            totalTests[0] += testStat[0]
+            totalTests[1] += testStat[1]
 
-        testStat = AUTO_TEST_a_summeBis_MitLoop(verbal=doVerbal)
-        totalTests[0] += testStat[0]
-        totalTests[1] += testStat[1]
+            testStat = AUTO_TEST_a_summeBis_MitLoop(verbal=doVerbal)
+            totalTests[0] += testStat[0]
+            totalTests[1] += testStat[1]
 
-        testStat = AUTO_TEST_a_summe(verbal=doVerbal)
-        totalTests[0] += testStat[0]
-        totalTests[1] += testStat[1]
+            testStat = AUTO_TEST_a_summe(verbal=doVerbal)
+            totalTests[0] += testStat[0]
+            totalTests[1] += testStat[1]
 
-        testStat = AUTO_TEST_a_generateStringRepeats(verbal=doVerbal)
-        totalTests[0] += testStat[0]
-        totalTests[1] += testStat[1]
+            testStat = AUTO_TEST_a_generateStringRepeats(verbal=doVerbal)
+            totalTests[0] += testStat[0]
+            totalTests[1] += testStat[1]
 
-        testStat = AUTO_TEST_a_unterstreichen(verbal=doVerbal)
-        totalTests[0] += testStat[0]
-        totalTests[1] += testStat[1]
+            testStat = AUTO_TEST_a_unterstreichen(verbal=doVerbal)
+            totalTests[0] += testStat[0]
+            totalTests[1] += testStat[1]
 
-        testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
-        totalTests[0] += testStat[0]
-        totalTests[1] += testStat[1]
+            testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
+            totalTests[0] += testStat[0]
+            totalTests[1] += testStat[1]
 
-        deleteDir("./TestData")
-        if doVerbal:
-            print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
-            print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
-            print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
+            deleteDir("./TestData")
+            if doVerbal:
+                print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
+                print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
+                print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
 
 
-        print("\n\n")
-        ex_TestFaelle = 23
-        print("Ihre provisorisches Prüfungsbewertung:")
-        print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
-        print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
-        print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
-        p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
-        p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
-        p_TotalPunkte = p_testabdeckung+p_implement
-        print("\n")
-        print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
-        print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
-        print("\n")
-        print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
-        print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
-        print("                            =======")
+            print("\n\n")
+            ex_TestFaelle = 23
+            print("Ihre provisorisches Prüfungsbewertung:")
+            print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
+            print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
+            print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
+            p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
+            p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
+            p_TotalPunkte = p_testabdeckung+p_implement
+            print("\n")
+            print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
+            print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
+            print("\n")
+            print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
+            print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
+            print("                            =======")
+        else:
+            print("Vielen Dank, ", meinName, " für die Abgabe der ehrenwörtlichen Erklärung! Nun können Sie mit dem Test beginnen!", sep="")
     else:
-        print("Herzliche Gratulation ", meinName, "! Nun können Sie mit dem Test beginnen!", sep="")
+        print("Sie müssen noch der ehrenwörtlichen Erklärung zustimmen! Danach können Sie mit dem Test beginnen")
