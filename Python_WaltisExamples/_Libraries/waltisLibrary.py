@@ -22,6 +22,7 @@
 import inspect
 import math
 import os
+import shutil
 import sys
 import time
 import datetime
@@ -39,14 +40,6 @@ from time import sleep
 # --------------------------------
 # Click an directory in project folders. Than Rigth Click in Project-Explorer  --> Mark Directory as --> Source Root
 # https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000782850-How-to-set-up-working-directory-in-PyCharm-and-package-import-
-
-# Constants
-# =========
-auto_test_suiteNameLength = 40
-auto_test_testStatistics_anzStellen = 4
-auto_test_testStatistics_totalLength = 107
-auto_test_fct_prefix = "AUTO_TEST_"
-auto_test_fct_prefix_len = len(auto_test_fct_prefix)
 
 # Library fucntions
 # =================
@@ -115,6 +108,21 @@ def AUTO_TEST_pysikalische_umrechnungen_2(verbal=False):
     print(round(fahrenheit2Celsius(inVal), 2) == expected)
 
 def AUTO_TEST_pysikalische_umrechnungen_3(verbal=False):
+    """
+    Alle AUTO_TEST_ Funktionen sind zum automatischen Testen von Funktionen. Dabei werden Testfälle ausgeführt und
+    das Resultat direkt mit dem erwarteten Resultat verglichen. Falls das Resultat eines Funktionsaufrufes
+    nicht mit dem erwarteten übereinstimmen, ist dieser Test-Case durchgefallen oder "failed".
+
+    Bei jedem durchgefallenen Test-Case muss ich folgende Analyse machen:
+    •	Erwartungswert richtig?
+    o	Ja: Fehler in der Implementation der Funktion fixen und Test wiederholen
+    o	Nein: Erwartungswert anpassen und Test wiederholen
+
+    In AUTO_TEST_pysikalische_umrechnungen_3:
+    •	celsius2Fahrenheit() mit 2 Test-Cases
+    •	fahrenheit2Celsius() mit 2 Test-Cases
+    """
+
     inVal = 37.8
     expected = 100.05
     if round(celsius2Fahrenheit(inVal), 2) != expected:
@@ -140,9 +148,6 @@ def AUTO_TEST_pysikalische_umrechnungen_3(verbal=False):
         print("celsiusToFahrenheit(", inVal, ") = ", round(fahrenheit2Celsius(inVal), 2), "   Expected:", expected, sep="")
 
 def AUTO_TEST_pysikalische_umrechnungen_4(verbal=False):
-    testsPerformed = 0
-    testsFailed = 0
-
     testSuite = "pysikalische_umrechnungen"
     testCases = """
     Nr    |Fct                   |Param1       |Param2       |Param3       |Expected
@@ -151,6 +156,9 @@ def AUTO_TEST_pysikalische_umrechnungen_4(verbal=False):
          3|fahrenheit2Celsius    |100          |0            |0            |37.78
          4|rad2Grad              |0            |0            |0            |0
     """
+
+    testsPerformed = 0
+    testsFailed = 0
 
     listOfTestCases = testCases.split("\n")
     for aTestCase in listOfTestCases[2:-1]:
@@ -176,9 +184,6 @@ def AUTO_TEST_pysikalische_umrechnungen_4(verbal=False):
     print("==> ", testSuite, ": Tests Performed:", testsPerformed, "   Tests Failed:", testsFailed, "    Passed:", round(100-(100 * testsFailed / testsPerformed),1), "%", sep="" )
 
 def AUTO_TEST_pysikalische_umrechnungen_5(verbal=False):
-    testsPerformed = 0
-    testsFailed = 0
-
     testSuite = getMyFctName()[auto_test_fct_prefix_len:]
     testCases = """
     Nr    |Fct                   |Param1       |Param2       |Param3       |Expected
@@ -190,6 +195,8 @@ def AUTO_TEST_pysikalische_umrechnungen_5(verbal=False):
          6|grad2Rad              |180          |0            |0            |3.14
     """
 
+    testsPerformed = 0
+    testsFailed = 0
     listOfTestCases = testCases.split("\n")
     for aTestCase in listOfTestCases[2:-1]:
         testsPerformed += 1
@@ -214,7 +221,8 @@ def AUTO_TEST_pysikalische_umrechnungen_5(verbal=False):
             print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
             print("   celsius2Fahrenheit(", param_1,  ") = ", result, "    Expected:", expectedResult, sep="")
             print()
-    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 def AUTO_TEST_pysikalische_umrechnungen(verbal=False):
@@ -242,15 +250,297 @@ def AUTO_TEST_pysikalische_umrechnungen(verbal=False):
     # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_5", "-"))
     return AUTO_TEST_pysikalische_umrechnungen_5(verbal)
 
+# Summen Reihen-Functionen
+# ------------------------
+def summeBis_MitFormel(bis):
+    # Spezifikation: 1+2+3+4+5+6+...+bis = (bis * (bis+1) /2)   Der Returnparameter ist ein int
+    # mit Gausschen Summenformel
+    #
+    # Test-Cases
+    # ----------
+    # summeBis_MitFormel(9) = 45
+    # summeBis_MitFormel(4) = 10
+    # summeBis_MitFormel(20) = 210
+
+    return int(bis * (bis + 1) / 2)
+
+def summeBis_MitLoop(bis):
+    # Spezifikation: 1+2+3+4+5+6+...+bis Der Returnparameter ist ein int
+    # Informatiker Lösung (langsamer in der Ausführung)
+    #
+    # Test-Cases
+    # ----------
+    # summeBis_MitLoop(9) = 45
+    # summeBis_MitLoop(4) = 10
+    # summeBis_MitLoop(20) = 210
+
+    res = 0
+    for i in range(bis + 1):
+        res += i
+    return res
+
+def summe(bis, von=None):
+    # Spezifikation: von+..+5+6+...+bis
+    #
+    # Test-Cases
+    # ----------
+    # summe(9) = 45
+    # summe(4) = 10
+    # summe(20) = 210
+    # summe(100) = 5050
+    # summe(9, 4) = 39
+    # summe(4, 9) = 39
+    # summe(-1, 1) = 0
+
+    if von is None:
+        return int(bis * (bis + 1) / 2)
+    else:
+        if von > bis:
+            tmp = bis
+            bis = von
+            von = tmp
+        return int(bis * (bis + 1) / 2) - int(von * (von + 1) / 2) + von
+
+
+def AUTO_TEST_a_summe(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_summe"
+
+    # Test-Cases
+    # ----------
+    # summe(9) = 45
+    # summe(4) = 10
+    # summe(20) = 210
+    # summe(100) = 5050
+    # summe(9, 4) = 39
+    # summe(4, 9) = 39
+    # summe(-1, 1) = 0
+    testsPerformed += 1
+    if summe(9) != 45:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(4) != 10:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(20) != 210:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(100) != 5050:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(9, 4) != 39:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(4, 9) != 39:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(-1, 1) != 0:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
+
+def AUTO_TEST_a_summeBis_MitFormel(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_summeBis_MitFormel"
+
+    # Test-Cases
+    # ----------
+    # summeBis_MitFormel(9) = 45
+    # summeBis_MitFormel(4) = 10
+    # summeBis_MitFormel(20) = 210
+    testsPerformed += 1
+    if summeBis_MitFormel(9) != 45:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summeBis_MitFormel(4) != 10:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summeBis_MitFormel(20) != 210:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    if verbal:
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+          "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
+
+def AUTO_TEST_a_summeBis_MitLoop(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_summeBis_MitLoop"
+
+    # Test-Cases
+    # ----------
+    # summeBis_MitLoop(9) = 45
+    # summeBis_MitLoop(4) = 10
+    # summeBis_MitLoop(20) = 210
+    testsPerformed += 1
+    if summeBis_MitLoop(9) != 45:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summeBis_MitLoop(4) != 10:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summeBis_MitLoop(20) != 210:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    if verbal:
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+          "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
+def AUTO_TEST_a_summe(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_summe"
+
+    # Test-Cases
+    # ----------
+    # summe(9) = 45
+    # summe(4) = 10
+    # summe(20) = 210
+    # summe(100) = 5050
+    # summe(9, 4) = 39
+    # summe(4, 9) = 39
+    # summe(-1, 1) = 0
+    testsPerformed += 1
+    testsPerformed += 1
+    if summe(9) != 45:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(4) != 10:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(20) != 210:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(100) != 5050:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(9, 4) != 39:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(4, 9) != 39:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if summe(-1, 1) != 0:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
+def AUTO_TEST_summe(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+
+    testSuite = getMyFctName()[auto_test_fct_prefix_len:]
+    testCases = """
+    Nr    |Fct            |bis           |von           |Expected
+    Type  |               |int           |int           |int
+         1|summe          |9             |None          |45
+         2|summe          |4             |None          |10
+         3|summe          |20            |None          |210
+         4|summe          |100           |None          |5050
+         5|summe          |9             |4             |39
+         6|summe          |4             |9             |39
+         7|summe          |-1            |1             |1
+    """
+    listOfTestCases = testCases.split("\n")
+    headStr = listOfTestCases[1]
+    typeStr = listOfTestCases[2]
+    ##### TBI print(headStr)
+    ##### TBI print(typeStr)
+
+    for aTestCase in listOfTestCases[3:-1]:
+        testsPerformed += 1
+        listOfTestValues = aTestCase.split("|")
+        case = listOfTestValues[0].strip()
+        fct = listOfTestValues[1].strip()
+        param_1 = int(listOfTestValues[2].strip())
+        param_2_str = listOfTestValues[3].strip()
+        if param_2_str != 'None':
+            param_2 = int(param_2_str)
+        else:
+            param_2 = 1   # default value parameter 2
+        expectedResult = int(listOfTestValues[4].strip())
+        # print(case, fct, param_1, param_2, expectedResult)
+
+        possibles = globals().copy()
+        possibles.update(locals())
+        method = possibles.get(fct)
+        result = None
+        if method:
+            result = method(bis=param_1, von=param_2)
+        else:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+        if result != expectedResult:
+            testsFailed += 1
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
+            print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
+            print()
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
 # Fakultät berechnen
 # ==================
 def fakultaet(obergrenze, untergrenze=1):
+    # Spezifikation: untergrenze*..*5*6*...*obergrenze
     # Test-Cases
     # ----------
     # fakultaet(10, 1) = 3628800
     # fakultaet(15, 13) = 2730
     # fakultaet(8, 3) = 20160
     # fakultaet(99, 98) = 9702
+    # fakultaet(3) = 6
+    # fakultaet(5) = 120
 
     fakultaet = -1
     if (obergrenze > 0):
@@ -266,21 +556,33 @@ def AUTO_TEST_fakultaet(verbal=False):
 
     testSuite = getMyFctName()[auto_test_fct_prefix_len:]
     testCases = """
-    Nr    |Fct                |Obergrenze    |Untergrenze   |Expected
+    Nr    |Fct                |obergrenze    |untergrenze   |Expected
+    Type  |                   |int           |int           |
          1|fakultaet          |10            |1             |3628800
          2|fakultaet          |15            |13            |2730
          3|fakultaet          |8             |3             |20160
          4|fakultaet          |99            |98            |9702
+         5|fakultaet          |3             |              |6
+         6|fakultaet          |5             |              |120
     """
 
     listOfTestCases = testCases.split("\n")
-    for aTestCase in listOfTestCases[2:-1]:
+    headStr = listOfTestCases[1]
+    typeStr = listOfTestCases[2]
+    ##### TBI print(headStr)
+    ##### TBI print(typeStr)
+
+    for aTestCase in listOfTestCases[3:-1]:
         testsPerformed += 1
         listOfTestValues = aTestCase.split("|")
         case = listOfTestValues[0].strip()
         fct = listOfTestValues[1].strip()
         param_1 = int(listOfTestValues[2].strip())
-        param_2 = int(listOfTestValues[3].strip())
+        param_2_str = listOfTestValues[3].strip()
+        if param_2_str != '':
+            param_2 = int(param_2_str)
+        else:
+            param_2 = 1   # default value parameter 2
         expectedResult = int(listOfTestValues[4].strip())
         # print(case, fct, param_1, param_2, expectedResult)
 
@@ -298,7 +600,8 @@ def AUTO_TEST_fakultaet(verbal=False):
             print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
             print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
-    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 # Primzahlen Functions
@@ -462,7 +765,8 @@ def AUTO_TEST_addParity(verbal=False):
             print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
             print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
-    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 def showASCII_Table(firstVal = 33, lastVal = 126, sep = " --> ", end = "\n"):
@@ -502,11 +806,90 @@ def toFirstUpperCase(inString):
     endPart   = inString[1:]
     return toUpperCase(firstPart) + toLowerCase(endPart)
 
-def generateStringRepeats(len, aChar = " "):
-    return (aChar*len)[:len]
+def generateStringRepeats(len, aStr = " "):
+    # Spezifikation: Wiederholt den aStr so oft, dass der Return-String len lang ist
+    # Test-Cases
+    # ----------
+    # generateStringRepeats(10, '-')     => '----------'
+    # generateStringRepeats(9,  '+-=')   => '+-=+-=+-='
+    # generateStringRepeats(3,  'A')     => 'AAA'
+    # generateStringRepeats(5, '.-')     => '.-.-.'
+    # generateStringRepeats(6)           => '      '
+    return (aStr*len)[:len]
+
+def AUTO_TEST_a_generateStringRepeats(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_generateStringRepeats"
+
+    # Test-Cases
+    # ----------
+    # generateStringRepeats(10, '-')     => '----------'
+    # generateStringRepeats(9,  '+-=')   => '+-=+-=+-='
+    # generateStringRepeats(3,  'A')     => 'AAA'
+    # generateStringRepeats(5, '.-')     => '.-.-.'
+    # generateStringRepeats(6)           => '      '
+    testsPerformed += 1
+    if generateStringRepeats(10, '-') != '----------':
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if generateStringRepeats(9, '+-=') != '+-=+-=+-=':
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if generateStringRepeats(3, 'A') != 'AAA':
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if generateStringRepeats(5,'.-') != '.-.-.':
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if generateStringRepeats(6) != '      ':
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
 
 def unterstreichen(title, aChar="=", end="\n"):
+    # Spezifikation: Unterstreich einen String auf dem Bildschirm
+    #     Beispiel: print(unterstreichen('Die ist ein Test',"+")
+    #               Die ist ein Test
+    #               ++++++++++++++++
+    # Test-Cases
+    # ----------
+    # unterstreichen('Hallo')                     => 'Hallo\n====='
+    # unterstreichen('Die ist ein Test',"+")      => 'Die ist ein Test\n++++++++++++++++'
     return title + end + generateStringRepeats(len(title), aChar)
+
+def AUTO_TEST_a_unterstreichen(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_unterstreichen"
+
+    # Test-Cases
+    # ----------
+    # unterstreichen('Hallo')                     => 'Hallo\n====='
+    # unterstreichen('Die ist ein Test',"+")      => 'Die ist ein Test\n++++++++++++++++'
+    testsPerformed += 1
+    if unterstreichen('Hallo') != 'Hallo\n=====':
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if unterstreichen('Die ist ein Test',"+") != 'Die ist ein Test\n++++++++++++++++':
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
 
 
 def TEST_stringFct():
@@ -616,6 +999,36 @@ def equalsWithinTolerance(ist, soll, abweichungProzent=0.001):
         else:
             return True
 
+def isFloatEquals(ist, soll, roundDezimals=3):
+    # Test-Cases
+    # ----------
+    # isFloatEquals(4.5321,4.5329,2)      => True
+    # isFloatEquals(4.5321,4.5329,3)      => False
+    return round(ist, roundDezimals) == round(soll, roundDezimals)
+
+def AUTO_TEST_a_isFloatEquals(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_isFloatEquals"
+
+    # Test-Cases
+    # ----------
+    # isFloatEquals(4.5321,4.5329,2)      => True
+    # isFloatEquals(4.5321,4.5329,3)      => False
+    testsPerformed += 1
+    if isFloatEquals(4.5321,4.5329,2) != True:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    testsPerformed += 1
+    if isFloatEquals(4.5321,4.5329,3) != False:
+        print("Failed in ", testSuite, "  Case:", testsPerformed)
+        testsFailed += 1
+
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
 # Inspection functions
 # ====================
 def getMyFctName():
@@ -685,8 +1098,30 @@ def AUTO_TEST_xPath_Get(verbal=False):
         print("--> Test Cases Failed  : {a:4d}".format(a=testCasesFailed))
     return {"TestName": getMyFctName(), "testCasesExecuted": testCasesExecuted, "testCasesFailed": testCasesFailed}
 
-# File operationen
-# ================
+# File and Directory operations
+# =============================
+def createDirIfNotExists(dir_path= "./TestData", access_rights=0o755, verbal=False):
+    try:
+        ## os.mkdir(dir_path, access_rights)
+        os.makedirs(dir_path, access_rights)
+    except OSError:
+        if verbal:
+            print("Creation of the directory %s failed" % dir_path)
+    else:
+        if verbal:
+            print("Successfully created the directory %s " % dir_path)
+
+def deleteDir(dir_path= "./TestData", verbal=False):
+    try:
+        shutil.rmtree(dir_path)  # does it even if it contains files
+        ## os.rmdir(dir_path)    # only if the director is empty
+    except OSError:
+        if verbal:
+            print("Deletion of the directory %s failed" % dir_path)
+    else:
+        if verbal:
+            print("Successfully deleted the directory %s " % dir_path)
+
 #    TBC verallgemeinern start
 # Cleanup - Rule N°1 : Verzeichnis wird durchsucht und alle Files mit .csv werden gelöscht
 def file_cleanup1():
@@ -741,6 +1176,8 @@ def File_cleanup(filename, directory, path_sign):
 
 #    TBC verallgemeinern start
 
+# File manipulation
+# =================
 def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFooter="", aContent=""):
     aTestFile = open(aFileFN, "w")
     if aHeader != "":
@@ -794,12 +1231,47 @@ def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr= ""):
     with open(sourceFileFN, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
-    # Header an Liste anhängen
-    lines.insert(0, headerStr)
-
     # Liste in ein File schreiben
-    with open(destinationFileFN, "w", encoding="utf-8") as f:
-        f.writelines(lines)
+    aTestFile = open(destinationFileFN, "w")
+    aTestFile.write(headerStr)
+    aTestFile.write("\n")
+    aTestFile.writelines(lines)
+    aTestFile.close()
+
+def AUTO_TEST_a_File_addHeader(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "a_File_addHeader"
+
+    testPath="./TestData/AUTO_TEST_a_File_addHeader"
+    createDirIfNotExists(dir_path=testPath)
+
+    testsPerformed += 1
+    baseTestFile = testPath + "/Test_3.txt"
+    testFileName = testPath + "/Test_3a.txt"
+
+    File_createTestFile(baseTestFile)
+    expectedResult = 22
+    File_addHeader(baseTestFile, testFileName, headerStr="This is \na multiline String")
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":     case:", testsPerformed, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    testsPerformed += 1
+    testFileName = testPath + "/Test_2b.txt"
+    expectedResult = 21
+    File_addHeader(baseTestFile, testFileName, headerStr="This is a singleline String")
+    if File_getCountOfLines(testFileName) != expectedResult:
+        print("Error in testSuite:   ", testSuite, ":     case:", testsPerformed, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        testsFailed += 1
+
+    deleteDir(testPath)
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
 
 def File_addFooter(sourceFileFN, destinationFileFN=None, footerStr=""):
     if destinationFileFN is None:
@@ -809,12 +1281,11 @@ def File_addFooter(sourceFileFN, destinationFileFN=None, footerStr=""):
     with open(sourceFileFN, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
-    # Footer an Liste anhängen
-    lines.append(footerStr)
-
     # Liste in ein File schreiben
-    with open(destinationFileFN, "w", encoding="utf-8") as f:
-        f.writelines(lines)
+    aTestFile = open(destinationFileFN, "w")
+    aTestFile.writelines(lines)
+    aTestFile.write(footerStr)
+    aTestFile.close()
 
 def getRegExMatches(inString, regEx):
     matches = re.findall(regEx, inString)
@@ -854,36 +1325,41 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     testSuite = getMyFctName()[auto_test_fct_prefix_len:]
 
+    testPath = "./TestData/AUTO_TEST_FileFunctions"
+    createDirIfNotExists(dir_path=testPath)
+
     # -------------------------------------------------------------------------------
     fct = "File_getCountOfLines()"
     # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
-    File_createTestFile("./TestData/Test_1.txt")
-    countOfLine = File_getCountOfLines("./TestData/Test_1.txt")
+    testFileName = testPath + "/Test_1.txt"
+    File_createTestFile(testPath + "/Test_1.txt")
+    countOfLine = File_getCountOfLines(testFileName)
     expectedResult = 20
     if (countOfLine != expectedResult):
-        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(./TestData/Test_1.txt)", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult)
+        print("Error in testSuite:   ", testSuite, "(1):   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     case = 2
     testsPerformed += 1
-    File_createTestFile("./TestData/Test_2.txt", aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5, endLineNr=45)
-    countOfLine = File_getCountOfLines("./TestData/Test_2.txt")
+    testFileName = testPath + "/Test_2.txt"
+    File_createTestFile(testFileName, aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5, endLineNr=45)
+    countOfLine = File_getCountOfLines(testPath + "/Test_2.txt")
     expectedResult = 43
     if (countOfLine != expectedResult):
-        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(./TestData/Test_2.txt)", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult)
+        print("Error in testSuite:   ", testSuite, "(2):   ", fct, "    case:", case, sep="")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
     # -------------------------------------------------------------------------------
     fct = "File_deleteLines()"
     # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
-    testFileName = "./TestData/Test_1a.txt"
+    testFileName = testPath + "/Test_1a.txt"
     expectedResult = 20
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=None, deleteLineTo=None, verbal=False)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=None, deleteLineTo=None, verbal=False)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
@@ -891,9 +1367,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     case = 2
     testsPerformed += 1
-    testFileName = "./TestData/Test_1b.txt"
+    testFileName = testPath + "/Test_1b.txt"
     expectedResult = 14
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=2, deleteLineTo=7)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=2, deleteLineTo=7)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
@@ -901,9 +1377,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     case = 3
     testsPerformed += 1
-    testFileName = "./TestData/Test_1c.txt"
+    testFileName = testPath + "/Test_1c.txt"
     expectedResult = 4
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineFrom=5)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=5)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
@@ -911,9 +1387,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     case = 4
     testsPerformed += 1
-    testFileName = "./TestData/Test_1d.txt"
+    testFileName = testPath + "/Test_1d.txt"
     expectedResult = 13
-    File_deleteLines("./TestData/Test_1.txt", testFileName, deleteLineTo=7)
+    File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineTo=7)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
@@ -924,8 +1400,8 @@ def AUTO_TEST_FileFunctions(verbal=False):
     # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
-    testFileName = "./TestData/Test_1a.txt"
-    expectedResult = 21
+    testFileName = testPath + "/Test_1a.txt"
+    expectedResult = 22
     File_addHeader(testFileName, headerStr="Hallo this ist ein \nHeader")
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
@@ -939,8 +1415,8 @@ def AUTO_TEST_FileFunctions(verbal=False):
     # -------------------------------------------------------------------------------
     case = 1
     testsPerformed += 1
-    testFileName = "./TestData/Test_1a.txt"
-    expectedResult = 23
+    testFileName = testPath + "/Test_1a.txt"
+    expectedResult = 24
     File_addFooter(testFileName, footerStr="Hier ist ein \nFooter")
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
@@ -950,7 +1426,9 @@ def AUTO_TEST_FileFunctions(verbal=False):
 
     #### TEST_getIncludeFileName()
     #### File_readWithInludes("./TestData/Test_1_With_Include_1.txt")
-    print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    deleteDir(testPath)
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 
@@ -1048,27 +1526,84 @@ if __name__ == '__main__':
     # TEST_stringFct()
     # TEST_hexStrToURLEncoded()
 
+
     # Automated Tests
     # ===============
-    totalTests = 0
-    totalFails = 0
-    testStat = AUTO_TEST_pysikalische_umrechnungen(verbal=True)
-    totalTests += testStat[0]
-    totalFails += testStat[1]
+    auto_test_suiteNameLength = 40
+    auto_test_testStatistics_anzStellen = 4
+    auto_test_testStatistics_totalLength = 107
+    auto_test_fct_prefix = "AUTO_TEST_"
+    auto_test_fct_prefix_len = len(auto_test_fct_prefix)
 
-    testStat = AUTO_TEST_fakultaet(verbal=True)
-    totalTests += testStat[0]
-    totalFails += testStat[1]
+    doVerbal = True
+    totalTests = [0, 0]
+    testStat = AUTO_TEST_pysikalische_umrechnungen(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_FileFunctions(verbal=True)
-    totalTests += testStat[0]
-    totalFails += testStat[1]
+    testStat = AUTO_TEST_a_summeBis_MitFormel(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_addParity(verbal=True)
-    totalTests += testStat[0]
-    totalFails += testStat[1]
-    print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
-    print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalFails), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalFails / totalTests), 1)), "%", sep="")
-    print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
+    testStat = AUTO_TEST_a_summeBis_MitLoop(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
 
+    testStat = AUTO_TEST_a_summe(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
 
+    testStat = AUTO_TEST_a_generateStringRepeats(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    testStat = AUTO_TEST_a_unterstreichen(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    testStat = AUTO_TEST_summe(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    testStat = AUTO_TEST_fakultaet(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    testStat = AUTO_TEST_FileFunctions(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    testStat = AUTO_TEST_addParity(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    testStat = AUTO_TEST_a_isFloatEquals(verbal=doVerbal)
+    totalTests[0] += testStat[0]
+    totalTests[1] += testStat[1]
+
+    deleteDir("./TestData")
+    if doVerbal:
+        print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
+        print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
+        print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
+
+    print("\n\n")
+    ex_TestFaelle = totalTests[0]
+    print("Ihre provisorisches Prüfungsbewertung:")
+    print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
+    print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
+    print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
+    p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
+    p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
+    p_TotalPunkte = p_testabdeckung+p_implement
+    print("\n")
+    print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
+    print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
+    print("\n")
+    print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
+    print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
+    print("                            =======")

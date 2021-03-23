@@ -25,8 +25,8 @@ while doLoop:
     print()
     print()
     print()
-    print("  Umrechnungen (V5.0")
-    print("  ==================")
+    print("  Umrechnungen (V5.0)")
+    print("  ===================")
     print("  1: Grad in Bogenmass")  # rad  = grad*pi/180
     print("  2: Bogenmass in Grad")  # grad = rad*180/pi
     print()
