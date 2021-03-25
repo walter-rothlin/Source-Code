@@ -26,7 +26,7 @@ import shutil
 # Ehrenwörtliche Erklärung
 # ------------------------
 # Hiermit bestätige ich:
-meinName = "Muster Lösung"   # Ersetzen Sie unten den Namen Felix Muster durch Ihren Namen
+meinName = "Felix Muster"   # Ersetzen Sie hier den Namen Felix Muster durch Ihren Vornamen und Namen
 # diesen Test ohne unerlaubte Mittel selber gemacht zu haben. Dazu gehören vorallem, dass ich während und nach der Prüfung
 # mit Niemandem über irgend einen Kanal über den Inhalt dieser Prüfung spreche und mir keine Unterstützung geholt habe.
 # Eine Widerhalndlung wird als Betrug geandet und muss der Schulleitung, wie dem Lehrbetrieb gemeldet werden
@@ -40,7 +40,7 @@ testBeginnt = False  # Setzen Sie diese Variable auf True sobald Sie mit der Pr�
 # 2) Für jede Funktion hat es ebenfalls einen Protoype einer AUTO_TEST_ Funktion, welche im main bereits aufgerufen wird.
 # 3) Führen Sie die Tests aus und implementieren (am Besten in dieser Reihenfolge) Sie nun alle Funktionen und
 #    kontrollieren immer wieder durch Testen, wie weit Sie sind (Test-Driven Approach)
-# 4) Lösen Sie wenn Sie alles gelöst haben die Bonus-Aufgabe
+# 4) Lösen Sie, wenn Sie alles gelöst haben, die Bonus-Aufgabe
 
 
 # Summen Reihen-Functionen
