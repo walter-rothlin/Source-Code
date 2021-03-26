@@ -2,7 +2,7 @@
 -- ================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 26-MAR-2021
+--    Last Change: 26-MAR-2021 / 10:25
 --
 -- ================================
 -- END title
