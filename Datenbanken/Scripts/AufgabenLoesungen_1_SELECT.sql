@@ -167,13 +167,14 @@ SELECT
    sum(payment.amount)    AS Umsatz
 FROM 
    payment
-LEFT JOIN customer ON payment.customer_id = customer.customer_id
+    -- LEFT JOIN customer ON payment.customer_id = customer.customer_id
+   INNER JOIN customer ON payment.customer_id = customer.customer_id
 GROUP BY
    payment.customer_id
 Order BY
    Umsatz DESC;
     
--- 1.12) Noch nicht loesen!!!!
+-- 1.15) Noch nicht loesen!!!!
 --       In der staff table hat es ein Attribute picture vom Type BLOB. Googeln Sie, was das fuer ein Type ist und 
 --       laden Sie ein Bild fuer eine Record (staff_id = 1) in dieses Feld
 
