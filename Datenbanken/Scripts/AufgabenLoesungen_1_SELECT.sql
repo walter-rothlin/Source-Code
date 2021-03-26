@@ -1,6 +1,9 @@
 -- START title
 -- ================================
--- Aufgaben-Sammlung (AufgabenLoesungen_1_SELECT.sql)
+-- Aufgaben-Sammlung
+--    File: AufgabenLoesungen_1_SELECT.sql
+--    Last Change: 26-MAR-2021
+--
 -- ================================
 -- END title
 
