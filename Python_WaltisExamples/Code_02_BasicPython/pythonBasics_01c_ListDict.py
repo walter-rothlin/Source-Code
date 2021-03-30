@@ -167,19 +167,19 @@ capital_country["Germany"] = "Berlin"
 print(capital_country)
 
 # ? Fügen Sie die Hauptstadt von Italy dazu (Roma)
-capital_country.update({"Italy":"Roma","Lichtenstein":"Vaduz"})
+capital_country.update({"Italy": "Roma", "Lichtenstein": "Vaduz"})
 print(capital_country)
 
 # Dict of Dict
 # ------------
 capital_country = {"United States":
-                       {"Capitol":"Washington",
-                        "Präsident":"Donald Trup",
-                        "Population":328000000,},
+                       {"Capitol": "Washington",
+                        "Präsident": "Donald Trup",
+                        "Population": 328000000, },
                    "Switzerland":
-                       {"Capitol":"Bern",
-                        "Präsident":"Simoneta Samaruga",
-                        "Population":8000000,},
+                       {"Capitol": "Bern",
+                        "Präsident": "Simoneta Samaruga",
+                        "Population": 8000000, },
                    }
 
 # ? Zeigen Sie auf dem Bildschirm die Struktur

@@ -23,8 +23,8 @@ if not ("Fiat" in carSet):
     print("Fiat is not in set")
 carSet.add("Fiat")
 print("carSet.add(\"Fiat)\"             :", carSet)
-carSet.update(["Lexus","Audi"])
-print("carSet.update([\"Lexus\",\"Audi\"]):", carSet)
+carSet.update(["Lexus", "Audi"])
+print("carSet.update(['Lexus','Audi']):", carSet)
 if ("Fiat" in carSet):
     print("Fiat is in set")
 carSet.discard("Fiat")

@@ -18,7 +18,7 @@ TypeError: 'separator' is an invalid keyword argument for split()
 
 # Listen
 # ------
-namensListe=['Walter','Rothlin','Peterliwiese 33',8855,'Wangen']
+namensListe=['Walter', 'Rothlin', 'Peterliwiese 33', 8855, 'Wangen']
 ortPlz = str(namensListe[3]) + " <U>" + namensListe[4] + "</U>"
 print(ortPlz)
 

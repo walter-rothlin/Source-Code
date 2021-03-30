@@ -75,13 +75,13 @@ capital_country = {"United States": "Washington",
 # Dict of Dict
 # ------------
 capital_country = {"United States":
-                       {"Capitol":"Washington",
-                        "Präsident":"Donald Trup",
-                        "Population":328000000,},
+                       {"Capitol": "Washington",
+                        "Präsident": "Donald Trup",
+                        "Population": 328000000, },
                    "Switzerland":
-                       {"Capitol":"Bern",
-                        "Präsident":"Simoneta Samaruga",
-                        "Population":8000000,},
+                       {"Capitol": "Bern",
+                        "Präsident": "Simoneta Samaruga",
+                        "Population": 8000000, },
                    }
 
 # ? Zeigen Sie auf dem Bildschirm die Struktur
