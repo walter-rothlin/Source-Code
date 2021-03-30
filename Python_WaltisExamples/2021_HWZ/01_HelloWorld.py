@@ -1,6 +1,6 @@
 
-doThisSection = False
-if doThisSection:
+doThisSection_1 = False
+if doThisSection_1:
     # Print
     # =====
     print("Hello HWZ 2021")
@@ -100,143 +100,137 @@ if doThisSection:
     umfang = calcUmfang(durchmesser)
     print("Durchmesser:", durchmesser, " --> Umfang:", round(umfang, 2))
 
+doThisSection_2 = True
+if doThisSection_2:
+    # Listen
+    # ======
+    # List is a collection which is ordered and changeable. Allows duplicate members.
+    squares = ["1", "4", "9", "16", "25", "36", "49", "49"]
+    print(squares)
+    print(squares[1])
+    print(len(squares))
+    print(squares[4])
+    print(squares[len(squares)-1])
+    print(squares[-1])
+    print(squares[2:4])
 
-# Listen
-# ======
-# List is a collection which is ordered and changeable. Allows duplicate members.
-squares = ["1", "4", "9", "16", "25", "36", "49", "49"]
-print(squares)
-print(squares[1])
-print(len(squares))
-print(squares[4])
-print(squares[len(squares)-1])
-print(squares[-1])
-print(squares[2:4])
+    moreSquares = [36, 49, 64, 81, 100]
+    if (49 in moreSquares):
+        print("49 ist eine Quadratzahl!")
 
-moreSquares = [36, 49, 64, 81, 100]
-if (49 in moreSquares):
-    print("49 ist eine Quadratzahl!")
+    if (not (50 in moreSquares)):
+        print("50 ist keine Quadratzahl!")
 
-if (not (50 in moreSquares)):
-    print("50 ist keine Quadratzahl!")
+    if 50 not in moreSquares:
+        print("50 ist keine Quadratzahl!")
 
-if 50 not in moreSquares:
-    print("50 ist keine Quadratzahl!")
+    # squares_1 = squares.copy()
+    squares_1 = squares
+    print("squares            -->", squares)
+    print("squares_1          -->", squares_1)
+    squares.clear()
+    print("squares            -->", squares)
+    print("squares_1          -->", squares_1)
 
-# squares_1 = squares.copy()
-squares_1 = squares
-print("squares            -->", squares)
-print("squares_1          -->", squares_1)
-squares.clear()
-print("squares            -->", squares)
-print("squares_1          -->", squares_1)
+    cubes = [1, 8, 27, 65, 125, 27]  # something's wrong here
+    print("cubes                                  -->", cubes)
+    cubes[3] = 64
+    print("cubes                                  -->", cubes)
+    cubes.append(6**3)
+    print("cubes                                  -->", cubes)
+    cubes.remove(27)  # Removes the first item with the specified value
+    print("cubes                                  -->", cubes)
+    cubes.pop(1)    # Removes the element at the specified position
+    print("cubes                                  -->", cubes)
+    cubes.insert(1,8)
+    print("cubes                                  -->", cubes)
+    cubes.extend([7**3,8**3,9**3])
+    print("cubes                                  -->", cubes)
+    cubes.reverse()
+    print("cubes                                  -->", cubes)
 
-cubes = [1, 8, 27, 65, 125, 27]  # something's wrong here
-print("cubes                                  -->", cubes)
-cubes[3] = 64
-print("cubes                                  -->", cubes)
-cubes.append(6**3)
-print("cubes                                  -->", cubes)
-cubes.remove(27)  # Removes the first item with the specified value
-print("cubes                                  -->", cubes)
-cubes.pop(1)    # Removes the element at the specified position
-print("cubes                                  -->", cubes)
-cubes.insert(1,8)
-print("cubes                                  -->", cubes)
-cubes.extend([7**3,8**3,9**3])
-print("cubes                                  -->", cubes)
-cubes.reverse()
-print("cubes                                  -->", cubes)
-
-cars = [["Ford",12,1960], ["Volvo",13], ["BMW",15]]
-print(cars[1][0])
-print(len(cars[1]))
-for aCar in cars:
-    print(aCar)
-    for element in aCar:
-        print("   ", element)
-
-
-for i in [1,2,3,4,5,6]:
-    print(i)
-
-# Tuples
-# ======
-# Tuple is a collection which is ordered and unchangeable. Allows duplicate members.
-carsTuple = ("Ford", "Volvo", "BMW", "Ford")
-print("1st carsTuble      :", carsTuple[0])
-#   carsTuple[0] = "Tesla"   # nicht erlaubt!!!! Tuples können nicht geändert werden!
-print("Count of carsTuble :", len(carsTuple))
-
-# Sets
-# ====
-# Set is a collection which is unordered and unindexed. No duplicate members.
-carSet = {"Ford", "Volvo", "BMW", "Ford"}
-print(carSet)
-print(len(carSet))
-
-if ("BMW" in carSet):
-    print("BMW is in set")
-
-if ("Fiat" in carSet):
-    print("Fiat is in set")
-
-# Dictonaries
-# ===========
-capital_country = {"United States": "Washington",
-                   "US": "Washington",
-                   "Canada": "Ottawa",
-                   "Germany": "Berlin",
-                   "France": "Paris",
-                   "England": "London",
-                   "UK": "London",
-                   "Switzerland": "Bern",
-                   "Austria": "Vienna",
-                   "Netherlands": "Amsterdam"}
-print(capital_country)
-
-print(capital_country["Austria"])
-for c in capital_country:
-    print("-->", c)
-
-for v in capital_country.values():
-    print("==>", v)
+    cars = [["Ford",12,1960], ["Volvo",13], ["BMW",15]]
+    print(cars[1][0])
+    print(len(cars[1]))
+    for aCar in cars:
+        print(aCar)
+        for element in aCar:
+            print("   ", element)
 
 
-# JSON
-# ====
-# Dict in dict
-data = {
-    "president": {
-        "name": "Zaphod Beeblebrox",
-        "species": "Betelgeusian"
+    for i in [1,2,3,4,5,6]:
+        print(i)
+
+    # Tuples
+    # ======
+    # Tuple is a collection which is ordered and unchangeable. Allows duplicate members.
+    carsTuple = ("Ford", "Volvo", "BMW", "Ford")
+    print("1st carsTuble      :", carsTuple[0])
+    #   carsTuple[0] = "Tesla"   # nicht erlaubt!!!! Tuples können nicht geändert werden!
+    print("Count of carsTuble :", len(carsTuple))
+
+    # Sets
+    # ====
+    # Set is a collection which is unordered and unindexed. No duplicate members.
+    carSet = {"Ford", "Volvo", "BMW", "Ford"}
+    print(carSet)
+    print(len(carSet))
+
+    if ("BMW" in carSet):
+        print("BMW is in set")
+
+    if ("Fiat" in carSet):
+        print("Fiat is in set")
+
+    # Dictonaries
+    # ===========
+    capital_country = {"United States": "Washington",
+                       "US": "Washington",
+                       "Canada": "Ottawa",
+                       "Germany": "Berlin",
+                       "France": "Paris",
+                       "England": "London",
+                       "UK": "London",
+                       "Switzerland": "Bern",
+                       "Austria": "Vienna",
+                       "Netherlands": "Amsterdam"}
+    print(capital_country)
+
+    print(capital_country["Austria"])
+    for c in capital_country:
+        print("-->", c)
+
+    for v in capital_country.values():
+        print("==>", v)
+
+
+    # JSON
+    # ====
+    # Dict in dict
+    data = {
+        "president": {
+            "name": "Zaphod Beeblebrox",
+            "species": "Betelgeusian"
+        }
     }
-}
 
-print(data["president"]["species"])
+    print(data["president"]["species"])
 
-data1 = {
-    "researcher": {
-        "name": "Ford Prefect",
-        "species": "Betelgeusian",
-        "relatives": [
-            {
-                "name": "Zaphod Beeblebrox",
-                "species": "Betelgeusian"
-            },
-            {
-                "name": "Zaphod Beeblebrox",
-                "species": "Wahl"
-            }
-        ]
+    data1 = {
+        "researcher": {
+            "name": "Ford Prefect",
+            "species": "Betelgeusian",
+            "relatives": [
+                {
+                    "name": "Zaphod Beeblebrox",
+                    "species": "Betelgeusian"
+                },
+                {
+                    "name": "Zaphod Beeblebrox",
+                    "species": "Wahl"
+                }
+            ]
+        }
     }
-}
 
-print(data1["researcher"]["relatives"][1]["species"])
-
-
-
-
-
-
-
+    print(data1["researcher"]["relatives"][1]["species"])
