@@ -8,7 +8,7 @@ def hello(firstname="No", lastName="Name", anz=3, delay=3.0):
         time.sleep(delay)
 
 
-# Testf‰lle
+# Testf√§lle
 hello()
 # hello("Felix")
 # hello("Felix", "Muster", 1)
@@ -25,5 +25,3 @@ print("....main is waiting for termination")
 t.join()
 hello("Claudia", "Collet", 5, 0.5)
 print("....main finished!!!")
-
-

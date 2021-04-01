@@ -2,20 +2,22 @@
 
 from threading import Timer
 
-def hello(firstName,lastName):
-    print("hello,", firstName, lastName)
 
+def hello(firstname="No", lastName="Name"):
+    print("Hello", firstname, lastName)
 
+# Main
+# ====
+delayTime = float(input("Delay-Time [s]:"))
+fName = input("Vorname :")
+lName = input("Nachname:")
 
-if __name__ == '__main__':
-    delayTime = float(input("Delay-Time [s]:"))
-    fName = input("Vorname :")
-    lName = input("Nachname:")
-    print("Timer set to {dT:3.1f}s".format(dT=delayTime))
+hello("Felix", "Muster")
+hello(fName, lName)
+hello()
 
-    t = Timer(delayTime, hello, args=[fName, lName])
-    t.start() # after 30 seconds, "hello, world" will be printed
+t = Timer(2.4, hello, args=[fName, lName])
+t.start()
 
-    print("... main finished!!!!")
-
-
+hello("Felix_1", "Muster")
+print("\n")
