@@ -12,11 +12,11 @@ else:
 
 print("(1):", re.findall(r'Co.k.e', 'Cookie'))
 print("(2):", re.findall(r'^Eat', "Eat a cake! Eat it!"))
-print("(2a):", re.findall(r'E.t', "Ect a cake! Ebt it!"))
-print("(3):", re.findall(r'cake$', "Cake! Let's eat cake"))
+print("(3):", re.findall(r'E.t', "Ect a cake! Ebt it!"))
+print("(4):", re.findall(r'cake$', "Cake! Let's eat cake"))
 
 
-print("(4):", re.findall(r'E.t', "Ect a cake! Ebt it!"))
+print("(5):", re.findall(r'E.t', "Ect a cake! Ebt it!"))
 
 test_text_1 = '''
 Uebungsaufgabe
@@ -39,7 +39,8 @@ claudia@collet.com 8853 Lachen
 079/368'22'20
 '''
 
-print("(5):", re.findall(r'{[a-zA-Z]+}', test_text_1))                                 # alle Placeholders
-print("(6):", re.findall(r'[a-zA-Z]+@rothlin.com|[a-zA-Z]+@collet.com', test_text_1))  # alle eMail Adressen
+
 print("(7):", re.findall(r'\d{4}', test_text_1))                                       # alle 4-stelligen Ziffern
-print("(8):", re.findall(r'\d{3}.?\d{3}.?\d{2}.?\d{2}', test_text_1))                  # alle Telefonnummern
+print("(9):", re.findall(r'{[a-zA-Z]+}', test_text_1))                                 # alle Placeholders
+print("(8):", re.findall(r'\d{3}.?\d{3}.?\d{2}.?\d{2}', test_text_1))                  # alle Telefonnummer
+print("(6):", re.findall(r'[a-zA-Z]+@rothlin.com|[a-zA-Z]+@collet.com', test_text_1))  # alle eMail Adressen
