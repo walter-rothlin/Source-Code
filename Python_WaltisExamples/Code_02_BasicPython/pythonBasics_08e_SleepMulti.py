@@ -18,14 +18,20 @@ def hello(msg, text1, countOfLoops=0):
 # hello("Morgen", "Studiengruppe")
 
 print("Thread 1 gestarted")
-t = Timer(4, hello, args=["hallo", "HWZ", 10])
-t.start()
-
-print("Thread 2 gestarted")
-t1 = Timer(8, hello, args=["hallo", "Schweiz"])
+t1 = Timer(4, hello, args=["t1: hallo", "BWI", 10])
 t1.start()
 
-t.join()
+print("Thread 2 gestarted")
+t2 = Timer(8, hello, args=["t2: hallo", "HWZ", 5])
+t2.start()
 
-hello("Gugus", "BWI", 30)
+print("Wait for t1...")
+t1.join()
+
+print("Wait for t2...")
+t2.join()
+
+print()
+print("Threats terminated. Back in main")
+hello("Gugus", "BWI", 6)
 print("Finished")
