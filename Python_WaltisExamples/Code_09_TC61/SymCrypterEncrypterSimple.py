@@ -10,16 +10,44 @@
 #
 # History:
 # 28-Apr-2020	Initial Version
-#
+# 08-Apr-2021   Added automated testing
 # ------------------------------------------------------------------
-def shiftChr(buchstabe, shift):
-   return chr(ord(buchstabe) + shift)
+def shiftChr(einBuchstabe, shiffter):
+   return chr(ord(einBuchstabe) + shiffter)
 
 
-klartext = input("Klartext:")
-shiftDistance = int(input("Distanz:"))
-geheimText = ""
-for aChar in klartext:
-   geheimText = geheimText + shiftChr(aChar, shiftDistance)
+if __name__ == '__main__':
+   if shiftChr('a', 5) != 'f':
+      print("Error in Test-Case 1")
 
-print("Geheimtext:", geheimText)
+   if shiftChr('f', -5) != 'a':
+      print("Error in Test-Case 2")
+
+   klartextZeichen = input("Klartext Zeichen:")
+   shiftDistance = int(input("Distanz:"))
+   print(shiftChr(klartextZeichen, shiftDistance))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# klartext = input("Klartext:")
+# shiftDistance = int(input("Distanz:"))
+# geheimText = ""
+# for aChar in klartext:
+#    geheimText = geheimText + shiftChr(aChar, shiftDistance)
+#
+# print("Geheimtext:", geheimText)

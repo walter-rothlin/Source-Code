@@ -1,14 +1,18 @@
 #!/usr/bin/python3
 
-from threading import Timer
 import time
 
-delayTime = float(input("Delay-Time [s]:"))
-doLoop = True
-i = 0;
-while doLoop:
-    print(i, "hallo")
-    i += 1
+delayTime = float(input("Delay [s]:"))
+zaehler = 0
+while True:
+    print(zaehler, "Hello!!!")
+    zaehler += 1     # zaehler = zaehler + 1
+
+    # busy wait
+    # for i in range(10000):
+    #    tmp = 4.5 * 2.1
+
+    # timer-Event (Scheduler Anfrage)
     time.sleep(delayTime)
 
 

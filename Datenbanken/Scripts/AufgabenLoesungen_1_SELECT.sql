@@ -386,6 +386,16 @@ FROM
 	country as L
 RIGHT JOIN city as S on S.country_id = L.country_id; 
 
+
+select
+	address.address,
+    city.city,
+    country.country
+from
+	address
+inner join city    on address.city_id = city.city_id
+inner join country on city.country_id = country.country_id;
+
 SELECT
      f.film_id      AS Id,
      f.title        AS Title,
@@ -393,7 +403,7 @@ SELECT
      orgLang.name   AS Originalsprache
 FROM
      film AS f
-LEFT JOIN language AS lang    ON f.language_id          = lang.language_id
+INNER JOIN language AS lang    ON f.language_id          = lang.language_id
 LEFT JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 --  4.0) Machen Sie folgende Aenderungen in skaila (Am einfachsten mit der Workbench):

@@ -215,11 +215,12 @@ def AUTO_TEST_pysikalische_umrechnungen_5(verbal=False):
             result = round(method(param_1), 2)
         else:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")",
+                  "   Fct to test not found!!!", sep="")
         if result != expectedResult:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
-            print("   celsius2Fahrenheit(", param_1,  ") = ", result, "    Expected:", expectedResult, sep="")
+            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")", sep="")
+            print("   ", fct, "(", param_1, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     if verbal:
         print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
@@ -489,7 +490,7 @@ def AUTO_TEST_summe(verbal=False):
          4|summe          |100           |None          |5050
          5|summe          |9             |4             |39
          6|summe          |4             |9             |39
-         7|summe          |-1            |1             |1
+         7|summe          |-1            |1             |0
     """
     listOfTestCases = testCases.split("\n")
     headStr = listOfTestCases[1]
@@ -519,10 +520,10 @@ def AUTO_TEST_summe(verbal=False):
             result = method(bis=param_1, von=param_2)
         else:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")","   Fct to test not found!!!", sep="")
         if result != expectedResult:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
+            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")", sep="")
             print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     if verbal:
@@ -594,11 +595,12 @@ def AUTO_TEST_fakultaet(verbal=False):
             result = method(param_1, param_2)
         else:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")",
+                  "   Fct to test not found!!!", sep="")
         if result != expectedResult:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
-            print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
+            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")", sep="")
+            print("   ", fct, "(", param_1, ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     if verbal:
         print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
@@ -965,19 +967,53 @@ def TEST_hexStrToURLEncoded():
             f0 f1 f2 f3 f4 f5 f6 f7   f8 f9 fA fB fC fd fe ff
     """
     print(hexStrToURLEncoded(testStr_3))
+
 # Date and Timestamp
 # ==================
 def getTimestamp(preStr = "", postStr="", formatString="nice"):
-    formatStr = '{:%Y-%m-%d %H:%M:%S}'
+    dateFormatPlaceholders = '''
+        %a 	Weekday, short version 	Wed 	
+        %A 	Weekday, full version 	Wednesday 	
+        %w 	Weekday as a number 0-6, 0 is Sunday 	3 	
+        %d 	Day of month 01-31 	31 	
+        %b 	Month name, short version 	Dec 	
+        %B 	Month name, full version 	December 	
+        %m 	Month as a number 01-12 	12 	
+        %y 	Year, short version, without century 	18 	
+        %Y 	Year, full version 	2018 	
+        %H 	Hour 00-23 	17 	
+        %I 	Hour 00-12 	05 	
+        %p 	AM/PM 	PM 	
+        %M 	Minute 00-59 	41 	
+        %S 	Second 00-59 	08 	
+        %f 	Microsecond 000000-999999 	548513 	
+        %z 	UTC offset 	+0100 	
+        %Z 	Timezone 	CST 	
+        %j 	Day number of year 001-366 	365 	
+        %U 	Week number of year, Sunday as the first day of week, 00-53 	52 	
+        %W 	Week number of year, Monday as the first day of week, 00-53 	52 	
+        %c 	Local version of date and time 	Mon Dec 31 17:41:00 2018 	
+        %x 	Local version of date 	12/31/18 	
+        %X 	Local version of time 	17:41:00 	
+        %% 	A % character 	% 	
+        %G 	ISO 8601 year 	2018 	
+        %u 	ISO 8601 weekday (1-7) 	1 	
+        %V 	ISO 8601 weeknumber (01-53) 	01    
+    '''
+    formatStr = '{ts:%Y-%m-%d %H:%M:%S}'
     if (formatString == ""):
-        formatStr = '{:%Y%m%d%H%M%S}'
+        formatStr = '{ts:%Y%m%d%H%M%S}'
     elif (formatString == "nice"):
-        formatStr = '{:%Y-%m-%d %H:%M:%S}'
+        formatStr = '{ts:%Y-%m-%d %H:%M:%S}'
     else:
         formatStr = formatString
-    retStr = formatStr.format(datetime.datetime.now())
+    retStr = formatStr.format(ts=datetime.datetime.now())
     # retStr = left(retStr,len(retStr)-2)
     return preStr + retStr + postStr
+
+def TEST_getTimestamp():
+    print("TEST_getTimestamp...")
+    print(datetime.datetime.now())
 
 # True if (old-young > limit)
 def checkTimeDifference(oldTimestamp, youngTimestamp, limit, gt=True):
@@ -1526,84 +1562,87 @@ if __name__ == '__main__':
     # TEST_stringFct()
     # TEST_hexStrToURLEncoded()
 
+    TEST_getTimestamp()
 
     # Automated Tests
     # ===============
-    auto_test_suiteNameLength = 40
-    auto_test_testStatistics_anzStellen = 4
-    auto_test_testStatistics_totalLength = 107
-    auto_test_fct_prefix = "AUTO_TEST_"
-    auto_test_fct_prefix_len = len(auto_test_fct_prefix)
+    autoTest = True
+    if autoTest:
+        auto_test_suiteNameLength = 40
+        auto_test_testStatistics_anzStellen = 4
+        auto_test_testStatistics_totalLength = 107
+        auto_test_fct_prefix = "AUTO_TEST_"
+        auto_test_fct_prefix_len = len(auto_test_fct_prefix)
 
-    doVerbal = True
-    totalTests = [0, 0]
-    testStat = AUTO_TEST_pysikalische_umrechnungen(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        doVerbal = True
+        totalTests = [0, 0]
+        testStat = AUTO_TEST_pysikalische_umrechnungen(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_summeBis_MitFormel(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_summeBis_MitFormel(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_summeBis_MitLoop(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_summeBis_MitLoop(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_summe(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_summe(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_generateStringRepeats(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_generateStringRepeats(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_unterstreichen(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_unterstreichen(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_summe(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_summe(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_fakultaet(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_fakultaet(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_FileFunctions(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_FileFunctions(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_File_addHeader(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_addParity(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_addParity(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    testStat = AUTO_TEST_a_isFloatEquals(verbal=doVerbal)
-    totalTests[0] += testStat[0]
-    totalTests[1] += testStat[1]
+        testStat = AUTO_TEST_a_isFloatEquals(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
-    deleteDir("./TestData")
-    if doVerbal:
-        print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
-        print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
-        print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
+        deleteDir("./TestData")
+        if doVerbal:
+            print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
+            print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
+            print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
 
-    print("\n\n")
-    ex_TestFaelle = totalTests[0]
-    print("Ihre provisorisches Prüfungsbewertung:")
-    print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
-    print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
-    print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
-    p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
-    p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
-    p_TotalPunkte = p_testabdeckung+p_implement
-    print("\n")
-    print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
-    print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
-    print("\n")
-    print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
-    print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
-    print("                            =======")
+        print("\n\n")
+        ex_TestFaelle = totalTests[0]
+        print("Ihre provisorisches Prüfungsbewertung:")
+        print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
+        print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
+        print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
+        p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
+        p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
+        p_TotalPunkte = p_testabdeckung+p_implement
+        print("\n")
+        print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
+        print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
+        print("\n")
+        print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
+        print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
+        print("                            =======")
