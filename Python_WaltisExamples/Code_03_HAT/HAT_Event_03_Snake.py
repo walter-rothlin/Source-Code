@@ -1,35 +1,32 @@
 #!/usr/bin/python3
-
 # ------------------------------------------------------------------
-# Name: snake.py
+# Name: HAT_Event_03_Snake.py
 #
-# Description: Mit dem Joy-Stick kann ein Punkt auf allen Achsen 
+# Description: Mit dem Joy-Stick kann ein Punkt auf allen Achsen
 #              bewegt werden.
 #
 # Autor: Walter Rothlin
 #
-# History:  
-# 17-Apr-2018	Walter Rothlin		Initial Version
+# History:
+# 13-Apr-2021	Walter Rothlin		Initial Version
 # ------------------------------------------------------------------
 
-from sense_hat import *
-from time      import sleep
-from signal    import pause
-from support   import *
-import math
+from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
+from signal import pause
 
 x = 3
 y = 3
 sense = SenseHat()
 
-def clamp(value, min_value = 0, max_value = 7):
+# function definitions
+# --------------------
+def clamp(value, min_value=0, max_value=7):
     return min(max_value, max(min_value, value))
 
 def pushed_up(event):
     global y
     if event.action != ACTION_RELEASED:
         y = clamp(y - 1)
-
 def pushed_down(event):
     global y
     if event.action != ACTION_RELEASED:
@@ -48,7 +45,8 @@ def pushed_right(event):
 def refresh():
     sense.clear()
     sense.set_pixel(x, y, 255, 255, 255)
-
+# register event-handlers
+# -----------------------
 sense.stick.direction_up = pushed_up
 sense.stick.direction_down = pushed_down
 sense.stick.direction_left = pushed_left
@@ -56,11 +54,3 @@ sense.stick.direction_right = pushed_right
 sense.stick.direction_any = refresh
 refresh()
 pause()
-
-
-
-
-
-	
-
-
