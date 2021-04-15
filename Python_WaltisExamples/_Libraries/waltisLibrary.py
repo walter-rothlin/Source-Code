@@ -1561,8 +1561,7 @@ if __name__ == '__main__':
     # AUTO_TEST_xPath_Get(verbal=True)
     # TEST_stringFct()
     # TEST_hexStrToURLEncoded()
-
-    TEST_getTimestamp()
+    # TEST_getTimestamp()
 
     # Automated Tests
     # ===============

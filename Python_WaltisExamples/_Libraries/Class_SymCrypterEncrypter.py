@@ -9,11 +9,10 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 13-Apr-2020	Initial Version
-#
+# 13-Apr-2020  Walter Rothlin Initial Version
+# 15-apr-2021  Walter Rothlin Added automated testing
 # ------------------------------------------------------------------
 import math
-
 
 class SymCrypterEncrypter:
 
@@ -28,7 +27,7 @@ class SymCrypterEncrypter:
       self.key = key
       return self.key
 
-   def shiftChr(self,aChar,shift):
+   def shiftChr(self, aChar, shift):
       return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
       # return chr(ord(aChar) + shift)
 
@@ -144,12 +143,14 @@ class SymCrypterEncrypter:
       if ((klarText != encryptedText) or (doTrace)):
          testIsOk = "OK"
          if (klarText != encryptedText):
+
             testIsOk = "NOK"
             testErrorCount = testErrorCount + 1
       print(klarText, "-->", geheimText, "-->", encryptedText, "    ", testIsOk)
       print("\n\n")
 
-# Tester = SymCrypterEncrypter("")
-# Tester.TEST_EinzelZeichen()
-# Tester.TEST_Strings()
-# Tester.TEST_Stringshintertuer()
+if __name__ == '__main__':
+   Tester = SymCrypterEncrypter("")
+   Tester.TEST_EinzelZeichen()
+   Tester.TEST_Strings()
+   Tester.TEST_Stringshintertuer()
