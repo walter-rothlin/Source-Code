@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: Class_SymCrypterEncrypter.py
+# Name: SymCrypterEncrypterSimple.py
 #
-# Description: TC-61 / Enigma
+# Description: Caesar Scheibe (ohne ringbuffer)
 #
 #
 # Autor: Walter Rothlin
@@ -13,6 +13,7 @@
 # 08-Apr-2021   Walter Rothlin Added automated testing
 # ------------------------------------------------------------------
 def shiftChr(einBuchstabe, shiffter):
+   # return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
    return chr(ord(einBuchstabe) + shiffter)
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: Class_SymCrypterEncrypterWithBackdoor.py
+# Name: SymCrypterEncrypterWithBackdoor.py
 #
 # Description: TC-61 / Enigma
 #
