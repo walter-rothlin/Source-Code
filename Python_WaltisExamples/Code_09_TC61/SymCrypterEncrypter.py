@@ -9,13 +9,13 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 28-Apr-2020	Initial Version
-#
+# 28-Apr-2020	Walter Rothlin Initial Version
+# 08-Apr-2021   Walter Rothlin Added automated testing
 # ------------------------------------------------------------------
-import math
 from Class_SymCrypterEncrypter import *
 
-def encrypt(klarText,key):
+
+def encrypt(klarText, key):
    TC61 = SymCrypterEncrypter(key)
    geheimText = TC61.encrypt(klarText)
    return geheimText
@@ -38,12 +38,12 @@ print("Test Normal")
 print("===========")
 klarText   = input("Klartext :")
 secretKey  = input("Schlüssel:")
-geheimText = encrypt(klarText,secretKey)
+geheimText = encrypt(klarText, secretKey)
 print(klarText, "-->", geheimText, "\n")
 
 geheimText  = input("Geheimtext :")
 secretKey   = input("Schlüssel  :")
-encryptedText = decrypt(geheimText,secretKey)
+encryptedText = decrypt(geheimText, secretKey)
 print(geheimText, "-->", encryptedText, "\n")
 print("\n\n")
 

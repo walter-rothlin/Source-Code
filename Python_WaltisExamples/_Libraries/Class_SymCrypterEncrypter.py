@@ -67,11 +67,12 @@ class SymCrypterEncrypter:
          asciiList.append(chr(aCharId))
       return asciiList
 
-   def TEST_EinzelZeichen(self):
+   def AUTO_TEST_CryptEncrypt_EinzelZeichen(self, verbal=False):
       TC61 = SymCrypterEncrypter("")
 
-      print("Einzelzeichen Test")
-      print("==================")
+      if verbal:
+         print("Einzelzeichen Test")
+         print("==================")
       shiftList     = ['1', '2', '3']
       wichtigeAscii = [' ', '0', '9', 'A', 'Z', 'a', 'z']
       shiftList = TC61.generateAsciiList()
@@ -92,40 +93,46 @@ class SymCrypterEncrypter:
                if (klarChar != encryptedChr):
                   testIsOk = "NOK"
                   testErrorCount = testErrorCount + 1
-               print("==> shift: {s:3d} ('{sc:1s}'):          '{k:1s}' ({ok:3d}) --> '{g:1s}' ({og:3d}) --> '{e:1s}' ({oe:3d})  ==> {t:3s}".format(s=shift, sc=chr(shift), k=klarChar, ok=ord(klarChar), g=geheimChr, og=ord(geheimChr), e=encryptedChr, oe=ord(encryptedChr), t=testIsOk), sep="")
+                  print("ERROR in AUTO_TEST_CryptEncrypt_EinzelZeichen ==> shift: {s:3d} ('{sc:1s}'):          '{k:1s}' ({ok:3d}) --> '{g:1s}' ({og:3d}) --> '{e:1s}' ({oe:3d})  ==> {t:3s}".format(s=shift, sc=chr(shift), k=klarChar, ok=ord(klarChar), g=geheimChr, og=ord(geheimChr), e=encryptedChr, oe=ord(encryptedChr), t=testIsOk), sep="")
 
-      print("Test-Statistik: ", testCount, "Test-Cases  ", testErrorCount, "Errors")
-      print("\n\n")
+      if verbal:
+         print("Test-Statistik (AUTO_TEST_CryptEncrypt_EinzelZeichen): ", testCount, "Test-Cases  ", testErrorCount, "Errors")
+         print("\n\n")
 
-   def TEST_Strings(self):
+   def AUTO_TEST_CryptEncrypt_Strings(self, verbal=False):
       secretKey = "123456"
       klarText = "WWalter Rothlin"
 
       TC61 = SymCrypterEncrypter(secretKey)
-      print("Text Test")
-      print("=========")
+      if verbal:
+         print("String Test")
+         print("===========")
       testCount = 0
       testErrorCount = 0
 
       geheimText = TC61.encrypt(klarText)
       encryptedText = TC61.decrypt(geheimText)
       doTrace = True
+      testCount = testCount + 1
       if ((klarText != encryptedText) or (doTrace)):
          testIsOk = "OK"
          if (klarText != encryptedText):
             testIsOk = "NOK"
             testErrorCount = testErrorCount + 1
-      print(klarText, "-->", geheimText, "-->", encryptedText, "    ", testIsOk)
-      print("\n\n")
+            print("ERROR in AUTO_TEST_CryptEncrypt_Strings:", klarText, "-->", geheimText, "-->", encryptedText, "    ", testIsOk)
+      if verbal:
+         print("Test-Statistik (AUTO_TEST_CryptEncrypt_Strings): ", testCount, "Test-Cases  ", testErrorCount, "Errors")
+         print("\n\n")
 
-   def TEST_Stringshintertuer(self):
+   def AUTO_TEST_CryptEncrypt_Stringshintertuer(self, verbal=False):
       hintertorKey = "P19"
       secretKey = "123456"
       klarText = "WWalter Rothlin"
 
       TC61 = SymCrypterEncrypter(secretKey)
-      print("Text Test Hintertür")
-      print("===================")
+      if verbal:
+         print("Text Test Hintertür")
+         print("===================")
       testCount = 0
       testErrorCount = 0
       TC61_Sender = SymCrypterEncrypter(secretKey)
@@ -140,17 +147,20 @@ class SymCrypterEncrypter:
       encryptedText = TC61_Receiver.decrypt(parts[1])
 
       doTrace = True
+      testCount = testCount + 1
       if ((klarText != encryptedText) or (doTrace)):
          testIsOk = "OK"
          if (klarText != encryptedText):
 
             testIsOk = "NOK"
             testErrorCount = testErrorCount + 1
-      print(klarText, "-->", geheimText, "-->", encryptedText, "    ", testIsOk)
-      print("\n\n")
+            print("ERROR in AUTO_TEST_CryptEncrypt_Stringshintertuer:", klarText, "-->", geheimText, "-->", encryptedText, "    ", testIsOk)
+      if verbal:
+         print("Test-Statistik (AUTO_TEST_CryptEncrypt_Stringshintertuer): ", testCount, "Test-Cases  ", testErrorCount, "Errors")
+         print("\n\n")
 
 if __name__ == '__main__':
    Tester = SymCrypterEncrypter("")
-   Tester.TEST_EinzelZeichen()
-   Tester.TEST_Strings()
-   Tester.TEST_Stringshintertuer()
+   Tester.AUTO_TEST_CryptEncrypt_EinzelZeichen(verbal=True)
+   Tester.AUTO_TEST_CryptEncrypt_Strings(verbal=True)
+   Tester.AUTO_TEST_CryptEncrypt_Stringshintertuer(verbal=True)

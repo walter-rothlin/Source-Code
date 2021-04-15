@@ -9,8 +9,8 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 28-Apr-2020	Initial Version
-#
+# 28-Apr-2020	Walter Rothlin Initial Version
+# 08-Apr-2021   Walter Rothlin Added automated testing
 # ------------------------------------------------------------------
 import math
 from Class_SymCrypterEncrypter import *
