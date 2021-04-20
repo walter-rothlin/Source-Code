@@ -22,14 +22,14 @@ INSERT INTO `adressen` (`vorname`, `nachname`, `strasse`, `plz`, `ort`) VALUES (
 
 
 -- check der Daten
-select
+SELECT
 	 adressen.adress_id,
 	 adressen.vorname,
      adressen.nachname,
      adressen.strasse,
      adressen.plz,
      adressen.ort
-from adressen;
+FROM adressen;
 
 
 -- 1.Normalisierung: zusammengesetzte Felder trennen
@@ -45,7 +45,7 @@ UPDATE `adressen` SET `strasse`='Ochsenbodenweg', `hausnummer`='7a' WHERE `adres
 
 
 -- check der Daten
-select
+SELECT
      adressen.adress_id,
      adressen.vorname,
      adressen.nachname,
@@ -53,7 +53,7 @@ select
      adressen.hausnummer,
      adressen.plz,
      adressen.ort
-from adressen;
+FROM adressen;
 
 
 -- weiter Normalisieren (Orte in neue Tabelle auslagern)
@@ -72,7 +72,7 @@ INSERT INTO `orte` (`plz`, `name`) VALUES ('8855', 'Nuolen');
 INSERT INTO `orte` (`plz`, `name`) VALUES ('8854', 'Siebnen');
 
 -- check der Daten
-select * from orte;
+SELECT * FROM orte;
 
 
 -- foreign key in Haupttabelle einführen
@@ -86,7 +86,7 @@ UPDATE `adressen` SET `orte_fk`='3' WHERE `adress_id`='3';
 UPDATE `adressen` SET `orte_fk`='2' WHERE `adress_id`='4';
 
 -- check der Daten
-select
+SELECT
      adressen.adress_id,
      adressen.vorname,
      adressen.nachname,
@@ -95,7 +95,7 @@ select
      adressen.plz,
      adressen.ort,
      adressen.orte_fk
-from adressen;
+FROM adressen;
 
 -- redundante Felder (Attributte löschen)
 ALTER TABLE `adressen` 
@@ -103,25 +103,25 @@ ALTER TABLE `adressen`
     DROP COLUMN `plz`;
 
 -- check der Daten
-select
+SELECT
      adressen.adress_id,
      adressen.vorname,
      adressen.nachname,
      adressen.strasse,
      adressen.hausnummer,
      adressen.orte_fk
-from adressen;
+FROM adressen;
 
 -- check der Daten
-select
+SELECT
      adressen.vorname,
      adressen.nachname,
      adressen.strasse,
      adressen.hausnummer,
      orte.plz,
      orte.name
-from adressen
-join orte on adressen.orte_fk = orte.ort_id;
+FROM adressen
+JOIN orte ON adressen.orte_fk = orte.ort_id;
 
 
 -- alles wieder löschen
@@ -132,4 +132,4 @@ DELETE FROM `orte`;
 DROP TABLE `adressen`;
 DROP TABLE `orte`;
 
-DROP Schema `bzu`;
+DROP SCHEMA `bzu`;

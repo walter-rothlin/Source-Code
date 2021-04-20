@@ -114,8 +114,8 @@ WHERE
     -- in where-clause können keine Alias verwendet werden     
     -- FName      = 'NICK'            OR
     first_name = 'NICK'           OR   -- Nick (case-insensitive)
-    first_name like binary '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
-    first_name like '___'              -- _ genau ein Zeichen
+    first_name LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
+    first_name LIKE '___'              -- _ genau ein Zeichen
 ORDER BY
 	FName,   -- hier koennen ALIAS verwendet werden
     LName;
@@ -129,8 +129,8 @@ SELECT
 FROM
     actor
 WHERE    
-    last_name  regexp binary "^BER"  OR
-    first_name regexp binary "NA$";
+    last_name  REGEXP BINARY "^BER"  OR
+    first_name REGEXP BINARY "NA$";
     
 -- 1.11) Liste film_id, title, rating, special_features von der Tabelle film auf.
 --       Was ist der Type der Attribute rating und special_features?
@@ -263,8 +263,8 @@ WHERE
 SELECT
     film_id, 
     title, 
-    rating, 
-    special_features 
+    rating,          -- enum
+    special_features -- set
 FROM 
     film
 WHERE
@@ -281,7 +281,7 @@ FROM
 -- 2.5) Von welchen Schauspielern (Vorname und Nachname) hat der Store Filme? Liste diese in einer JASON Struktur auf!
 --       https://dev.mysql.com/doc/refman/5.7/en/json-creation-functions.html#function_json-array
 SELECT 
-    JSON_OBJECT("Vorname", first_name, "Nachname",last_name) AS JASON
+    JSON_OBJECT("Vorname", first_name, "Nachname",last_name) AS JSON
 FROM
     actor;
     
@@ -290,14 +290,13 @@ FROM
 --       https://dev.mysql.com/doc/refman/5.7/en/case.html
 SELECT 
     CASE 
-      WHEN first_name = "ED"   THEN "Edi"
-      WHEN first_name = "KARL" THEN "Kari"
+      WHEN first_name = 'ED'   THEN 'Edi'
+      WHEN first_name = 'KARL' THEN 'Kari'
       ELSE first_name
     END AS Vorname,
     last_name AS Nachname
 FROM
     actor;
--- END functions
 
 
 -- START metaData
@@ -339,21 +338,21 @@ ORDER BY table_schema , Table_NAME , column_name;
 -- START joins
 -- Joins
 -- =====
--- Erstellen Sie eine Orte Länderliste  (Kreuzprodukt)
+-- 3.9.1 Erstellen Sie eine Orte Länderliste  (Kreuzprodukt)
 SELECT
 	city.city as Stadt,
     country.country as Land
 FROM
 	city, country;
 
--- Erstellen Sie eine Orte Länderliste (Kreuzprodukt)
+-- 3.9.2 Erstellen Sie eine Orte Länderliste (Kreuzprodukt)
 SELECT
 	S.city as Stadt,
     L.country as Land
 FROM
 	city as S, country as L;
  
--- Erstellen Sie eine Orte Länderliste (mit where close)
+-- 3.9.3 Erstellen Sie eine Orte Länderliste (mit where close)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -362,7 +361,7 @@ FROM
 WHERE
 	S.country_id = L.country_id;
 
--- Erstellen Sie eine Orte Länderliste (mit inner join)
+-- 3.9.4 Erstellen Sie eine Orte Länderliste (mit inner join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -370,7 +369,7 @@ FROM
 	city as S
 INNER JOIN country as L on S.country_id = L.country_id;    
 
--- Erstellen Sie eine Orte Länderliste (mit left join)
+-- 3.9.5 Erstellen Sie eine Orte Länderliste (mit left join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -378,7 +377,7 @@ FROM
 	city as S
 LEFT JOIN country as L on S.country_id = L.country_id;
 
--- Erstellen Sie eine Orte Länderliste (mit right join)
+-- 3.9.6 Erstellen Sie eine Orte Länderliste (mit right join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -386,16 +385,17 @@ FROM
 	country as L
 RIGHT JOIN city as S on S.country_id = L.country_id; 
 
-
-select
+-- 3.9.7 Erstellen Sie eine Adress-, Orte und Länderliste
+SELECT
 	address.address,
     city.city,
     country.country
-from
+FROM
 	address
-inner join city    on address.city_id = city.city_id
-inner join country on city.country_id = country.country_id;
+INNER JOIN city    ON address.city_id = city.city_id
+INNER JOIN country ON city.country_id = country.country_id;
 
+-- 3.9.8 Erstellen Sie eine Filmtitle Liste mit den Sprachen und der Originalsprache
 SELECT
      f.film_id      AS Id,
      f.title        AS Title,
@@ -404,7 +404,7 @@ SELECT
 FROM
      film AS f
 INNER JOIN language AS lang    ON f.language_id          = lang.language_id
-LEFT JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+LEFT  JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 --  4.0) Machen Sie folgende Aenderungen in skaila (Am einfachsten mit der Workbench):
 --        a) fügen Sie eine weitere Sprache 'Schweizerdeutsch' in die Tabelle language 
@@ -532,7 +532,7 @@ FROM
     film AS f
 LEFT OUTER JOIN language AS lang    ON f.language_id          = lang.language_id
 LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id
-WHERE f.original_language_id is not NULL;  -- 2 rows
+WHERE f.original_language_id IS NOT NULL;  -- 2 rows
 
 
 
@@ -551,9 +551,6 @@ SELECT
 FROM
    language 
 LEFT JOIN film ON language.language_id = film.original_language_id;   -- 1005 rows
-
-
-
 
 
 -- 4.3.1) Listen sie Alle Städte auf und in wievielen Landern diese vorkommen absteigend sortiert nach den anzahl Laendern
@@ -581,8 +578,7 @@ ORDER BY
    city.city, 
    country.country;  -- 2 rows
 
--- 4.4.1) Erstellen Sie eine Liste mit allen ausgeliehenen DVDs und listen Sie die Vor-, Nachnamen
---        und Telefonnummern der Ausleiher auf sowie den Titel der DVD, welche am 27.5.2005 
+-- 4.4.1) Erstellen Sie eine Liste mit allen ausgeliehenen DVDs, welche am 27.5.2005 
 --        zurueckgegeben worden sind.
 SELECT 
    *
@@ -594,6 +590,9 @@ WHERE
 ORDER BY 
    return_date; -- (49 rows)
 
+-- 4.4.2) Erstellen Sie eine Liste mit allen ausgeliehenen DVDs und listen Sie die Vor-, Nachnamen
+--        und Telefonnummern der Ausleiher auf sowie den Titel der DVD, welche am 27.5.2005 
+--        zurueckgegeben worden sind.
 SELECT 
    CONCAT(LEFT(customer.first_name, 1),'. ', customer.last_name) AS Renter,
    film.title                                                    AS Film
@@ -607,7 +606,9 @@ WHERE
     DATE_FORMAT(return_date, '%Y%m%d') = '20050527'
 ORDER BY 
     return_date; -- (49 rows)
-    
+
+-- 4.4.3) Erstellen Sie eine Mahnungsliste, wie folgt:
+--			Enthält alle Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurückgeben haben
 SELECT 
     CONCAT(LEFT(customer.first_name, 1),'. ',customer.last_name) AS Renter,
     address.phone                                                AS Phone,
