@@ -1,0 +1,2 @@
+* * * * * sudo bash Desktop/WiFiCheck # JOB_ID_1
+@reboot /home/pi/Kaeltemacher/startup.sh > /tmp/KM.log 2>&1

@@ -108,13 +108,7 @@ if __name__ == '__main__':
 
     # Main polling loop
     # -----------------
-    if (len(sys.argv) >= 2):
-        if (sys.argv[1] == "--cleanup"):
-            cleanUp(file_path, city, max_logs_per_city)
-            exit()
-
     doLoop = True
-
     while doLoop:
         logOneRequestResponse()
         time.sleep(pollingTime)

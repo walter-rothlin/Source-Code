@@ -181,7 +181,7 @@ hochDruckOff      = Hysterese(schwellwert_H_On,          schwellwert_H_Off      
 luefter_1_On      = Hysterese(schwellwert_H1_On,         schwellwert_H1_Off       , name="Luefter_1" , OnStr = "Running", OffStr = "Stopped")
 luefter_2_On      = Hysterese(schwellwert_H2_On,         schwellwert_H2_Off       , name="Luefter_2" , OnStr = "Running", OffStr = "Stopped")
 waterPumpHy       = Hysterese(schwellwert_WaterPump_On,  schwellwert_WaterPump_Off, name="WaterPump" , OnStr = "Running", OffStr = "Stopped")
-logFile           = WR_Logfile(logFilePath, logFileName)
+logFile           = WR_Logfile(logFilePath,logFileName)
 # --------------------------------------------------
 # main Loop
 # -------------------------------------------------- 
