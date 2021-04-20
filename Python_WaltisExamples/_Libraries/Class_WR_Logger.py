@@ -17,7 +17,7 @@ from waltisLibrary import *
 class WR_Logger:
     # Ctr (Konstruktor)
     # -----------------
-    def __init__(self, fName, delimiter="|", headerStr=None, titleStr=None, withTimeStamp=True, withLevel=True, doVerbal=True, timeFormatString="nice", onlyChanges=False, ringbufferSize=-1, cWidth_TimeStamp = 22, cWidth_Level = 8):
+    def __init__(self, fName, delimiter="|", headerStr=None, titleStr="Title", withTimeStamp=True, withLevel=True, doVerbal=True, timeFormatString="nice", onlyChanges=False, ringbufferSize=-1, cWidth_TimeStamp = 22, cWidth_Level = 8):
         self.__fName = fName
         self.__delimiter = delimiter
         self.__withTimeStamp = withTimeStamp

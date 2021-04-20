@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-class CLASS_DataLogger:
+class DataLogger:
    loggerCount = 0
 
    def __init__(self, name, tolerance):
