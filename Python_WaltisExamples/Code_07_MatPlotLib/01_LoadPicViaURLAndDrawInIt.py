@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 01_InBildZeichnen.py
+# Name: 01_LoadPicViaURLAndDrawInIt.py
 #
 # Description: Lädt ein Bild und zeichnet ins Bild geometrische Figuren
 #
@@ -19,9 +19,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import requests
 
-# imgFileName = 'G:\\_WaltisDaten\\SourceCode\\GitHosted\\Python_WaltisExamples\\Code_07_MatPlotLib\\stinkbug.png'
-imgFileName = './stinkbug.png'
+
+def loadAndSaveFileFromURL(url='http://google.com/favicon.ico'):
+    filename = url.split('/')[-1]
+    r = requests.get(url, allow_redirects=True)
+    open(filename, 'wb').write(r.content)
+    return filename
+
+
+imgFileName = loadAndSaveFileFromURL('https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_07_MatPlotLib/stinkbug.png')
 img = mpimg.imread(imgFileName)
 height = len(img)
 width = len(img[1])

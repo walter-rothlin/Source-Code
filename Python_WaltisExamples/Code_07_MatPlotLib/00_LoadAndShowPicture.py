@@ -15,25 +15,10 @@
 # History:
 # 22.4.21   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
-
-
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import requests
 
-
-def loadAndSaveFileFromURL(url='http://google.com/favicon.ico'):
-    filename = url.split('/')[-1]
-    r = requests.get(url, allow_redirects=True)
-    open(filename, 'wb').write(r.content)
-    return filename
-
-
-# imgFileName = 'G:\\_WaltisDaten\\SourceCode\\GitHosted\\Python_WaltisExamples\\Code_07_MatPlotLib\\stinkbug.png'
-# imgFileName = './stinkbug.png'
-imgFileName = loadAndSaveFileFromURL('https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_07_MatPlotLib/stinkbug.png')
-
+imgFileName = './stinkbug.png'
 img = mpimg.imread(imgFileName)
 height = len(img)
 width = len(img[1])
