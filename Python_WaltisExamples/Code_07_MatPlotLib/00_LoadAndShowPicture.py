@@ -20,14 +20,6 @@ import matplotlib.image as mpimg
 
 imgFileName = './stinkbug.png'
 img = mpimg.imread(imgFileName)
-height = len(img)
-width = len(img[1])
-farbe = len(img[1][1])
-
-print("height   :", height)
-print("width    :", width)
-print("farbe    :", farbe)
-print(img)
 
 plt.imshow(img)
 plt.show()
