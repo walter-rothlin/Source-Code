@@ -49,10 +49,10 @@ def waltisPythonLib_Version():
 # Bildschirmsteuerung
 # ===================
 def VT52_cls():
-    print("\033[2J",end="", flush=True)
+    print("\033[2J", end="", flush=True)
 
 def VT52_home():
-    print("\033[H",end="", flush=True)
+    print("\033[H", end="", flush=True)
 
 def VT52_cls_home():
     VT52_cls()

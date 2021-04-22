@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 01_InBildZeichnen.py
+# Name: 00_LoadAndShowPicture.py
 #
 # Description: Lädt ein Bild und zeichnet ins Bild geometrische Figuren
 #
@@ -15,6 +15,7 @@
 # History:
 # 22.4.21   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,24 +31,6 @@ farbe = len(img[1][1])
 print("height   :", height)
 print("width    :", width)
 print("farbe    :", farbe)
-doChange = True
-if (doChange):
-    img[2:50, 2:80] = [1, 0.5, 0, 1]       # oranges Recheck oben links 
-    img[-50:-3, -100:-3] = [0, 1, 1, 0.8]  # cyan Rechteck unten rechts
-    img[0:, 0:5] = [1, 0, 0, 1]            # rote y-Achse
-    img[0:6, 0:] = [0, 1, 0, 1]            # gruene x-Achse
-    img[0:, -7:] = [0, 0, 1, 1]            # blaue  y-Ende
-    img[-8:, :] = [1, 0, 1, 1]             # mangenta x-Ende
-
-    steigung = height / width
-    # print("steigung :", steigung)
-    for x in range(width-1):
-        y = steigung * x
-        # print(x, y, int(y))
-        img[int(y), x] = [1, 1, 1, 1]
-
-    #   img = img[:, :, 0]   #
-
 print(img)
 
 plt.imshow(img)

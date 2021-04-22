@@ -28,7 +28,7 @@ def getPage(num, subfolder, booknumber):
 
 
 def pageCrawler(startPage, subfolder, booknumber):
-    while getPage(startPage,subfolder,booknumber) == 200:
+    while getPage(startPage, subfolder, booknumber) == 200:
         startPage += 1
 
 def createPdfFromImgFolder(sourceFolder, pdfName, destinationFolder):
@@ -55,7 +55,7 @@ def getPdf(listOFBooks):
     for book in listOFBooks:
         print("creating book: " + book[0])
         pageCrawler(1,book[0],book[1])
-        createPdfFromImgFolder(book[0]+'/',book[0],"outputPdf/")
+        createPdfFromImgFolder(book[0]+'/', book[0], outputPdf/")
 
 
 
