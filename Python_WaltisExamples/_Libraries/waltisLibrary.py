@@ -18,6 +18,7 @@
 # 21-Jan-2021   Walter Rothlin      Added ASCII Fct
 # 17-Feb-2021   Walter Rothlin      File Operationen implementiert
 # 11-Mar-2021   Walter Rothlin      More automated testing
+# 22-Apr-2021   Walter Rothlin      Added URL functions
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -1025,7 +1026,7 @@ def checkTimeDifference(oldTimestamp, youngTimestamp, limit, gt=True):
         return secStr < limit
 
 # Math functions
-# --------------
+# ==============
 def equalsWithinTolerance(ist, soll, abweichungProzent=0.001):
     if (soll == 0) and (ist == 0):
         return True
@@ -1133,6 +1134,14 @@ def AUTO_TEST_xPath_Get(verbal=False):
         print("--> Test Cases Executed: {a:4d}".format(a=testCasesExecuted))
         print("--> Test Cases Failed  : {a:4d}".format(a=testCasesFailed))
     return {"TestName": getMyFctName(), "testCasesExecuted": testCasesExecuted, "testCasesFailed": testCasesFailed}
+
+# URL operations
+# ==============
+def loadAndSaveFileFromURL(url='http://google.com/favicon.ico'):
+    filename = url.split('/')[-1]
+    r = requests.get(url, allow_redirects=True)
+    open(filename, 'wb').write(r.content)
+    return filename
 
 # File and Directory operations
 # =============================
