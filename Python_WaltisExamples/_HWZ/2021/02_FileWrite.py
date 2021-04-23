@@ -1,4 +1,5 @@
 import os
+import shutil
 
 text_1 = "Hallo HWZ 2021\\nHier geht es 'auf' die nächste Zeile\n\nDann eine Leerzeile"
 
@@ -80,9 +81,10 @@ if (os.path.exists(afilename)):
         lines = f.readlines()
     print("using with...\n", lines)
 else:
-    print("File nicht vorhanden!!!!")
-
-
-
-
-
+    print("File in", os.getcwd(), "nicht vorhanden!!!!")
+    print("Folgende Files sind vorhanden:")
+    filesInDir = os.listdir(".")
+    for aFileName in filesInDir:
+        print("  --> ", aFileName)
+    shutil.copy(filesInDir[0], afilename)
+    os.remove(afilename)
