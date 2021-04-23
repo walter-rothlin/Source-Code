@@ -76,6 +76,13 @@ if __name__ == '__main__':
   f.close()
   print("\n")
 
+  print("Files lesen using with")
+  print("------------------------")
+  with open(testfile_1, "r", encoding='utf-8') as f:
+    lines = f.readlines()
+  print("using with...\n", lines)
+
+
   if (os.path.exists(testfile_1)):
     os.remove(testfile_1)
     print(testfile_1, "has been deleted")
