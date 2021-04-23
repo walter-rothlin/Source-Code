@@ -6,7 +6,7 @@ USE `bzu`;
 
 -- Adressen-Tabelle kreieren
 CREATE TABLE `adressen` (
-  `vorname` VARCHAR(45) NOT NULL,
+  `vorname` VARCHAR(3) NOT NULL,
   `nachname` VARCHAR(45) NOT NULL,
   `strasse` VARCHAR(45) NULL,
   `plz` INT(4) NOT NULL,

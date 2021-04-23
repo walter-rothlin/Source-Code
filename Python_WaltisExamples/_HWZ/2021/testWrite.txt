@@ -1,0 +1,8 @@
+Hallo HWZ 2021\nHier geht es 'auf' die nächste Zeile
+Dann eine Leerzeile
+Hallo 'Zürich'
+HWZ
+Hallo HWZ 2021\nHier geht es 'auf' die nächste Zeile
+
+Dann eine Leerzeile
+===========================
