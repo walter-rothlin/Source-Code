@@ -1,3 +1,5 @@
+import os
+
 text_1 = "Hallo HWZ 2021\\nHier geht es 'auf' die nächste Zeile\n\nDann eine Leerzeile"
 
 text_2 = '''
@@ -58,10 +60,27 @@ print("\n")
 for aLine in fileContent:
     print(aLine, end="")
 
+print("Files lesen using with")
+print("------------------------")
+with open(testFileName, "r", encoding='utf-8') as f:
+    lines = f.readlines()
+print("using with...\n", lines)
 
+f = open(testFileName, "a", encoding='utf-8')
+f.write("Append\n")
+f.close()
 
+f = open("G:/_WaltisDaten/SourceCode/GitHosted/Python_WaltisExamples/_BZU/2021/testAppend.txt", "a", encoding='utf-8')
+f.write("Append\n")
+f.close()
 
-
+afilename = "gugus.txt"
+if (os.path.exists(afilename)):
+    with open(afilename, "r", encoding='utf-8') as f:
+        lines = f.readlines()
+    print("using with...\n", lines)
+else:
+    print("File nicht vorhanden!!!!")
 
 
 
