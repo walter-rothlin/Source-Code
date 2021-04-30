@@ -27,8 +27,8 @@ print("height * width: ", height, "*", width)
 
 
 # Geometrische Formen auf das Bild zeichnen
-# img[0:50, 0:80] = [1, 0.5, 0, 1]       # oranges Recheck oben links
-img[0:20, 0:20] = [1, 0, 0, 1]
+img[0:50, 0:80] = [1, 0.5, 0, 1]       # oranges Recheck oben links
+
 
 plt.imshow(img)
 plt.show()
