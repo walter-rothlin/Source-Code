@@ -40,7 +40,7 @@ print("width    :", width)
 print("farbe    :", farbe)
 doChange = True
 if (doChange):
-    img[2:50, 2:80] = [1, 0.5, 0, 1]       # oranges Recheck oben links 
+    img[2:50, 2:80] = [1, 0.5, 0, 1]       # oranges Recheck oben links
     img[-50:-3, -100:-3] = [0, 1, 1, 0.8]  # cyan Rechteck unten rechts
     img[0:, 0:5] = [1, 0, 0, 1]            # rote y-Achse
     img[0:6, 0:] = [0, 1, 0, 1]            # gruene x-Achse

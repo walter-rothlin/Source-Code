@@ -19,6 +19,7 @@
 # 17-Feb-2021   Walter Rothlin      File Operationen implementiert
 # 11-Mar-2021   Walter Rothlin      More automated testing
 # 22-Apr-2021   Walter Rothlin      Added URL functions
+# 30-Apr-2021   Walter Rothlin      Added average(list)
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -45,7 +46,7 @@ from time import sleep
 # Library fucntions
 # =================
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 1.0.0.3")
+    print("waltisLibrary.py: 1.0.0.4")
 
 # Bildschirmsteuerung
 # ===================
@@ -60,7 +61,7 @@ def VT52_cls_home():
     VT52_home()
 
 def halt(prompt="Weiter?"):
-    ant=input(prompt)
+    ant = input(prompt)
 
 # Pysikalische Umrechnungen
 # =========================
@@ -530,6 +531,84 @@ def AUTO_TEST_summe(verbal=False):
     if verbal:
         print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
+# Durchschnitt berechnen
+# ======================
+def average(nrList, untergrenze=0, obergrenze=None, verbal=False, debug=False):
+    '''
+    Specification:
+    This functions calculates the average of all number elements in a given List:
+    e.g.
+        average([4, 6, 2, 5.5])                           --> 4.375
+        average([4, 6, 2, 5.5, 3])                        --> 4.1
+        average(["4", "6", "2", "5.5", "1.5*2"])          --> 4.1
+        average(["4", "6", "2", "5.5", "1.5*2", "walti"]) --> 4.1
+    '''
+
+    if obergrenze is None:
+        nrList = nrList[untergrenze:]
+    else:
+        nrList = nrList[untergrenze:obergrenze]
+    if debug:
+        print(nrList)
+    aSumme = 0
+    aCount = 0
+    for aElement in nrList:
+        try:
+            if (type(aElement) == int) or (type(aElement) == float):
+             aNum = aElement
+            else:
+                aNum = eval(aElement)
+        except NameError as error:
+            if verbal:
+                print("WARNING: Element", aElement, "is not taken!!", error)
+        else:
+            aSumme += aNum
+            aCount += 1
+    return aSumme/aCount
+
+def AUTO_TEST_average(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "average"
+
+    testsPerformed += 1
+    param_1 = [4, 6, 2, 5.5]
+    expectedResult = 4.375
+    result = average(param_1)
+    if result != expectedResult:
+        testsFailed += 1
+        print("Error in testSuite:   ", testSuite, ":  -> (", testsPerformed, ")", sep="")
+        print("   average(", param_1, ") = ", result, "    Expected:", expectedResult, sep="")
+        print()
+
+    testsPerformed += 1
+    param_1 = [4, 6, 2, 5.5, 3]
+    expectedResult = 4.1
+    result = average(param_1)
+    if result != expectedResult:
+        testsFailed += 1
+        print("Error in testSuite:   ", testSuite, ":  -> (", testsPerformed, ")", sep="")
+        print("   average(", param_1, ") = ", result, "    Expected:", expectedResult, sep="")
+        print()
+
+    testsPerformed += 1
+    param_1 = ["4", "6", "2", "5.5", "1.5*2", "walti"]
+    expectedResult = 4.1
+    result = average(param_1)
+    if result != expectedResult:
+        testsFailed += 1
+        print("Error in testSuite:   ", testSuite, ":  -> (", testsPerformed, ")", sep="")
+        print("   average(", param_1, ") = ", result, "    Expected:", expectedResult, sep="")
+        print()
+
+    if verbal:
+        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
+
+   #print(average([4, 6, 2, 5.5, 3]) == 4.1)
+   #print(average() == 4.1)
 
 # Fakultät berechnen
 # ==================
@@ -1572,6 +1651,8 @@ if __name__ == '__main__':
     # TEST_hexStrToURLEncoded()
     # TEST_getTimestamp()
 
+
+
     # Automated Tests
     # ===============
     autoTest = True
@@ -1613,6 +1694,10 @@ if __name__ == '__main__':
         totalTests[1] += testStat[1]
 
         testStat = AUTO_TEST_fakultaet(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
+
+        testStat = AUTO_TEST_average(verbal=doVerbal)
         totalTests[0] += testStat[0]
         totalTests[1] += testStat[1]
 
