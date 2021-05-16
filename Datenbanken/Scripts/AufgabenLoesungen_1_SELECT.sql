@@ -2,7 +2,7 @@
 -- ================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 26-MAR-2021 / 10:25
+--    Last Change: 16-May-2021 / 20:05
 --
 -- ================================
 -- END title
@@ -33,14 +33,14 @@ SELECT
 FROM
     actor;
 
--- 1.2) Beschrifte die Resultat-Tabelle mit Vorname und Nachname als Spalten-Header
+-- 1.2) Beschrifte die Resultat-Tabelle von 1.1 mit Vorname und Nachname als Spalten-Header
 SELECT 
     sakila.act.first_name AS Vorname,
     last_name  AS Nachname
 FROM
     sakila.actor AS act;
 
--- 1.3) sortiert nach Nachname, Vorname
+-- 1.3) Sortiert die Resultat-Tabelle von 1.2 nach Nachname, Vorname
 SELECT 
     first_name AS Vorname, 
     last_name  AS Nachname
@@ -59,7 +59,7 @@ ORDER BY
     Nachname,
     Vorname;
 
--- 1.4) liste alle Schauspieler-Nachnamen sortiert auf
+-- 1.4) Liste alle Schauspieler-Nachnamen sortiert auf
 SELECT 
     last_name AS Nachname
 FROM
@@ -68,20 +68,20 @@ ORDER BY
     Nachname;
 
 
--- 1.5) liste alle Schauspieler-Nachnamen auf (jeder Nachname aber nur einmal)
+-- 1.5) Liste alle Schauspieler-Nachnamen auf (jeder Nachname aber nur einmal)
 SELECT DISTINCT
     last_name AS Nachname
 FROM
     actor
 ORDER BY Nachname;
 
--- 1.6) von wie viele Schauspieler hat es DVD im Store?
+-- 1.6) Von wie viele Schauspieler hat es DVD im Store?
 SELECT 
     COUNT(3)      -- COUNT(last_name)
 FROM
     actor;    -- 200
 
--- 1.7) wieviele verschiedene Nachnamen gibt es bei den Schauspielern
+-- 1.7) Wieviele verschiedene Nachnamen gibt es bei den Schauspielern
 SELECT 
     COUNT(DISTINCT last_name)
 FROM
@@ -90,7 +90,7 @@ ORDER BY
     last_name,
     first_name;  -- 121
 
--- 1.8) liste alle Schauspielern (Vorname und Nachname) auf, welche Kirsten zum Vornamen heissen? Sortiere diese
+-- 1.8) Liste alle Schauspielern (Vorname und Nachname) auf, welche Kirsten zum Vornamen heissen? Sortiere diese
 --      nach Nachnamen absteigend und nach Vorname aufsteigend
 SELECT 
     first_name, last_name
@@ -103,7 +103,7 @@ ORDER BY
     first_name;
 
 
--- 1.9) Alle die NICK zum Vornamen heissen oder ein SS im Vornamen haben oder deren Vorname genau 4 Buchstaben lang ist.
+-- 1.9) Liste alle Schauspielern (Vorname und Nachname) auf, welche NICK zum Vornamen heissen oder ein SS im Vornamen haben oder deren Vorname genau 4 Buchstaben lang ist.
 --      Sortiert nach first_name und last_name
 SELECT 
     first_name AS FName,
@@ -121,7 +121,7 @@ ORDER BY
     LName;
 
     
--- 1.10) ... alle bei denen der Nachname mit BER beginnt oder deren Vorname mit NA endet
+-- 1.10) Liste alle Schauspielern (Vorname und Nachname) auf, bei welchen der Nachname mit BER beginnt oder deren Vorname mit NA endet
 -- https://dev.mysql.com/doc/refman/5.7/en/regexp.html
 SELECT 
     first_name AS FName,
@@ -137,8 +137,8 @@ WHERE
 SELECT 
     film_id,
     title,
-    rating,
-    special_features
+    rating,            -- Enumeration
+    special_features   -- Set / Menge
 FROM
     film;
     
@@ -162,22 +162,8 @@ GROUP BY
 Order BY
    Umsatz DESC;
 
--- 1.14) ... und nun noch die Namen und Vornamen der Kunden
-SELECT 
-   payment.customer_id    As Kunden_ID,
-   customer.first_name    AS Vorname,
-   customer.last_name     AS Name,
-   sum(payment.amount)    AS Umsatz
-FROM 
-   payment
-    -- LEFT JOIN customer ON payment.customer_id = customer.customer_id
-   INNER JOIN customer ON payment.customer_id = customer.customer_id
-GROUP BY
-   payment.customer_id
-Order BY
-   Umsatz DESC;
     
--- 1.15) Noch nicht loesen!!!!
+-- 1.14) Noch nicht loesen!!!!
 --       In der staff table hat es ein Attribute picture vom Type BLOB. Googeln Sie, was das fuer ein Type ist und 
 --       laden Sie ein Bild fuer eine Record (staff_id = 1) in dieses Feld
 
@@ -338,21 +324,21 @@ ORDER BY table_schema , Table_NAME , column_name;
 -- START joins
 -- Joins
 -- =====
--- 3.9.1 Erstellen Sie eine Orte Länderliste  (Kreuzprodukt)
+-- 3.9.1) Erstellen Sie eine Orte Länderliste  (Kreuzprodukt)
 SELECT
 	city.city as Stadt,
     country.country as Land
 FROM
 	city, country;
 
--- 3.9.2 Erstellen Sie eine Orte Länderliste (Kreuzprodukt)
+-- 3.9.2) Erstellen Sie eine Orte Länderliste (Kreuzprodukt)
 SELECT
 	S.city as Stadt,
     L.country as Land
 FROM
 	city as S, country as L;
  
--- 3.9.3 Erstellen Sie eine Orte Länderliste (mit where close)
+-- 3.9.3) Erstellen Sie eine Orte Länderliste (mit where close)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -361,7 +347,7 @@ FROM
 WHERE
 	S.country_id = L.country_id;
 
--- 3.9.4 Erstellen Sie eine Orte Länderliste (mit inner join)
+-- 3.9.4) Erstellen Sie eine Orte Länderliste (mit inner join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -369,7 +355,7 @@ FROM
 	city as S
 INNER JOIN country as L on S.country_id = L.country_id;    
 
--- 3.9.5 Erstellen Sie eine Orte Länderliste (mit left join)
+-- 3.9.5) Erstellen Sie eine Orte Länderliste (mit left join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -377,7 +363,7 @@ FROM
 	city as S
 LEFT JOIN country as L on S.country_id = L.country_id;
 
--- 3.9.6 Erstellen Sie eine Orte Länderliste (mit right join)
+-- 3.9.6) Erstellen Sie eine Orte Länderliste (mit right join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -385,7 +371,7 @@ FROM
 	country as L
 RIGHT JOIN city as S on S.country_id = L.country_id; 
 
--- 3.9.7 Erstellen Sie eine Adress-, Orte und Länderliste
+-- 3.9.7) Erstellen Sie eine Adress-, Orte und Länderliste
 SELECT
 	address.address,
     city.city,
@@ -395,7 +381,43 @@ FROM
 INNER JOIN city    ON address.city_id = city.city_id
 INNER JOIN country ON city.country_id = country.country_id;
 
--- 3.9.8 Erstellen Sie eine Filmtitle Liste mit den Sprachen und der Originalsprache
+-- 3.9.8.1) Erstellen Sie eine Filmtitle Liste mit den jeweiligen Sprachen
+SELECT
+     f.film_id      AS Id,
+     f.title        AS Title,
+     lang.name      AS Sprache
+FROM
+     film AS f
+INNER JOIN language AS lang    ON f.language_id          = lang.language_id;
+
+-- 3.9.8.2) Erstellen Sie eine Filmtitle Liste mit den Originalsprache
+SELECT
+     f.film_id      AS Id,
+     f.title        AS Title,
+     orgLang.name   AS Originalsprache
+FROM
+     film AS f
+LEFT  JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+
+-- 3.9.8.3) Erstellen Sie eine Filmtitle Liste mit den Originalsprache als Right Join
+SELECT
+     film_id      AS Id,
+     title        AS Title,
+     name         AS Originalsprache
+FROM
+     language
+RIGHT JOIN film ON original_language_id = language.language_id;
+
+-- 3.9.8.4) Erstellen Sie eine Filmtitle Liste mit den Originalsprache als Right Join
+SELECT
+     f.film_id      AS Id,
+     f.title        AS Title,
+     l.name         AS Originalsprache
+FROM
+     language AS l
+RIGHT JOIN film AS f ON f.original_language_id = l.language_id;
+
+-- 3.9.8.5) Erstellen Sie eine Filmtitle Liste mit den Sprachen und der Originalsprache
 SELECT
      f.film_id      AS Id,
      f.title        AS Title,
@@ -405,6 +427,21 @@ FROM
      film AS f
 INNER JOIN language AS lang    ON f.language_id          = lang.language_id
 LEFT  JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+
+-- 3.9.9) Erstellen Sie eine Listen aller Kunden_id mit deren Umsaetzen (wie Aufgabe 1.13), nun aber neben der Kunden_ID noch die Namen und Vornamen der Kunden
+SELECT 
+   payment.customer_id    As Kunden_ID,
+   customer.first_name    AS Vorname,
+   customer.last_name     AS Name,
+   sum(payment.amount)    AS Umsatz
+FROM 
+   payment
+    -- LEFT JOIN customer ON payment.customer_id = customer.customer_id
+   INNER JOIN customer ON payment.customer_id = customer.customer_id
+GROUP BY
+   payment.customer_id
+Order BY
+   Umsatz DESC;
 
 --  4.0) Machen Sie folgende Aenderungen in skaila (Am einfachsten mit der Workbench):
 --        a) fügen Sie eine weitere Sprache 'Schweizerdeutsch' in die Tabelle language 
