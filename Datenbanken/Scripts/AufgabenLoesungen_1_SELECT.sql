@@ -738,8 +738,9 @@ select Stadt, Land from test_city_country;
 
 
 -- START ownFunctions
+
 -- FUNCTIONS
--- ---------
+-- =========
 -- Schreiben sie eine eigene Function. Diese Function nimmt ein String-Parameter entgegen und gibt einen 
 -- String in der Form Hello : inString zurueck. 
 -- Nach der Implementation testen sie die Function aus.
@@ -756,8 +757,9 @@ select HelloFct('Walti') as HALLO;
 
 
 -- START procedures
+
 -- STORED PROCEDURES
--- -----------------
+-- =================
 -- Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
 -- Der erste Parameter ist ein Land und der zweite ob case-sensitve oder nicht gesucht werden soll.
 DROP PROCEDURE IF EXISTS test_searchCountry;
@@ -800,6 +802,7 @@ call hwz_test_1.insertOrt(100,8853,'Lachen');
 
 
 -- START pruefung
+
 -- Prüfungsfragen
 -- ==============
 
