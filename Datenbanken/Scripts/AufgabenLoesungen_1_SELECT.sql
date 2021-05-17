@@ -2,7 +2,7 @@
 -- =======================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 17-May-2021 / 08:37
+--    Last Change: 17-May-2021 / 12:24
 --
 -- =======================================
 -- END title
@@ -176,10 +176,18 @@ Order BY
 -- START functions
 -- Select mit Functions-Aufruf
 -- ===========================
+-- https://dev.mysql.com/doc/refman/5.7/en/string-functions.html
+-- https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
+-- https://dev.mysql.com/doc/refman/5.7/en/regexp.html
+-- https://dev.mysql.com/doc/refman/5.7/en/retrieving-data.html
+-- https://dev.mysql.com/doc/refman/5.7/en/json-creation-functions.html#function_json-array
+-- https://dev.mysql.com/doc/refman/5.7/en/case.html
+-- https://dev.mysql.com/doc/refman/5.7/en/pattern-matching.html
+-- https://www.w3schools.com/sql/sql_join.asp
+
 
 -- 2.1) liste alle Schauspielern (Vorname, Nachname und LAST_UPDATE im format [yyyy-mon-dd]) auf, sowie den entsprechenden Wochentag aber 
 --      nur die, welche an einem bestimmten Datum geaendert wurden
---      https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
 -- %a 	Abbreviated weekday name (Sun..Sat)
 -- %b 	Abbreviated month name (Jan..Dec)
 -- %c 	Month, numeric (0..12)
@@ -289,56 +297,12 @@ FROM
 
 -- END functions
 
--- Prüfungsfragen
--- richtige
-SELECT 
-    first_name,  
-    last_name, 
-    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
-FROM staff 
-WHERE DATE_FORMAT(last_update, '%Y-%M-%d') = "2021-May-17";
-
-
-SELECT 
-    first_name,  
-    last_name, 
-    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
-FROM staff 
-WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
-
-SELECT 
-    first_name,  
-    last_name, 
-    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
-FROM staff 
-WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%b %d,%Y');
-
-
--- falsch
-SELECT 
-    first_name,  
-    last_name, 
-    STR_TO_DATE(last_update, '%M %d,%Y') AS LastUpdate 
-FROM staff 
-WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
-
-SELECT 
-    first_name,  
-    last_name, 
-    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
-FROM staff 
-WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%y');
-
-SELECT 
-    first_name,  
-    last_name, 
-    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
-FROM staff 
-WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 
 -- START metaData
 -- Meta-Daten abfragen
 -- ===================
+
+
 -- 3.1) liste alle Tabellen, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
 --      https://dev.mysql.com/doc/refman/5.7/en/tables-table.html
 SELECT 
@@ -832,4 +796,64 @@ END//
 call hwz_test_1.insertOrt(100,8853,'Lachen');
 
 -- END procedures
+
+
+
+-- START pruefung
+-- Prüfungsfragen
+-- ==============
+
+-- 1.0.0) Sie müssen eine Liste mit Vornamen, Nachnamen und Last_Update (Format: 25.May 2021) für alle
+--        Datensätze in staff, welche am 17.5.2021 geändert wurden, erzeugen.
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE DATE_FORMAT(last_update, '%Y-%M-%d') = "2021-May-17";
+
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%b %d,%Y');
+
+
+-- falsch
+SELECT 
+    first_name,  
+    last_name, 
+    STR_TO_DATE(last_update, '%M %d,%Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%y');
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
+
+
+-- 1.0.1) Sie müssen eine XXXXX
+
+
+-- END pruefung
+
 
