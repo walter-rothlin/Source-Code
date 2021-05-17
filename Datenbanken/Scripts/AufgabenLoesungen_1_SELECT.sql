@@ -289,6 +289,7 @@ FROM
 
 -- END functions
 
+-- Prüfungsfragen
 -- richtige
 SELECT 
     first_name,  
