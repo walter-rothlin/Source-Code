@@ -284,6 +284,7 @@ SELECT
 FROM
     actor;
 
+-- END functions
 
 -- START metaData
 -- Meta-Daten abfragen
