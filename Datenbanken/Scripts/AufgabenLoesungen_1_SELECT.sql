@@ -213,6 +213,8 @@ Order BY
 -- %y 	Year, numeric (two digits)
 -- %% 	A literal % character
 -- %x 	x, for any “x” not listed above
+
+-- 2.1.1) mit STR_TO_DATE in where clause (Effizienter! Wieso?)
 SELECT 
     first_name AS Vorname,
     last_name AS Nachname,
@@ -223,6 +225,7 @@ FROM
 WHERE 
     date(last_update) = STR_TO_DATE('February 15, 2006','%M %d,%Y');
 
+-- 2.1.2) mit STR_TO_DATE in where clause (Effizienter! Wieso?)
 SELECT 
     first_name AS Vorname,
     last_name AS Nachname,
@@ -285,6 +288,52 @@ FROM
     actor;
 
 -- END functions
+
+-- richtige
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE DATE_FORMAT(last_update, '%Y-%M-%d') = "2021-May-17";
+
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%b %d,%Y');
+
+
+-- falsch
+SELECT 
+    first_name,  
+    last_name, 
+    STR_TO_DATE(last_update, '%M %d,%Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%y');
+
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 
 -- START metaData
 -- Meta-Daten abfragen
