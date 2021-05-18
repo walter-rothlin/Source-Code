@@ -4,35 +4,52 @@ from sense_hat import SenseHat
 from time import sleep
 
 sense = SenseHat()
-sense.clear(0,50,0)
+sense.clear(50, 50, 0)
+sense.show_message("Ha", 0.5, (255, 0, 0), (0, 10, 10))
 
-red = (255, 0, 0)
-green = (0, 255,0)
-blue = (0, 0, 255)
+sense.show_message("BZU", back_colour=(10, 10, 10), text_colour=(0, 255, 0))
+sense.show_letter("?")
+sleep(3)
 
-yellow = (255, 255, 0)
-cyan = (0, 255, 255)
-magenta = (255, 0, 255)
 
-white = (255, 255, 255)
-grey = (100, 100, 100)
+X = [255, 0, 0]      # Red
+O = [50, 50, 50]     # Grey
+i = [0, 255, 0]      # Green
 
-sense.set_pixel(0,0,255,0,0)
-sleep(1)
-sense.show_message(back_colour=[10, 10, 10], text_colour=[255, 0, 0], text_string="Hallo!!!")
-    
-sense.set_rotation(180)
+question_mark = [
+i, O, O, X, X, O, O, i,
+O, O, X, O, O, X, O, O,
+O, O, O, O, O, X, O, O,
+O, O, O, O, X, O, O, O,
+O, O, O, X, O, O, O, O,
+O, O, O, X, O, O, O, O,
+O, O, O, O, O, O, O, O,
+i, O, O, X, O, O, O, i
+]
 
-sense.set_pixel(0,0,255,255,255)   
-sleep(1)
-sense.show_message(back_colour=[10, 10, 10], text_colour=[255, 255, 255], text_string="Tschüss")
+sense.set_pixels(question_mark)
+sleep(3)
+sense.clear()
 
+sense.show_letter("!")
+sleep(3)
 sense.set_rotation(90)
+sleep(3)
+sense.set_rotation(180)
+sleep(3)
+sense.set_rotation(270)
+sleep(3)
+sense.clear()
 
-sense.set_pixel(0,0,255,255,0)   
-sleep(1)
-sense.show_message(back_colour=[10, 10, 10], text_colour=[255, 255, 0], text_string="Tschüss")
-
-
-sleep(20)
+sense.set_rotation(0)
+sense.show_letter("G")
+sleep(3)
+sense.flip_h()
+sleep(3)
+sense.flip_h()
+sleep(3)
+sense.flip_v()
+sleep(3)
+sense.flip_v()
+sleep(3)
 sense.clear()
