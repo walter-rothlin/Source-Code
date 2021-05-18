@@ -30,43 +30,45 @@ sense.set_pixel(2, 0, magenta)
 sleep(2)
 sense.clear()
 
-# horizontale Linie
+# horizontale Linie oben
 for xCoordinate in range(0, 8):
     sense.set_pixel(xCoordinate, 0, yellow)
-    sleep(0.5)
+    sleep(0.3)
 
-# horizontale Linie
+# vertikale Linie rechts
+for yCoordinate in range(1, 7):
+    sense.set_pixel(7, yCoordinate, blue)
+    sleep(0.3)
+
+# horizontale Linie unten   
 for xCoordinate in range(0, 8):
-    sense.set_pixel(7 - xCoordinate, 7, cyan)
-    sleep(0.25)
+    sense.set_pixel(7 - xCoordinate, 7, magenta)
+    sleep(0.3) 
 
-# vertikale Linie
-for yCoordinate in range(1, 7):
-    sense.set_pixel(0, yCoordinate, red)
-    sleep(0.5) 
+# vertikale Linie links
+yCoordinate = 6
+while yCoordinate > 0:
+    sense.set_pixel(0, yCoordinate, green)
+    yCoordinate = yCoordinate - 1
+    sleep(0.3)
 
-# vertikale Linie
-for yCoordinate in range(1, 7):
-    sense.set_pixel(7, 7 - yCoordinate, blue)
-    sleep(0.5) 
-    
-# diagonale Linie
+# diagonale unten rechts nach links oben    
 yCoordinate = 6
 xCoordinate = 6
 while yCoordinate > 0:
-    sense.set_pixel(xCoordinate, yCoordinate, green)
+    sense.set_pixel(xCoordinate, yCoordinate, red)
     yCoordinate -= 1
     xCoordinate -= 1
     sleep(0.5)
 
-# diagonale Linie
+# diagonale unten links nach rechts oben    
 yCoordinate = 6
 xCoordinate = 1
 while yCoordinate > 0:
-    sense.set_pixel(xCoordinate, yCoordinate, magenta)
+    sense.set_pixel(xCoordinate, yCoordinate, cyan)
     yCoordinate -= 1
     xCoordinate += 1
-    sleep(0.5) 
-    
+    sleep(0.5)    
+
 sleep(20)
 sense.clear()
