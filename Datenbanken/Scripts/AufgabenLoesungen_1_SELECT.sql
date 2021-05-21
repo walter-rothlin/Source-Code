@@ -684,9 +684,14 @@ select Stadt, Land from test_city_country;
 
 -- END views
 
+-- START CRUD
+-- Insert - Update - Delete
+-- ========================
+
+--  CRUD 1)  Fuegen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und ‘Dutch' in die Tabelle language 
 
 
-
+-- END CRUD
 
 
 -- START uebung_1
@@ -737,8 +742,6 @@ UPDATE film SET original_language_id=NULL WHERE original_language_id in (SELECT 
 
 
 -- END uebung_1
-
-
 
 
 
