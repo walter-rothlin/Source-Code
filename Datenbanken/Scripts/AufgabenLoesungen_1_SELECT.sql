@@ -2,7 +2,7 @@
 -- =======================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 21-May-2021 / 16:00
+--    Last Change: 21-May-2021 / 16:01
 --
 -- =======================================
 -- END title
@@ -891,6 +891,8 @@ select HelloFct('Walti') as HALLO;
 
 -- STORED PROCEDURES
 -- =================
+-- https://federico-razzoli.com/mysql-stored-procedures-all-ways-to-produce-an-output
+
 -- STO_01) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
 --         Der erste Parameter ist ein Land und der Zweite ob case-sensitve oder nicht gesucht werden soll.
 	DROP PROCEDURE IF EXISTS isCountryExits;
@@ -984,7 +986,6 @@ select HelloFct('Walti') as HALLO;
 
 
 -- STO_05) Schreiben sie eine Stored-Procedure, welche eine city mittels name loescht.
-
 	-- Noch testen!!!
 	DROP PROCEDURE IF EXISTS deleteCityByName;
 	DELIMITER $$
