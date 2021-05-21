@@ -2,7 +2,7 @@
 -- =======================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 21-May-2021 / 07:24
+--    Last Change: 21-May-2021 / 12:00
 --
 -- =======================================
 -- END title
@@ -688,8 +688,70 @@ select Stadt, Land from test_city_country;
 -- Insert - Update - Delete
 -- ========================
 
---  CRUD 1)  Fuegen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und ‘Dutch' in die Tabelle language 
+--  CRUD 1)  Fuegen Sie das Land "Lichtenstein" ein
+INSERT INTO country (country) VALUES ('Lichtenstein');
 
+--  CRUD 1a)  Wie lautet der PK von 'Lichtenstein'?
+SELECT country_id from country where country = 'Lichtenstein';
+
+
+--  CRUD 2)  Fuegen Sie die beiden Staedte "Vaduz" und "Schan" ein. Beide gehören zum Land "Lichtenstein".
+INSERT INTO city (city,country_id) VALUES 
+	('Vaduz', 111), 
+    ('Schan', 111);
+
+--  CRUD 2a)  Wie lauten die beiden PKs dieser beiden Orte?    
+SELECT
+    city_id,
+    city,
+    country_id
+FROM
+	city
+WHERE country_id = 111;
+
+SELECT
+    city_id,
+    city,
+    country_id
+FROM
+	city
+WHERE country_id = (SELECT country_id from country where country = 'Lichtenstein');
+
+--  CRUD 2b)  Erstellen sie eine Liste mit den Orten und dem Landesnamen von Lichtenstein (inner Join)
+SELECT
+    city_id,
+    city,
+    country.country_id,
+    country.country
+FROM
+	city
+INNER JOIN country ON city.country_id = country.country_id
+WHERE city.country_id = (SELECT country_id from country where country = 'Lichtenstein'); 
+
+--  CRUD 2c)  Koorigieren Sie den Namen von 'Schan' auf 'Schaan'
+UPDATE city SET city='Schaan' WHERE city='Schan';
+
+
+--  CRUD 3)  Loeschen Sie das Land "Lichtenstein". Lesen Sie die Fehlermeldung? Wieso geht das nicht?
+DELETE FROM country WHERE country = 'Lichtenstein';
+
+--  CRUD 3a)  Loeschen Sie nun zuerst alle Staedte von "Lichtenstein".
+DELETE FROM city
+WHERE country_id = (SELECT country_id FROM country WHERE country = 'Lichtenstein');
+
+--  CRUD 3b)  Nun koennen Sie das Land "Lichtenstein" loeschen.
+DELETE FROM country WHERE country = 'Lichtenstein';
+
+--  CRUD 3c)  Kontrollieren Sie, ob Sie die Staedte und das Land wirklich gelöscht haben.
+SELECT country_id from country where country = 'Lichtenstein';    
+
+SELECT
+    city_id,
+    city,
+    country_id
+FROM
+	city
+WHERE country_id = (SELECT country_id from country where country = 'Lichtenstein');
 
 -- END CRUD
 
@@ -709,7 +771,7 @@ FROM
 INNER JOIN language AS lang    ON f.language_id          = lang.language_id
 INNER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
---  U1.2)  Fuegen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und ‘Dutch' in die Tabelle language 
+--  U1.2)  Fuegen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und 'Dutch' in die Tabelle language 
 SELECT * FROM language;
 INSERT INTO language (name) VALUES ('Schweizerdeutsch');
 INSERT INTO language (name) VALUES ('Suiss Italian');
@@ -737,7 +799,7 @@ UPDATE film SET original_language_id=(SELECT language_id FROM language WHERE nam
 --  U1.5)   Loeschen Sie diese 3 neu zugefuegten Sprachen wieder! Wieso geht das nicht?
 DELETE FROM language WHERE name in ('Schweizerdeutsch', 'Suiss Italian', 'Dutch');
 
---  U1.6)   Setzen Sie zuerst bei alle Filmen, welche einer dieser zugefügten Sprachen als Original-Sprache gesetzt haben, diese wieder auf NULL 
+--  U1.6)   Setzen Sie zuerst bei alle Filmen, welche einer dieser zugefuegten Sprachen als Original-Sprache gesetzt haben, diese wieder auf NULL 
 UPDATE film SET original_language_id=NULL WHERE original_language_id in (SELECT language_id FROM language WHERE name IN ('Schweizerdeutsch', 'Suiss Italian', 'Dutch'));
 
 
@@ -829,12 +891,12 @@ select HelloFct('Walti') as HALLO;
 
 -- STORED PROCEDURES
 -- =================
--- Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
--- Der erste Parameter ist ein Land und der zweite ob case-sensitve oder nicht gesucht werden soll.
-DROP PROCEDURE IF EXISTS test_searchCountry;
+-- STO_01) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
+--         Der erste Parameter ist ein Land und der Zweite ob case-sensitve oder nicht gesucht werden soll.
+DROP PROCEDURE IF EXISTS isCountryExits;
 
 Delimiter // 
-CREATE PROCEDURE test_searchCountry(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
+CREATE PROCEDURE isCountryExits(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
 BEGIN
    IF caseSesitive THEN
        SELECT
@@ -853,10 +915,98 @@ BEGIN
     END IF;
 END//
 
-call test_searchCountry('GermanY', false);
-call test_searchCountry('GermanY', true);
+CALL isCountryExits('GermanY', false);
+CALL isCountryExits('GermanY', true);
 
 
+-- STO_02) Schreiben sie eine Stored-Procedure, bei welcher eine Landesbezeichnung übergeben werden kann. 
+--         Existiert dieses Land noch nicht in der country Tabelle, wird es dort eingefuegt.
+--         Der PK dieses Landes wird als Parameter zurück gegeben
+  
+DROP PROCEDURE IF EXISTS getCountryId;
+DELIMITER $$
+CREATE PROCEDURE getCountryId(IN landesNamen VARCHAR(50), out land_id SMALLINT(5))
+BEGIN
+	IF((SELECT COUNT(*) FROM country WHERE country = landesNamen) = 0) THEN
+		INSERT INTO country(`country`) VALUES (landesNamen);
+    END IF;
+    SELECT country_id FROM country WHERE country = landesNamen INTO land_id;
+END$$
+DELIMITER ;
+
+CALL getCountryId('Lichtenstein', @country_pk);
+SELECT @country_pk;
+
+
+-- STO_03) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
+--         Der erste Parameter ist eine Stadt und der zweite ein Land. 
+--         Die Procedure checked als erstes ob das Land bereits in country existiert
+--              wenn Nein: Insert neues Land
+--         Danach wird der PK des neuen Landes geholt
+--         Checken ob Die Stadt in diesem Land bereits besteht
+--              wenn Ja: nichts weiter machen
+--              wenn Nein: Stadt in city einfuegen mit dem PK des Landes
+DROP PROCEDURE IF EXISTS getCityId;
+DELIMITER $$
+CREATE PROCEDURE getCityId(IN ortsNamen varchar(45), IN landesName varchar(45), OUT city_id SMALLINT(5))
+BEGIN
+	CALL getCountryId(landesName, @land_id);
+	IF((SELECT COUNT(*) FROM city WHERE country_id = @land_id AND city = ortsNamen) = 0) THEN
+		INSERT INTO city (city, country_id) VALUES (ortsNamen, @land_id);
+    END IF;
+    SELECT city_id FROM city WHERE city = ortsNamen AND country_id = @land_id INTO city_id;
+END$$
+DELIMITER ;
+
+SELECT city_id FROM city WHERE city = 'Rom' AND country_id =119;
+
+CALL getCityId('Roma', 'Italien', @city_pk);
+SELECT @city_pk;
+
+CALL getCityId('Schaan', 'Lichtenstein', @city_pk);
+SELECT @city_pk;
+
+
+-- STO_04) Schreiben sie eine Stored-Procedure, welche eine city mittels ID loescht.
+	-- Noch testen!!! 
+DROP PROCEDURE IF EXISTS deleteCityById;
+DELIMITER $$
+CREATE PROCEDURE deleteCityById(IN id SMALLINT(5), OUT countOfDelete SMALLINT(5))
+BEGIN
+    SELECT COUNT(*) FROM city WHERE city_id = id INTO countOfDelete;
+	IF((SELECT COUNT(*) FROM city WHERE city_id = id) != 0) THEN
+		DELETE FROM city WHERE city_id=id;
+	END IF;
+END$$
+DELIMITER ;
+
+CALL deleteCityById(601, @countOfDel);
+SELECT @countOfDel;
+
+
+-- STO_05) Schreiben sie eine Stored-Procedure, welche eine city mittels name loescht.
+
+-- Noch testen!!!
+DROP PROCEDURE IF EXISTS deleteCityByName;
+DELIMITER $$
+CREATE PROCEDURE deleteCityByName(IN ortsNamen varchar(45), OUT countOfDelete SMALLINT(5))
+BEGIN
+    SELECT COUNT(*) FROM city WHERE city = ortsNamen INTO countOfDelete;
+	IF((SELECT COUNT(*) FROM city WHERE city = ortsNamen) != 0) THEN
+		DELETE FROM city WHERE city = ortsNamen;
+	END IF;
+END$$
+DELIMITER ;
+
+CALL deleteCityByName('Vaduz', @countOfDel);
+SELECT @countOfDel;
+
+
+
+
+
+
+-- nur für BZU Schema!!!!!!
 DROP PROCEDURE IF EXISTS insertOrt;
 Delimiter // 
 CREATE PROCEDURE `insertOrt`(IN ort_id smallint(5), IN plz smallint(4), In bezeichnung varchar(45))
