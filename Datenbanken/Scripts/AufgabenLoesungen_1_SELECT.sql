@@ -663,43 +663,6 @@ ORDER BY
     return_date; -- (12 rows)
 -- END joins
 
--- START subQueries
-
--- SUB_QUERIES
--- ===========
--- 5.1) Nehmen Sie eine funktionierende Abfrage z.B. 4.2.5. Verwenden Sie diese Query als "Derived Table (Subqueries in the FROM clause) und 
---      und selektieren sie eine Spalte (z.B. original_language) aber nur von den Data-Tubles, welche nicht NULL sind.
-SELECT SUBQ_1.Originalsprache AS ORGLANG FROM (
-	SELECT 
-		f.title       AS Title, 
-		lang.name     AS Sprache,
-		orgLang.name  AS Originalsprache
-	FROM
-		film AS f
-	LEFT OUTER JOIN language AS lang    ON f.language_id          = lang.language_id
-	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) as SUBQ_1
-WHERE SUBQ_1.Originalsprache IS NOT NULL;
-
--- 5.2) Listen sie alle Filme-Titles auf, welche als Orginal-Sprache "GERMAN" oder "ENGLISH" haben.
---      Verwenden Sie dazu eine Subquery als Scalar-Operand für einen Vergleich
-SELECT
-	title                AS  FilmTitle,
-    original_language_id AS  Sprache
-FROM
-    film
-WHERE
-	original_language_id in (
-		SELECT
-			language_id AS Id
-		FROM
-			language
-		WHERE
-			name = "GERMAN"   OR
-            name = "ENGLISH"
-    );
-
-
--- END subQueries
 
 -- START views
 
@@ -722,70 +685,11 @@ select Stadt, Land from test_city_country;
 -- END views
 
 
--- START ownFunctions
-
--- FUNCTIONS
--- =========
--- Schreiben sie eine eigene Function. Diese Function nimmt ein String-Parameter entgegen und gibt einen 
--- String in der Form Hello : inString zurueck. 
--- Nach der Implementation testen sie die Function aus.
-DROP FUNCTION IF EXISTS HelloFct;
-Delimiter //
-CREATE FUNCTION HelloFct(p_input_string CHAR(20)) RETURNS CHAR(50)
-  BEGIN
-    RETURN  concat('Hallo: ', p_input_string);
-  END
-//
-select HelloFct('Walti') as HALLO;
-
--- END ownFunctions
 
 
--- START procedures
 
--- STORED PROCEDURES
--- =================
--- Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
--- Der erste Parameter ist ein Land und der zweite ob case-sensitve oder nicht gesucht werden soll.
-DROP PROCEDURE IF EXISTS test_searchCountry;
-
-Delimiter // 
-CREATE PROCEDURE test_searchCountry(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
-BEGIN
-   IF caseSesitive THEN
-       SELECT
-          country  AS Land
-       FROM
-          country 
-	   WHERE 
-          country LIKE BINARY searchQuery;
-    ELSE
-       SELECT
-          country  AS Land
-		FROM 
-           country 
-        WHERE
-           country LIKE searchQuery;
-    END IF;
-END//
-
-call test_searchCountry('GermanY', false);
-call test_searchCountry('GermanY', true);
-
-
-DROP PROCEDURE IF EXISTS insertOrt;
-Delimiter // 
-CREATE PROCEDURE `insertOrt`(IN ort_id smallint(5), IN plz smallint(4), In bezeichnung varchar(45))
-BEGIN
-	SELECT concat('insertOrt(', ort_id , ',' , plz, ',' , bezeichnung);
-END//
-
-call hwz_test_1.insertOrt(100,8853,'Lachen');
-
--- END procedures
 
 -- START uebung_1
-
 -- Uebung 1
 -- ==============
 --  Machen Sie folgende Aenderungen in skaila:
@@ -813,7 +717,7 @@ INSERT INTO language (name) VALUES
 
 --  U1.3)   Setzen Sie für die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
 UPDATE film SET original_language_id=1 WHERE film_id=1;  -- English
-UPDATE film SET original_language_id=1 WHERE film_id=2;
+UPDATE film SET original_language_id=1 WHERE film_id=2;  -- Italian
 
 --  U1.4)   Setzen Sie für den Filme mit der AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
 SELECT language_id FROM language where name = 'Schweizerdeutsch';
@@ -839,6 +743,10 @@ DELETE FROM language WHERE name='Schweizerdeutsch';
 
 UPDATE film SET original_language_id=null WHERE film_id IN (1,2);
 -- END uebung_1
+
+
+
+
 
 -- START pruefung
 
@@ -899,3 +807,105 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 -- END pruefung
 
 
+-- START ownFunctions
+
+-- FUNCTIONS
+-- =========
+-- Schreiben sie eine eigene Function. Diese Function nimmt ein String-Parameter entgegen und gibt einen 
+-- String in der Form Hello : inString zurueck. 
+-- Nach der Implementation testen sie die Function aus.
+DROP FUNCTION IF EXISTS HelloFct;
+Delimiter //
+CREATE FUNCTION HelloFct(p_input_string CHAR(20)) RETURNS CHAR(50)
+  BEGIN
+    RETURN  concat('Hallo: ', p_input_string);
+  END
+//
+select HelloFct('Walti') as HALLO;
+
+-- END ownFunctions
+
+
+
+
+-- START procedures
+
+-- STORED PROCEDURES
+-- =================
+-- Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
+-- Der erste Parameter ist ein Land und der zweite ob case-sensitve oder nicht gesucht werden soll.
+DROP PROCEDURE IF EXISTS test_searchCountry;
+
+Delimiter // 
+CREATE PROCEDURE test_searchCountry(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
+BEGIN
+   IF caseSesitive THEN
+       SELECT
+          country  AS Land
+       FROM
+          country 
+	   WHERE 
+          country LIKE BINARY searchQuery;
+    ELSE
+       SELECT
+          country  AS Land
+		FROM 
+           country 
+        WHERE
+           country LIKE searchQuery;
+    END IF;
+END//
+
+call test_searchCountry('GermanY', false);
+call test_searchCountry('GermanY', true);
+
+
+DROP PROCEDURE IF EXISTS insertOrt;
+Delimiter // 
+CREATE PROCEDURE `insertOrt`(IN ort_id smallint(5), IN plz smallint(4), In bezeichnung varchar(45))
+BEGIN
+	SELECT concat('insertOrt(', ort_id , ',' , plz, ',' , bezeichnung);
+END//
+
+-- call insertOrt(100,8853,'Lachen');
+
+-- END procedures
+
+
+-- START subQueries
+
+-- SUB_QUERIES
+-- ===========
+-- 5.1) Nehmen Sie eine funktionierende Abfrage z.B. 4.2.5. Verwenden Sie diese Query als "Derived Table (Subqueries in the FROM clause) und 
+--      und selektieren sie eine Spalte (z.B. original_language) aber nur von den Data-Tubles, welche nicht NULL sind.
+SELECT SUBQ_1.Originalsprache AS ORGLANG FROM (
+	SELECT 
+		f.title       AS Title, 
+		lang.name     AS Sprache,
+		orgLang.name  AS Originalsprache
+	FROM
+		film AS f
+	LEFT OUTER JOIN language AS lang    ON f.language_id          = lang.language_id
+	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) as SUBQ_1
+WHERE SUBQ_1.Originalsprache IS NOT NULL;
+
+-- 5.2) Listen sie alle Filme-Titles auf, welche als Orginal-Sprache "GERMAN" oder "ENGLISH" haben.
+--      Verwenden Sie dazu eine Subquery als Scalar-Operand für einen Vergleich
+SELECT
+	title                AS  FilmTitle,
+    original_language_id AS  Sprache
+FROM
+    film
+WHERE
+	original_language_id in (
+		SELECT
+			language_id AS Id
+		FROM
+			language
+		WHERE
+			name = "GERMAN"   OR
+            name = "ENGLISH"
+    );
+
+
+-- END subQueries
