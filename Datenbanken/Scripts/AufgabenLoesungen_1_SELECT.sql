@@ -2,7 +2,7 @@
 -- =======================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 21-May-2021 / 12:00
+--    Last Change: 21-May-2021 / 16:00
 --
 -- =======================================
 -- END title
@@ -111,7 +111,7 @@ SELECT
 FROM 
     actor
 WHERE
-    -- in where-clause können keine Alias verwendet werden     
+    -- in where-clause koennen keine Alias verwendet werden     
     -- FName      = 'NICK'            OR
     first_name = 'NICK'           OR   -- Nick (case-insensitive)
     first_name LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
@@ -265,7 +265,7 @@ SELECT
 FROM 
     film
 WHERE
-    rating = 'PG' AND    -- e.g. Parental Guidance (Amerikanische Alterbeschränkung)
+    rating = 'PG' AND    -- e.g. Parental Guidance (Amerikanische Alterbeschraenkung)
     find_in_set('Trailers', special_features);
 
 -- 2.4) Erstellen Sie eine Liste mit allen Namen und Vorname von staff, welche nur den Anfangsbuchstaben des Vornamen mit einem . getrennt vom vollstaendigen Nachnamen auflistet.
@@ -339,21 +339,21 @@ ORDER BY table_schema , Table_NAME , column_name;
 -- START joins
 -- Joins
 -- =====
--- 3.9.1) Erstellen Sie eine Orte Länderliste  (Kreuzprodukt)
+-- 3.9.1) Erstellen Sie eine Orte Laenderliste  (Kreuzprodukt)
 SELECT
 	city.city as Stadt,
     country.country as Land
 FROM
 	city, country;
 
--- 3.9.2) Erstellen Sie eine Orte Länderliste (Kreuzprodukt)
+-- 3.9.2) Erstellen Sie eine Orte Laenderliste (Kreuzprodukt)
 SELECT
 	S.city as Stadt,
     L.country as Land
 FROM
 	city as S, country as L;
  
--- 3.9.3) Erstellen Sie eine Orte Länderliste (mit where close)
+-- 3.9.3) Erstellen Sie eine Orte Laenderliste (mit where close)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -362,7 +362,7 @@ FROM
 WHERE
 	S.country_id = L.country_id;
 
--- 3.9.4) Erstellen Sie eine Orte Länderliste (mit inner join)
+-- 3.9.4) Erstellen Sie eine Orte Laenderliste (mit inner join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -370,7 +370,7 @@ FROM
 	city as S
 INNER JOIN country as L on S.country_id = L.country_id;    
 
--- 3.9.5) Erstellen Sie eine Orte Länderliste (mit left join)
+-- 3.9.5) Erstellen Sie eine Orte Laenderliste (mit left join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -378,7 +378,7 @@ FROM
 	city as S
 LEFT JOIN country as L on S.country_id = L.country_id;
 
--- 3.9.6) Erstellen Sie eine Orte Länderliste (mit right join)
+-- 3.9.6) Erstellen Sie eine Orte Laenderliste (mit right join)
 SELECT
 	S.city as Stadt,
     L.country as Land
@@ -386,7 +386,7 @@ FROM
 	country as L
 RIGHT JOIN city as S on S.country_id = L.country_id; 
 
--- 3.9.7) Erstellen Sie eine Adress-, Orte und Länderliste
+-- 3.9.7) Erstellen Sie eine Adress-, Orte und Laenderliste
 SELECT
 	address.address,
     city.city,
@@ -507,7 +507,7 @@ FROM
     city    AS Stadt
 INNER JOIN country AS Land on Stadt.country_id = Land.country_id;
 
---  4.2)  Wie viele Einträge gibt es in der film  und in der language Tabelle?
+--  4.2)  Wie viele Eintraege gibt es in der film  und in der language Tabelle?
 SELECT 
     COUNT(*)
 FROM
@@ -590,7 +590,7 @@ FROM
 LEFT JOIN film ON language.language_id = film.original_language_id;   -- 1005 rows
 
 
--- 4.3.1) Listen sie Alle Städte auf und in wievielen Landern diese vorkommen absteigend sortiert nach den anzahl Laendern
+-- 4.3.1) Listen sie Alle Staedte auf und in wievielen Landern diese vorkommen absteigend sortiert nach den anzahl Laendern
 SELECT
    city.city       AS Stadt,
    count(country.country) As Count
@@ -645,7 +645,7 @@ ORDER BY
     return_date; -- (49 rows)
 
 -- 4.4.3) Erstellen Sie eine Mahnungsliste, wie folgt:
---			Enthält alle Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurückgeben haben
+--        Enthaelt alle Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurueckgeben haben
 SELECT 
     CONCAT(LEFT(customer.first_name, 1),'. ',customer.last_name) AS Renter,
     address.phone                                                AS Phone,
@@ -695,7 +695,7 @@ INSERT INTO country (country) VALUES ('Lichtenstein');
 SELECT country_id from country where country = 'Lichtenstein';
 
 
---  CRUD 2)  Fuegen Sie die beiden Staedte "Vaduz" und "Schan" ein. Beide gehören zum Land "Lichtenstein".
+--  CRUD 2)  Fuegen Sie die beiden Staedte "Vaduz" und "Schan" ein. Beide gehoeren zum Land "Lichtenstein".
 INSERT INTO city (city,country_id) VALUES 
 	('Vaduz', 111), 
     ('Schan', 111);
@@ -742,7 +742,7 @@ WHERE country_id = (SELECT country_id FROM country WHERE country = 'Lichtenstein
 --  CRUD 3b)  Nun koennen Sie das Land "Lichtenstein" loeschen.
 DELETE FROM country WHERE country = 'Lichtenstein';
 
---  CRUD 3c)  Kontrollieren Sie, ob Sie die Staedte und das Land wirklich gelöscht haben.
+--  CRUD 3c)  Kontrollieren Sie, ob Sie die Staedte und das Land wirklich geloescht haben.
 SELECT country_id from country where country = 'Lichtenstein';    
 
 SELECT
@@ -782,7 +782,7 @@ INSERT INTO language (name) VALUES
     ('Dutch');
 
 
---  U1.3)   Setzen Sie für die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
+--  U1.3)   Setzen Sie fuer die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
 UPDATE film SET original_language_id=1 WHERE film_id=1;  -- English
 UPDATE film SET original_language_id=2 WHERE film_id=2;  -- Italian
 
@@ -809,11 +809,11 @@ UPDATE film SET original_language_id=NULL WHERE original_language_id in (SELECT 
 
 -- START pruefung
 
--- Prüfungsfragen
+-- Pruefungsfragen
 -- ==============
 
--- 1.0.0) Sie müssen eine Liste mit Vornamen, Nachnamen und Last_Update (Format: 25.May 2021) für alle
---        Datensätze in staff, welche am 17.5.2021 geändert wurden, erzeugen.
+-- 1.0.0) Sie muessen eine Liste mit Vornamen, Nachnamen und Last_Update (Format: 25.May 2021) fuer alle
+--        Datensaetze in staff, welche am 17.5.2021 geaendert wurden, erzeugen.
 SELECT 
     first_name,  
     last_name, 
@@ -860,7 +860,7 @@ FROM staff
 WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 
 
--- 1.0.1) Sie müssen eine XXXXX
+-- 1.0.1) Sie muessen eine XXXXX
 
 
 -- END pruefung
@@ -893,49 +893,48 @@ select HelloFct('Walti') as HALLO;
 -- =================
 -- STO_01) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
 --         Der erste Parameter ist ein Land und der Zweite ob case-sensitve oder nicht gesucht werden soll.
-DROP PROCEDURE IF EXISTS isCountryExits;
+	DROP PROCEDURE IF EXISTS isCountryExits;
 
-Delimiter // 
-CREATE PROCEDURE isCountryExits(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
-BEGIN
-   IF caseSesitive THEN
-       SELECT
-          country  AS Land
-       FROM
-          country 
-	   WHERE 
-          country LIKE BINARY searchQuery;
-    ELSE
-       SELECT
-          country  AS Land
-		FROM 
-           country 
-        WHERE
-           country LIKE searchQuery;
-    END IF;
-END//
+	Delimiter // 
+	CREATE PROCEDURE isCountryExits(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
+	BEGIN
+	   IF caseSesitive THEN
+		   SELECT
+			  country  AS Land
+		   FROM
+			  country 
+		   WHERE 
+			  country LIKE BINARY searchQuery;
+		ELSE
+		   SELECT
+			  country  AS Land
+			FROM 
+			   country 
+			WHERE
+			   country LIKE searchQuery;
+		END IF;
+	END//
 
-CALL isCountryExits('GermanY', false);
-CALL isCountryExits('GermanY', true);
+	CALL isCountryExits('GermanY', false);
+	CALL isCountryExits('GermanY', true);
 
 
--- STO_02) Schreiben sie eine Stored-Procedure, bei welcher eine Landesbezeichnung übergeben werden kann. 
+-- STO_02) Schreiben sie eine Stored-Procedure, bei welcher eine Landesbezeichnung uebergeben werden kann. 
 --         Existiert dieses Land noch nicht in der country Tabelle, wird es dort eingefuegt.
---         Der PK dieses Landes wird als Parameter zurück gegeben
-  
-DROP PROCEDURE IF EXISTS getCountryId;
-DELIMITER $$
-CREATE PROCEDURE getCountryId(IN landesNamen VARCHAR(50), out land_id SMALLINT(5))
-BEGIN
-	IF((SELECT COUNT(*) FROM country WHERE country = landesNamen) = 0) THEN
-		INSERT INTO country(`country`) VALUES (landesNamen);
-    END IF;
-    SELECT country_id FROM country WHERE country = landesNamen INTO land_id;
-END$$
-DELIMITER ;
+--         Der PK dieses Landes wird als Parameter zurueck gegeben
+	DROP PROCEDURE IF EXISTS getCountryId;
+	DELIMITER $$
+	CREATE PROCEDURE getCountryId(IN landesNamen VARCHAR(50), out land_id SMALLINT(5))
+	BEGIN
+		IF((SELECT COUNT(*) FROM country WHERE country = landesNamen) = 0) THEN
+			INSERT INTO country(`country`) VALUES (landesNamen);
+		END IF;
+		SELECT country_id FROM country WHERE country = landesNamen INTO land_id;
+	END$$
+	DELIMITER ;
 
-CALL getCountryId('Lichtenstein', @country_pk);
-SELECT @country_pk;
+	CALL getCountryId('Lichtenstein', @country_pk);
+	SELECT @country_pk;
 
 
 -- STO_03) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
@@ -946,67 +945,67 @@ SELECT @country_pk;
 --         Checken ob Die Stadt in diesem Land bereits besteht
 --              wenn Ja: nichts weiter machen
 --              wenn Nein: Stadt in city einfuegen mit dem PK des Landes
-DROP PROCEDURE IF EXISTS getCityId;
-DELIMITER $$
-CREATE PROCEDURE getCityId(IN ortsNamen varchar(45), IN landesName varchar(45), OUT city_id SMALLINT(5))
-BEGIN
-	CALL getCountryId(landesName, @land_id);
-	IF((SELECT COUNT(*) FROM city WHERE country_id = @land_id AND city = ortsNamen) = 0) THEN
-		INSERT INTO city (city, country_id) VALUES (ortsNamen, @land_id);
-    END IF;
-    SELECT city_id FROM city WHERE city = ortsNamen AND country_id = @land_id INTO city_id;
-END$$
-DELIMITER ;
+	DROP PROCEDURE IF EXISTS getCityId;
+	DELIMITER $$
+	CREATE PROCEDURE getCityId(IN ortsNamen varchar(45), IN landesName varchar(45), OUT city_id SMALLINT(5))
+	BEGIN
+		CALL getCountryId(landesName, @land_id);
+		IF((SELECT COUNT(*) FROM city WHERE country_id = @land_id AND city = ortsNamen) = 0) THEN
+			INSERT INTO city (city, country_id) VALUES (ortsNamen, @land_id);
+		END IF;
+		SELECT city_id FROM city WHERE city = ortsNamen AND country_id = @land_id INTO city_id;
+	END$$
+	DELIMITER ;
 
-SELECT city_id FROM city WHERE city = 'Rom' AND country_id =119;
+	SELECT city_id FROM city WHERE city = 'Rom' AND country_id =119;
 
-CALL getCityId('Roma', 'Italien', @city_pk);
-SELECT @city_pk;
+	CALL getCityId('Roma', 'Italien', @city_pk);
+	SELECT @city_pk;
 
-CALL getCityId('Schaan', 'Lichtenstein', @city_pk);
-SELECT @city_pk;
+	CALL getCityId('Schaan', 'Lichtenstein', @city_pk);
+	SELECT @city_pk;
 
 
 -- STO_04) Schreiben sie eine Stored-Procedure, welche eine city mittels ID loescht.
 	-- Noch testen!!! 
-DROP PROCEDURE IF EXISTS deleteCityById;
-DELIMITER $$
-CREATE PROCEDURE deleteCityById(IN id SMALLINT(5), OUT countOfDelete SMALLINT(5))
-BEGIN
-    SELECT COUNT(*) FROM city WHERE city_id = id INTO countOfDelete;
-	IF((SELECT COUNT(*) FROM city WHERE city_id = id) != 0) THEN
-		DELETE FROM city WHERE city_id=id;
-	END IF;
-END$$
-DELIMITER ;
+	DROP PROCEDURE IF EXISTS deleteCityById;
+	DELIMITER $$
+	CREATE PROCEDURE deleteCityById(IN id SMALLINT(5), OUT countOfDelete SMALLINT(5))
+	BEGIN
+		SELECT COUNT(*) FROM city WHERE city_id = id INTO countOfDelete;
+		IF((SELECT COUNT(*) FROM city WHERE city_id = id) != 0) THEN
+			DELETE FROM city WHERE city_id=id;
+		END IF;
+	END$$
+	DELIMITER ;
 
-CALL deleteCityById(601, @countOfDel);
-SELECT @countOfDel;
+	CALL deleteCityById(601, @countOfDel);
+	SELECT @countOfDel;
 
 
 -- STO_05) Schreiben sie eine Stored-Procedure, welche eine city mittels name loescht.
 
--- Noch testen!!!
-DROP PROCEDURE IF EXISTS deleteCityByName;
-DELIMITER $$
-CREATE PROCEDURE deleteCityByName(IN ortsNamen varchar(45), OUT countOfDelete SMALLINT(5))
-BEGIN
-    SELECT COUNT(*) FROM city WHERE city = ortsNamen INTO countOfDelete;
-	IF((SELECT COUNT(*) FROM city WHERE city = ortsNamen) != 0) THEN
-		DELETE FROM city WHERE city = ortsNamen;
-	END IF;
-END$$
-DELIMITER ;
+	-- Noch testen!!!
+	DROP PROCEDURE IF EXISTS deleteCityByName;
+	DELIMITER $$
+	CREATE PROCEDURE deleteCityByName(IN ortsNamen varchar(45), OUT countOfDelete SMALLINT(5))
+	BEGIN
+		SELECT COUNT(*) FROM city WHERE city = ortsNamen INTO countOfDelete;
+		IF((SELECT COUNT(*) FROM city WHERE city = ortsNamen) != 0) THEN
+			DELETE FROM city WHERE city = ortsNamen;
+		END IF;
+	END$$
+	DELIMITER ;
 
-CALL deleteCityByName('Vaduz', @countOfDel);
-SELECT @countOfDel;
-
-
+	CALL deleteCityByName('Vaduz', @countOfDel);
+	SELECT @countOfDel;
 
 
 
 
--- nur für BZU Schema!!!!!!
+
+
+-- nur fuer BZU Schema!!!!!!
 DROP PROCEDURE IF EXISTS insertOrt;
 Delimiter // 
 CREATE PROCEDURE `insertOrt`(IN ort_id smallint(5), IN plz smallint(4), In bezeichnung varchar(45))
@@ -1037,7 +1036,7 @@ SELECT SUBQ_1.Originalsprache AS ORGLANG FROM (
 WHERE SUBQ_1.Originalsprache IS NOT NULL;
 
 -- 5.2) Listen sie alle Filme-Titles auf, welche als Orginal-Sprache "GERMAN" oder "ENGLISH" haben.
---      Verwenden Sie dazu eine Subquery als Scalar-Operand für einen Vergleich
+--      Verwenden Sie dazu eine Subquery als Scalar-Operand fuer einen Vergleich
 SELECT
 	title                AS  FilmTitle,
     original_language_id AS  Sprache
