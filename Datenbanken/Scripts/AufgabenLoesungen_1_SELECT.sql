@@ -704,7 +704,7 @@ FROM
 INNER JOIN language AS lang    ON f.language_id          = lang.language_id
 INNER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
---  U1.2)  Fügen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und ‘Dutch' in die Tabelle language 
+--  U1.2)  Fuegen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und ‘Dutch' in die Tabelle language 
 SELECT * FROM language;
 INSERT INTO language (name) VALUES ('Schweizerdeutsch');
 INSERT INTO language (name) VALUES ('Suiss Italian');
@@ -719,7 +719,7 @@ INSERT INTO language (name) VALUES
 UPDATE film SET original_language_id=1 WHERE film_id=1;  -- English
 UPDATE film SET original_language_id=2 WHERE film_id=2;  -- Italian
 
---  U1.4)   Setzen Sie für den Filme mit der AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
+--  U1.4)   Setzen Sie fuer den Filme mit der AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
 SELECT language_id FROM language where name = 'Schweizerdeutsch';
 SELECT film_id, title, original_language_id FROM film WHERE title='AFRICAN EGG';
 UPDATE film SET original_language_id=7 WHERE film_id=5;
@@ -729,7 +729,7 @@ UPDATE film SET original_language_id=NULL WHERE film_id=5;
 
 UPDATE film SET original_language_id=(SELECT language_id FROM language WHERE name='Schweizerdeutsch') WHERE title='AFRICAN EGG';
 
---  U1.5)   Löschen Sie diese 3 neu zugefügten Sprachen wieder! Wieso geht das nicht?
+--  U1.5)   Loeschen Sie diese 3 neu zugefuegten Sprachen wieder! Wieso geht das nicht?
 DELETE FROM language WHERE name in ('Schweizerdeutsch', 'Suiss Italian', 'Dutch');
 
 --  U1.6)   Setzen Sie zuerst bei alle Filmen, welche einer dieser zugefügten Sprachen als Original-Sprache gesetzt haben, diese wieder auf NULL 
