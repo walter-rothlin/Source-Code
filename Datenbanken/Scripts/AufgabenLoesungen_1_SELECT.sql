@@ -2,7 +2,7 @@
 -- =======================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 21-May-2021 / 12:24
+--    Last Change: 21-May-2021 / 07:24
 --
 -- =======================================
 -- END title
@@ -13,7 +13,7 @@
 -- -    Listen Sie alle Attribut-Typen auf die Sie finden. Gibt es ihnen unbekannte?
 -- -    Machen Sie eine Liste der Symbole, Farben vor den Attribute Namen und deren Bedeutung.
 -- -    Suchen Sie folgende Beziehungen:
---     o    1  :  1..n
+--     o    1 : 1..n
 --     o    1 : 0..n
 --     o    m : n
 -- -    Was bedeuten die zwei Relationen (Beziehungen) zwischen language und film?
@@ -704,20 +704,20 @@ FROM
 INNER JOIN language AS lang    ON f.language_id          = lang.language_id
 INNER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
---  U1.2)  Fügen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italien' und ‘Dutch' in die Tabelle language 
+--  U1.2)  Fügen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und ‘Dutch' in die Tabelle language 
 SELECT * FROM language;
 INSERT INTO language (name) VALUES ('Schweizerdeutsch');
-INSERT INTO language (name) VALUES ('Suiss Italien');
+INSERT INTO language (name) VALUES ('Suiss Italian');
 INSERT INTO language (name) VALUES ('Dutch');
 INSERT INTO language (name) VALUES 
 	('Schweizerdeutsch'), 
-    ('Suiss Italien'), 
+    ('Suiss Italian'), 
     ('Dutch');
 
 
 --  U1.3)   Setzen Sie für die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
 UPDATE film SET original_language_id=1 WHERE film_id=1;  -- English
-UPDATE film SET original_language_id=1 WHERE film_id=2;  -- Italian
+UPDATE film SET original_language_id=2 WHERE film_id=2;  -- Italian
 
 --  U1.4)   Setzen Sie für den Filme mit der AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
 SELECT language_id FROM language where name = 'Schweizerdeutsch';
@@ -729,19 +729,13 @@ UPDATE film SET original_language_id=NULL WHERE film_id=5;
 
 UPDATE film SET original_language_id=(SELECT language_id FROM language WHERE name='Schweizerdeutsch') WHERE title='AFRICAN EGG';
 
---        e) Löschen Sie diese 3 neu zugefügten Sprachen wieder
+--  U1.5)   Löschen Sie diese 3 neu zugefügten Sprachen wieder! Wieso geht das nicht?
+DELETE FROM language WHERE name in ('Schweizerdeutsch', 'Suiss Italian', 'Dutch');
 
---        e) Löschen Sie diese 3 neu zugefügten Sprachen wieder
-DELETE FROM language WHERE name='Schweizerdeutsch';
-UPDATE film SET original_language_id=NULL WHERE original_language_id=5;
---              DELETE FROM language WHERE name='Schweizerdeutsch';
---              UPDATE film SET original_language_id=null WHERE film_id IN (1,2);
+--  U1.6)   Setzen Sie zuerst bei alle Filmen, welche einer dieser zugefügten Sprachen als Original-Sprache gesetzt haben, diese wieder auf NULL 
+UPDATE film SET original_language_id=NULL WHERE original_language_id in (SELECT language_id FROM language WHERE name IN ('Schweizerdeutsch', 'Suiss Italian', 'Dutch'));
 
 
--- MySQL Workbench unter Edit > Preferences > SQL Queries das Feld “Safe Updates”
-DELETE FROM language WHERE name='Schweizerdeutsch';
-
-UPDATE film SET original_language_id=null WHERE film_id IN (1,2);
 -- END uebung_1
 
 
