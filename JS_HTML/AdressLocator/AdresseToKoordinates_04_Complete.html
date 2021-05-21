@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>GeoAdminLocation</title>
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+		<!-- Local Recources: URL http://fhoch3.peterliwiese.ch/ -->
+		<link href="AdresseToKoordinates_Style.css" rel="stylesheet" type="text/css">
+		<script src="AdressToKoordinates_04_Complete.js"></script>
+	</head>
+
+	<body>
+		<h1>Address-Locator</h1>
+		<div class="SearchField">
+			<div class="SearchBar">
+				<input type="text" id="AdressPattern"  placeholder="Please enter a search pattern" size="30">
+				<div class="fa fa-search"></div>
+			</div>
+			<div class="Divider"></div>
+			<table id="ResultSetView" >
+			</table>
+		</div>
+	</body>
+
+	<script>
+		document.getElementById("AdressPattern").addEventListener('keyup', GetCoordinatesForAdresse);
+	</script>
+</html>
