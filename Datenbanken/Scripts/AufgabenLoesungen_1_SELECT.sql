@@ -2,7 +2,7 @@
 -- =======================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 17-May-2021 / 12:24
+--    Last Change: 21-May-2021 / 12:24
 --
 -- =======================================
 -- END title
@@ -458,31 +458,16 @@ GROUP BY
 Order BY
    Umsatz DESC;
 
---  4.0) Machen Sie folgende Aenderungen in skaila (Am einfachsten mit der Workbench):
---        a) fügen Sie eine weitere Sprache 'Schweizerdeutsch' in die Tabelle language 
---             INSERT INTO language (name) VALUES ('Schweizerdeutsch');
-SELECT * FROM language;
-INSERT INTO language (name) VALUES ('Schweizerdeutsch');
-INSERT INTO language (name) VALUES ('Suiss Italien');
-INSERT INTO language (name) VALUES ('Schweizerdeutsch'),('Suiss Italien');
-
-
---        b) setzen Sie für die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
---             UPDATE film SET original_language_id=1 WHERE film_id=1;
---             UPDATE film SET original_language_id=6 WHERE film_id=2;
-UPDATE film SET original_language_id=1 WHERE film_id=1;
-UPDATE film SET original_language_id=1 WHERE film_id=2;
-
---        c) um diese Aenderungen am Schluss wieder Rueckgaengig zu machen verwenden Sie:
---              DELETE FROM language WHERE name='Schweizerdeutsch';
---              UPDATE film SET original_language_id=null WHERE film_id IN (1,2);
-
-
--- MySQL Workbench unter Edit > Preferences > SQL Queries das Feld “Safe Updates”
-DELETE FROM language WHERE name='Schweizerdeutsch';
-
-UPDATE film SET original_language_id=null WHERE film_id IN (1,2);
-
+--  4.0) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language
+SELECT
+     f.film_id      AS Id,
+     f.title        AS Title,
+     lang.name      AS Sprache,
+     orgLang.name   AS Originalsprache
+FROM
+     film AS f
+INNER JOIN language AS lang    ON f.language_id          = lang.language_id
+INNER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 
 --  4.1) Inner-Join: Wieviele Rows hat es in der Tabelle country und city?
@@ -799,7 +784,61 @@ call hwz_test_1.insertOrt(100,8853,'Lachen');
 
 -- END procedures
 
+-- START uebung_1
 
+-- Uebung 1
+-- ==============
+--  Machen Sie folgende Aenderungen in skaila:
+--  U1.1) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language
+SELECT
+     f.film_id      AS Id,
+     f.title        AS Title,
+     lang.name      AS Sprache,
+     orgLang.name   AS Originalsprache
+FROM
+     film AS f
+INNER JOIN language AS lang    ON f.language_id          = lang.language_id
+INNER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+
+--  U1.2)  Fügen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italien' und ‘Dutch' in die Tabelle language 
+SELECT * FROM language;
+INSERT INTO language (name) VALUES ('Schweizerdeutsch');
+INSERT INTO language (name) VALUES ('Suiss Italien');
+INSERT INTO language (name) VALUES ('Dutch');
+INSERT INTO language (name) VALUES 
+	('Schweizerdeutsch'), 
+    ('Suiss Italien'), 
+    ('Dutch');
+
+
+--  U1.3)   Setzen Sie für die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
+UPDATE film SET original_language_id=1 WHERE film_id=1;  -- English
+UPDATE film SET original_language_id=1 WHERE film_id=2;
+
+--  U1.4)   Setzen Sie für den Filme mit der AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
+SELECT language_id FROM language where name = 'Schweizerdeutsch';
+SELECT film_id, title, original_language_id FROM film WHERE title='AFRICAN EGG';
+UPDATE film SET original_language_id=7 WHERE film_id=5;
+SELECT film_id, title, original_language_id FROM film WHERE film_id=5;
+
+UPDATE film SET original_language_id=NULL WHERE film_id=5;
+
+UPDATE film SET original_language_id=(SELECT language_id FROM language WHERE name='Schweizerdeutsch') WHERE title='AFRICAN EGG';
+
+--        e) Löschen Sie diese 3 neu zugefügten Sprachen wieder
+
+--        e) Löschen Sie diese 3 neu zugefügten Sprachen wieder
+DELETE FROM language WHERE name='Schweizerdeutsch';
+UPDATE film SET original_language_id=NULL WHERE original_language_id=5;
+--              DELETE FROM language WHERE name='Schweizerdeutsch';
+--              UPDATE film SET original_language_id=null WHERE film_id IN (1,2);
+
+
+-- MySQL Workbench unter Edit > Preferences > SQL Queries das Feld “Safe Updates”
+DELETE FROM language WHERE name='Schweizerdeutsch';
+
+UPDATE film SET original_language_id=null WHERE film_id IN (1,2);
+-- END uebung_1
 
 -- START pruefung
 
