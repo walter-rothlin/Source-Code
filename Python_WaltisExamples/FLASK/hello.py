@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Hello world Walti'
+    return 'Hello world Walti!'
 
 @app.route('/hello')
 def gugus():
