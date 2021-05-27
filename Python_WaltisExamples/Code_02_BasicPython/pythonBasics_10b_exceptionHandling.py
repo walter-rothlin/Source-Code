@@ -1,3 +1,16 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name: pythonBasics_10_exceptionHandling.py
+#
+# Description: Berechnet die Nullstellen einer quadratischen Funktion
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 26-May-2021   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
 
 import math
 

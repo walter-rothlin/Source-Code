@@ -1,4 +1,16 @@
+#!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name: pythonBasics_10_exceptionHandling.py
+#
+# Description: Berechnet die Nullstellen einer quadratischen Funktion
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 26-May-2021   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
 import math
 
 help = '''
@@ -19,9 +31,9 @@ c = float(input("c="))
 
 diskriminante = b**2 - 4*a*c
 print("Diskriminante:", diskriminante)
-x1 = (-b + math.sqrt(diskriminante))/(2 * a)
-x2 = (-b - math.sqrt(diskriminante))/(2 * a)
-print("x1 =", x1, "    x1 =", x2)
+x1 = (-b - math.sqrt(diskriminante))/(2 * a)
+x2 = (-b + math.sqrt(diskriminante))/(2 * a)
+print("x1 =", x1, "    x2 =", x2)
 
 
 
