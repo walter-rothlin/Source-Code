@@ -30,9 +30,11 @@ print(help)
 error = True
 while error:
     try:
-        a = float(input("a="))
+        aString = input("a=")
+        a = float(aString)
         error = False
     except ValueError:
+        print("Flasche Eingabe:", aString, " Must be a float!!!!")
         error = True
 
 b = float(input("b="))
