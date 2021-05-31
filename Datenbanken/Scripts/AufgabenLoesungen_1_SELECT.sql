@@ -77,6 +77,16 @@ ORDER BY Nachname;
 
 -- 1.6) Von wie viele Schauspieler hat es DVD im Store?
 SELECT 
+    COUNT(last_name)
+FROM
+    actor;    -- 200
+
+SELECT 
+    COUNT(*)
+FROM
+    actor;    -- 200
+    
+SELECT 
     COUNT(3)      -- COUNT(last_name)
 FROM
     actor;    -- 200
@@ -141,28 +151,121 @@ SELECT
     special_features   -- Set / Menge
 FROM
     film;
-    
--- 1.12) Erstellen Sie eine Listen aller Kunden_id mit deren Umsaetzen
+
+-- 1.12) Erstellen Sie eine Listen der bezahlten Betraege (FROM payment), sortiert nach customer_id und Betraege
 SELECT 
    customer_id,
-   sum(amount)
+   amount
 FROM 
    payment
-GROUP BY
-   customer_id;
-   
--- 1.13) ... ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
+ORDER BY
+   customer_id,
+   amount    DESC;
+
+-- 1.12.1) Erstellen Sie eine Listen (mit Vor- und Nachnamen) der bezahlten Betraege (FROM payment), sortiert nach customer_id und Betraege   
+SELECT
+   C.first_name,
+   C.last_name,
+   P.customer_id,
+   P.amount
+FROM 
+   payment AS P
+LEFT JOIN customer AS C ON C.customer_id = P.customer_id
+ORDER BY
+   P.customer_id,
+   P.amount    DESC;
+
+-- 1.13) Erstellen Sie eine Listen aller Kunden_id mit deren Umsaetzen (FROM payment), sortiert nach customer_id und Betraege   
 SELECT 
-   customer_id    AS Kunden_ID,
-   sum(amount)    AS Umsatz
+   P.customer_id,
+   sum(P.amount)
 FROM 
-   payment
+   payment AS P
 GROUP BY
-   customer_id
+   P.customer_id
+ORDER BY
+   P.customer_id,
+   P.amount    DESC;
+
+-- 1.13.1) Erstellen Sie eine Listen aller Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment), sortiert nach customer_id und Betraege   
+SELECT
+   C.first_name,
+   C.last_name,
+   P.customer_id,
+   sum(P.amount)
+FROM 
+   payment AS P
+LEFT JOIN customer AS C ON C.customer_id = P.customer_id
+GROUP BY
+   P.customer_id
+ORDER BY
+   P.customer_id,
+   P.amount    DESC;
+   
+-- 1.14) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
+--       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
+--       Nur von den Kunden mit ID < 5
+SELECT
+   C.first_name,
+   C.last_name,
+   P.customer_id    AS Kunden_ID,
+   sum(P.amount)    AS Umsatz
+FROM 
+   payment as P
+LEFT JOIN customer as C on C.customer_id = P.customer_id
+WHERE P.customer_id < 5
+GROUP BY
+   P.customer_id
 Order BY
    Umsatz DESC;
+   
+-- 1.14) Erstellen Sie eine Listen Kunden_id mit deren Umsaetzen (FROM payment),
+--       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
+--       Nur von den Kunden mit einem Umsatz > 170
+SELECT 
+	UmsatzListe.Kunden_ID AS Kunde,
+    UmsatzListe.Umsatz    AS Sales
+FROM (
+	SELECT 
+	   P.customer_id AS Kunden_ID,
+	   sum(P.amount) AS Umsatz
+	FROM 
+	   payment AS P
+	GROUP BY
+	   P.customer_id
+	ORDER BY
+	   P.customer_id,
+	   P.amount    DESC) AS UmsatzListe
+WHERE
+	UmsatzListe.Umsatz > 170;
 
+-- 1.14.1) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
+--       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
+--       Nur von den Kunden mit einem Umsatz > 170
+SELECT 
+	UmsatzListe.Vorname   AS Firstname,
+    UmsatzListe.Nachname  AS Lastname,
+    UmsatzListe.Kunden_ID AS Kunde,
+    UmsatzListe.Umsatz    AS Sales
+FROM (
+	SELECT
+       C.first_name  AS Vorname,
+	   C.last_name   AS Nachname,
+	   P.customer_id AS Kunden_ID,
+	   sum(P.amount) AS Umsatz
+	FROM 
+	   payment AS P
+	LEFT JOIN customer as C on C.customer_id = P.customer_id
+	GROUP BY
+	   P.customer_id
+	ORDER BY
+	   P.customer_id,
+	   P.amount    DESC) AS UmsatzListe
+WHERE
+	UmsatzListe.Umsatz > 170;
     
+
+
 -- 1.14) Noch nicht loesen!!!!
 --       In der staff table hat es ein Attribute picture vom Type BLOB. Googeln Sie, was das fuer ein Type ist und 
 --       laden Sie ein Bild fuer eine Record (staff_id = 1) in dieses Feld
@@ -626,10 +729,31 @@ WHERE
    DATE_FORMAT(return_date, '%Y%m%d') = '20050527' 
 ORDER BY 
    return_date; -- (49 rows)
+   
+   
+SELECT 
+   *
+FROM
+   rental
+WHERE
+   return_date IS NOT NULL AND 
+   return_date = STR_TO_DATE('20050527', '%Y%m%d')
+ORDER BY 
+   return_date; -- (49 rows)
+
+  -- Schneller! Nur einmal ein fct-Call in Where-Clause!
+SELECT 
+    first_name,  
+    last_name, 
+    DATE_FORMAT(last_update, '%d.%M %Y') AS LastUpdate 
+FROM staff 
+WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
+
 
 -- 4.4.2) Erstellen Sie eine Liste mit allen ausgeliehenen DVDs und listen Sie die Vor-, Nachnamen
 --        und Telefonnummern der Ausleiher auf sowie den Titel der DVD, welche am 27.5.2005 
 --        zurueckgegeben worden sind.
+--        https://dev.mysql.com/doc/refman/5.7/en/string-functions.html
 SELECT 
    CONCAT(LEFT(customer.first_name, 1),'. ', customer.last_name) AS Renter,
    film.title                                                    AS Film
@@ -646,6 +770,7 @@ ORDER BY
 
 -- 4.4.3) Erstellen Sie eine Mahnungsliste, wie folgt:
 --        Enthaelt alle Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurueckgeben haben
+--        https://dev.mysql.com/doc/refman/5.7/en/string-functions.html
 SELECT 
     CONCAT(LEFT(customer.first_name, 1),'. ',customer.last_name) AS Renter,
     address.phone                                                AS Phone,
@@ -687,6 +812,8 @@ select Stadt, Land from test_city_country;
 -- START CRUD
 -- Insert - Update - Delete
 -- ========================
+--  CRUD 0)  Welche Laender sind erfasst?
+SELECT * FROM country;
 
 --  CRUD 1)  Fuegen Sie das Land "Lichtenstein" ein
 INSERT INTO country (country) VALUES ('Lichtenstein');
@@ -1023,7 +1150,7 @@ END//
 
 -- SUB_QUERIES
 -- ===========
--- 5.1) Nehmen Sie eine funktionierende Abfrage z.B. 4.2.5. Verwenden Sie diese Query als "Derived Table (Subqueries in the FROM clause) und 
+-- 5.1) Nehmen Sie eine funktionierende Abfrage. Verwenden Sie diese Query als "Derived Table (Subqueries in the FROM clause) und 
 --      und selektieren sie eine Spalte (z.B. original_language) aber nur von den Data-Tubles, welche nicht NULL sind.
 SELECT SUBQ_1.Originalsprache AS ORGLANG FROM (
 	SELECT 
@@ -1036,7 +1163,32 @@ SELECT SUBQ_1.Originalsprache AS ORGLANG FROM (
 	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) as SUBQ_1
 WHERE SUBQ_1.Originalsprache IS NOT NULL;
 
--- 5.2) Listen sie alle Filme-Titles auf, welche als Orginal-Sprache "GERMAN" oder "ENGLISH" haben.
+-- 5.2 (siehe 1.14.1) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
+--       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
+--       Nur von den Kunden mit einem Umsatz > 170
+SELECT 
+	UmsatzListe.Vorname   AS Firstname,
+    UmsatzListe.Nachname  AS Lastname,
+    UmsatzListe.Kunden_ID AS Kunde,
+    UmsatzListe.Umsatz    AS Sales
+FROM (
+	SELECT
+       C.first_name  AS Vorname,
+	   C.last_name   AS Nachname,
+	   P.customer_id AS Kunden_ID,
+	   sum(P.amount) AS Umsatz
+	FROM 
+	   payment AS P
+	LEFT JOIN customer as C on C.customer_id = P.customer_id
+	GROUP BY
+	   P.customer_id
+	ORDER BY
+	   P.customer_id,
+	   P.amount    DESC) AS UmsatzListe
+WHERE
+	UmsatzListe.Umsatz > 170;
+    
+-- 5.3) Listen sie alle Filme-Titles auf, welche als Orginal-Sprache "GERMAN" oder "ENGLISH" haben.
 --      Verwenden Sie dazu eine Subquery als Scalar-Operand fuer einen Vergleich
 SELECT
 	title                AS  FilmTitle,
