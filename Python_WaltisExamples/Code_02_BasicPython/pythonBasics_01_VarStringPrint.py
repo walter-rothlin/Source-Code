@@ -24,15 +24,16 @@ print("==>", os.path.basename(__file__))
 
 print("# print")
 print("# -----")
-print("Hallo world")             # first statement
-print("Hallo", "world", "!!!")     # mehrere Argumente / Parameter
-print("Hallo\n\nWorld")          # line-feed
-print("Radius:",5," --> ","Umfang:",2*5*3.141592)      # Zahlenwerte
-print("Radius:",5," --> ","Umfang:",2*5*3.141592,sep="")
-print("Radius:",5," --> ","Umfang:",2*5*3.141592,sep="::")
-print("Radius:",5," --> ","Umfang:",2*5*3.141592,sep="\t")
-print("Radius:",5,end="", flush=True)
-print(" --> ","Umfang:",2*5*3.141592,sep="\t")
+print("Hallo world")                   # first statement
+print("Hallo", "world", "!!!")         # mehrere Argumente / Parameter
+print("Hallo" + " world" + " !!!")     # Ein Argument mit String-Operationen
+print("Hallo\n\nWorld")                # line-feed
+print("Radius:", 5, " --> ", "Umfang:", 2*5*3.141592)      # Zahlenwerte
+print("Radius:", 5, " --> ", "Umfang:", 2*5*3.141592, sep="")
+print("Radius:", 5, " --> ", "Umfang:", 2*5*3.141592, sep="::")
+print("Radius:", 5, " --> ", "Umfang:", 2*5*3.141592, sep="\t")
+print("Radius:", 5, end="", flush=True)
+print(" --> ", "Umfang:", 2*5*3.141592, sep="\t")
 print("\n\n")
 
 print("# print mit variables and string conncationation ")
