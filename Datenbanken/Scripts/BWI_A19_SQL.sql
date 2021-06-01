@@ -1,5 +1,5 @@
--- Hier ist das erste SELECT statement
--- ===================================
+-- 18.5.21 (2.Abend)
+-- =================
 select
 	country as Land,
     country_id,
@@ -60,3 +60,8 @@ select
 from film
 inner join language as lang on film.language_id = lang.language_id
 left outer join language as org_lang on film.original_language_id = org_lang.language_id;
+
+
+-- 1.6.21 (3.Abend)
+-- ================
+
