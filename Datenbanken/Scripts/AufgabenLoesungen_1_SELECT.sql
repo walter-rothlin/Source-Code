@@ -75,7 +75,7 @@ FROM
     actor
 ORDER BY Nachname;
 
--- 1.6) Von wie viele Schauspieler hat es DVD im Store?
+-- 1.6) Von wie viele Schauspieler hat es im DVD im Store?
 SELECT 
     COUNT(last_name)
 FROM
@@ -405,7 +405,6 @@ FROM
 -- Meta-Daten abfragen
 -- ===================
 
-
 -- 3.1) liste alle Tabellen, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
 --      https://dev.mysql.com/doc/refman/5.7/en/tables-table.html
 SELECT 
@@ -435,6 +434,14 @@ FROM
 WHERE
     table_schema = 'sakila'
 ORDER BY table_schema , Table_NAME , column_name;
+
+
+-- 3.3 Liste alle Attribute der Tabelle film aus
+DESC film; 
+
+
+-- 3.4 Liste alle Attribute der Tabelle INFORMATION_SCHEMA.COLUMNS aus
+DESCRIBE INFORMATION_SCHEMA.COLUMNS;
 
 -- END metaData
 
@@ -1159,8 +1166,8 @@ SELECT SUBQ_1.Originalsprache AS ORGLANG FROM (
 		orgLang.name  AS Originalsprache
 	FROM
 		film AS f
-	LEFT OUTER JOIN language AS lang    ON f.language_id          = lang.language_id
-	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) as SUBQ_1
+	INNER      JOIN language AS lang    ON f.language_id          = lang.language_id
+	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) AS SUBQ_1
 WHERE SUBQ_1.Originalsprache IS NOT NULL;
 
 -- 5.2 (siehe 1.14.1) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
@@ -1179,7 +1186,7 @@ FROM (
 	   sum(P.amount) AS Umsatz
 	FROM 
 	   payment AS P
-	LEFT JOIN customer as C on C.customer_id = P.customer_id
+	LEFT JOIN customer AS C ON C.customer_id = P.customer_id
 	GROUP BY
 	   P.customer_id
 	ORDER BY
@@ -1187,24 +1194,24 @@ FROM (
 	   P.amount    DESC) AS UmsatzListe
 WHERE
 	UmsatzListe.Umsatz > 170;
-    
--- 5.3) Listen sie alle Filme-Titles auf, welche als Orginal-Sprache "GERMAN" oder "ENGLISH" haben.
+
+-- 5.3) Listen sie alle Filme-Titles auf, welche als Sprache "GERMAN" oder "ENGLISH" haben.
 --      Verwenden Sie dazu eine Subquery als Scalar-Operand fuer einen Vergleich
 SELECT
-	title                AS  FilmTitle,
+    title                AS  FilmTitle,
     original_language_id AS  Sprache
 FROM
     film
 WHERE
-	original_language_id in (
+	original_language_id IN (
 		SELECT
 			language_id AS Id
 		FROM
 			language
 		WHERE
 			name = "GERMAN"   OR
-            name = "ENGLISH"
-    );
+			name = "ENGLISH"
+	);
 
 
 -- END subQueries
