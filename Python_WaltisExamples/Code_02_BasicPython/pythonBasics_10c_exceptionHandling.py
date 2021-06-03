@@ -37,16 +37,33 @@ while error:
         print("Flasche Eingabe:", aString, " Must be a float!!!!")
         error = True
 
-b = float(input("b="))
-c = float(input("c="))
+error = True
+while error:
+    try:
+        aString = input("b=")
+        b = float(aString)
+        error = False
+    except ValueError:
+        print("Flasche Eingabe:", aString, " Must be a float!!!!")
+        error = True
+
+error = True
+while error:
+    try:
+        aString = input("c=")
+        c = float(aString)
+        error = False
+    except ValueError:
+        print("Flasche Eingabe:", aString, " Must be a float!!!!")
+        error = True
 
 diskriminante = b**2 - 4*a*c
 print("Diskriminante:", diskriminante)
-try:
+if diskriminante < 0:
+    print("Keine Lösung")
+else:
     x1 = (-b + math.sqrt(diskriminante))/(2 * a)
     x2 = (-b - math.sqrt(diskriminante))/(2 * a)
     print("x1 =", x1, "    x1 =", x2)
-except ValueError:
-    print("Keine Lösung! Diskriminante=", diskriminante)
 
 

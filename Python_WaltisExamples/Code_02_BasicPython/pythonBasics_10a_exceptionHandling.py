@@ -27,7 +27,10 @@ Berechnung der Nullstellen einer quadratischen Funktion der Form:
 '''
 
 print(help)
-a = float(input("a="))
+
+aString = input("a=")
+
+a = float(aString)
 b = float(input("b="))
 c = float(input("c="))
 
