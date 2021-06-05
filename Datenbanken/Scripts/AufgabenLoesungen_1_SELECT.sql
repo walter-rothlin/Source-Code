@@ -887,6 +887,19 @@ FROM
 	city
 WHERE country_id = (SELECT country_id from country where country = 'Lichtenstein');
 
+--  CRUD 4)  Setzen Sie die Originalsprache von den Filmen 'ACADEMY DINOSAUR', 'ACE GOLDFINGER' auf 'Mandarin' 
+UPDATE
+   film 
+SET original_language_id=(
+			SELECT
+				language_id
+			FROM
+				language
+			WHERE
+				name = 'Mandarin'
+) 
+WHERE title in ('ACADEMY DINOSAUR', 'ACE GOLDFINGER');
+
 -- END CRUD
 
 
@@ -1159,7 +1172,9 @@ END//
 -- ===========
 -- 5.1) Nehmen Sie eine funktionierende Abfrage. Verwenden Sie diese Query als "Derived Table (Subqueries in the FROM clause) und 
 --      und selektieren sie eine Spalte (z.B. original_language) aber nur von den Data-Tubles, welche nicht NULL sind.
-SELECT SUBQ_1.Originalsprache AS ORGLANG FROM (
+SELECT 
+    SUBQ_1.Originalsprache AS ORGLANG 
+FROM (
 	SELECT 
 		f.title       AS Title, 
 		lang.name     AS Sprache,
