@@ -10,24 +10,25 @@
 -- 15-May-2020   Walter Rothlin      Initial Version
 -- 04-Jun-2020   Walter Rothlin      Added Join, Function, View
 -- 25-Jun-2020   Walter Rothlin      Added Stored-Procedures
+-- 05-Jun-2021   Walter Rothlin		 Merged with HWZ Script
 -- ---------------------------------------------------------------------------------------------
 
 -- Neues Schema kreieren
-DROP SCHEMA IF EXISTS `bzu`;
-CREATE SCHEMA `bzu`;
+DROP SCHEMA IF EXISTS `BZU`;
+CREATE SCHEMA IF NOT EXISTS `BZU`;  -- DEFAULT CHARACTER SET utf8;
 
 -- Als default Schema setzen
-USE `bzu`;
+USE `BZU`;
 
 -- Adressen-Tabelle kreieren
 DROP TABLE IF EXISTS `adressen`;
-CREATE TABLE `adressen` (
+CREATE TABLE IF NOT EXISTS `adressen` (
   `vorname`    VARCHAR(45) NOT NULL,
   `nachname`   VARCHAR(45) NOT NULL,
   `strasse`    VARCHAR(45) NULL,
   `plz`        INT(4)      NOT NULL,
   `ort`        VARCHAR(45) NOT NULL,
-  `adress_id`  INT         NOT NULL AUTO_INCREMENT,
+  `adress_id`  INT         UNSIGNED NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`adress_id`));
   
 -- Adressen einfüllen
@@ -63,14 +64,13 @@ UPDATE `adressen` SET `strasse`='Ochsenbodenweg', `hausnummer`='7a'  WHERE `adre
 
 
 -- Check der Daten
+SELECT * FROM adressen;
 SELECT
      `adress_id`,
      `vorname`,
      `nachname`,
      `strasse`,
-     `plz`,
-     `ort`
-     `hausnummer`,
+	 `hausnummer`,
      `plz`,
      `ort`
 FROM `adressen`;
@@ -81,10 +81,10 @@ FROM `adressen`;
 
 -- Neue Tabelle kreieren
 DROP TABLE IF EXISTS `orte`;
-CREATE TABLE `orte` (
-  `ort_id` INT         NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `orte` (
+  `ort_id` INT         UNSIGNED NOT NULL AUTO_INCREMENT,
   `plz`    INT(4)      NOT NULL,
-  `name`   VARCHAR(45) NOT NULL,
+  `name`   VARCHAR(45) CHARACTER SET 'big5' NOT NULL,
   PRIMARY KEY (`ort_id`));
 
 -- Check, welche Orte in die neue Tabelle migriert werden müssen
@@ -95,11 +95,12 @@ FROM
      `adressen`
 ORDER BY `plz`, `ort`; 
  
--- Orte einfüllen
--- -- INSERT INTO `orte` (`plz`, `name`) VALUES (8854, 'Siebnen');
--- -- INSERT INTO `orte` (`plz`, `name`) VALUES (8855, 'Nuolen');
--- -- INSERT INTO `orte` (`plz`, `name`) VALUES (8855, 'Wangen');
-
+-- Orte einfüllen, manually
+INSERT INTO `orte` (`ort_id`, `plz`, `name`) VALUES (1, 8854, 'Siebnen');
+INSERT INTO `orte` (`ort_id`, `plz`, `name`) VALUES (2, 8855, 'Nuolen');
+INSERT INTO `orte` (`ort_id`, `plz`, `name`) VALUES (3, 8855, 'Wangen');
+DELETE FROM `orte`;      -- alles wieder löschen, weil es sollte wie folgt gemacht werden
+TRUNCATE TABLE `orte`;   -- SEQUENZES will be reset as well. Is a DDL command
 
 -- oder combined INSERT and SELECT
 INSERT INTO `orte` (`plz`, `name`)
@@ -125,18 +126,27 @@ ALTER TABLE `adressen`
 -- add FK constraint
 ALTER TABLE `adressen` 
   ADD CONSTRAINT `fk_adressen_orte`
-     FOREIGN KEY (`orte_fk`) REFERENCES `orte` (`ort_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+     FOREIGN KEY (`orte_fk`) REFERENCES `orte` (`ort_id`)
+     ON DELETE RESTRICT   -- ON DELETE NO ACTION
+     ON UPDATE CASCADE;   -- ON UPDATE NO ACTION
 
 -- Datensätze mutieren
--- -- UPDATE `adressen` SET `orte_fk`=3 WHERE `adress_id`=1;
--- -- UPDATE `adressen` SET `orte_fk`=3 WHERE `adress_id`=2;
--- -- UPDATE `adressen` SET `orte_fk`=1 WHERE `adress_id`=3;
--- -- UPDATE `adressen` SET `orte_fk`=2 WHERE `adress_id`=4;
+UPDATE `adressen` SET `orte_fk`=3 WHERE `adress_id`=1;
+UPDATE `adressen` SET `orte_fk`=3 WHERE `adress_id`=2;
+UPDATE `adressen` SET `orte_fk`=1 WHERE `adress_id`=3;
+UPDATE `adressen` SET `orte_fk`=2 WHERE `adress_id`=4;
 
 -- oder so...
-UPDATE `adressen` SET `orte_fk`=1 WHERE `ort`='Siebnen' and plz=8854;
-UPDATE `adressen` SET `orte_fk`=2 WHERE `ort`='Nuolen'  and plz=8855;
-UPDATE `adressen` SET `orte_fk`=3 WHERE `ort`='Wangen'  and plz=8855;
+UPDATE `adressen` SET `orte_fk`=1 WHERE `ort`='Siebnen' AND plz=8854;
+UPDATE `adressen` SET `orte_fk`=2 WHERE `ort`='Nuolen'  AND plz=8855;
+UPDATE `adressen` SET `orte_fk`=3 WHERE `ort`='Wangen'  AND plz=8855;
+
+-- oder noch besser so...
+UPDATE `adressen` SET `orte_fk`=(SELECT ort_id FROM orte WHERE name = 'Siebnen' AND plz = 8854) WHERE `ort`='Siebnen' AND plz=8854;
+UPDATE `adressen` SET `orte_fk`=(SELECT ort_id FROM orte WHERE name = 'Nuolen'  AND plz = 8855) WHERE `ort`='Nuolen'  AND plz=8855;
+UPDATE `adressen` SET `orte_fk`=(SELECT ort_id FROM orte WHERE name = 'Wangen'  AND plz = 8855) WHERE `ort`='Wangen'  AND plz=8855;
+
+-- oder noch besser mit einer procedure TBA
 
 
 -- Ueberprüft ob Migration richtig war
@@ -174,12 +184,90 @@ SELECT
 FROM `adressen`
 JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`;
 
+-- ===============================================================================================
+-- Everything from Scratch
+-- ===============================================================================================
+-- Create first referenced table
+DROP TABLE IF EXISTS orte;
+CREATE TABLE IF NOT EXISTS orte (
+  ort_id INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+  plz    INT(4)      NOT NULL,
+  -- name   VARCHAR(45) CHARACTER SET 'big5' NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (ort_id));
+
+-- populate table
+INSERT INTO orte (ort_id, plz, name) VALUES (1  , 8854, 'Siebnen');
+INSERT INTO orte (ort_id, plz, name) VALUES (2  , 8855, 'Nuolen');
+INSERT INTO orte (ort_id, plz, name) VALUES (3  , 8855, 'Wangen');
+INSERT INTO orte (ort_id, plz, name) VALUES (100, 8810, 'Horgen');
+
+-- Create main table
+DROP TABLE IF EXISTS adressen;
+CREATE TABLE IF NOT EXISTS adressen (
+   adress_id    SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT,
+   PRIMARY KEY (adress_id),
+   nachname     VARCHAR(45) NOT NULL,
+   vorname      VARCHAR(45) NOT NULL,
+   strasse      VARCHAR(45) NOT NULL,
+   hausnummer   VARCHAR(10) NULL,
+   orte_fk      INT         UNSIGNED NOT NULL,   -- must be exactely the same type as the PK referenced
+   INDEX fk_adressen_orte_idx (orte_fk ASC)      -- must be indexed
+); 
+
+-- FK constraint to reflect the relation
+ALTER TABLE adressen 
+ADD CONSTRAINT fkr_adressen_orte
+  FOREIGN KEY (orte_fk) REFERENCES orte (ort_id) ON DELETE RESTRICT ON UPDATE CASCADE;    -- ON DELETE NO ACTION ON UPDATE NO ACTION
+
+-- populate table
+INSERT INTO adressen (vorname, nachname, strasse, hausnummer, orte_fk) VALUES 
+    ('Walter' ,  'Rothlin' , 'Peterliwiese'  , '33' , 3),
+	('Claudia' , 'Collet'  , 'Peterliwiese'  , '33' , 3),
+    ('Michaela', 'Stöhr'   , 'Züricherstr.'  , '42c', 1),
+    ('Josef'   , 'Friedlos', 'Ochsenbodenweg', '7a' , 2);
+
+
+-- Test FK constraint
+-- ------------------
+DELETE FROM orte WHERE name = 'Horgen';  -- Is working because this Ort is not referenced by any Adresses
+DELETE FROM orte WHERE name = 'Wangen';  -- Foreign key constraint fails! This Ort is referenced by to Adresses
+
+
+-- zuerst FK Constraint löschen und umdefinieren auf cascading (es gibt kein alter foreign key)!
+ALTER TABLE adressen DROP FOREIGN KEY fkr_adressen_orte;
+-- ALTER TABLE adressen DROP INDEX fk_adressen_orte_idx;
+
+ALTER TABLE adressen 
+ADD CONSTRAINT fkr_adressen_orte
+  FOREIGN KEY (orte_fk) REFERENCES orte (ort_id) ON DELETE CASCADE ON UPDATE CASCADE;
+DELETE FROM orte WHERE name = 'Wangen';
+
+-- -----------------------------------------------------------------------------------------------
+-- Create view for business (external) read access
+-- -----------------------------------------------------------------------------------------------
+DROP VIEW IF EXISTS adress_liste;
+CREATE VIEW adress_liste AS
+    SELECT
+         A.vorname    AS Vorname,
+         A.nachname   AS Nachname,
+         A.strasse    AS Strasse,
+         A.hausnummer AS Hausnummer,
+         O.plz        AS PLZ,
+         O.name       AS Ort
+    FROM adressen AS A
+    INNER JOIN orte AS O ON A.orte_fk = O.ort_id;
+
+SELECT * FROM adress_liste;
+
 -- -----------------------------------------------------------------------------------------------
 -- Add Function
 -- -----------------------------------------------------------------------------------------------
+-- Create function formatPLZ()
+-- ===========================
 DROP FUNCTION IF EXISTS formatPLZ;
 Delimiter //
-CREATE FUNCTION formatPLZ(p_input_plz SMALLINT) RETURNS CHAR(10)
+CREATE FUNCTION formatPLZ(p_input_plz SMALLINT) RETURNS CHAR(50)
 BEGIN
    RETURN  concat('CH-', p_input_plz);
 END
@@ -187,31 +275,60 @@ END
 DELIMITER ;
 
 SELECT
-     formatPLZ(`orte`.`plz`),
-     `orte`.`name`
-FROM `orte`;
+     formatPLZ(plz),
+     name
+FROM orte;
 
 
 -- -----------------------------------------------------------------------------------------------
 -- Create view for business (external) read access
 -- -----------------------------------------------------------------------------------------------
-DROP VIEW IF EXISTS `adress_liste`;
-CREATE VIEW `adress_liste` AS
+DROP VIEW IF EXISTS adress_liste;
+CREATE VIEW adress_liste AS
     SELECT
-         `adressen`.`vorname`    AS `Vorname`,
-         `adressen`.`nachname`   AS `Nachname`,
-         `adressen`.`strasse`    AS `Strasse`,
-         `adressen`.`hausnummer` AS `Hausnummer`,
-         `orte`.`plz`            AS `PLZ`,
-         `orte`.`name`           AS `Ort`,
-         formatPLZ(`orte`.`plz`) AS `PLZ_Formated`
-    FROM `adressen`
-    JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`;
- 
+         A.vorname        AS Vorname,
+         A.nachname       AS Nachname,
+         A.strasse        AS Strasse,
+         A.hausnummer     AS Hausnummer,
+         O.plz            AS PLZ,
+         formatPLZ(O.plz) AS PLZ_Formated,
+         O.name           AS Ort
+    FROM adressen AS A
+    INNER JOIN orte AS O ON A.orte_fk = O.ort_id
+    ORDER BY A.nachname, A.vorname;
 
 -- Abfrage via VIEW
-SELECT * FROM `adress_liste`;
+SELECT * FROM adress_liste;
 
+-- -----------------------------------------------------------------------------------------------
+-- Daten aendern
+-- -----------------------------------------------------------------------------------------------
+
+-- Update von Daten
+-- ================
+-- Claudia ist an die Etzelstrasse 7 gezogen
+UPDATE adressen 
+    SET 
+		strasse='Etzelstrasse', 
+		hausnummer = '7'
+	WHERE 
+		nachname = 'Collet' AND 
+        vorname = 'Claudia';
+
+
+-- Claudia ist von Wangen weggezogen und wohnt nun in Nuolen am Ochsenbodenweg 8a
+UPDATE adressen 
+   SET 
+       strasse    = 'Ochsenbodenweg',
+       hausnummer = '8a',
+       orte_fk    = (SELECT 
+						ort_id 
+					 FROM orte 
+                     WHERE bezeichnung='Nuolen')  
+    WHERE 
+       nachname = 'Collet' AND 
+       vorname  = 'Claudia';
+       
 
 -- -----------------------------------------------------------------------------------------------
 -- Create stored procedures for business (external) write access
@@ -272,7 +389,7 @@ set @id = 6;
 call updateAdresse(@id, 'Ruijter', 'Doron', 'Schulhausstrasse', '1a', 8400, 'Winterthur');
 select @id;
 
-deleteAdresse-- deleteAdresse
+-- deleteAdresse
 DROP PROCEDURE IF EXISTS deleteAdresse;
 DELIMITER $$
 CREATE PROCEDURE deleteAdresse(IN id SMALLINT(5))
@@ -314,6 +431,7 @@ END$$
 DELIMITER ;
 
 
+
 -- -----------------------------------------------------------------------------------------------
 -- Alles wieder löschen
 -- -----------------------------------------------------------------------------------------------
@@ -324,4 +442,4 @@ DROP VIEW  `adress_liste`;
 DROP TABLE `adressen`;
 DROP TABLE `orte`;
 
-DROP Schema `bzu`;
+DROP Schema `BZU`;
