@@ -2,7 +2,7 @@
 -- =======================================
 -- Aufgaben-Sammlung
 --    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 21-May-2021 / 16:01
+--    Last Change: 06-Jun-2021 / 07:11
 --
 -- =======================================
 -- END title
@@ -127,7 +127,7 @@ WHERE
     first_name LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
     first_name LIKE '___'              -- _ genau ein Zeichen
 ORDER BY
-	FName,   -- hier koennen ALIAS verwendet werden
+    FName,   -- hier koennen ALIAS verwendet werden
     LName;
 
     
@@ -223,46 +223,46 @@ Order BY
 --       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
 --       Nur von den Kunden mit einem Umsatz > 170
 SELECT 
-	UmsatzListe.Kunden_ID AS Kunde,
+    UmsatzListe.Kunden_ID AS Kunde,
     UmsatzListe.Umsatz    AS Sales
 FROM (
-	SELECT 
-	   P.customer_id AS Kunden_ID,
-	   sum(P.amount) AS Umsatz
-	FROM 
-	   payment AS P
-	GROUP BY
-	   P.customer_id
-	ORDER BY
-	   P.customer_id,
-	   P.amount    DESC) AS UmsatzListe
+    SELECT 
+       P.customer_id AS Kunden_ID,
+       sum(P.amount) AS Umsatz
+    FROM 
+       payment AS P
+    GROUP BY
+       P.customer_id
+    ORDER BY
+       P.customer_id,
+       P.amount    DESC) AS UmsatzListe
 WHERE
-	UmsatzListe.Umsatz > 170;
+    UmsatzListe.Umsatz > 170;
 
 -- 1.14.1) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
 --       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
 --       Nur von den Kunden mit einem Umsatz > 170
 SELECT 
-	UmsatzListe.Vorname   AS Firstname,
+    UmsatzListe.Vorname   AS Firstname,
     UmsatzListe.Nachname  AS Lastname,
     UmsatzListe.Kunden_ID AS Kunde,
     UmsatzListe.Umsatz    AS Sales
 FROM (
-	SELECT
+    SELECT
        C.first_name  AS Vorname,
-	   C.last_name   AS Nachname,
-	   P.customer_id AS Kunden_ID,
-	   sum(P.amount) AS Umsatz
-	FROM 
-	   payment AS P
-	LEFT JOIN customer as C on C.customer_id = P.customer_id
-	GROUP BY
-	   P.customer_id
-	ORDER BY
-	   P.customer_id,
-	   P.amount    DESC) AS UmsatzListe
+       C.last_name   AS Nachname,
+       P.customer_id AS Kunden_ID,
+       sum(P.amount) AS Umsatz
+    FROM 
+       payment AS P
+    LEFT JOIN customer as C on C.customer_id = P.customer_id
+    GROUP BY
+       P.customer_id
+    ORDER BY
+       P.customer_id,
+       P.amount    DESC) AS UmsatzListe
 WHERE
-	UmsatzListe.Umsatz > 170;
+    UmsatzListe.Umsatz > 170;
     
 
 
@@ -291,39 +291,38 @@ WHERE
 
 -- 2.1) liste alle Schauspielern (Vorname, Nachname und LAST_UPDATE im format [yyyy-mon-dd]) auf, sowie den entsprechenden Wochentag aber 
 --      nur die, welche an einem bestimmten Datum geaendert wurden
--- %a 	Abbreviated weekday name (Sun..Sat)
--- %b 	Abbreviated month name (Jan..Dec)
--- %c 	Month, numeric (0..12)
--- %D 	Day of the month with English suffix (0th, 1st, 2nd, 3rd, …)
--- %d 	Day of the month, numeric (00..31)
--- %e 	Day of the month, numeric (0..31)
--- %f 	Microseconds (000000..999999)
--- %H 	Hour (00..23)
--- %h 	Hour (01..12)
--- %I 	Hour (01..12)
--- %i 	Minutes, numeric (00..59)
--- %j 	Day of year (001..366)
--- %k 	Hour (0..23)
--- %l 	Hour (1..12)
--- %M 	Month name (January..December)
--- %m 	Month, numeric (00..12)
--- %p 	AM or PM
--- %r 	Time, 12-hour (hh:mm:ss followed by AM or PM)
--- %S 	Seconds (00..59)
--- %s 	Seconds (00..59)
--- %T 	Time, 24-hour (hh:mm:ss)
--- %U 	Week (00..53), where Sunday is the first day of the week; WEEK() mode 0
--- %u 	Week (00..53), where Monday is the first day of the week; WEEK() mode 1
--- %V 	Week (01..53), where Sunday is the first day of the week; WEEK() mode 2; used with %X
--- %v 	Week (01..53), where Monday is the first day of the week; WEEK() mode 3; used with %x
--- %W 	Weekday name (Sunday..Saturday)
--- %w 	Day of the week (0=Sunday..6=Saturday)
--- %X 	Year for the week where Sunday is the first day of the week, numeric, four digits; used with %V
--- %x 	Year for the week, where Monday is the first day of the week, numeric, four digits; used with %v
--- %Y 	Year, numeric, four digits
--- %y 	Year, numeric (two digits)
--- %% 	A literal % character
--- %x 	x, for any “x” not listed above
+-- %a     Abbreviated weekday name (Sun..Sat)
+-- %b     Abbreviated month name (Jan..Dec)
+-- %c     Month, numeric (0..12)
+-- %D     Day of the month with English suffix (0th, 1st, 2nd, 3rd, …)
+-- %d     Day of the month, numeric (00..31)
+-- %e     Day of the month, numeric (0..31)
+-- %f     Microseconds (000000..999999)
+-- %H     Hour (00..23)
+-- %h     Hour (01..12)
+-- %I     Hour (01..12)
+-- %i     Minutes, numeric (00..59)
+-- %j     Day of year (001..366)
+-- %k     Hour (0..23)
+-- %l     Hour (1..12)
+-- %M     Month name (January..December)
+-- %m     Month, numeric (00..12)
+-- %p     AM or PM
+-- %r     Time, 12-hour (hh:mm:ss followed by AM or PM)
+-- %S     Seconds (00..59)
+-- %s     Seconds (00..59)
+-- %T     Time, 24-hour (hh:mm:ss)
+-- %U     Week (00..53), where Sunday is the first day of the week; WEEK() mode 0
+-- %u     Week (00..53), where Monday is the first day of the week; WEEK() mode 1
+-- %V     Week (01..53), where Sunday is the first day of the week; WEEK() mode 2; used with %X
+-- %v     Week (01..53), where Monday is the first day of the week; WEEK() mode 3; used with %x
+-- %W     Weekday name (Sunday..Saturday)
+-- %w     Day of the week (0=Sunday..6=Saturday)
+-- %X     Year for the week where Sunday is the first day of the week, numeric, four digits; used with %V
+-- %x     Year for the week, where Monday is the first day of the week, numeric, four digits; used with %v
+-- %Y     Year, numeric, four digits
+-- %y     Year, numeric (two digits)
+-- %%     A literal % character
 
 -- 2.1.1) mit STR_TO_DATE in where clause (Effizienter! Wieso?)
 SELECT 
@@ -398,6 +397,18 @@ SELECT
 FROM
     actor;
 
+
+-- 2.7) Erstellen Sie eine Liste aller Filme mit den Originalsprachen (nur FK). Anstelle von NULL soll "Not defined" stehen
+SELECT
+    f.title AS Titel,
+    CASE
+       WHEN f.original_language_id IS NULL THEN 'Not Defined'
+       ELSE f.original_language_id
+    END AS `Original Sprache`
+FROM
+    film AS f;
+
+
 -- END functions
 
 
@@ -451,58 +462,58 @@ DESCRIBE INFORMATION_SCHEMA.COLUMNS;
 -- =====
 -- 3.9.1) Erstellen Sie eine Orte Laenderliste  (Kreuzprodukt)
 SELECT
-	city.city as Stadt,
+     city.city as Stadt,
     country.country as Land
 FROM
-	city, country;
+    city, country;
 
 -- 3.9.2) Erstellen Sie eine Orte Laenderliste (Kreuzprodukt)
 SELECT
-	S.city as Stadt,
+    S.city as Stadt,
     L.country as Land
 FROM
-	city as S, country as L;
+    city as S, country as L;
  
 -- 3.9.3) Erstellen Sie eine Orte Laenderliste (mit where close)
 SELECT
-	S.city as Stadt,
+    S.city as Stadt,
     L.country as Land
 FROM
-	city as S, country as L
+    city as S, country as L
 WHERE
-	S.country_id = L.country_id;
+    S.country_id = L.country_id;
 
 -- 3.9.4) Erstellen Sie eine Orte Laenderliste (mit inner join)
 SELECT
-	S.city as Stadt,
+    S.city as Stadt,
     L.country as Land
 FROM
-	city as S
+    city as S
 INNER JOIN country as L on S.country_id = L.country_id;    
 
 -- 3.9.5) Erstellen Sie eine Orte Laenderliste (mit left join)
 SELECT
-	S.city as Stadt,
+    S.city as Stadt,
     L.country as Land
 FROM
-	city as S
+    city as S
 LEFT JOIN country as L on S.country_id = L.country_id;
 
 -- 3.9.6) Erstellen Sie eine Orte Laenderliste (mit right join)
 SELECT
-	S.city as Stadt,
+    S.city as Stadt,
     L.country as Land
 FROM
-	country as L
+    country as L
 RIGHT JOIN city as S on S.country_id = L.country_id; 
 
 -- 3.9.7) Erstellen Sie eine Adress-, Orte und Laenderliste
 SELECT
-	address.address,
+    address.address,
     city.city,
     country.country
 FROM
-	address
+    address
 INNER JOIN city    ON address.city_id = city.city_id
 INNER JOIN country ON city.country_id = country.country_id;
 
@@ -808,7 +819,7 @@ CREATE VIEW test_city_country AS
         city.city       AS Stadt, 
         country.country AS Land
      FROM
-		city
+        city
         INNER JOIN country ON city.country_id=country.country_id
      ORDER BY city.city ASC;
 
@@ -831,7 +842,7 @@ SELECT country_id from country where country = 'Lichtenstein';
 
 --  CRUD 2)  Fuegen Sie die beiden Staedte "Vaduz" und "Schan" ein. Beide gehoeren zum Land "Lichtenstein".
 INSERT INTO city (city,country_id) VALUES 
-	('Vaduz', 111), 
+    ('Vaduz', 111), 
     ('Schan', 111);
 
 --  CRUD 2a)  Wie lauten die beiden PKs dieser beiden Orte?    
@@ -840,7 +851,7 @@ SELECT
     city,
     country_id
 FROM
-	city
+    city
 WHERE country_id = 111;
 
 SELECT
@@ -848,7 +859,7 @@ SELECT
     city,
     country_id
 FROM
-	city
+    city
 WHERE country_id = (SELECT country_id from country where country = 'Lichtenstein');
 
 --  CRUD 2b)  Erstellen sie eine Liste mit den Orten und dem Landesnamen von Lichtenstein (inner Join)
@@ -858,7 +869,7 @@ SELECT
     country.country_id,
     country.country
 FROM
-	city
+    city
 INNER JOIN country ON city.country_id = country.country_id
 WHERE city.country_id = (SELECT country_id from country where country = 'Lichtenstein'); 
 
@@ -884,19 +895,19 @@ SELECT
     city,
     country_id
 FROM
-	city
+    city
 WHERE country_id = (SELECT country_id from country where country = 'Lichtenstein');
 
 --  CRUD 4)  Setzen Sie die Originalsprache von den Filmen 'ACADEMY DINOSAUR', 'ACE GOLDFINGER' auf 'Mandarin' 
 UPDATE
    film 
 SET original_language_id=(
-			SELECT
-				language_id
-			FROM
-				language
-			WHERE
-				name = 'Mandarin'
+            SELECT
+                language_id
+            FROM
+                language
+            WHERE
+                name = 'Mandarin'
 ) 
 WHERE title in ('ACADEMY DINOSAUR', 'ACE GOLDFINGER');
 
@@ -924,7 +935,7 @@ INSERT INTO language (name) VALUES ('Schweizerdeutsch');
 INSERT INTO language (name) VALUES ('Suiss Italian');
 INSERT INTO language (name) VALUES ('Dutch');
 INSERT INTO language (name) VALUES 
-	('Schweizerdeutsch'), 
+    ('Schweizerdeutsch'), 
     ('Suiss Italian'), 
     ('Dutch');
 
@@ -1042,48 +1053,48 @@ select HelloFct('Walti') as HALLO;
 
 -- STO_01) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
 --         Der erste Parameter ist ein Land und der Zweite ob case-sensitve oder nicht gesucht werden soll.
-	DROP PROCEDURE IF EXISTS isCountryExits;
+    DROP PROCEDURE IF EXISTS isCountryExits;
 
-	Delimiter // 
-	CREATE PROCEDURE isCountryExits(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
-	BEGIN
-	   IF caseSesitive THEN
-		   SELECT
-			  country  AS Land
-		   FROM
-			  country 
-		   WHERE 
-			  country LIKE BINARY searchQuery;
-		ELSE
-		   SELECT
-			  country  AS Land
-			FROM 
-			   country 
-			WHERE
-			   country LIKE searchQuery;
-		END IF;
-	END//
+    Delimiter // 
+    CREATE PROCEDURE isCountryExits(IN searchQuery VARCHAR(20), IN caseSesitive BOOLEAN)
+    BEGIN
+       IF caseSesitive THEN
+           SELECT
+              country  AS Land
+           FROM
+              country 
+           WHERE 
+              country LIKE BINARY searchQuery;
+        ELSE
+           SELECT
+              country  AS Land
+            FROM 
+               country 
+            WHERE
+               country LIKE searchQuery;
+        END IF;
+    END//
 
-	CALL isCountryExits('GermanY', false);
-	CALL isCountryExits('GermanY', true);
+    CALL isCountryExits('GermanY', false);
+    CALL isCountryExits('GermanY', true);
 
 
 -- STO_02) Schreiben sie eine Stored-Procedure, bei welcher eine Landesbezeichnung uebergeben werden kann. 
 --         Existiert dieses Land noch nicht in der country Tabelle, wird es dort eingefuegt.
 --         Der PK dieses Landes wird als Parameter zurueck gegeben
-	DROP PROCEDURE IF EXISTS getCountryId;
-	DELIMITER $$
-	CREATE PROCEDURE getCountryId(IN landesNamen VARCHAR(50), out land_id SMALLINT(5))
-	BEGIN
-		IF((SELECT COUNT(*) FROM country WHERE country = landesNamen) = 0) THEN
-			INSERT INTO country(`country`) VALUES (landesNamen);
-		END IF;
-		SELECT country_id FROM country WHERE country = landesNamen INTO land_id;
-	END$$
-	DELIMITER ;
+    DROP PROCEDURE IF EXISTS getCountryId;
+    DELIMITER $$
+    CREATE PROCEDURE getCountryId(IN landesNamen VARCHAR(50), out land_id SMALLINT(5))
+    BEGIN
+        IF((SELECT COUNT(*) FROM country WHERE country = landesNamen) = 0) THEN
+            INSERT INTO country(`country`) VALUES (landesNamen);
+        END IF;
+        SELECT country_id FROM country WHERE country = landesNamen INTO land_id;
+    END$$
+    DELIMITER ;
 
-	CALL getCountryId('Lichtenstein', @country_pk);
-	SELECT @country_pk;
+    CALL getCountryId('Lichtenstein', @country_pk);
+    SELECT @country_pk;
 
 
 -- STO_03) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
@@ -1094,59 +1105,59 @@ select HelloFct('Walti') as HALLO;
 --         Checken ob Die Stadt in diesem Land bereits besteht
 --              wenn Ja: nichts weiter machen
 --              wenn Nein: Stadt in city einfuegen mit dem PK des Landes
-	DROP PROCEDURE IF EXISTS getCityId;
-	DELIMITER $$
-	CREATE PROCEDURE getCityId(IN ortsNamen varchar(45), IN landesName varchar(45), OUT city_id SMALLINT(5))
-	BEGIN
-		CALL getCountryId(landesName, @land_id);
-		IF((SELECT COUNT(*) FROM city WHERE country_id = @land_id AND city = ortsNamen) = 0) THEN
-			INSERT INTO city (city, country_id) VALUES (ortsNamen, @land_id);
-		END IF;
-		SELECT city_id FROM city WHERE city = ortsNamen AND country_id = @land_id INTO city_id;
-	END$$
-	DELIMITER ;
+    DROP PROCEDURE IF EXISTS getCityId;
+    DELIMITER $$
+    CREATE PROCEDURE getCityId(IN ortsNamen varchar(45), IN landesName varchar(45), OUT city_id SMALLINT(5))
+    BEGIN
+        CALL getCountryId(landesName, @land_id);
+        IF((SELECT COUNT(*) FROM city WHERE country_id = @land_id AND city = ortsNamen) = 0) THEN
+            INSERT INTO city (city, country_id) VALUES (ortsNamen, @land_id);
+        END IF;
+        SELECT city_id FROM city WHERE city = ortsNamen AND country_id = @land_id INTO city_id;
+    END$$
+    DELIMITER ;
 
-	SELECT city_id FROM city WHERE city = 'Rom' AND country_id =119;
+    SELECT city_id FROM city WHERE city = 'Rom' AND country_id =119;
 
-	CALL getCityId('Roma', 'Italien', @city_pk);
-	SELECT @city_pk;
+    CALL getCityId('Roma', 'Italien', @city_pk);
+    SELECT @city_pk;
 
-	CALL getCityId('Schaan', 'Lichtenstein', @city_pk);
-	SELECT @city_pk;
+    CALL getCityId('Schaan', 'Lichtenstein', @city_pk);
+    SELECT @city_pk;
 
 
 -- STO_04) Schreiben sie eine Stored-Procedure, welche eine city mittels ID loescht.
-	-- Noch testen!!! 
-	DROP PROCEDURE IF EXISTS deleteCityById;
-	DELIMITER $$
-	CREATE PROCEDURE deleteCityById(IN id SMALLINT(5), OUT countOfDelete SMALLINT(5))
-	BEGIN
-		SELECT COUNT(*) FROM city WHERE city_id = id INTO countOfDelete;
-		IF((SELECT COUNT(*) FROM city WHERE city_id = id) != 0) THEN
-			DELETE FROM city WHERE city_id=id;
-		END IF;
-	END$$
-	DELIMITER ;
+    -- Noch testen!!! 
+    DROP PROCEDURE IF EXISTS deleteCityById;
+    DELIMITER $$
+    CREATE PROCEDURE deleteCityById(IN id SMALLINT(5), OUT countOfDelete SMALLINT(5))
+    BEGIN
+        SELECT COUNT(*) FROM city WHERE city_id = id INTO countOfDelete;
+        IF((SELECT COUNT(*) FROM city WHERE city_id = id) != 0) THEN
+            DELETE FROM city WHERE city_id=id;
+        END IF;
+    END$$
+    DELIMITER ;
 
-	CALL deleteCityById(601, @countOfDel);
-	SELECT @countOfDel;
+    CALL deleteCityById(601, @countOfDel);
+    SELECT @countOfDel;
 
 
 -- STO_05) Schreiben sie eine Stored-Procedure, welche eine city mittels name loescht.
-	-- Noch testen!!!
-	DROP PROCEDURE IF EXISTS deleteCityByName;
-	DELIMITER $$
-	CREATE PROCEDURE deleteCityByName(IN ortsNamen varchar(45), OUT countOfDelete SMALLINT(5))
-	BEGIN
-		SELECT COUNT(*) FROM city WHERE city = ortsNamen INTO countOfDelete;
-		IF((SELECT COUNT(*) FROM city WHERE city = ortsNamen) != 0) THEN
-			DELETE FROM city WHERE city = ortsNamen;
-		END IF;
-	END$$
-	DELIMITER ;
+    -- Noch testen!!!
+    DROP PROCEDURE IF EXISTS deleteCityByName;
+    DELIMITER $$
+    CREATE PROCEDURE deleteCityByName(IN ortsNamen varchar(45), OUT countOfDelete SMALLINT(5))
+    BEGIN
+        SELECT COUNT(*) FROM city WHERE city = ortsNamen INTO countOfDelete;
+        IF((SELECT COUNT(*) FROM city WHERE city = ortsNamen) != 0) THEN
+            DELETE FROM city WHERE city = ortsNamen;
+        END IF;
+    END$$
+    DELIMITER ;
 
-	CALL deleteCityByName('Vaduz', @countOfDel);
-	SELECT @countOfDel;
+    CALL deleteCityByName('Vaduz', @countOfDel);
+    SELECT @countOfDel;
 
 
 
@@ -1158,7 +1169,7 @@ DROP PROCEDURE IF EXISTS insertOrt;
 Delimiter // 
 CREATE PROCEDURE `insertOrt`(IN ort_id smallint(5), IN plz smallint(4), In bezeichnung varchar(45))
 BEGIN
-	SELECT concat('insertOrt(', ort_id , ',' , plz, ',' , bezeichnung);
+    SELECT concat('insertOrt(', ort_id , ',' , plz, ',' , bezeichnung);
 END//
 
 -- call insertOrt(100,8853,'Lachen');
@@ -1175,40 +1186,40 @@ END//
 SELECT 
     SUBQ_1.Originalsprache AS ORGLANG 
 FROM (
-	SELECT 
-		f.title       AS Title, 
-		lang.name     AS Sprache,
-		orgLang.name  AS Originalsprache
-	FROM
-		film AS f
-	INNER      JOIN language AS lang    ON f.language_id          = lang.language_id
-	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) AS SUBQ_1
+    SELECT 
+        f.title       AS Title, 
+        lang.name     AS Sprache,
+        orgLang.name  AS Originalsprache
+    FROM
+        film AS f
+    INNER      JOIN language AS lang    ON f.language_id          = lang.language_id
+    LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) AS SUBQ_1
 WHERE SUBQ_1.Originalsprache IS NOT NULL;
 
 -- 5.2 (siehe 1.14.1) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
 --       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
 --       Nur von den Kunden mit einem Umsatz > 170
 SELECT 
-	UmsatzListe.Vorname   AS Firstname,
+    UmsatzListe.Vorname   AS Firstname,
     UmsatzListe.Nachname  AS Lastname,
     UmsatzListe.Kunden_ID AS Kunde,
     UmsatzListe.Umsatz    AS Sales
 FROM (
-	SELECT
+    SELECT
        C.first_name  AS Vorname,
-	   C.last_name   AS Nachname,
-	   P.customer_id AS Kunden_ID,
-	   sum(P.amount) AS Umsatz
-	FROM 
-	   payment AS P
-	LEFT JOIN customer AS C ON C.customer_id = P.customer_id
-	GROUP BY
-	   P.customer_id
-	ORDER BY
-	   P.customer_id,
-	   P.amount    DESC) AS UmsatzListe
+       C.last_name   AS Nachname,
+       P.customer_id AS Kunden_ID,
+       sum(P.amount) AS Umsatz
+    FROM 
+       payment AS P
+    LEFT JOIN customer AS C ON C.customer_id = P.customer_id
+    GROUP BY
+       P.customer_id
+    ORDER BY
+       P.customer_id,
+       P.amount    DESC) AS UmsatzListe
 WHERE
-	UmsatzListe.Umsatz > 170;
+    UmsatzListe.Umsatz > 170;
 
 -- 5.3) Listen sie alle Filme-Titles auf, welche als Sprache "GERMAN" oder "ENGLISH" haben.
 --      Verwenden Sie dazu eine Subquery als Scalar-Operand fuer einen Vergleich
@@ -1218,15 +1229,15 @@ SELECT
 FROM
     film
 WHERE
-	original_language_id IN (
-		SELECT
-			language_id AS Id
-		FROM
-			language
-		WHERE
-			name = "GERMAN"   OR
-			name = "ENGLISH"
-	);
+    original_language_id IN (
+        SELECT
+            language_id AS Id
+        FROM
+            language
+        WHERE
+            name = "GERMAN"   OR
+            name = "ENGLISH"
+    );
 
 
 -- END subQueries

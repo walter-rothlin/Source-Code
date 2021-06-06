@@ -10,7 +10,7 @@
 -- 15-May-2020   Walter Rothlin      Initial Version
 -- 04-Jun-2020   Walter Rothlin      Added Join, Function, View
 -- 25-Jun-2020   Walter Rothlin      Added Stored-Procedures
--- 05-Jun-2021   Walter Rothlin		 Merged with HWZ Script
+-- 05-Jun-2021   Walter Rothlin      Merged with HWZ Script
 -- ---------------------------------------------------------------------------------------------
 
 -- Neues Schema kreieren
@@ -70,7 +70,7 @@ SELECT
      `vorname`,
      `nachname`,
      `strasse`,
-	 `hausnummer`,
+    `hausnummer`,
      `plz`,
      `ort`
 FROM `adressen`;
@@ -223,7 +223,7 @@ ADD CONSTRAINT fkr_adressen_orte
 -- populate table
 INSERT INTO adressen (vorname, nachname, strasse, hausnummer, orte_fk) VALUES 
     ('Walter' ,  'Rothlin' , 'Peterliwiese'  , '33' , 3),
-	('Claudia' , 'Collet'  , 'Peterliwiese'  , '33' , 3),
+    ('Claudia' , 'Collet'  , 'Peterliwiese'  , '33' , 3),
     ('Michaela', 'Stöhr'   , 'Züricherstr.'  , '42c', 1),
     ('Josef'   , 'Friedlos', 'Ochsenbodenweg', '7a' , 2);
 
@@ -309,10 +309,10 @@ SELECT * FROM adress_liste;
 -- Claudia ist an die Etzelstrasse 7 gezogen
 UPDATE adressen 
     SET 
-		strasse='Etzelstrasse', 
-		hausnummer = '7'
-	WHERE 
-		nachname = 'Collet' AND 
+        strasse='Etzelstrasse', 
+        hausnummer = '7'
+    WHERE 
+        nachname = 'Collet' AND 
         vorname = 'Claudia';
 
 
@@ -322,8 +322,8 @@ UPDATE adressen
        strasse    = 'Ochsenbodenweg',
        hausnummer = '8a',
        orte_fk    = (SELECT 
-						ort_id 
-					 FROM orte 
+                         ort_id 
+                     FROM orte 
                      WHERE bezeichnung='Nuolen')  
     WHERE 
        nachname = 'Collet' AND 
