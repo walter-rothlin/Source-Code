@@ -20,6 +20,7 @@
 # 11-Mar-2021   Walter Rothlin      More automated testing
 # 22-Apr-2021   Walter Rothlin      Added URL functions
 # 30-Apr-2021   Walter Rothlin      Added average(list)
+# 08-Jun-2021   Walter Rothlin      Added readInt, readFloat
 # ------------------------------------------------------------------
 import inspect
 import math
