@@ -8,7 +8,7 @@
 --              Danach wird normalisiert und die Daten migriert
 --
 -- History:
--- 08_Jun-2021   Walter Rothlin      Initial Version
+-- 08-Jun-2021   Walter Rothlin      Initial Version
 -- ---------------------------------------------------------------------------------------------
 
 -- create new Schema
