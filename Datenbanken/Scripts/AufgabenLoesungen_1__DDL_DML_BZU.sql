@@ -15,9 +15,10 @@
 
 -- Neues Schema kreieren
 DROP SCHEMA IF EXISTS `BZU`;
-CREATE SCHEMA IF NOT EXISTS `BZU`;  -- DEFAULT CHARACTER SET utf8;
+CREATE SCHEMA IF NOT EXISTS `BZU` DEFAULT CHARACTER SET utf8;
 
 -- Als default Schema setzen
+SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
 USE `BZU`;
 
 -- Adressen-Tabelle kreieren
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `adressen` (
   `strasse`    VARCHAR(45) NULL,
   `plz`        INT(4)      NOT NULL,
   `ort`        VARCHAR(45) NOT NULL,
-  `adress_id`  INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+  `adress_id`  INT(10)     UNSIGNED NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`adress_id`));
   
 -- Adressen einfüllen
@@ -70,21 +71,21 @@ SELECT
      `vorname`,
      `nachname`,
      `strasse`,
-    `hausnummer`,
+     `hausnummer`,
      `plz`,
      `ort`
 FROM `adressen`;
 
 -- -----------------------------------------------------------------------------------------------
--- Weiter Normalisieren (Orte in neue Tabelle auslagern)
+-- Weiter normalisieren (Orte in neue Tabelle auslagern)
 -- -----------------------------------------------------------------------------------------------
 
 -- Neue Tabelle kreieren
 DROP TABLE IF EXISTS `orte`;
 CREATE TABLE IF NOT EXISTS `orte` (
-  `ort_id` INT         UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ort_id` INT(10)     UNSIGNED NOT NULL AUTO_INCREMENT,
   `plz`    INT(4)      NOT NULL,
-  `name`   VARCHAR(45) CHARACTER SET 'big5' NOT NULL,
+  `name`   VARCHAR(45) NOT NULL, -- CHARACTER SET 'big5' NOT NULL,
   PRIMARY KEY (`ort_id`));
 
 -- Check, welche Orte in die neue Tabelle migriert werden müssen
@@ -117,7 +118,7 @@ SELECT * FROM `adressen`;
 
 -- Foreign key in Haupttabelle einführen
 ALTER TABLE `adressen` 
-    ADD COLUMN `orte_fk` INT NULL;   -- NOT NULL produces a contraint violation; Change it after migration to NOT NULL
+    ADD COLUMN `orte_fk` INT(10) UNSIGNED NULL;   -- NOT NULL produces a contraint violation; Change it after migration to NOT NULL
 
 -- Add FK do be indexed NOT REQUIRED
 ALTER TABLE `adressen` 
@@ -171,7 +172,8 @@ ALTER TABLE `adressen`
 
 -- After migration set FK to NOT NULL
 ALTER TABLE `adressen`
-     CHANGE COLUMN `orte_fk` `orte_fk` INT NOT NULL;
+     CHANGE COLUMN `orte_fk` `orte_fk` INT(10) UNSIGNED NOT NULL;
+
 
 -- Abfrage via Join
 SELECT

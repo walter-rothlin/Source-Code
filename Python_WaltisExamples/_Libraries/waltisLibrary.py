@@ -64,6 +64,36 @@ def VT52_cls_home():
 def halt(prompt="Weiter?"):
     ant = input(prompt)
 
+
+# Readln functions
+# ================
+def TEST_readln(verbal=False):
+    print("Test Readln")
+    i1 = read_StrongType("int", postError="Muss ein")
+    print(i1)
+    f1 = read_StrongType("float")
+    print(f1)
+
+
+def read_StrongType(type, prompt="Input [{t:1s}]:", preError="Wrong Format:", postError="Must be a {t:1s}!!!!"):
+    error = True
+    retVal = 0
+    while error:
+        try:
+            aString = input(prompt.format(t=type))
+            if (type == "int"):
+                retVal= int(aString)
+            elseif  (type == "int"):
+                retVal= int(aString)
+            else:
+                print("Unknown Type")
+            error = False
+        except ValueError:
+            print(preError + aString + "    " + postError.format(t=type))
+            error = True
+    return retVal
+
+
 # Pysikalische Umrechnungen
 # =========================
 def grad2Rad(grad):
@@ -1647,16 +1677,19 @@ def TEST_CircleFct():
 
 
 if __name__ == '__main__':
-    # AUTO_TEST_xPath_Get(verbal=True)
-    # TEST_stringFct()
-    # TEST_hexStrToURLEncoded()
-    # TEST_getTimestamp()
+    autoTest = False
 
+    if not autoTest:
+        # AUTO_TEST_xPath_Get(verbal=True)
+        # TEST_stringFct()
+        # TEST_hexStrToURLEncoded()
+        # TEST_getTimestamp()
+        TEST_readln(verbal=True)
 
 
     # Automated Tests
     # ===============
-    autoTest = True
+
     if autoTest:
         auto_test_suiteNameLength = 40
         auto_test_testStatistics_anzStellen = 4

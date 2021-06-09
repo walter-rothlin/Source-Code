@@ -1,10 +1,18 @@
 -- START title
--- =======================================
--- Aufgaben-Sammlung
---    File: AufgabenLoesungen_1_SELECT.sql
---    Last Change: 06-Jun-2021 / 07:11
+
+-- ---------------------------------------------------------------------------------------------
+-- AufgabenLoesungen_1_SELECT.sql
+-- ---------------------------------------------------------------------------------------------
 --
--- =======================================
+-- Autor: Walter Rothlin
+-- Description: Aufgaben und Lösungen zu DML
+--
+-- History:
+-- 15-May-2020   Walter Rothlin      Initial Version
+-- 02-Feb-2021   Walter Rothlin		 Adapded for BWI-A19
+-- 09-Jun-2021   Walter Rothlin      Explained "Safe Updates"
+-- ---------------------------------------------------------------------------------------------
+
 -- END title
 
 
@@ -874,6 +882,8 @@ INNER JOIN country ON city.country_id = country.country_id
 WHERE city.country_id = (SELECT country_id from country where country = 'Lichtenstein'); 
 
 --  CRUD 2c)  Koorigieren Sie den Namen von 'Schan' auf 'Schaan'
+--            Mögliche Fehlermeldung: "Safe Updates". Forbid UPDATEs and DELETEs with no key in WHERE clause
+--            --> Workbench: Edit -> Preferences -> SQL Editor (Uncheck box at the end of the screen)
 UPDATE city SET city='Schaan' WHERE city='Schan';
 
 
