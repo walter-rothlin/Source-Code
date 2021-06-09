@@ -5,7 +5,7 @@
 --
 -- Autor: Walter Rothlin
 -- Description: Kreiert ein neues Schema und eine Adressen-Tabelle. Daten-Sätze werden erfasst.
---              Danach wird normalisiert und eine View erstellt
+--              Danach wird normalisiert und die Daten migriert
 --
 -- History:
 -- 08_Jun-2021   Walter Rothlin      Initial Version
