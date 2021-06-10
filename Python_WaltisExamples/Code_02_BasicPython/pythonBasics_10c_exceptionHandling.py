@@ -14,6 +14,30 @@
 
 import math
 
+def readInt(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg=" Must be a float!!!!"):
+    error = True
+    while error:
+        try:
+            aStr = input(prompt)
+            aValue = int(aStr)
+            error = False
+        except ValueError:
+            print(errPreMsg + aStr + errPostMsg)
+            error = True
+    return aValue
+
+def readFloat(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg=" Must be a float!!!!"):
+    error = True
+    while error:
+        try:
+            aStr = input(prompt)
+            aValue = float(aStr)
+            error = False
+        except ValueError:
+            print(errPreMsg + aStr + errPostMsg)
+            error = True
+    return aValue
+
 help = '''
 Berechnung der Nullstellen einer quadratischen Funktion der Form:
    y = ax^2 + bx + c
@@ -27,35 +51,9 @@ Berechnung der Nullstellen einer quadratischen Funktion der Form:
 
 print(help)
 
-error = True
-while error:
-    try:
-        aString = input("a=")
-        a = float(aString)
-        error = False
-    except ValueError:
-        print("Flasche Eingabe:", aString, " Must be a float!!!!")
-        error = True
-
-error = True
-while error:
-    try:
-        aString = input("b=")
-        b = float(aString)
-        error = False
-    except ValueError:
-        print("Flasche Eingabe:", aString, " Must be a float!!!!")
-        error = True
-
-error = True
-while error:
-    try:
-        aString = input("c=")
-        c = float(aString)
-        error = False
-    except ValueError:
-        print("Flasche Eingabe:", aString, " Must be a float!!!!")
-        error = True
+a = readFloat(prompt="a=", errPreMsg="Wrong format!!")
+b = readFloat(prompt="b=")
+c = readFloat(prompt="c=")
 
 diskriminante = b**2 - 4*a*c
 print("Diskriminante:", diskriminante)

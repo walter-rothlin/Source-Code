@@ -28,9 +28,7 @@ Berechnung der Nullstellen einer quadratischen Funktion der Form:
 
 print(help)
 
-aString = input("a=")
-
-a = float(aString)
+a = float(input("a="))
 b = float(input("b="))
 c = float(input("c="))
 
