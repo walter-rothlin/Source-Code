@@ -14,17 +14,6 @@
 
 import math
 
-def readInt(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg=" Must be a float!!!!"):
-    error = True
-    while error:
-        try:
-            aStr = input(prompt)
-            aValue = int(aStr)
-            error = False
-        except ValueError:
-            print(errPreMsg + aStr + errPostMsg)
-            error = True
-    return aValue
 
 def readFloat(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg=" Must be a float!!!!"):
     error = True

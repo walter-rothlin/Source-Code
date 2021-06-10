@@ -68,57 +68,35 @@ def halt(prompt="Weiter?"):
 # Readln functions
 # ================
 def TEST_readln(verbal=False):
-    print("Test readInt")
-    i1 = readInt("aInteger=")
+    print("Test readInt:", end="")
+    i1 = readInt("   readInt=")
     print(i1)
 
-    print("Test readFloat")
-    f1 = readFloat("aFloat=")
+    print("\nTest readFloat:", end="")
+    f1 = readFloat("    readFloat=")
     print(f1)
 
-    print("Test Readln")
-    i1 = read_StrongType("int", postError="Muss ein")
+    print("\n1) Test read_Number:", end="")
+    i1 = read_Number("int", prompt="   int:", postError=" Must be a {t:1s}!!!!")
     print(i1)
-    f1 = read_StrongType("float")
+
+    print("\n2) Test read_Number:", end="")
+    f1 = read_Number("float")
     print(f1)
 
-    i1 = read_StrongType("int", postError="Muss ein", min=0, max=100)
+    print("\n3) Test read_StrongType:", end="")
+    i1 = read_Number("int", prompt="   int [0..100]:", postError=" Must be a {t:1s}!!!!", min=0, max=100)
     print(i1)
 
-    i1 = read_StrongType("int", postError="Muss ein", min=-10)
+    print("\n4) Test read_Number:", end="")
+    i1 = read_Number("int", prompt="   int >= -10:", postError=" Must be a {t:1s}!!!!", min=-10)
     print(i1)
 
-    i1 = read_StrongType("int", postError="Muss ein", max=150)
-    print(i1)
+    print("\nTest readFloat:", end="")
+    f1 = readFloat(prompt="    float <= 150:", postError=" Must be a {t:1s}!!!!", max=150)
+    print(f1)
 
-
-def readInt(prompt="Input [Int]:", preError="Wrong Format:", postError="   Must be a INT!!!!"):
-    error = True
-    userInputStr = ""
-    while error:
-        try:
-            userInputStr = input(prompt)
-            userInputInt = int(userInputStr)
-            error = False
-        except ValueError:
-            print(preError + userInputStr + postError)
-            error = True
-    return userInputInt
-
-def readFloat(prompt="Input [Float]:", preError="Wrong Format:", postError="   Must be a FLOAT!!!!"):
-    error = True
-    userInputStr = ""
-    while error:
-        try:
-            userInputStr   = input(prompt)
-            userInputFloat = float(userInputStr)
-            error = False
-        except ValueError:
-            print(preError + userInputStr + postError)
-            error = True
-    return userInputFloat
-
-def read_StrongType(type, prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="Must be a {t:1s}!!!!", min=None, max=None):
+def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
     error = True
     retVal = 0
     while error:
@@ -150,6 +128,68 @@ def read_StrongType(type, prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format
             print(preError + aString + "    " + postError.format(t=type))
             error = True
     return retVal
+
+
+def readInt_0(prompt="Input [Int]:", preError="Wrong Format:", postError="   Must be a INT!"):
+    error = True
+    userInputStr = ""
+    while error:
+        try:
+            userInputStr = input(prompt)
+            userInputInt = int(userInputStr)
+            error = False
+        except ValueError:
+            print(preError + userInputStr + postError)
+            error = True
+    return userInputInt
+
+def readFloat_0(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg="   Must be a float!"):
+    error = True
+    while error:
+        try:
+            aStr = input(prompt)
+            aValue = float(aStr)
+            error = False
+        except ValueError:
+            print(errPreMsg + aStr + errPostMsg)
+            error = True
+    return aValue
+
+def readFloat_1(prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
+    error = True
+    userInputStr = ""
+    type = "float"
+    while error:
+        try:
+            if min is not None and max is not None:
+                aString = input(prompt.format(t=type, lh="  " + str(min) + ".." + str(max)))
+            elif min is not None:
+                aString = input(prompt.format(t=type, lh="  " + str(min) + ".."))
+            elif max is not None:
+                aString = input(prompt.format(t=type, lh="  " + ".." + str(max)))
+            else:
+                aString = input(prompt.format(t=type, lh=""))
+
+            retVal = float(aString)
+            error = False
+            if min is not None:
+                if retVal < min:
+                    print("Value less than " + str(min) + ": " + aString)
+                    error = True
+            if max is not None:
+                if retVal > max:
+                    print("Value higher than " + str(max) + ": " + aString)
+                    error = True
+        except ValueError:
+            print(preError + aString + postError.format(t=type))
+            error = True
+    return retVal
+
+def readFloat(prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
+    return read_Number("float", prompt=prompt, preError=preError, postError=postError, min=min, max=max)
+
+def readInt(prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
+    return read_Number("int", prompt=prompt, preError=preError, postError=postError, min=min, max=max)
 
 
 # Pysikalische Umrechnungen
