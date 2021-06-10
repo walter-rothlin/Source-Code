@@ -68,26 +68,84 @@ def halt(prompt="Weiter?"):
 # Readln functions
 # ================
 def TEST_readln(verbal=False):
+    print("Test readInt")
+    i1 = readInt("aInteger=")
+    print(i1)
+
+    print("Test readFloat")
+    f1 = readFloat("aFloat=")
+    print(f1)
+
     print("Test Readln")
     i1 = read_StrongType("int", postError="Muss ein")
     print(i1)
     f1 = read_StrongType("float")
     print(f1)
 
+    i1 = read_StrongType("int", postError="Muss ein", min=0, max=100)
+    print(i1)
 
-def read_StrongType(type, prompt="Input [{t:1s}]:", preError="Wrong Format:", postError="Must be a {t:1s}!!!!"):
+    i1 = read_StrongType("int", postError="Muss ein", min=-10)
+    print(i1)
+
+    i1 = read_StrongType("int", postError="Muss ein", max=150)
+    print(i1)
+
+
+def readInt(prompt="Input [Int]:", preError="Wrong Format:", postError="   Must be a INT!!!!"):
+    error = True
+    userInputStr = ""
+    while error:
+        try:
+            userInputStr = input(prompt)
+            userInputInt = int(userInputStr)
+            error = False
+        except ValueError:
+            print(preError + userInputStr + postError)
+            error = True
+    return userInputInt
+
+def readFloat(prompt="Input [Float]:", preError="Wrong Format:", postError="   Must be a FLOAT!!!!"):
+    error = True
+    userInputStr = ""
+    while error:
+        try:
+            userInputStr   = input(prompt)
+            userInputFloat = float(userInputStr)
+            error = False
+        except ValueError:
+            print(preError + userInputStr + postError)
+            error = True
+    return userInputFloat
+
+def read_StrongType(type, prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="Must be a {t:1s}!!!!", min=None, max=None):
     error = True
     retVal = 0
     while error:
         try:
-            aString = input(prompt.format(t=type))
+            if min is not None and max is not None:
+                aString = input(prompt.format(t=type, lh="  " + str(min) + ".." + str(max)))
+            elif min is not None:
+                aString = input(prompt.format(t=type, lh="  " + str(min) + ".."))
+            elif max is not None:
+                aString = input(prompt.format(t=type, lh="  " + ".." + str(max)))
+            else:
+                aString = input(prompt.format(t=type, lh=""))
             if (type == "int"):
                 retVal= int(aString)
-            elseif  (type == "int"):
-                retVal= int(aString)
+            elif  (type == "float"):
+                retVal= float(aString)
             else:
                 print("Unknown Type")
             error = False
+            if min is not None:
+                if retVal < min:
+                    print("Value less than " + str(min) + ": " + aString)
+                    error = True
+            if max is not None:
+                if retVal > max:
+                    print("Value higher than " + str(max) + ": " + aString)
+                    error = True
         except ValueError:
             print(preError + aString + "    " + postError.format(t=type))
             error = True
