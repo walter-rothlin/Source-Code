@@ -11,6 +11,7 @@
 -- 04-Jun-2020   Walter Rothlin      Added Join, Function, View
 -- 25-Jun-2020   Walter Rothlin      Added Stored-Procedures
 -- 05-Jun-2021   Walter Rothlin      Merged with HWZ Script
+-- 16-Jun-2021   Walter Rothlin      Changes for HWZ
 -- ---------------------------------------------------------------------------------------------
 
 -- Neues Schema kreieren
@@ -282,12 +283,22 @@ SELECT
 FROM orte;
 
 
+DROP FUNCTION IF EXISTS HelloFct;
+Delimiter //
+CREATE FUNCTION HelloFct(p_input_string CHAR(20)) RETURNS CHAR(50)
+Begin
+  RETURN  concat('Hallo: ', p_input_string);
+end//
+
+select HelloFct('Walti');
+
 -- -----------------------------------------------------------------------------------------------
 -- Create view for business (external) read access
 -- -----------------------------------------------------------------------------------------------
 DROP VIEW IF EXISTS adress_liste;
 CREATE VIEW adress_liste AS
     SELECT
+         A
          A.vorname        AS Vorname,
          A.nachname       AS Nachname,
          A.strasse        AS Strasse,
@@ -309,6 +320,14 @@ SELECT * FROM adress_liste;
 -- Update von Daten
 -- ================
 -- Claudia ist an die Etzelstrasse 7 gezogen
+UPDATE adress_liste
+    SET
+         Strasse='Etzelstrasse',
+        `Haus Nummer`= '7'
+    WHERE
+        Nachname = 'Collet' AND
+        Vorname = 'Claudia';
+
 UPDATE adressen 
     SET 
         strasse='Etzelstrasse', 
@@ -319,6 +338,17 @@ UPDATE adressen
 
 
 -- Claudia ist von Wangen weggezogen und wohnt nun in Nuolen am Ochsenbodenweg 8a
+-- FEHLER!!!!
+-- UPDATE adress_liste
+--    SET
+--        Strasse='Ochsenbodenweg',
+--        `Haus Nummer`= '8a',
+--        PLZ = 8855,
+--        Ort = 'Nuolen'
+--    WHERE
+--        Nachname = 'Collet' AND
+--        Vorname = 'Claudia';
+
 UPDATE adressen 
    SET 
        strasse    = 'Ochsenbodenweg',
@@ -326,7 +356,7 @@ UPDATE adressen
        orte_fk    = (SELECT 
                          ort_id 
                      FROM orte 
-                     WHERE bezeichnung='Nuolen')  
+                     WHERE name='Nuolen')  
     WHERE 
        nachname = 'Collet' AND 
        vorname  = 'Claudia';
@@ -352,6 +382,8 @@ DELIMITER ;
 -- bestehendes Ort
 set @id = 0;
 call getOrtId(8855, 'Wangen', @id);
+select @id;
+call getOrtId(8855, 'Nuolen', @id);
 select @id;
 
 -- neues Ort
