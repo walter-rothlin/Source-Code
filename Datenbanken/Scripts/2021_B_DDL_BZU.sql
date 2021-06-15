@@ -42,3 +42,25 @@ SELECT
 FROM
 	adressen;
 
+-- -----------------------------------------------------------------------------------------------
+-- 1.Normalisierung: zusammengesetzte Felder trennen
+-- -----------------------------------------------------------------------------------------------
+ALTER TABLE adressen
+    ADD COLUMN hausnummer varchar(10) NULL AFTER strasse;
+    
+-- Datensätze mutieren
+UPDATE `adressen` SET `strasse`='Peterliwiese',   `hausnummer`='33'  WHERE `adress_id`=1;
+UPDATE `adressen` SET `strasse`='Peterliwiese',   `hausnummer`='33'  WHERE `adress_id`=2;
+UPDATE `adressen` SET `strasse`='Züricherstr.',   `hausnummer`='42c' WHERE `adress_id`=3;
+UPDATE `adressen` SET `strasse`='Ochsenbodenweg', `hausnummer`='7a'  WHERE `adress_id`=4;
+
+SELECT
+	adress_id,
+    vorname,
+    nachname,
+    strasse,
+    hausnummer,
+    plz,
+    ort
+FROM
+	adressen;
