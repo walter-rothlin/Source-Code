@@ -1842,11 +1842,12 @@ if __name__ == '__main__':
     autoTest = False
 
     if not autoTest:
+        pass   # NOP in Python
         # AUTO_TEST_xPath_Get(verbal=True)
         # TEST_stringFct()
         # TEST_hexStrToURLEncoded()
         # TEST_getTimestamp()
-        TEST_readln(verbal=True)
+        # TEST_readln(verbal=True)
 
 
     # Automated Tests
