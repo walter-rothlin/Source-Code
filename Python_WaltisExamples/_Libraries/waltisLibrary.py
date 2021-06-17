@@ -21,6 +21,7 @@
 # 22-Apr-2021   Walter Rothlin      Added URL functions
 # 30-Apr-2021   Walter Rothlin      Added average(list)
 # 08-Jun-2021   Walter Rothlin      Added readInt, readFloat
+# 17-Jun-2021   Walter Rothlin      Added Mitternachts-Formel
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -77,7 +78,7 @@ def TEST_readln(verbal=False):
     print(f1)
 
     print("\n1) Test read_Number:", end="")
-    i1 = read_Number("int", prompt="   int:", postError=" Must be a {t:1s}!!!!")
+    i1 = read_Number("int", prompt="   int:", postErrorStr=" Must be a {t:1s}!!!!")
     print(i1)
 
     print("\n2) Test read_Number:", end="")
@@ -85,20 +86,21 @@ def TEST_readln(verbal=False):
     print(f1)
 
     print("\n3) Test read_StrongType:", end="")
-    i1 = read_Number("int", prompt="   int [0..100]:", postError=" Must be a {t:1s}!!!!", min=0, max=100)
+    i1 = read_Number("int", prompt="   int [0..100]:", postErrorStr=" Must be a {t:1s}!!!!", min=0, max=100)
     print(i1)
 
     print("\n4) Test read_Number:", end="")
-    i1 = read_Number("int", prompt="   int >= -10:", postError=" Must be a {t:1s}!!!!", min=-10)
+    i1 = read_Number("int", prompt="   int >= -10:", postErrorStr=" Must be a {t:1s}!!!!", min=-10)
     print(i1)
 
     print("\nTest readFloat:", end="")
-    f1 = readFloat(prompt="    float <= 150:", postError=" Must be a {t:1s}!!!!", max=150)
+    f1 = readFloat(prompt="    float <= 150:", postErrorStr=" Must be a {t:1s}!!!!", max=150)
     print(f1)
 
-def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
+
+def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!", min=None, minErrorStr="Value must be greater or equal than {mi:1d}", max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
     error = True
-    retVal = 0
+    userInputZahl = 0
     while error:
         try:
             if min is not None and max is not None:
@@ -109,25 +111,28 @@ def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", 
                 aString = input(prompt.format(t=type, lh="  " + ".." + str(max)))
             else:
                 aString = input(prompt.format(t=type, lh=""))
-            if (type == "int"):
-                retVal= int(aString)
-            elif  (type == "float"):
-                retVal= float(aString)
+            if type == "int":
+                userInputZahl = int(aString)
+            elif type == "float":
+                userInputZahl = float(aString)
             else:
                 print("Unknown Type")
             error = False
-            if min is not None:
-                if retVal < min:
-                    print("Value less than " + str(min) + ": " + aString)
-                    error = True
-            if max is not None:
-                if retVal > max:
-                    print("Value higher than " + str(max) + ": " + aString)
-                    error = True
+            if (min is None) and (max is None):
+                error = False
+            else:
+                if min is not None:
+                    if userInputZahl < min:
+                        print(minErrorStr.format(mi=min))
+                        error = True
+                if max is not None:
+                    if userInputZahl > max:
+                        print(maxErrorStr.format(ma=max))
+                        error = True
         except ValueError:
-            print(preError + aString + "    " + postError.format(t=type))
+            print(preErrorStr + aString + "    " + postErrorStr.format(t=type))
             error = True
-    return retVal
+    return userInputZahl
 
 
 def readInt_0(prompt="Input [Int]:", preError="Wrong Format:", postError="   Must be a INT!"):
@@ -155,41 +160,72 @@ def readFloat_0(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg="   Mu
             error = True
     return aValue
 
-def readFloat_1(prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
+def readFloat_1(prompt="Input [Float]:",
+              preErrorStr="Wrong Format:",
+              postErrorStr="   Must be an FLOAT!!!!",
+              min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
+              max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
+
     error = True
     userInputStr = ""
-    type = "float"
     while error:
         try:
-            if min is not None and max is not None:
-                aString = input(prompt.format(t=type, lh="  " + str(min) + ".." + str(max)))
-            elif min is not None:
-                aString = input(prompt.format(t=type, lh="  " + str(min) + ".."))
-            elif max is not None:
-                aString = input(prompt.format(t=type, lh="  " + ".." + str(max)))
-            else:
-                aString = input(prompt.format(t=type, lh=""))
-
-            retVal = float(aString)
+            userInputStr = input(prompt)
+            userInputZahl = float(userInputStr)
             error = False
-            if min is not None:
-                if retVal < min:
-                    print("Value less than " + str(min) + ": " + aString)
-                    error = True
-            if max is not None:
-                if retVal > max:
-                    print("Value higher than " + str(max) + ": " + aString)
-                    error = True
+            if (min is None) and (max is None):
+                error = False
+            else:
+                if min is not None:
+                    if userInputZahl < min:
+                        print(minErrorStr.format(mi=min))
+                        error = True
+                if max is not None:
+                    if userInputZahl > max:
+                        print(maxErrorStr.format(ma=max))
+                        error = True
         except ValueError:
-            print(preError + aString + postError.format(t=type))
+            print(preErrorStr + userInputStr + postErrorStr)
             error = True
-    return retVal
+    return userInputZahl
 
-def readFloat(prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
-    return read_Number("float", prompt=prompt, preError=preError, postError=postError, min=min, max=max)
+def readInt_1(prompt="Input [Int]:",
+            preErrorStr="Wrong Format:",
+            postErrorStr="   Must be an Int!!!!",
+            min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
+            max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
+    error = True
+    userInputStr = ""
+    while error:
+        try:
+            userInputStr  = input(prompt)
+            userInputZahl = int(userInputStr)
+            error = False
+            if (min is None) and (max is None):
+                error = False
+            else:
+                if min is not None:
+                    if userInputZahl < min:
+                        print(minErrorStr.format(mi=min))
+                        error = True
+                if max is not None:
+                    if userInputZahl > max:
+                        print(maxErrorStr.format(ma=max))
+                        error = True
+        except ValueError:
+            print(preErrorStr + userInputStr + postErrorStr)
+            error = True
+    return userInputZahl
 
-def readInt(prompt="Input [{t:1s}{lh:s}]:", preError="Wrong Format:", postError="   Must be a {t:1s}!", min=None, max=None):
-    return read_Number("int", prompt=prompt, preError=preError, postError=postError, min=min, max=max)
+def readFloat(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
+              min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
+              max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
+    return read_Number("float", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min, minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
+
+def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
+            min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
+            max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
+    return read_Number("int"  , prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min, minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
 
 
 # Pysikalische Umrechnungen
@@ -1773,7 +1809,35 @@ def TEST_CircleFct():
     TEST_calcCircle_Radius()
     TEST_calcCircle_Durchmesser()
 
+# Quadratische Gleichungen
+# ========================
+def calcNullstellen(a, b, c):
+    '''
+    Berechnung der Nullstellen einer quadratischen Funktion der Form:
+       y = ax^2 + bx + c
 
+       Mitternachtsformel: https://www.mathebibel.de/mitternachtsformel
+
+       Positive Testfälle: a=2    b=1    c=-4      Diskriminante: 33    x1=-1.69  x2=1.19
+       Positive Testfälle: a=1    b=0    c=0       Diskriminante:  0    x1,2=0
+       Negative Testfälle: a=1    b=2    c=3       Diskriminante: -8    x1=----   x2=-----
+    '''
+    diskriminante = b ** 2 - 4 * a * c
+    print("Diskriminante:", diskriminante)
+    if diskriminante < 0:
+        return {"Solutions": 0, "Solution Text": "Keine Lösung"}
+    elif diskriminante == 0:
+        x1 = (-b) / (2 * a)
+        return {"Solutions": 1, "Solution Text": "Eine Lösung", "x1": x1, "x2": x1}
+    else:
+        x1 = (-b + math.sqrt(diskriminante)) / (2 * a)
+        x2 = (-b - math.sqrt(diskriminante)) / (2 * a)
+        return {"Solutions": 2, "Solution Text": "Zwei Lösungen", "x1": x1, "x2": x2}
+
+
+# ===========================================================
+# MAIN
+# ===========================================================
 if __name__ == '__main__':
     autoTest = False
 

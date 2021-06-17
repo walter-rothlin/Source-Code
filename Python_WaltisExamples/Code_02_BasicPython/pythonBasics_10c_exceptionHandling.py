@@ -14,7 +14,9 @@
 
 import math
 
-
+# =========
+# Functions
+# =========
 def readFloat(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg=" Must be a float!!!!"):
     error = True
     while error:
@@ -27,6 +29,9 @@ def readFloat(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg=" Must b
             error = True
     return aValue
 
+# =========
+# Main
+# =========
 help = '''
 Berechnung der Nullstellen einer quadratischen Funktion der Form:
    y = ax^2 + bx + c
