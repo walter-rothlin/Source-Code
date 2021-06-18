@@ -268,6 +268,9 @@ SELECT * FROM adress_liste;
 -- -----------------------------------------------------------------------------------------------
 -- Create function formatPLZ()
 -- ===========================
+--  Fct 1.0)  Nimmt eine PLZ und hängt CH- vorne an.
+--            SELECT formatPLZ(8855);     -- --> CH-8855
+
 DROP FUNCTION IF EXISTS formatPLZ;
 Delimiter //
 CREATE FUNCTION formatPLZ(p_input_plz SMALLINT) RETURNS CHAR(50)
@@ -277,20 +280,7 @@ END
 //
 DELIMITER ;
 
-SELECT
-     formatPLZ(plz),
-     name
-FROM orte;
-
-
-DROP FUNCTION IF EXISTS HelloFct;
-Delimiter //
-CREATE FUNCTION HelloFct(p_input_string CHAR(20)) RETURNS CHAR(50)
-Begin
-  RETURN  concat('Hallo: ', p_input_string);
-end//
-
-select HelloFct('Walti');
+SELECT formatPLZ(8855);     -- --> CH-8855
 
 -- -----------------------------------------------------------------------------------------------
 -- Create view for business (external) read access

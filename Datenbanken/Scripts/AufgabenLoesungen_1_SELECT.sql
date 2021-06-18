@@ -11,6 +11,7 @@
 -- 15-May-2020   Walter Rothlin      Initial Version
 -- 02-Feb-2021   Walter Rothlin		 Adapded for BWI-A19
 -- 09-Jun-2021   Walter Rothlin      Explained "Safe Updates"
+-- 18-Jun-2021   Walter Rothlin      Added more functions
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -1038,17 +1039,71 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 
 -- FUNCTIONS
 -- =========
--- Schreiben sie eine eigene Function. Diese Function nimmt ein String-Parameter entgegen und gibt einen 
--- String in der Form Hello : inString zurueck. 
--- Nach der Implementation testen sie die Function aus.
-DROP FUNCTION IF EXISTS HelloFct;
+-- Schreiben sie eine eigene Function gemäss Spezification
+
+--  Fct 1.0)  Nimmt eine PLZ und hängt CH- vorne an.
+--            SELECT formatPLZ(8855);     -- --> CH-8855
+
+DROP FUNCTION IF EXISTS formatPLZ;
 Delimiter //
-CREATE FUNCTION HelloFct(p_input_string CHAR(20)) RETURNS CHAR(50)
-  BEGIN
-    RETURN  concat('Hallo: ', p_input_string);
-  END
+CREATE FUNCTION formatPLZ(p_input_plz SMALLINT) RETURNS CHAR(50)
+BEGIN
+   RETURN  concat('CH-', p_input_plz);
+END
 //
-select HelloFct('Walti') as HALLO;
+DELIMITER ;
+
+SELECT formatPLZ(8855);     -- --> CH-8855
+
+
+--  Fct 2.0) Nimmt eine Zeichenkette und hängt Hallo: vorne an.
+--           SELECT sayHello('Walti');-- --> Hallo: Walti
+
+DROP FUNCTION IF EXISTS sayHello;
+Delimiter //
+CREATE FUNCTION sayHello(p_input_string CHAR(20)) RETURNS CHAR(50)
+BEGIN
+  RETURN  CONCAT('Hallo: ', p_input_string);
+END//
+
+SELECT sayHello('Walti');-- --> Hallo: Walti
+
+
+--  Fct 3.0) Nimmt eine Zeichenkette und macht den 1.Buchstaben Uppercase und die restlichen Lowercase
+--           SELECT firstUpper("herr");  -- --> Herr
+--           SELECT firstUpper("HERR");  -- --> Herr
+--           SELECT firstUpper("Herr");  -- --> Herr
+--           SELECT firstUpper("hERR");  -- --> Herr
+DROP FUNCTION IF EXISTS firstUpper;
+Delimiter //
+CREATE FUNCTION firstUpper(p_str CHAR(100)) RETURNS CHAR(100)
+BEGIN
+   RETURN  CONCAT(UPPER(LEFT(p_str, 1)), LOWER(RIGHT(p_str,LENGTH(p_str)-1)));
+END
+//
+DELIMITER ;
+
+SELECT firstUpper("herr");  -- --> Herr
+SELECT firstUpper("HERR");  -- --> Herr
+SELECT firstUpper("Herr");  -- --> Herr
+SELECT firstUpper("hERR");  -- --> Herr
+
+
+--  Fct 4.0) Nimmt eine Zeichenkette und hängt Hallo: vorne an.
+--           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
+--           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+DROP FUNCTION IF EXISTS getAnrede;
+Delimiter //
+CREATE FUNCTION getAnrede(p_sex CHAR(20), p_firstname CHAR(20), p_lastname CHAR(20) ) RETURNS CHAR(50)
+BEGIN
+   RETURN  CONCAT(firstUpper(p_sex), ' ', UPPER(LEFT(p_firstname, 1)), '.', firstUpper(p_lastname));
+END
+//
+DELIMITER ;
+
+SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
+SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+
 
 -- END ownFunctions
 
