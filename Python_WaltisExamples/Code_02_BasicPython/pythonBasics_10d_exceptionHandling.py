@@ -50,7 +50,7 @@ def readFloat(prompt="Input [Float]:",
 def calcNullstellen(a, b, c):
     """
     Berechnung der Nullstellen einer quadratischen Funktion der Form:
-       y = ax^2 + bx + c
+       y = ax\u00B2 + bx + c
 
        Mitternachtsformel: https://www.mathebibel.de/mitternachtsformel
 
@@ -59,16 +59,15 @@ def calcNullstellen(a, b, c):
        Negative Testfälle: a=1    b=2    c=3       Diskriminante: -8    x1=----   x2=-----
     """
     diskriminante = b ** 2 - 4 * a * c
-    print("Diskriminante:", diskriminante)
     if diskriminante < 0:
-        return {"Solutions": 0, "Solution Text": "Keine Lösung"}
+        return {"Diskriminante": diskriminante, "Solutions": 0, "Solution Text": "Keine Lösung"}
     elif diskriminante == 0:
         x1 = (-b) / (2 * a)
-        return {"Solutions": 1, "Solution Text": "Eine Lösung", "x1": x1, "x2": x1}
+        return {"Diskriminante": diskriminante, "Solutions": 1, "Solution Text": "Eine Lösung", "x1": x1, "x2": x1}
     else:
         x1 = (-b + math.sqrt(diskriminante)) / (2 * a)
         x2 = (-b - math.sqrt(diskriminante)) / (2 * a)
-        return {"Solutions": 2, "Solution Text": "Zwei Lösungen", "x1": x1, "x2": x2}
+        return {"Diskriminante": diskriminante, "Solutions": 2, "Solution Text": "Zwei Lösungen", "x1": x1, "x2": x2}
 
 
 # ====

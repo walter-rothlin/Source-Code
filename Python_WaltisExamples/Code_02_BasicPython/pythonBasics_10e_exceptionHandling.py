@@ -20,13 +20,16 @@ from waltisLibrary import *
 # ====
 
 print(unterstreichen("Quadratische Gleichung"))
+# help("waltisLibrary")
 # help("waltisLibrary.calcNullstellen")
+# help(get_sub)
+help(getTimestamp)
 help(calcNullstellen)
 
 a = readFloat("a=")
 b = readFloat("b=")
 c = readFloat("c=")
-print("0 = ax^2 + bx + c  ==> 0 = {a:1.2f}x^2 + ({b:1.2f})x + ({c:1.2f})   x12=?".format(a=a, b=b, c=c))
+print("0 = ax² + bx + c  ==> 0 = {a:1.2f}x\u00B2 + ({b:1.2f})x + ({c:1.2f})   x₁,₂=?".format(a=a, b=b, c=c))
 loesungen = calcNullstellen(a, b, c)
 print(loesungen)
 

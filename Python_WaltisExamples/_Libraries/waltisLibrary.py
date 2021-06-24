@@ -34,6 +34,7 @@ from pathlib import Path
 import re
 from time import sleep
 
+
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
 # import sys
@@ -47,20 +48,27 @@ from time import sleep
 
 # Library fucntions
 # =================
+import requests
+
+
 def waltisPythonLib_Version():
     print("waltisLibrary.py: 1.0.0.4")
+
 
 # Bildschirmsteuerung
 # ===================
 def VT52_cls():
     print("\033[2J", end="", flush=True)
 
+
 def VT52_home():
     print("\033[H", end="", flush=True)
+
 
 def VT52_cls_home():
     VT52_cls()
     VT52_home()
+
 
 def halt(prompt="Weiter?"):
     ant = input(prompt)
@@ -98,7 +106,9 @@ def TEST_readln(verbal=False):
     print(f1)
 
 
-def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!", min=None, minErrorStr="Value must be greater or equal than {mi:1d}", max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
+def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
+                min=None, minErrorStr="Value must be greater or equal than {mi:1d}", max=None,
+                maxErrorStr="Value must less or equal than {ma:1d}"):
     error = True
     userInputZahl = 0
     while error:
@@ -148,6 +158,7 @@ def readInt_0(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mus
             error = True
     return userInputInt
 
+
 def readFloat_0(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg="   Must be a float!"):
     error = True
     while error:
@@ -160,12 +171,12 @@ def readFloat_0(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg="   Mu
             error = True
     return aValue
 
-def readFloat_1(prompt="Input [Float]:",
-              preErrorStr="Wrong Format:",
-              postErrorStr="   Must be an FLOAT!!!!",
-              min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
-              max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
 
+def readFloat_1(prompt="Input [Float]:",
+                preErrorStr="Wrong Format:",
+                postErrorStr="   Must be an FLOAT!!!!",
+                min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
+                max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
     error = True
     userInputStr = ""
     while error:
@@ -189,16 +200,17 @@ def readFloat_1(prompt="Input [Float]:",
             error = True
     return userInputZahl
 
+
 def readInt_1(prompt="Input [Int]:",
-            preErrorStr="Wrong Format:",
-            postErrorStr="   Must be an Int!!!!",
-            min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
-            max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
+              preErrorStr="Wrong Format:",
+              postErrorStr="   Must be an Int!!!!",
+              min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
+              max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
     error = True
     userInputStr = ""
     while error:
         try:
-            userInputStr  = input(prompt)
+            userInputStr = input(prompt)
             userInputZahl = int(userInputStr)
             error = False
             if (min is None) and (max is None):
@@ -217,30 +229,38 @@ def readInt_1(prompt="Input [Int]:",
             error = True
     return userInputZahl
 
+
 def readFloat(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
               min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
               max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
-    return read_Number("float", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min, minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
+    return read_Number("float", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min,
+                       minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
+
 
 def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
             min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
             max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
-    return read_Number("int"  , prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min, minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
+    return read_Number("int", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min,
+                       minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
 
 
 # Pysikalische Umrechnungen
 # =========================
 def grad2Rad(grad):
-    return math.pi*grad/180
+    return math.pi * grad / 180
+
 
 def rad2Grad(rad):
-    return 180*rad/math.pi
+    return 180 * rad / math.pi
+
 
 def fahrenheit2Celsius(fahrenheit):
-    return (fahrenheit-32)/1.8
+    return (fahrenheit - 32) / 1.8
+
 
 def celsius2Fahrenheit(celsius):
-    return (celsius*1.8)+32
+    return (celsius * 1.8) + 32
+
 
 def AUTO_TEST_pysikalische_umrechnungen_1(verbal=False):
     print(celsius2Fahrenheit(37.8))  # --> 100
@@ -249,12 +269,13 @@ def AUTO_TEST_pysikalische_umrechnungen_1(verbal=False):
     print(fahrenheit2Celsius(100))  # --> 37.8
     print(fahrenheit2Celsius(32))  # --> 0
 
+
 def AUTO_TEST_pysikalische_umrechnungen_1a(verbal=False):
     print("celsius2Fahrenheit(37.8)) = ", celsius2Fahrenheit(37.8), "   Expected: 100")
-    print("celsius2Fahrenheit(0))    = ", celsius2Fahrenheit(0),    "   Expected: 32")
+    print("celsius2Fahrenheit(0))    = ", celsius2Fahrenheit(0), "   Expected: 32")
 
     print("fahrenheit2Celsius(100))  = ", fahrenheit2Celsius(100), "    Expected: 37.8")
-    print("fahrenheit2Celsius(32))   = ", fahrenheit2Celsius(32),  "    Expected: 32")
+    print("fahrenheit2Celsius(32))   = ", fahrenheit2Celsius(32), "    Expected: 32")
 
 
 def AUTO_TEST_pysikalische_umrechnungen_2(verbal=False):
@@ -273,6 +294,7 @@ def AUTO_TEST_pysikalische_umrechnungen_2(verbal=False):
     inVal = 32
     expected = 0
     print(round(fahrenheit2Celsius(inVal), 2) == expected)
+
 
 def AUTO_TEST_pysikalische_umrechnungen_3(verbal=False):
     """
@@ -294,25 +316,30 @@ def AUTO_TEST_pysikalische_umrechnungen_3(verbal=False):
     expected = 100.05
     if round(celsius2Fahrenheit(inVal), 2) != expected:
         print("ERROR (1):", end="")
-        print("celsiusToFahrenheit(", inVal, ") = ", round(celsius2Fahrenheit(inVal), 2), "   Expected:", expected, sep="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(celsius2Fahrenheit(inVal), 2), "   Expected:", expected,
+              sep="")
 
     inVal = 0
     expected = 32.0
     if round(celsius2Fahrenheit(inVal), 2) != expected:
         print("ERROR (2):", end="")
-        print("celsiusToFahrenheit(", inVal, ") = ", round(celsius2Fahrenheit(inVal), 2), "   Expected:", expected, sep="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(celsius2Fahrenheit(inVal), 2), "   Expected:", expected,
+              sep="")
 
     inVal = 100
     expected = 37.78
     if round(fahrenheit2Celsius(inVal), 2) != expected:
         print("ERROR (3):", end="")
-        print("celsiusToFahrenheit(", inVal, ") = ", round(fahrenheit2Celsius(inVal), 2), "   Expected:", expected, sep="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(fahrenheit2Celsius(inVal), 2), "   Expected:", expected,
+              sep="")
 
     inVal = 32
     expected = 0.1
     if round(fahrenheit2Celsius(inVal), 2) != expected:
         print("ERROR (4):", end="")
-        print("celsiusToFahrenheit(", inVal, ") = ", round(fahrenheit2Celsius(inVal), 2), "   Expected:", expected, sep="")
+        print("celsiusToFahrenheit(", inVal, ") = ", round(fahrenheit2Celsius(inVal), 2), "   Expected:", expected,
+              sep="")
+
 
 def AUTO_TEST_pysikalische_umrechnungen_4(verbal=False):
     testSuite = "pysikalische_umrechnungen"
@@ -345,10 +372,12 @@ def AUTO_TEST_pysikalische_umrechnungen_4(verbal=False):
         if result != expectedResult:
             testsFailed += 1
             print("Error in ", fct, "  ->", case, " (", testsPerformed, ")", sep="")
-            print("   celsius2Fahrenheit(", param_1,  ") = ", result, "    Expected:", expectedResult, sep="")
+            print("   celsius2Fahrenheit(", param_1, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     print("\n")
-    print("==> ", testSuite, ": Tests Performed:", testsPerformed, "   Tests Failed:", testsFailed, "    Passed:", round(100-(100 * testsFailed / testsPerformed),1), "%", sep="" )
+    print("==> ", testSuite, ": Tests Performed:", testsPerformed, "   Tests Failed:", testsFailed, "    Passed:",
+          round(100 - (100 * testsFailed / testsPerformed), 1), "%", sep="")
+
 
 def AUTO_TEST_pysikalische_umrechnungen_5(verbal=False):
     testSuite = getMyFctName()[auto_test_fct_prefix_len:]
@@ -390,8 +419,12 @@ def AUTO_TEST_pysikalische_umrechnungen_5(verbal=False):
             print("   ", fct, "(", param_1, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 def AUTO_TEST_pysikalische_umrechnungen(verbal=False):
     # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen", "="))
@@ -418,6 +451,7 @@ def AUTO_TEST_pysikalische_umrechnungen(verbal=False):
     # print(unterstreichen("AUTO_TEST_pysikalische_umrechnungen_5", "-"))
     return AUTO_TEST_pysikalische_umrechnungen_5(verbal)
 
+
 # Summen Reihen-Functionen
 # ------------------------
 def summeBis_MitFormel(bis):
@@ -431,6 +465,7 @@ def summeBis_MitFormel(bis):
     # summeBis_MitFormel(20) = 210
 
     return int(bis * (bis + 1) / 2)
+
 
 def summeBis_MitLoop(bis):
     # Spezifikation: 1+2+3+4+5+6+...+bis Der Returnparameter ist ein int
@@ -446,6 +481,7 @@ def summeBis_MitLoop(bis):
     for i in range(bis + 1):
         res += i
     return res
+
 
 def summe(bis, von=None):
     # Spezifikation: von+..+5+6+...+bis
@@ -520,7 +556,10 @@ def AUTO_TEST_a_summe(verbal=False):
         testsFailed += 1
 
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 
@@ -551,9 +590,9 @@ def AUTO_TEST_a_summeBis_MitFormel(verbal=False):
 
     if verbal:
         print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
-          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
-          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
-          "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 
@@ -584,10 +623,11 @@ def AUTO_TEST_a_summeBis_MitLoop(verbal=False):
 
     if verbal:
         print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
-          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
-          ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
-          "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 def AUTO_TEST_a_summe(verbal=False):
     testsPerformed = 0
@@ -640,8 +680,12 @@ def AUTO_TEST_a_summe(verbal=False):
         testsFailed += 1
 
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 def AUTO_TEST_summe(verbal=False):
     testsPerformed = 0
@@ -675,7 +719,7 @@ def AUTO_TEST_summe(verbal=False):
         if param_2_str != 'None':
             param_2 = int(param_2_str)
         else:
-            param_2 = 1   # default value parameter 2
+            param_2 = 1  # default value parameter 2
         expectedResult = int(listOfTestValues[4].strip())
         # print(case, fct, param_1, param_2, expectedResult)
 
@@ -687,15 +731,20 @@ def AUTO_TEST_summe(verbal=False):
             result = method(bis=param_1, von=param_2)
         else:
             testsFailed += 1
-            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")","   Fct to test not found!!!", sep="")
+            print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")",
+                  "   Fct to test not found!!!", sep="")
         if result != expectedResult:
             testsFailed += 1
             print("Error in testSuite:", testSuite, "   Function:", fct, "    case:(", case, ")", sep="")
-            print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
+            print("   ", fct, "(", param_1, ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 # Durchschnitt berechnen
 # ======================
@@ -721,7 +770,7 @@ def average(nrList, untergrenze=0, obergrenze=None, verbal=False, debug=False):
     for aElement in nrList:
         try:
             if (type(aElement) == int) or (type(aElement) == float):
-             aNum = aElement
+                aNum = aElement
             else:
                 aNum = eval(aElement)
         except NameError as error:
@@ -730,7 +779,8 @@ def average(nrList, untergrenze=0, obergrenze=None, verbal=False, debug=False):
         else:
             aSumme += aNum
             aCount += 1
-    return aSumme/aCount
+    return aSumme / aCount
+
 
 def AUTO_TEST_average(verbal=False):
     testsPerformed = 0
@@ -768,12 +818,15 @@ def AUTO_TEST_average(verbal=False):
         print()
 
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 
-   #print(average([4, 6, 2, 5.5, 3]) == 4.1)
-   #print(average() == 4.1)
+# print(average([4, 6, 2, 5.5, 3]) == 4.1)
+# print(average() == 4.1)
 
 # Fakultät berechnen
 # ==================
@@ -795,6 +848,7 @@ def fakultaet(obergrenze, untergrenze=1):
             fakultaet = fakultaet * obergrenze
             obergrenze = obergrenze - 1
     return fakultaet
+
 
 def AUTO_TEST_fakultaet(verbal=False):
     testsPerformed = 0
@@ -828,7 +882,7 @@ def AUTO_TEST_fakultaet(verbal=False):
         if param_2_str != '':
             param_2 = int(param_2_str)
         else:
-            param_2 = 1   # default value parameter 2
+            param_2 = 1  # default value parameter 2
         expectedResult = int(listOfTestValues[4].strip())
         # print(case, fct, param_1, param_2, expectedResult)
 
@@ -848,8 +902,12 @@ def AUTO_TEST_fakultaet(verbal=False):
             print("   ", fct, "(", param_1, ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 # Primzahlen Functions
 # ====================
@@ -870,14 +928,15 @@ def isPrimzahl(aZahl):
         isPrim = True
         obergrenze = int(aZahl / 2) + 1
         # print("Obergrenze:",obergrenze)
-        for i in range(2,obergrenze + 1):
+        for i in range(2, obergrenze + 1):
             # print("    Test: aZahl % i = ",aZahl,"%",i,"=",aZahl % i)
             if ((aZahl % i) == 0):
                 isPrim = False
     return isPrim
 
+
 def getNextPrimzahl(zahl):
-    if ((zahl % 2) == 0):   # then Gerade
+    if ((zahl % 2) == 0):  # then Gerade
         aZahl = zahl + 1
     else:
         aZahl = zahl + 2
@@ -885,9 +944,10 @@ def getNextPrimzahl(zahl):
     while (isPrimzahl(aZahl) == False):
         aZahl = aZahl + 2
     return aZahl
-  
+
+
 def getPrevPrimzahl(zahl):
-    if ((zahl % 2) == 0):   # then Gerade
+    if ((zahl % 2) == 0):  # then Gerade
         aZahl = zahl - 1
     else:
         aZahl = zahl - 2
@@ -899,15 +959,17 @@ def getPrevPrimzahl(zahl):
             aZahl = aZahl - 2
     return aZahl
 
-def getPrimezahlenListe(start, end, sep = ";"):
+
+def getPrimezahlenListe(start, end, sep=";"):
     retStr = ""
-    for i in range(start,end+1):
+    for i in range(start, end + 1):
         if (isPrimzahl(i)):
             retStr = retStr + sep + str(i)
     retStr = retStr[-(len(retStr) - len(sep)):]
     return retStr
 
-def getPrimfactors(zahl, sep = ";"):
+
+def getPrimfactors(zahl, sep=";"):
     retStr = ""
     aZahl = abs(zahl)
     aDivisor = 2
@@ -921,7 +983,7 @@ def getPrimfactors(zahl, sep = ";"):
                 if ((aZahl % aDivisor) == 0):
                     if (aZahl > 1):
                         retStr = retStr + sep + str(aDivisor)
-                    aZahl = int(aZahl / aDivisor)    # Ganzzahlige division
+                    aZahl = int(aZahl / aDivisor)  # Ganzzahlige division
                 else:
                     aDivisor = getNextPrimzahl(aDivisor)
             if (aZahl > 1):
@@ -929,17 +991,19 @@ def getPrimfactors(zahl, sep = ";"):
             retStr = retStr[-(len(retStr) - len(sep)):]
     return retStr
 
-def getDivisors(zahl, sep = ";"):
+
+def getDivisors(zahl, sep=";"):
     retStr = ""
     aZahl = abs(zahl)
     aDivisor = 2
     while (aDivisor < aZahl):
-      if ((aZahl % aDivisor) == 0):
-         retStr = retStr + sep + str(aDivisor)
-      aDivisor = aDivisor + 1
+        if ((aZahl % aDivisor) == 0):
+            retStr = retStr + sep + str(aDivisor)
+        aDivisor = aDivisor + 1
 
     retStr = retStr[-(len(retStr) - len(sep)):]
     return retStr
+
 
 # Test der Functions primezahlen
 # ------------------------------
@@ -948,7 +1012,9 @@ def TEST_Primzahlen():
         if (isPrimzahl(i)):
             print("{z:3d}: Ist eine Primzahl!!!".format(z=i))
         else:
-            print("{z:3d}: Primzahlen:{s:30s}      Teiler    :{s1:30s}".format(z=i,s=getPrimfactors(i),s1=getDivisors(i)))
+            print("{z:3d}: Primzahlen:{s:30s}      Teiler    :{s1:30s}".format(z=i, s=getPrimfactors(i),
+                                                                               s1=getDivisors(i)))
+
 
 # String Functions
 # ================
@@ -1006,29 +1072,56 @@ def AUTO_TEST_addParity(verbal=False):
             result = method(param_1, param_2)
         else:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")   Fct to test not found!!!", sep="")
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed,
+                  ")   Fct to test not found!!!", sep="")
         if result != expectedResult:
             testsFailed += 1
-            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")", sep="")
-            print("   ", fct, "(", param_1,  ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
+            print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:()  ->", case, " (", testsPerformed, ")",
+                  sep="")
+            print("   ", fct, "(", param_1, ",", param_2, ") = ", result, "    Expected:", expectedResult, sep="")
             print()
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
-def showASCII_Table(firstVal = 33, lastVal = 126, sep = " --> ", end = "\n"):
-    print("{z:5s} {sep:1s} {ordDec:3s}     {ordHex:5s} {ordOct:6s} {ordBin:8s}   {odd:8s}   {even:8s}".format(z="ASCII", sep=sep, ordDec="Dez", ordHex="Hex", ordOct="Oct", ordBin="Bin", even="Even", odd="Odd"), sep="")
-    for i in range(firstVal, lastVal+1):
-        print("{z:5s} {sep:1s} {ordDec:3d}     {ordHex:5s} {ordOct:6s} {ordBin:8s}".format(z=chr(i), sep=sep, ordDec=i, ordHex=hex(i)[2:].upper(), ordOct=oct(i)[2:].upper().rjust(3, "0"), ordBin=bin(i)[2:].upper().rjust(7, "0")), "   ", addParity(bin(i)[2:].upper().rjust(7, "0")), "   ", addParity(bin(i)[2:].upper().rjust(7, "0"), False), sep="")
+
+def showASCII_Table(firstVal=33, lastVal=126, sep=" --> ", end="\n"):
+    print("{z:5s} {sep:1s} {ordDec:3s}     {ordHex:5s} {ordOct:6s} {ordBin:8s}   {odd:8s}   {even:8s}".format(z="ASCII",
+                                                                                                              sep=sep,
+                                                                                                              ordDec="Dez",
+                                                                                                              ordHex="Hex",
+                                                                                                              ordOct="Oct",
+                                                                                                              ordBin="Bin",
+                                                                                                              even="Even",
+                                                                                                              odd="Odd"),
+          sep="")
+    for i in range(firstVal, lastVal + 1):
+        print("{z:5s} {sep:1s} {ordDec:3d}     {ordHex:5s} {ordOct:6s} {ordBin:8s}".format(z=chr(i), sep=sep, ordDec=i,
+                                                                                           ordHex=hex(i)[2:].upper(),
+                                                                                           ordOct=oct(i)[
+                                                                                                  2:].upper().rjust(3,
+                                                                                                                    "0"),
+                                                                                           ordBin=bin(i)[
+                                                                                                  2:].upper().rjust(7,
+                                                                                                                    "0")),
+              "   ", addParity(bin(i)[2:].upper().rjust(7, "0")), "   ",
+              addParity(bin(i)[2:].upper().rjust(7, "0"), False), sep="")
+
 
 def left(s, amount):
     return s[:amount]
 
+
 def right(s, amount):
     return s[-amount:]
 
+
 def mid(s, offset, amount):
-    return s[offset:offset+amount]
+    return s[offset:offset + amount]
+
 
 def toUpperCase(inString):
     retString = ""
@@ -1039,6 +1132,7 @@ def toUpperCase(inString):
             retString = retString + aChar
     return retString
 
+
 def toLowerCase(inString):
     retString = ""
     for aChar in inString:
@@ -1048,12 +1142,14 @@ def toLowerCase(inString):
             retString = retString + aChar
     return retString
 
+
 def toFirstUpperCase(inString):
     firstPart = inString[:1]
-    endPart   = inString[1:]
+    endPart = inString[1:]
     return toUpperCase(firstPart) + toLowerCase(endPart)
 
-def generateStringRepeats(len, aStr = " "):
+
+def generateStringRepeats(len, aStr=" "):
     # Spezifikation: Wiederholt den aStr so oft, dass der Return-String len lang ist
     # Test-Cases
     # ----------
@@ -1062,7 +1158,8 @@ def generateStringRepeats(len, aStr = " "):
     # generateStringRepeats(3,  'A')     => 'AAA'
     # generateStringRepeats(5, '.-')     => '.-.-.'
     # generateStringRepeats(6)           => '      '
-    return (aStr*len)[:len]
+    return (aStr * len)[:len]
+
 
 def AUTO_TEST_a_generateStringRepeats(verbal=False):
     testsPerformed = 0
@@ -1092,7 +1189,7 @@ def AUTO_TEST_a_generateStringRepeats(verbal=False):
         testsFailed += 1
 
     testsPerformed += 1
-    if generateStringRepeats(5,'.-') != '.-.-.':
+    if generateStringRepeats(5, '.-') != '.-.-.':
         print("Failed in ", testSuite, "  Case:", testsPerformed)
         testsFailed += 1
 
@@ -1102,8 +1199,12 @@ def AUTO_TEST_a_generateStringRepeats(verbal=False):
         testsFailed += 1
 
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 def unterstreichen(title, aChar="=", end="\n"):
     # Spezifikation: Unterstreich einen String auf dem Bildschirm
@@ -1115,6 +1216,7 @@ def unterstreichen(title, aChar="=", end="\n"):
     # unterstreichen('Hallo')                     => 'Hallo\n====='
     # unterstreichen('Die ist ein Test',"+")      => 'Die ist ein Test\n++++++++++++++++'
     return title + end + generateStringRepeats(len(title), aChar)
+
 
 def AUTO_TEST_a_unterstreichen(verbal=False):
     testsPerformed = 0
@@ -1131,11 +1233,14 @@ def AUTO_TEST_a_unterstreichen(verbal=False):
         testsFailed += 1
 
     testsPerformed += 1
-    if unterstreichen('Die ist ein Test',"+") != 'Die ist ein Test\n++++++++++++++++':
+    if unterstreichen('Die ist ein Test', "+") != 'Die ist ein Test\n++++++++++++++++':
         print("Failed in ", testSuite, "  Case:", testsPerformed)
         testsFailed += 1
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 
@@ -1148,17 +1253,16 @@ def TEST_stringFct():
     print("toFirstUpperCase(", eingabeString, ")      --> ", toFirstUpperCase(eingabeString), sep="")
 
 
-
 def hexStrToURLEncoded(inStr):
     # https://www.quora.com/How-do-I-convert-hex-into-a-string-using-Python
     retStr = ""
     instr = "".join(inStr.split())
     print("instr:", instr)
-    listOfDoubleHexStr  = []
+    listOfDoubleHexStr = []
 
     i = 0
     while i < len(instr):
-        listOfDoubleHexStr.append(instr[i] + instr[i+1])
+        listOfDoubleHexStr.append(instr[i] + instr[i + 1])
         i += 2
 
     print("listOfDoubleHexStr:", listOfDoubleHexStr)
@@ -1174,6 +1278,7 @@ def hexStrToURLEncoded(inStr):
         retStr += partRetStr
         print(partRetStr, ":")
     return retStr
+
 
 def TEST_hexStrToURLEncoded():
     testStr_0 = "5350430d0a303230300d0a31"
@@ -1213,38 +1318,71 @@ def TEST_hexStrToURLEncoded():
     """
     print(hexStrToURLEncoded(testStr_3))
 
+# UNICODE Functions
+# =================
+# https://www.geeksforgeeks.org/how-to-print-superscript-and-subscript-in-python/
+
+
+def get_sub(x):
+    """
+    function to convert to subscript
+    Wandelt ein Zeichen in ein Index-Zeichen (tiefgestellt) um:
+
+        get_sub('2') ==> ₂
+    """
+    normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
+    sub_s = "ₐ₈CDₑբGₕᵢⱼₖₗₘₙₒₚQᵣₛₜᵤᵥwₓᵧZₐ♭꜀ᑯₑբ₉ₕᵢⱼₖₗₘₙₒₚ૧ᵣₛₜᵤᵥwₓᵧ₂₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎"
+    res = x.maketrans(''.join(normal), ''.join(sub_s))
+    return x.translate(res)
+
+
+def get_super(x):
+    """
+    function to convert to superscript
+    Wandelt ein Zeichen in ein Hoch-Zeichen (hochgestellt) um:
+
+        get_super('2') ==> ²
+    """
+    normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()"
+    super_s = "ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ۹ʳˢᵗᵘᵛʷˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾"
+    res = x.maketrans(''.join(normal), ''.join(super_s))
+    return x.translate(res)
+
 # Date and Timestamp
 # ==================
-def getTimestamp(preStr = "", postStr="", formatString="nice"):
-    dateFormatPlaceholders = '''
-        %a 	Weekday, short version 	Wed 	
-        %A 	Weekday, full version 	Wednesday 	
-        %w 	Weekday as a number 0-6, 0 is Sunday 	3 	
-        %d 	Day of month 01-31 	31 	
-        %b 	Month name, short version 	Dec 	
-        %B 	Month name, full version 	December 	
-        %m 	Month as a number 01-12 	12 	
-        %y 	Year, short version, without century 	18 	
-        %Y 	Year, full version 	2018 	
-        %H 	Hour 00-23 	17 	
-        %I 	Hour 00-12 	05 	
-        %p 	AM/PM 	PM 	
-        %M 	Minute 00-59 	41 	
-        %S 	Second 00-59 	08 	
-        %f 	Microsecond 000000-999999 	548513 	
-        %z 	UTC offset 	+0100 	
-        %Z 	Timezone 	CST 	
-        %j 	Day number of year 001-366 	365 	
-        %U 	Week number of year, Sunday as the first day of week, 00-53 	52 	
-        %W 	Week number of year, Monday as the first day of week, 00-53 	52 	
-        %c 	Local version of date and time 	Mon Dec 31 17:41:00 2018 	
-        %x 	Local version of date 	12/31/18 	
-        %X 	Local version of time 	17:41:00 	
-        %% 	A % character 	% 	
-        %G 	ISO 8601 year 	2018 	
-        %u 	ISO 8601 weekday (1-7) 	1 	
-        %V 	ISO 8601 weeknumber (01-53) 	01    
-    '''
+def getTimestamp(preStr="", postStr="", formatString="nice"):
+    """
+        formatString == nice    ==> {ts:%Y-%m-%d %H:%M:%S}   2021-01-02 13:15:03
+        formatString == Default ==> {ts:%Y%m%d%H%M%S}        20210102131503
+
+        %a 	Weekday, short version 	Wed
+        %A 	Weekday, full version 	Wednesday
+        %w 	Weekday as a number 0-6, 0 is Sunday 	3
+        %d 	Day of month 01-31 	31
+        %b 	Month name, short version 	Dec
+        %B 	Month name, full version 	December
+        %m 	Month as a number 01-12 	12
+        %y 	Year, short version, without century 	18
+        %Y 	Year, full version 	2018
+        %H 	Hour 00-23 	17
+        %I 	Hour 00-12 	05
+        %p 	AM/PM 	PM
+        %M 	Minute 00-59 	41
+        %S 	Second 00-59 	08
+        %f 	Microsecond 000000-999999 	548513
+        %z 	UTC offset 	+0100
+        %Z 	Timezone 	CST
+        %j 	Day number of year 001-366 	365
+        %U 	Week number of year, Sunday as the first day of week, 00-53 	52
+        %W 	Week number of year, Monday as the first day of week, 00-53 	52
+        %c 	Local version of date and time 	Mon Dec 31 17:41:00 2018
+        %x 	Local version of date 	12/31/18
+        %X 	Local version of time 	17:41:00
+        %% 	A % character 	%
+        %G 	ISO 8601 year 	2018
+        %u 	ISO 8601 weekday (1-7) 	1
+        %V 	ISO 8601 weeknumber (01-53) 	01
+    """
     formatStr = '{ts:%Y-%m-%d %H:%M:%S}'
     if (formatString == ""):
         formatStr = '{ts:%Y%m%d%H%M%S}'
@@ -1256,9 +1394,11 @@ def getTimestamp(preStr = "", postStr="", formatString="nice"):
     # retStr = left(retStr,len(retStr)-2)
     return preStr + retStr + postStr
 
+
 def TEST_getTimestamp():
     print("TEST_getTimestamp...")
     print(datetime.datetime.now())
+
 
 # True if (old-young > limit)
 def checkTimeDifference(oldTimestamp, youngTimestamp, limit, gt=True):
@@ -1268,6 +1408,7 @@ def checkTimeDifference(oldTimestamp, youngTimestamp, limit, gt=True):
         return secStr > limit
     else:
         return secStr < limit
+
 
 # Math functions
 # ==============
@@ -1280,12 +1421,14 @@ def equalsWithinTolerance(ist, soll, abweichungProzent=0.001):
         else:
             return True
 
+
 def isFloatEquals(ist, soll, roundDezimals=3):
     # Test-Cases
     # ----------
     # isFloatEquals(4.5321,4.5329,2)      => True
     # isFloatEquals(4.5321,4.5329,3)      => False
     return round(ist, roundDezimals) == round(soll, roundDezimals)
+
 
 def AUTO_TEST_a_isFloatEquals(verbal=False):
     testsPerformed = 0
@@ -1297,18 +1440,22 @@ def AUTO_TEST_a_isFloatEquals(verbal=False):
     # isFloatEquals(4.5321,4.5329,2)      => True
     # isFloatEquals(4.5321,4.5329,3)      => False
     testsPerformed += 1
-    if isFloatEquals(4.5321,4.5329,2) != True:
+    if isFloatEquals(4.5321, 4.5329, 2) != True:
         print("Failed in ", testSuite, "  Case:", testsPerformed)
         testsFailed += 1
 
     testsPerformed += 1
-    if isFloatEquals(4.5321,4.5329,3) != False:
+    if isFloatEquals(4.5321, 4.5329, 3) != False:
         print("Failed in ", testSuite, "  Case:", testsPerformed)
         testsFailed += 1
 
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 # Inspection functions
 # ====================
@@ -1324,17 +1471,17 @@ def getMyFctName():
 # =====================
 # https://stackoverflow.com/questions/7320319/xpath-like-query-for-nested-python-dictionaries
 def xPath_Get(mydict, path):
-     elem = mydict
-     try:
-         for x in path.strip("/").split("/"):
-             try:
-                 x = int(x)
-                 elem = elem[x]
-             except ValueError:
-                 elem = elem.get(x)
-     except:
-         pass
-     return elem
+    elem = mydict
+    try:
+        for x in path.strip("/").split("/"):
+            try:
+                x = int(x)
+                elem = elem[x]
+            except ValueError:
+                elem = elem.get(x)
+    except:
+        pass
+    return elem
 
 
 def AUTO_TEST_xPath_Get(verbal=False):
@@ -1342,21 +1489,21 @@ def AUTO_TEST_xPath_Get(verbal=False):
         print("==> ", getMyFctName())
 
     foo = {
-         'spam': 'eggs',
-         'morefoo': [{
-             'bar': 'soap',
-             'morebar': {
-                 'bacon': {
-                     'bla': '12345'
-                 }
-             }
-         },
-             'Walt'
-         ]
+        'spam': 'eggs',
+        'morefoo': [{
+            'bar': 'soap',
+            'morebar': {
+                'bacon': {
+                    'bla': '12345'
+                }
+            }
+        },
+            'Walt'
+        ]
     }
 
     testCasesExecuted = 5
-    testCasesFailed   = 2
+    testCasesFailed = 2
     testCases = """"
     Expected | Param_1                     
     1234     | /morefoo/0/morebar/bacon/bla
@@ -1365,19 +1512,20 @@ def AUTO_TEST_xPath_Get(verbal=False):
     param1 = "/morefoo/0/morebar/bacon/bla"
     expextedVal1 = "1234"
     retVal = xPath_Get(foo, param1)
-    if ( retVal != expextedVal1):
+    if (retVal != expextedVal1):
         print("   ERROR in TEST: xPath_Get(foo, ", param1, ") = ", retVal, "    ==> expected: ", expextedVal1, sep="")
 
     param1 = "morefoo/1"
     expextedVal1 = "Walti"
     retVal = xPath_Get(foo, param1)
-    if ( retVal != expextedVal1):
+    if (retVal != expextedVal1):
         print("   ERROR in TEST: xPath_Get(foo, ", param1, ") = ", retVal, "    ==> expected: ", expextedVal1, sep="")
 
     if verbal:
         print("--> Test Cases Executed: {a:4d}".format(a=testCasesExecuted))
         print("--> Test Cases Failed  : {a:4d}".format(a=testCasesFailed))
     return {"TestName": getMyFctName(), "testCasesExecuted": testCasesExecuted, "testCasesFailed": testCasesFailed}
+
 
 # URL operations
 # ==============
@@ -1387,9 +1535,10 @@ def loadAndSaveFileFromURL(url='http://google.com/favicon.ico'):
     open(filename, 'wb').write(r.content)
     return filename
 
+
 # File and Directory operations
 # =============================
-def createDirIfNotExists(dir_path= "./TestData", access_rights=0o755, verbal=False):
+def createDirIfNotExists(dir_path="./TestData", access_rights=0o755, verbal=False):
     try:
         ## os.mkdir(dir_path, access_rights)
         os.makedirs(dir_path, access_rights)
@@ -1400,7 +1549,8 @@ def createDirIfNotExists(dir_path= "./TestData", access_rights=0o755, verbal=Fal
         if verbal:
             print("Successfully created the directory %s " % dir_path)
 
-def deleteDir(dir_path= "./TestData", verbal=False):
+
+def deleteDir(dir_path="./TestData", verbal=False):
     try:
         shutil.rmtree(dir_path)  # does it even if it contains files
         ## os.rmdir(dir_path)    # only if the director is empty
@@ -1410,6 +1560,7 @@ def deleteDir(dir_path= "./TestData", verbal=False):
     else:
         if verbal:
             print("Successfully deleted the directory %s " % dir_path)
+
 
 #    TBC verallgemeinern start
 # Cleanup - Rule N°1 : Verzeichnis wird durchsucht und alle Files mit .csv werden gelöscht
@@ -1423,6 +1574,7 @@ def file_cleanup1():
             except OSError as error:
                 print("File {} konnte nicht gelöscht werden: {}".format(file, error))
 
+
 # Cleanup - Rule N°2 : Verzeichnis wird durchsucht und alle Files(.csv) älter als 7 Tage werden gelöscht
 def File_cleanup2():
     logfiles = Path('C:\\Users\charl\PycharmProjects\Python_HWZ\programming_tools\projektarbeit_python')
@@ -1432,17 +1584,19 @@ def File_cleanup2():
             os.unlink(file)
             print('{} removed'.format(file))
 
+
 def File_getAllLogFiles(path):
     files = os.listdir(path)
     files = list(filter(lambda file: file.endswith('.csv'), files))
     return [path + file for file in files]  # append path to the file to delete it later
 
 
-def File_removeOldLogs(files,maxLogFiles=10):
+def File_removeOldLogs(files, maxLogFiles=10):
     while len(files) > maxLogFiles:
         oldestFile = min(files, key=os.path.getctime)
         os.remove(oldestFile)
         files = File_getAllLogFiles(".")
+
 
 def File_cleanup(filename, directory, path_sign):
     """Cleanup Funktion löscht angegebene Dateien aus angegebenen Verzeichnisse"""
@@ -1463,6 +1617,7 @@ def File_cleanup(filename, directory, path_sign):
                 print("Datei {} löschen".format(file))
                 os.remove(file)
 
+
 #    TBC verallgemeinern start
 
 # File manipulation
@@ -1471,18 +1626,20 @@ def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFoote
     aTestFile = open(aFileFN, "w")
     if aHeader != "":
         aTestFile.write(aHeader + "\n")
-    for lNr in range(startLineNr, endLineNr+1):
+    for lNr in range(startLineNr, endLineNr + 1):
         aTestFile.write(str(lNr) + aContent + "\n")
 
     if aFooter != "":
         aTestFile.write(aFooter + "\n")
     aTestFile.close()
 
+
 def File_getCountOfLines(sourceFileFN):
     lines = []
     with open(sourceFileFN, "r", encoding="utf-8") as f:
         lines = f.readlines()
     return len(lines)
+
 
 def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, deleteLineTo=None, verbal=False):
     if destinationFileFN is None:
@@ -1506,13 +1663,14 @@ def File_deleteLines(sourceFileFN, destinationFileFN=None, deleteLineFrom=None, 
         lines = f.readlines()
 
     # In Liste Range löschen
-    del lines[deleteLineFrom-1:deleteLineTo]
+    del lines[deleteLineFrom - 1:deleteLineTo]
 
     # Liste in ein File schreiben
     with open(destinationFileFN, "w", encoding="utf-8") as f:
         f.writelines(lines)
 
-def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr= ""):
+
+def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr=""):
     if destinationFileFN is None:
         destinationFileFN = sourceFileFN
 
@@ -1527,12 +1685,13 @@ def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr= ""):
     aTestFile.writelines(lines)
     aTestFile.close()
 
+
 def AUTO_TEST_a_File_addHeader(verbal=False):
     testsPerformed = 0
     testsFailed = 0
     testSuite = "a_File_addHeader"
 
-    testPath="./TestData/AUTO_TEST_a_File_addHeader"
+    testPath = "./TestData/AUTO_TEST_a_File_addHeader"
     createDirIfNotExists(dir_path=testPath)
 
     testsPerformed += 1
@@ -1544,7 +1703,8 @@ def AUTO_TEST_a_File_addHeader(verbal=False):
     File_addHeader(baseTestFile, testFileName, headerStr="This is \na multiline String")
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":     case:", testsPerformed, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     testsPerformed += 1
@@ -1553,12 +1713,16 @@ def AUTO_TEST_a_File_addHeader(verbal=False):
     File_addHeader(baseTestFile, testFileName, headerStr="This is a singleline String")
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":     case:", testsPerformed, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     deleteDir(testPath)
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 
@@ -1576,22 +1740,26 @@ def File_addFooter(sourceFileFN, destinationFileFN=None, footerStr=""):
     aTestFile.write(footerStr)
     aTestFile.close()
 
+
 def getRegExMatches(inString, regEx):
     matches = re.findall(regEx, inString)
     return matches
+
 
 def getIncludeFileName(aTextLine, includePattern='# include:\S+'):
     aFilename = ""
     listOfMatches = getRegExMatches(aTextLine, includePattern)
     if len(listOfMatches) > 0:
-        aFilename = listOfMatches[0][10:]   # hard codiert len('# include:')
+        aFilename = listOfMatches[0][10:]  # hard codiert len('# include:')
     return aFilename
+
 
 def TEST_getIncludeFileName():
     print(getIncludeFileName("3   # include:Test_1_With_Include_2.txt   kkkkkkkk"))
     print(getIncludeFileName("   4   # include:./hhhh/Test_1_With_Include_22.txt   "))
 
-def File_readWithInludes(sourceFileFN, includePattern='# include:\S+', includeSearchPath = "./", recLevel = 0):
+
+def File_readWithInludes(sourceFileFN, includePattern='# include:\S+', includeSearchPath="./", recLevel=0):
     '''
     returns a list of lines and resolves the includes
     Default include pattern is: <include:filename>
@@ -1604,7 +1772,7 @@ def File_readWithInludes(sourceFileFN, includePattern='# include:\S+', includeSe
     for aLine in fileContent:
         includeFileName = getIncludeFileName(aLine, includePattern)
         if includeFileName != "" and recLevel < 3:
-            File_readWithInludes(includeFileName, includePattern, includeSearchPath, recLevel=recLevel+1)
+            File_readWithInludes(includeFileName, includePattern, includeSearchPath, recLevel=recLevel + 1)
         print(fileContent)
 
 
@@ -1628,18 +1796,21 @@ def AUTO_TEST_FileFunctions(verbal=False):
     expectedResult = 20
     if (countOfLine != expectedResult):
         print("Error in testSuite:   ", testSuite, "(1):   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines("./TestData/Test_1.txt"), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     case = 2
     testsPerformed += 1
     testFileName = testPath + "/Test_2.txt"
-    File_createTestFile(testFileName, aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5, endLineNr=45)
+    File_createTestFile(testFileName, aHeader="Nr |", aContent=" | Content", aFooter="File Ende", startLineNr=5,
+                        endLineNr=45)
     countOfLine = File_getCountOfLines(testPath + "/Test_2.txt")
     expectedResult = 43
     if (countOfLine != expectedResult):
         print("Error in testSuite:   ", testSuite, "(2):   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines("./TestData/Test_2.txt"), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
     # -------------------------------------------------------------------------------
     fct = "File_deleteLines()"
@@ -1651,7 +1822,8 @@ def AUTO_TEST_FileFunctions(verbal=False):
     File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=None, deleteLineTo=None, verbal=False)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     case = 2
@@ -1661,7 +1833,8 @@ def AUTO_TEST_FileFunctions(verbal=False):
     File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=2, deleteLineTo=7)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     case = 3
@@ -1671,7 +1844,8 @@ def AUTO_TEST_FileFunctions(verbal=False):
     File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineFrom=5)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     case = 4
@@ -1681,7 +1855,8 @@ def AUTO_TEST_FileFunctions(verbal=False):
     File_deleteLines(testPath + "/Test_1.txt", testFileName, deleteLineTo=7)
     if File_getCountOfLines(testFileName) != expectedResult:
         print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
-        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ", File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
+        print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
+              File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
 
     # -------------------------------------------------------------------------------
@@ -1697,7 +1872,6 @@ def AUTO_TEST_FileFunctions(verbal=False):
         print("    Test Failed: File_getCountOfLines(" + testFileName + ")", "Result: ",
               File_getCountOfLines(testFileName), "   Expected:", expectedResult, end="\n\n")
         testsFailed += 1
-
 
     # -------------------------------------------------------------------------------
     fct = "File_addFooter()"
@@ -1717,7 +1891,10 @@ def AUTO_TEST_FileFunctions(verbal=False):
     #### File_readWithInludes("./TestData/Test_1_With_Include_1.txt")
     deleteDir(testPath)
     if verbal:
-        print("=>   ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v=testSuite), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsPerformed), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=testsFailed), "    Passed:{v:7.1f}".format(v=round(100-(100 * testsFailed / testsPerformed), 1)), "%", sep="")
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
 
@@ -1728,22 +1905,24 @@ def AUTO_TEST_FileFunctions(verbal=False):
 #  -----
 def calcCircle_Flaeche(radius=None, durchmesser=None, flaeche=None, umfang=None):
     if radius is not None:
-        return radius**2 * math.pi
+        return radius ** 2 * math.pi
     elif durchmesser is not None:
-        return (durchmesser/2) ** 2 * math.pi
+        return (durchmesser / 2) ** 2 * math.pi
     elif flaeche is not None:
         return flaeche
     elif umfang is not None:
-        return ((umfang/math.pi)/2) ** 2 * math.pi
+        return ((umfang / math.pi) / 2) ** 2 * math.pi
     else:
         return 0
+
 
 def TEST_calcCircle_Flaeche():
     radius = 10
     print(calcCircle_Flaeche(radius=radius))
     print(calcCircle_Flaeche(durchmesser=2 * radius))
     print(calcCircle_Flaeche(umfang=2 * radius * math.pi))
-    print(calcCircle_Flaeche(flaeche=radius**2 * math.pi))
+    print(calcCircle_Flaeche(flaeche=radius ** 2 * math.pi))
+
 
 def calcCircle_Umfang(radius=None, durchmesser=None, flaeche=None, umfang=None):
     if radius is not None:
@@ -1757,32 +1936,35 @@ def calcCircle_Umfang(radius=None, durchmesser=None, flaeche=None, umfang=None):
     else:
         return 0
 
+
 def TEST_calcCircle_Umfang():
     radius = 10
     print(calcCircle_Umfang(radius=radius))
     print(calcCircle_Umfang(durchmesser=2 * radius))
     print(calcCircle_Umfang(umfang=2 * radius * math.pi))
-    print(calcCircle_Umfang(flaeche=radius**2 * math.pi))
+    print(calcCircle_Umfang(flaeche=radius ** 2 * math.pi))
 
 
 def calcCircle_Radius(radius=None, durchmesser=None, flaeche=None, umfang=None):
     if radius is not None:
         return radius
     elif durchmesser is not None:
-        return durchmesser/2
+        return durchmesser / 2
     elif flaeche is not None:
         return math.sqrt(flaeche / math.pi)
     elif umfang is not None:
-        return (umfang/math.pi)/2
+        return (umfang / math.pi) / 2
     else:
         return 0
+
 
 def TEST_calcCircle_Radius():
     radius = 10
     print(calcCircle_Radius(radius=radius))
     print(calcCircle_Radius(durchmesser=2 * radius))
     print(calcCircle_Radius(umfang=2 * radius * math.pi))
-    print(calcCircle_Radius(flaeche=radius**2 * math.pi))
+    print(calcCircle_Radius(flaeche=radius ** 2 * math.pi))
+
 
 def calcCircle_Durchmesser(radius=None, durchmesser=None, flaeche=None, umfang=None):
     if radius is not None:
@@ -1792,16 +1974,18 @@ def calcCircle_Durchmesser(radius=None, durchmesser=None, flaeche=None, umfang=N
     elif flaeche is not None:
         return math.sqrt(flaeche / math.pi) * 2
     elif umfang is not None:
-        return umfang/math.pi
+        return umfang / math.pi
     else:
         return 0
+
 
 def TEST_calcCircle_Durchmesser():
     radius = 10
     print(calcCircle_Durchmesser(radius=radius))
     print(calcCircle_Durchmesser(durchmesser=2 * radius))
     print(calcCircle_Durchmesser(umfang=2 * radius * math.pi))
-    print(calcCircle_Durchmesser(flaeche=radius**2 * math.pi))
+    print(calcCircle_Durchmesser(flaeche=radius ** 2 * math.pi))
+
 
 def TEST_CircleFct():
     TEST_calcCircle_Flaeche()
@@ -1809,46 +1993,54 @@ def TEST_CircleFct():
     TEST_calcCircle_Radius()
     TEST_calcCircle_Durchmesser()
 
+
 # Quadratische Gleichungen
 # ========================
 def calcNullstellen(a, b, c):
     """
     Berechnung der Nullstellen einer quadratischen Funktion der Form:
-       y = ax^2 + bx + c
+       y = ax² + bx + c
 
        Mitternachtsformel: https://www.mathebibel.de/mitternachtsformel
 
-       Positive Testfälle: a=2    b=1    c=-4      Diskriminante: 33    x1=-1.69  x2=1.19
-       Positive Testfälle: a=1    b=0    c=0       Diskriminante:  0    x1,2=0
-       Negative Testfälle: a=1    b=2    c=3       Diskriminante: -8    x1=----   x2=-----
+       Positive Testfälle: a=2    b=1    c=-4      Diskriminante: 33    x₁=-1.69  x₂=1.19
+       Positive Testfälle: a=1    b=0    c=0       Diskriminante:  0    x₁,₂=0
+       Negative Testfälle: a=1    b=2    c=3       Diskriminante: -8    x₁=----   x₂=-----
+
+        return {"Diskriminante": diskriminante, "Solutions": 2, "Solution Text": "Zwei Lösungen", "x1": x1, "x2": x2}
     """
+
     diskriminante = b ** 2 - 4 * a * c
-    print("Diskriminante:", diskriminante)
     if diskriminante < 0:
-        return {"Solutions": 0, "Solution Text": "Keine Lösung"}
+        return {"Diskriminante": diskriminante, "Solutions": 0, "Solution Text": "Keine Lösung"}
     elif diskriminante == 0:
         x1 = (-b) / (2 * a)
-        return {"Solutions": 1, "Solution Text": "Eine Lösung", "x1": x1, "x2": x1}
+        return {"Diskriminante": diskriminante, "Solutions": 1, "Solution Text": "Eine Lösung", "x1": x1, "x2": x1}
     else:
         x1 = (-b + math.sqrt(diskriminante)) / (2 * a)
         x2 = (-b - math.sqrt(diskriminante)) / (2 * a)
-        return {"Solutions": 2, "Solution Text": "Zwei Lösungen", "x1": x1, "x2": x2}
+        return {"Diskriminante": diskriminante, "Solutions": 2, "Solution Text": "Zwei Lösungen", "x1": x1, "x2": x2}
 
 
 # ===========================================================
 # MAIN
 # ===========================================================
+
 if __name__ == '__main__':
     autoTest = False
 
     if not autoTest:
-        pass   # NOP in Python
+        pass  # NOP in Python
         # AUTO_TEST_xPath_Get(verbal=True)
         # TEST_stringFct()
         # TEST_hexStrToURLEncoded()
         # TEST_getTimestamp()
         # TEST_readln(verbal=True)
+        EinsSub = get_sub('1')
+        print("get_sub('1'):", EinsSub)
+        print("get_sub('2'):", get_sub('2'))
 
+        print("get_super('1'):", get_super('1'))
 
     # Automated Tests
     # ===============
@@ -1917,7 +2109,11 @@ if __name__ == '__main__':
         deleteDir("./TestData")
         if doVerbal:
             print(generateStringRepeats(auto_test_testStatistics_totalLength, '-'))
-            print("===> ", ("{v:"+str(auto_test_suiteNameLength)+"s}").format(v="Total:"), "Tests Performed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[0]), "      Tests Failed:", ("{v:"+str(auto_test_testStatistics_anzStellen)+"d}").format(v=totalTests[1]), "    Passed:{v:7.1f}".format(v=round(100-(100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
+            print("===> ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v="Total:"), "Tests Performed:",
+                  ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=totalTests[0]),
+                  "      Tests Failed:",
+                  ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=totalTests[1]),
+                  "    Passed:{v:7.1f}".format(v=round(100 - (100 * totalTests[1] / totalTests[0]), 1)), "%", sep="")
             print(generateStringRepeats(auto_test_testStatistics_totalLength, '='))
 
         print("\n\n")
@@ -1926,13 +2122,13 @@ if __name__ == '__main__':
         print("     Total zu implementierende Testfälle: {p:3d}".format(p=ex_TestFaelle))
         print("     Testfälle implementiert            : {p:3d}".format(p=totalTests[0]))
         print("     Testfälle failed                   : {p:3d}".format(p=totalTests[1]))
-        p_testabdeckung = 100*totalTests[0]/ex_TestFaelle
+        p_testabdeckung = 100 * totalTests[0] / ex_TestFaelle
         p_implement = 100 * (totalTests[0] - totalTests[1]) / totalTests[0]
-        p_TotalPunkte = p_testabdeckung+p_implement
+        p_TotalPunkte = p_testabdeckung + p_implement
         print("\n")
         print("     Punkte für Testabdeckung        : {p:6.2f}".format(p=p_testabdeckung))
         print("     Punkte für Implementierung      : {p:6.2f}".format(p=p_implement))
         print("\n")
         print("     Total Punkte         : {p:6.2f}".format(p=p_TotalPunkte))
-        print("     Provisorische Note   : {p:5.1f}".format(p=(5/200)*p_TotalPunkte + 1))
+        print("     Provisorische Note   : {p:5.1f}".format(p=(5 / 200) * p_TotalPunkte + 1))
         print("                            =======")
