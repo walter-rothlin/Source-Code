@@ -1,91 +1,58 @@
-import sys
+#!/usr/bin/python3
 
-# Erros an exception-Handling: https://docs.python.org/3/tutorial/errors.html
-# try : https://docs.python.org/3/reference/compound_stmts.html#finally
+# ------------------------------------------------------------------
+# Name: pythonBasics_10_exceptionHandling.py
+#
+# Description: Berechnet die Nullstellen einer quadratischen Funktion
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 26-May-2021   Walter Rothlin      Initial Version
+# 10-Jun-2021   Walter Rothlin      Created readFloat()
+# 17-Jun-2021   Walter Rothlin      Extended readFloat()
+# 24-Jun_2021   Walter Rothlin      Use of own library
+# ------------------------------------------------------------------
+from waltisLibrary import *
+import matplotlib.pyplot as plt
+import numpy as np
 
+def drawParabel(a, b, c):
+    # 100 linearly spaced numbers
+    x = np.linspace(-10, 10, 100)
 
-# Raising an exception
-# --------------------
-x = "hello"
-# via assert: if condition returns True, then nothing happens:
-assert x == "hello"
-assert x == "hello", "You have entred not 'hello'"   # this will be passed to the Ctr of the exception
+    # the function
 
-# via raise: calls Ctr from an exception and string
-if not type(x) is int:
-    ## pass # NOP
-    raise TypeError("Only integers are allowed")
+    y = ((a * (x**2)) + (b*x)) + c
 
+    # setting the axes at the centre
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.spines['left'].set_position('center')
+    ax.spines['bottom'].set_position('zero')
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_ticks_position('left')
 
-# Except an exception
-# -------------------
+    # plot the function
+    plt.plot(x, y, 'r')
 
-# assert: if returns False, AssertionError is raised with text:
-try:
-    assert x == "hello", "all fine! Not really an error!"
-    assert x == "goodbye", "You have entred not 'hello'"
-    assert x == "BZU Uster", "You have entred not 'hello'"
-except AssertionError as error:
-    print("Error happend! ", error)
-    print("Error details: ", sys.exc_info())
-else:
-    print('else: executed if no error happens')
-finally:
-    print('finally: executed in any cases')
+    # show the plot
+    plt.show()
 
-# Chaining an exception
-# ---------------------
-# def func():
-#     raise IOError
+# ====
+# Main
+# ====
 
-# try:
-#     func()
-# except IOError as exc:
-#     raise RuntimeError('Failed to open database') from exc
+print(unterstreichen("Quadratische Gleichung"))
+# help("waltisLibrary.calcNullstellen")
+help(calcNullstellen)
 
-
-
-# User defined exceptions
-class Error(Exception):
-    """Base class for exceptions in this module."""
-    pass
-
-class InputError(Error):
-    """Exception raised for errors in the input.
-
-    Attributes:
-        expression -- input expression in which the error occurred
-        message -- explanation of the error
-    """
-
-    def __init__(self, expression, message):
-        self.expression = expression
-        self.message = message
-
-class TransitionError(Error):
-    """Raised when an operation attempts a state transition that's not
-    allowed.
-
-    Attributes:
-        previous -- state at beginning of transition
-        next -- attempted new state
-        message -- explanation of why the specific transition is not allowed
-    """
-
-    def __init__(self, previous, next, message):
-        self.previous = previous
-        self.next = next
-        self.message = message
-
-    def __str__(self):
-        return "TransitionError: " + self.previous + " " + str(self.next) + " '" + self.message + "'"
-
-
-def func():
-    raise TransitionError("Old value", 55, "Next value")
-
-if __name__ == '__main__':
-    try:
-        func()
-    except TransitionError as transError:
-        print(transError)
+a = readFloat("a=")
+b = readFloat("b=")
+c = readFloat("c=")
+print("0 = ax^2 + bx + c  ==> 0 = {a:1.2f}x^2 + ({b:1.2f})x + ({c:1.2f})   x12=?".format(a=a, b=b, c=c))
+loesungen = calcNullstellen(a, b, c)
+print(loesungen)
+drawParabel(a, b, c)
