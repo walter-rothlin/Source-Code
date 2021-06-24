@@ -2,19 +2,15 @@ from math import sqrt as wurzel
 import matplotlib.pyplot as plt
 import numpy as np
 
-#Inputs
-print('Mitternachtsformel:')
-print()
-a = str(input('a: '))
-b = str(input('b: '))
-c = str(input('c: '))
 
-def Mitternachtsformel():
-    #Berschnungen Mitternachtsformel
+# INFO mit Parameter arbeiten    NOT def Mitternachtsformel():
+def Mitternachtsformel(a, b, c):
+    # Berechnungen Mitternachtsformel
     diskriminante = b**2 - 4*a*c
-    #Schaut ob die diskriminante unter 0 ist
+
+    # Schaut ob die diskriminante unter 0 ist
     if diskriminante < 0:
-        print('Keine lösung:')
+        print('Keine Lösung:')
     else:
         x1 = round(float(-b + wurzel(diskriminante)) / (2*a), 2)
         x2 = round(float(-b - wurzel(diskriminante)) / (2*a), 2)
@@ -24,13 +20,14 @@ def Mitternachtsformel():
         print('x2:', x2)
         print()
 
-def graph():
+# INFO mit Parameter arbeiten # def graph():
+def graph(a, b, c):
     # 100 linearly spaced numbers
-    x = np.linspace(-5,5,100)
+    x = np.linspace(-5, 5, 100)
 
     # the function
 
-    y = ((a * (x**2) ) + (b*x)) + c
+    y = ((a * (x**2)) + (b*x)) + c
 
     # setting the axes at the centre
     fig = plt.figure()
@@ -43,21 +40,30 @@ def graph():
     ax.yaxis.set_ticks_position('left')
 
     # plot the function
-    plt.plot(x,y, 'r')
+    plt.plot(x, y, 'r')
 
     # show the plot
     plt.show()
 
-#Check if a or b or c is a str or not
-if a.isalpha() or b.isalpha() or c.isalpha() == True:
-    print('ERROR Bitte Gebe keine Buchstaben an.')
+# User Inputs
+print('Mitternachtsformel:')
+print()
+a1 = input('a: ')     # INFO: str(input('a: ')  str ist nicht nötig da input return value is String
+b1 = input('b: ')
+c1 = input('c: ')
+
+# Check if a or b or c is a str or not
+# INFO nicht optimal #  if a.isalpha() or b.isalpha() or c.isalpha():  # INFO nicht nötig == True:
+if a1.isdecimal() and b1.isdecimal() and c1.isdecimal():
+    # Konvertiert a,b,c zurück zu floats
+    a1 = float(a)
+    b1 = float(b)
+    c1 = float(c)
+    Mitternachtsformel(a=a1, b=b1, c=c1)  # INFO Function immer mit Parameter aufrufen!
+    graph(a, b, c)               # INFO Function immer mit Parameter aufrufen!
 else:
-    #Konvertiert a,b,c zurück zu floats
-    a = float(a)
-    b = float(b)
-    c = float(c)
-    Mitternachtsformel()
-    graph()
+    print('ERROR Bitte gebe keine Buchstaben an.')
+
 
 
 

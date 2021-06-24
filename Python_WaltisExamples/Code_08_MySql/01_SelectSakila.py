@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import mysql.connector
+import mysql.connector  # mysql-connector-python not default mässiger one
 
 print("Connecting to sakila....", end="", flush=True)
 mydb = mysql.connector.connect(

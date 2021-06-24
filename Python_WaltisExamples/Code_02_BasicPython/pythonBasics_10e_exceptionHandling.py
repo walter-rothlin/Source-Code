@@ -45,16 +45,14 @@ def drawParabel(a, b, c):
 # Main
 # ====
 
-# tba:
-#   help text ausgeben
-#   0 = ax^2 + ... ersetzen
-
 print(unterstreichen("Quadratische Gleichung"))
+# help("waltisLibrary.calcNullstellen")
+help(calcNullstellen)
 
 a = readFloat("a=")
 b = readFloat("b=")
 c = readFloat("c=")
-print("0 = ax^2 + bx + c  x12")
+print("0 = ax^2 + bx + c  ==> 0 = {a:1.2f}x^2 + ({b:1.2f})x + ({c:1.2f})   x12=?".format(a=a, b=b, c=c))
 loesungen = calcNullstellen(a, b, c)
 print(loesungen)
 drawParabel(a, b, c)
