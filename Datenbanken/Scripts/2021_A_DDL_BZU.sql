@@ -127,3 +127,56 @@ UPDATE `adressen` SET `orte_fk`=2 WHERE `adress_id`=4;
 UPDATE `adressen` SET `orte_fk`=(SELECT ort_id FROM orte WHERE name = 'Siebnen' AND plz = 8854) WHERE `ort`='Siebnen' AND plz=8854;
 UPDATE `adressen` SET `orte_fk`=(SELECT ort_id FROM orte WHERE name = 'Nuolen'  AND plz = 8855) WHERE `ort`='Nuolen'  AND plz=8855;
 UPDATE `adressen` SET `orte_fk`=(SELECT ort_id FROM orte WHERE name = 'Wangen'  AND plz = 8855) WHERE `ort`='Wangen'  AND plz=8855;
+
+-- Ueberprüft ob Migration richtig war
+SELECT
+     `adressen`.`vorname`,
+     `adressen`.`nachname`,
+     `adressen`.`strasse`,
+     `adressen`.`hausnummer`,
+     `adressen`.`plz`,
+     `adressen`.`ort`,
+     `orte`.`plz`,
+     `orte`.`name`
+FROM `adressen`
+JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`
+WHERE `adressen`.`plz` <> `orte`.`plz` or 
+      `adressen`.`ort` <> `orte`.`name`;
+      
+-- Redundante Felder (Attributte löschen)
+ALTER TABLE `adressen` 
+    DROP COLUMN `ort`,
+    DROP COLUMN `plz`;
+    
+-- After migration set FK to NOT NULL
+ALTER TABLE `adressen`
+     CHANGE COLUMN `orte_fk` `orte_fk` INT(10) UNSIGNED NOT NULL;
+     
+
+-- Abfrage via Join
+SELECT
+    `adressen`.`vorname`    AS `Vorname`,
+    `adressen`.`nachname`   AS `Nachname`,
+    `adressen`.`strasse`    AS `Strasse`,
+    `adressen`.`hausnummer` AS `Haus Nummer`,
+    `orte`.`plz`            AS `PLZ`,
+    `orte`.`name`           AS `Ort`
+FROM `adressen`
+JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`;
+
+-- -----------------------------------------------------------------------------------------------
+-- Create view for business (external) read access
+-- -----------------------------------------------------------------------------------------------
+DROP VIEW IF EXISTS adress_liste;
+CREATE VIEW adress_liste AS
+    SELECT
+         A.vorname    AS Vorname,
+         A.nachname   AS Nachname,
+         A.strasse    AS Strasse,
+         A.hausnummer AS Hausnummer,
+         O.plz        AS PLZ,
+         O.name       AS Ort
+    FROM adressen AS A
+    INNER JOIN orte AS O ON A.orte_fk = O.ort_id;
+    
+SELECT * FROM adress_liste;
