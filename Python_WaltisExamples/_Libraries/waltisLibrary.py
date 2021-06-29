@@ -107,8 +107,8 @@ def TEST_readln(verbal=False):
 
 
 def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
-                min=None, minErrorStr="Value must be greater or equal than {mi:1d}", max=None,
-                maxErrorStr="Value must less or equal than {ma:1d}"):
+                min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
+                max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
     error = True
     userInputZahl = 0
     while error:
@@ -150,6 +150,7 @@ def readInt_0(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mus
     userInputStr = ""
     while error:
         try:
+            # userInputInt = int(input(prompt))  # User Eingabe kann bei Fehlermeldung nicht reflektiert werden
             userInputStr = input(prompt)
             userInputInt = int(userInputStr)
             error = False
@@ -158,18 +159,29 @@ def readInt_0(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mus
             error = True
     return userInputInt
 
+def readInt_00(prompt="Input [Int]:", preError="Wrong Format:", postError="   Must be a INT!"):
+    error = True
+    userInputStr = ""
+    while error:
+        try:
+            userInputInt = int(input(prompt))
+            error = False
+        except ValueError:
+            print(preError + userInputStr + postError)
+            error = True
+    return userInputInt
 
 def readFloat_0(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg="   Must be a float!"):
     error = True
     while error:
         try:
-            aStr = input(prompt)
-            aValue = float(aStr)
+            userInputStr = input(prompt)
+            userInputFloat = float(userInputStr)
             error = False
         except ValueError:
-            print(errPreMsg + aStr + errPostMsg)
+            print(errPreMsg + userInputStr + errPostMsg)
             error = True
-    return aValue
+    return userInputFloat
 
 
 def readFloat_1(prompt="Input [Float]:",
@@ -195,7 +207,7 @@ def readFloat_1(prompt="Input [Float]:",
                     if userInputZahl > max:
                         print(maxErrorStr.format(ma=max))
                         error = True
-        except ValueError:
+        except Exception:
             print(preErrorStr + userInputStr + postErrorStr)
             error = True
     return userInputZahl
@@ -224,7 +236,7 @@ def readInt_1(prompt="Input [Int]:",
                     if userInputZahl > max:
                         print(maxErrorStr.format(ma=max))
                         error = True
-        except ValueError:
+        except Exception:
             print(preErrorStr + userInputStr + postErrorStr)
             error = True
     return userInputZahl
@@ -233,15 +245,17 @@ def readInt_1(prompt="Input [Int]:",
 def readFloat(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
               min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
               max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
-    return read_Number("float", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min,
-                       minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
+    return read_Number("float", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr,
+                       min=min, minErrorStr=minErrorStr,
+                       max=max, maxErrorStr=maxErrorStr)
 
 
 def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
             min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
             max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
-    return read_Number("int", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr, min=min,
-                       minErrorStr=minErrorStr, max=max, maxErrorStr=maxErrorStr)
+    return read_Number("int"  , prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr,
+                       min=min, minErrorStr=minErrorStr,
+                       max=max, maxErrorStr=maxErrorStr)
 
 
 # Pysikalische Umrechnungen
@@ -1322,6 +1336,11 @@ def TEST_hexStrToURLEncoded():
 # =================
 # https://www.geeksforgeeks.org/how-to-print-superscript-and-subscript-in-python/
 
+def TEST_get_sup_super():
+    EinsSub = get_sub('1')
+    print("get_sub('1'):", EinsSub)
+    print("get_sub('2'):", get_sub('2'))
+    print("get_super('1'):", get_super('1'))
 
 def get_sub(x):
     """
@@ -1996,6 +2015,26 @@ def TEST_CircleFct():
 
 # Quadratische Gleichungen
 # ========================
+def TEST_calcNulstellen():
+    print('1)', calcNullstellen_checked('2', '1', '-4', True))
+    try:
+        print('2)', calcNullstellen('2', '1', '-4'))
+    except TypeError:
+        print('2)', "Exception geworfen!!!")
+
+    print('3)', calcNullstellen_checked(2, 1, -4, True))
+    print('4)', calcNullstellen_checked('2', '1', '-4', True))
+
+    try:
+        print('5)', calcNullstellen_checked('2', '1', '-4', False))
+    except TypeError:
+        print('5)', "Exception geworfen wegen falschen Datentypen der Parameter!!!")
+
+    try:
+        print('6)', calcNullstellen_checked(2, 1))
+    except TypeError:
+        print('6)', "Exception geworfen wegen falschen Datentypen der Parameter!!!")
+
 def calcNullstellen(a, b, c):
     """
     Berechnung der Nullstellen einer quadratischen Funktion der Form:
@@ -2022,6 +2061,17 @@ def calcNullstellen(a, b, c):
         return {"Diskriminante": diskriminante, "Solutions": 2, "Solution Text": "Zwei Lösungen", "x1": x1, "x2": x2}
 
 
+def calcNullstellen_checked(a, b, c, ParameterCheck=True, ParamCheckErrorMsg="Falsche Parameter"):
+    if ParameterCheck:
+        try:
+            loesungen = calcNullstellen(a, b, c)
+            return loesungen
+        except TypeError:
+            return {"Solutions": -1, "Solution Text": ParamCheckErrorMsg}
+    else:
+        return calcNullstellen(a, b, c)
+
+
 # ===========================================================
 # MAIN
 # ===========================================================
@@ -2036,11 +2086,8 @@ if __name__ == '__main__':
         # TEST_hexStrToURLEncoded()
         # TEST_getTimestamp()
         # TEST_readln(verbal=True)
-        EinsSub = get_sub('1')
-        print("get_sub('1'):", EinsSub)
-        print("get_sub('2'):", get_sub('2'))
-
-        print("get_super('1'):", get_super('1'))
+        # TEST_get_sup_super()
+        # TEST_calcNulstellen()
 
     # Automated Tests
     # ===============

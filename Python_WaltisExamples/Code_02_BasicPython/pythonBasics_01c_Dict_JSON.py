@@ -31,7 +31,7 @@ json_string = """
 """
 
 data = json.loads(json_string)
-print("data from JSON-String:",data)
+print("data from JSON-String:", data)
 
 
 with open("data_file.json", "r") as read_file:

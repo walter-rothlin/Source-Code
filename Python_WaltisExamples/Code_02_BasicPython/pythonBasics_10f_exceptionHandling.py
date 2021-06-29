@@ -49,10 +49,17 @@ print(unterstreichen("Quadratische Gleichung"))
 # help("waltisLibrary.calcNullstellen")
 help(calcNullstellen)
 
+TEST_calcNulstellen()
+
+
+
 a = readFloat("a=")
 b = readFloat("b=")
 c = readFloat("c=")
 print("0 = ax\u00B2 + bx + c  ==> 0 = {a:1.2f}x\u00B2 + ({b:1.2f})x + ({c:1.2f})   x12=?".format(a=a, b=b, c=c))
 loesungen = calcNullstellen(a, b, c)
-print(loesungen)
+print("Loesung      : ", loesungen)
+print("Diskriminante: ", loesungen["Diskriminante"])
+print("Solution Text: ", loesungen['Solution Text'])
+print("Solutions    : ", loesungen['Solutions'])
 drawParabel(a, b, c)
