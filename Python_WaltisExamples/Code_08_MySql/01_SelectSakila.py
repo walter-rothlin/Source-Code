@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+# Install driver first: python -m pip install mysql-connector
 import mysql.connector  # mysql-connector-python not default mässiger one
 
 print("Connecting to sakila....", end="", flush=True)

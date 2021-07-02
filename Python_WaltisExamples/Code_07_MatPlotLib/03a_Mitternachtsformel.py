@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# INFO mit Parameter arbeiten    NOT def Mitternachtsformel():
 def Mitternachtsformel(a, b, c):
     # Berechnungen Mitternachtsformel
     diskriminante = b**2 - 4*a*c
@@ -17,7 +16,6 @@ def Mitternachtsformel(a, b, c):
         return [diskriminante, x1, x2]
 
 
-# INFO mit Parameter arbeiten # def graph():
 def graph(a, b, c):
     # 100 linearly spaced numbers
     x = np.linspace(-5, 5, 100)

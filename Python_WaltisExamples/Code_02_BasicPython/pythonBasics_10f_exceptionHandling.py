@@ -22,10 +22,9 @@ def drawParabel(a, b, c):
     x = np.linspace(-10, 10, 100)
 
     # the function
-
     y = ((a * (x**2)) + (b*x)) + c
 
-    # setting the axes at the centre
+    # setting the axes
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     ax.spines['left'].set_position('center')

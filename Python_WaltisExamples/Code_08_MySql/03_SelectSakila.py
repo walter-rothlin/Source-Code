@@ -39,9 +39,9 @@ stm_selectCities = """
     ORDER BY name;
 """
 
-mycursor = mydb.cursor()
-mycursor.execute(stm_selectCities)
-myresult = mycursor.fetchall()
+myCursor = mydb.cursor()
+myCursor.execute(stm_selectCities)
+myresult = myCursor.fetchall()
 
 print("Records found:", len(myresult), myresult)
 
