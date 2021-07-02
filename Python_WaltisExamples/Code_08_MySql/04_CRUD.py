@@ -5,6 +5,8 @@ import sys
 import mysql.connector
 
 # https://www.w3schools.com/python/python_mysql_getstarted.asp
+# https://pynative.com/python-mysql-execute-stored-procedure/   Calling stored procedure
+
 
 print("Connecting to DB....", end="", flush=True)
 mydb = mysql.connector.connect(
