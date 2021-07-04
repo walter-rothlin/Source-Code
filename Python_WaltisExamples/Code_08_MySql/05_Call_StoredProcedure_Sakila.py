@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------
 # Name: 04a_CRUD_Sakila.py
 #
-# Description: Connects to sakila and queries data
+# Description: Connects to sakila and calls stored procedures
 #
 # Autor: Walter Rothlin
 #
@@ -15,6 +15,7 @@ from waltisLibrary import *
 import mysql.connector as mc # mysql-connector-python not default mässiger one
 import sys
 
+# https://pynative.com/python-mysql-execute-stored-procedure/   Calling stored procedure
 
 def showTable():
     print("+------+--------------------------------+")

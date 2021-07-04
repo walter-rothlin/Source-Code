@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------
 # Name: 04_CRUD.py
 #
-# Description: Connects to sakila and queries data
+# Description: Connects to mysql and creates a new schema
 #
 # Autor: Walter Rothlin
 #
@@ -15,7 +15,6 @@ from waltisLibrary import *
 import mysql.connector
 
 # https://www.w3schools.com/python/python_mysql_getstarted.asp
-# https://pynative.com/python-mysql-execute-stored-procedure/   Calling stored procedure
 
 
 print("Connecting to DB....", end="", flush=True)

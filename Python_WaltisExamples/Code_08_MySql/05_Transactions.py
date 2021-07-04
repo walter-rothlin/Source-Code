@@ -3,7 +3,10 @@
 # ------------------------------------------------------------------
 # Name: 05_Transactions.py
 #
-# Description: Connects to sakila and queries data
+# Description: Connects to MyBank and demonstrates a transaction (Kontoübertrag)
+#
+#              Use the following sql-script to create MyBank schema:
+#              https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/Create_Bankkonto.sql
 #
 # Autor: Walter Rothlin
 #
