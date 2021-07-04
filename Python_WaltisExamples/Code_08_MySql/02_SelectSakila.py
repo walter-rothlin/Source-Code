@@ -1,5 +1,16 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name: 02_SelectSakila.py
+#
+# Description: Connects to sakila and queries data
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 26-May-2020   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 import sys
 import mysql.connector as mc # mysql-connector-python not default mässiger one
 

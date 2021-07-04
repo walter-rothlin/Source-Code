@@ -1,5 +1,15 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name: 05_Transactions.py
+#
+# Description: Connects to sakila and queries data
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 26-May-2020   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 from waltisLibrary import *
 import mysql.connector
 

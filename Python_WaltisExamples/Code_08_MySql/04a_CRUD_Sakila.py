@@ -1,5 +1,16 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name: 04a_CRUD_Sakila.py
+#
+# Description: Connects to sakila and queries data
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 26-May-2020   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 from waltisLibrary import *
 import mysql.connector as mc # mysql-connector-python not default mässiger one
 import sys
