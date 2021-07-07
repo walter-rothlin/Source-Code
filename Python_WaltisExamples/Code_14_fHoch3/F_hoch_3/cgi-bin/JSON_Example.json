@@ -1,0 +1,10 @@
+{
+  "Mandant":"8855_Wangen",
+  "Plaene":[
+      {"Plan_Name": "Plan_Div","Object_Count": 3},
+      {"Plan_Name": "Plan_EW","Object_Count": 3},
+      {"Plan_Name": "Plan_Einsatz","Object_Count": 3},
+      {"Plan_Name": "Plan_Hydranten","Object_Count": 140},
+      {"Plan_Name": "Plan_Wasser","Object_Count": 3},
+      {"Plan_Name": "Plan_Wasserbezug","Object_Count": 3}]
+}

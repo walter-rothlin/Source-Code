@@ -1,0 +1,6 @@
+Name|Farbe|Adresse|Kommentar|Bild_1|Bild_2|Type|IconScale|longitude (Länge)|latitude (Breite)|Leerspalte|BeschreibungText|Beschreibung|Icon|Koordinaten
+.|ff00ffff|Walter Rothlin-Meier&lt;BR/&gt;Etzelstr. 7&lt;BR/&gt;8855 &lt;U&gt;Wangen&lt;/U&gt;||||Ref|<scale>0.5</scale>|8.8963076|47.1867037||Walter Rothlin-Meier&lt;BR/&gt;Etzelstr. 7&lt;BR/&gt;8855 &lt;U&gt;Wangen&lt;/U&gt;|Walter Rothlin-Meier&lt;BR/&gt;Etzelstr. 7&lt;BR/&gt;8855 &lt;U&gt;Wangen&lt;/U&gt;|https://api3.geo.admin.ch/color/0,128,0/circle-24@2x.png|8.8963076,47.1867037
+.|ff00ffff|Ilag||||Ref|<scale>0.5</scale>|8.8780797|47.1950999||Ilag|Ilag|https://api3.geo.admin.ch/color/0,128,0/circle-24@2x.png|8.8780797,47.1950999
+.|ff00ffff|c||||Ref|<scale>0.25</scale>|8.89494617010727|47.1853998201072||c|c|https://api3.geo.admin.ch/color/0,128,0/circle-24@2x.png|8.89494617010727,47.1853998201072
+.|ff00ffff|Referenzpunkt (Fixiert)||||Ref|<scale>0.25</scale>|8.89564334184216|47.1912677667322||Referenzpunkt (Fixiert)|Referenzpunkt (Fixiert)|https://api3.geo.admin.ch/color/0,128,0/circle-24@2x.png|8.89564334184216,47.1912677667322
+.|ff00ffff|Referenzpunkt (Berechnet)||||Ref|<scale>0.25</scale>|8.89555167627809|47.1913843447073||Referenzpunkt (Berechnet)|Referenzpunkt (Berechnet)|https://api3.geo.admin.ch/color/0,128,0/circle-24@2x.png|8.89555167627809,47.1913843447073

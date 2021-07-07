@@ -1,0 +1,3 @@
+Name|Farbe|Adresse|Kommentar|Bild_1|Bild_2|Type|IconScale|longitude (Länge)|latitude (Breite)|Leerspalte|BeschreibungText|Beschreibung|Icon|Koordinaten
+ |ff00ffff|Referenzpunkt (Fixiert)||||Kgruen|<scale>0.25</scale>|8.89564334184216|47.1912677667322||Referenzpunkt (Fixiert)|Referenzpunkt (Fixiert)|https://api3.geo.admin.ch/color/0,128,0/circle-24@2x.png|8.89564334184216,47.1912677667322
+ |ff00ffff|Referenzpunkt (Berechnet)||||Kgruen|<scale>0.25</scale>|8.89555167627809|47.1913843447073||Referenzpunkt (Berechnet)|Referenzpunkt (Berechnet)|https://api3.geo.admin.ch/color/0,128,0/circle-24@2x.png|8.89555167627809,47.1913843447073

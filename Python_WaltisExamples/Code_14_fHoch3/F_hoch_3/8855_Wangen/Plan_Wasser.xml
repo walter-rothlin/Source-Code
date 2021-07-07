@@ -1,0 +1,101 @@
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+	<Document>
+		<name>Plan_Wasser</name>
+
+
+		
+		<Placemark id="marker_1000000000001">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name> </name>
+			<description> Schieber</description>
+			<Style>
+				<IconStyle>
+					
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/WasserSchieberBlau.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ffff0000</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.88739,47.19458</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000002">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name> </name>
+			<description> Schieber</description>
+			<Style>
+				<IconStyle>
+					
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/WasserSchieberRot.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ffff0000</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.8872,47.1947</coordinates>
+			</Point>
+		</Placemark>
+		
+	</Document>
+</kml>

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+   <Document>
+      <name>Zeichnung</name>
+      <Placemark id="marker_1616452840058">
+         <ExtendedData>
+            <Data name="htmlpopup">
+               <value>&lt;div id="KML||https://public.geo.admin.ch/pEj5BDDMTS2ZZDImNJbr6g#marker_1616452840058" class="htmlpopup-container"&gt;&lt;div class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung &amp;nbsp;&lt;/span&gt;(Unteriberg Schmalzgrubenstrasse)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Kontakt vor Aufstellen:
+Sepp Marty, 077 455 95 15&lt;/div&gt;&lt;/div&gt;</value>
+            </Data>
+            <Data name="layerId">
+               <value>KML||https://public.geo.admin.ch/pEj5BDDMTS2ZZDImNJbr6g</value>
+            </Data>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Unteriberg Schmalzgrubenstrasse</name>
+         <description>Kontakt vor Aufstellen:Sepp Marty, 077 455 95 15</description>
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.80537326867057,47.065836314925875</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616453103045">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Oberiberg Jessenenstrasse</name>
+         <description>Stall Ferdi Holdener,Kontakt vor Aufstellen: Wisi Reichmuth, 079 753 58 86</description>
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.781465613234348,47.04027470186823</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616453185967">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Oberiberg Moosstrasse</name>
+         <description>Kontakt vor Aufstellen: Wisi Reichmuth, 079 753 58 86</description>
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.786549421984244,47.04075128628249</coordinates>
+         </Point>
+      </Placemark>
+   </Document>
+</kml>

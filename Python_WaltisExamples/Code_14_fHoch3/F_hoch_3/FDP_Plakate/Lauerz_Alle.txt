@@ -1,0 +1,18 @@
+id|name|description|coordinates|
+marker_1616606515870|Lauerz, Bergstrasse|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Cornel Pfrunder 041 810 40 68|8.581793935336641,47.034012872574294|
+marker_1616606771738|Lauerz, Seestrasse|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Christian Nideröst 041 811 53 37|8.590434579623434,47.03100457692024|
+marker_1616606934598|Lauerz: Husmatt|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Gemeinde Lauerz 041 818 66 88|8.57845356410839,47.03564198351399|
+marker_1616607029586|Lauerz, Bauernhof|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Landgasthaus Bauernhof 041 811 58 18|8.57872859854972,47.03545753294326|
+
+id|name|description|coordinates|
+marker_1616606515870|Lauerz, Bergstrasse|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Cornel Pfrunder 041 810 40 68|8.581793935336641,47.034012872574294|
+marker_1616606771738|Lauerz, Seestrasse|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Christian Nideröst 041 811 53 37|8.590434579623434,47.03100457692024|
+marker_1616606934598|Lauerz: Husmatt|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Gemeinde Lauerz 041 818 66 88|8.57845356410839,47.03564198351399|
+
+
+id|name|description|coordinates|
+marker_1616606515870|Lauerz, Bergstrasse|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Cornel Pfrunder 041 810 40 68|8.581793935336641,47.034012872574294|
+marker_1616606771738|Lauerz, Seestrasse|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Christian Nideröst 041 811 53 37|8.590434579623434,47.03100457692024|
+
+id|name|description|coordinates|
+marker_1616606515870|Lauerz, Bergstrasse|Bewilligter Standort, Kontakt vor Aufstellen: Grundeigentümer, Cornel Pfrunder 041 810 40 68|8.581793935336641,47.034012872574294|

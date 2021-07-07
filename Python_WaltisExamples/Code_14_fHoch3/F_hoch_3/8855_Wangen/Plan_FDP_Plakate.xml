@@ -1,0 +1,791 @@
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+	<Document>
+		<name>Plan_FDP_Plakate</name>
+
+
+		
+		<Placemark id="marker_1000000000001">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Nuolen</name>
+			<description>Balz Vogt Nuolerstr. 34, 8855 Wangen, 055 440 14 40, info@vogt-sportpreise.ch&lt;BR/&gt;&lt;img src="http://www.fhoch3.peterliwiese.ch/8855_Wangen/img/FDP_Nuolen_Balz_1.jpg" style="max-height:200px;" /&gt;</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.88517723132118,47.1998823414699</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000002">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Wangen</name>
+			<description>Urs Kuettel Bahnhofstr. 51, 8855 Wangen, <BR/>055 440 74 23, 078 644 61 69, u.g.kuettel@hispeed.ch&lt;BR/&gt;&lt;img src="http://www.fhoch3.peterliwiese.ch/8855_Wangen/img/FDP_Kuettel_1.jpg" style="max-height:200px;" /&gt;</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff0000ff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.8978146765945,47.1860332136688</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000003">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Wangen</name>
+			<description>Urs Kuettel Bahnhofstr. 51, 8855 Wangen, <BR/>055 440 74 23, 078 644 61 69, u.g.kuettel@hispeed.ch</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.89794964823401,47.1850554057426</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000004">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Wangen</name>
+			<description>Urs Kuettel Bahnhofstr. 51, 8855 Wangen, <BR/>055 440 74 23, 078 644 61 69, u.g.kuettel@hispeed.ch</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.89767362589602,47.1852163408367</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000005">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Wangen</name>
+			<description>Mily Laeufer Adlerstr. 4, 8854 Siebnen, 055 440 35 53, 079 453 80 18, k.laeffer@sunrise.ch</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.90163791902891,47.1820892750477</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000006">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Siebnen</name>
+			<description>Andy Vogt Bahnhofstr. 51, 8854 Siebnen, 055 440 50 50, 079 344 50 50, info@vogt-architektur.ch</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.89763486920251,47.1805063775451</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000007">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Siebnen</name>
+			<description>Andy Vogt Bahnhofstr. 51, 8854 Siebnen, 055 440 50 50, 079 344 50 50, info@vogt-architektur.ch</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.89109015480382,47.1832718694187</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000008">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Wangen</name>
+			<description>Patrick Geu</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.88243949433469,47.1957460681527</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000009">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Wangen</name>
+			<description>Sepp Schnellmann</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.88128239119053,47.1919452785218</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000010">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Wangen</name>
+			<description>Walter Rickenbacher</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.88385095788253,47.1917619149018</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000011">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Nuolen</name>
+			<description>Walter Vogt Seestr. 76, 8855 Nuolen, 055 440 33 01, 079 427 83 74, wavogt1978@gmail.com</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.88896,47.20312</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000012">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Brunnen</name>
+			<description>Villa Maria Luzernerstrasse, 6440 Ingenbohl Brunnen</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.60767592993841,47.0002215780375</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000013">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Gersau</name>
+			<description>Villa Maria Seestrasse, 6442 Gersau</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.52909457722444,46.9907788910419</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000014">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Gersau</name>
+			<description>Minigolfanlage Seestrasse, 6442 Gersau</description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.52549010380645,46.9908342496819</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000015">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Gersau</name>
+			<description></description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.51673480912551,46.9941091075397</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000016">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Gersau</name>
+			<description></description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.51325721966742,46.9931252038871</coordinates>
+			</Point>
+		</Placemark>
+
+		
+		<Placemark id="marker_1000000000017">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>Gersau</name>
+			<description></description>
+			<Style>
+				<IconStyle>
+					<scale>0.5</scale>
+					<Icon>
+						<href>http://www.fhoch3.peterliwiese.ch/icons/FDP_Logo.png</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>ff00ffff</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>8.52567951947115,46.9975600867829</coordinates>
+			</Point>
+		</Placemark>
+		
+	</Document>
+</kml>

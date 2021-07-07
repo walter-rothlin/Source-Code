@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+   <Document>
+      <name>Zeichnung</name>
+      <Placemark id="marker_1616861039521">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Garage Chicherio, Kantonsstrasse 9, Bennau</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.726548108575956,47.15403485140661</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616861677677">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Skilift Schnabelsberg</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.738984783517687,47.14222794701832</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616861750853">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Kobiboden</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.747572164553699,47.14007401192246</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616861799645">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Birchli, Verzweigung Viadukt</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.770358610866841,47.12734911165192</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616861856436">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Schützenstand Bennau</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.725706232863088,47.14759818419854</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616861946052">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Bodenmattli 1, Willerzell</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.792145116019194,47.13216309777234</coordinates>
+         </Point>
+      </Placemark>
+      <Placemark id="marker_1616861997580">
+         <ExtendedData>
+            <Data name="type">
+               <value>marker</value>
+            </Data>
+         </ExtendedData>
+         <name>Euthalerstrasse 11, Euthal</name>
+         <description />
+         <Style>
+            <IconStyle>
+               <Icon>
+                  <href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</href>
+                  <gx:w>48</gx:w>
+                  <gx:h>48</gx:h>
+               </Icon>
+               <hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+            </IconStyle>
+            <LabelStyle>
+               <color>ff0000ff</color>
+            </LabelStyle>
+         </Style>
+         <Point>
+            <tessellate>1</tessellate>
+            <altitudeMode>clampToGround</altitudeMode>
+            <coordinates>8.809997653886633,47.097709097798955</coordinates>
+         </Point>
+      </Placemark>
+   </Document>
+</kml>

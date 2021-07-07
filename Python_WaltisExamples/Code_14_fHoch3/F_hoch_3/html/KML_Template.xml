@@ -1,0 +1,46 @@
+
+		
+		<Placemark id="{placemark_id}">
+			<ExtendedData>
+				<Data name="htmlpopup">
+					<value>&lt;div
+						id="KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w#marker_1578494727782"
+						class="htmlpopup-container"&gt;&lt;div
+						class="htmlpopup-header"&gt;&lt;span&gt;Zeichnung
+						&amp;nbsp;&lt;/span&gt;(Test Marke mit bild und
+						Link)&lt;/div&gt;&lt;div class="htmlpopup-content"&gt;Dies ist ein
+						Test&lt;a target="_blank" href="http://www.feuerwehr-wangen.ch"&gt;mit
+						Link&lt;/a&gt;&lt;img
+						src="http://www.rothlin.com/maps/img/100_Pic_1.jpg"
+						style="max-height:200px;"/&gt;&lt;/div&gt;&lt;/div&gt;</value>
+				</Data>
+				<Data name="layerId">
+					<value>KML||https://public.geo.admin.ch/A7LIWVfyT6ikZ-7-eBTX7w</value>
+				</Data>
+				<Data name="type">
+					<value>marker</value>
+				</Data>
+			</ExtendedData>
+			<name>{name}</name>
+			<description>{description}</description>
+			<Style>
+				<IconStyle>
+					{iconScale}
+					<Icon>
+						<href>{icon}</href>
+						<gx:w>48</gx:w>
+						<gx:h>48</gx:h>
+					</Icon>
+					<hotSpot x="24" y="4.799999999999997" xunits="pixels"
+						yunits="pixels" />
+				</IconStyle>
+				<LabelStyle>
+					<color>{lblColor}</color>
+				</LabelStyle>
+			</Style>
+			<Point>
+				<tessellate>1</tessellate>
+				<altitudeMode>clampToGround</altitudeMode>
+				<coordinates>{coordinates}</coordinates>
+			</Point>
+		</Placemark>

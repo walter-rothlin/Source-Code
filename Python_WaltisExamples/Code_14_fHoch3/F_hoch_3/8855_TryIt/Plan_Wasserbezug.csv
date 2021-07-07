@@ -1,0 +1,3 @@
+Name|Farbe|Adresse|Kommentar|Bild_1|Bild_2|Type|IconScale|longitude (Länge)|latitude (Breite)|Leerspalte|BeschreibungText|Beschreibung|Icon|Koordinaten
+A|ff00ffff|KIBAG AG, Kieswerk|Ab See|||Wasserbezug|<scale>0.5</scale>|8.8918|47.20575||KIBAG AG, Kieswerk Ab See|KIBAG AG, Kieswerk Ab See|https://api3.geo.admin.ch/color/0,255,0/marker-24@2x.png|8.8918,47.20575
+B|ff00ffff|Flugplatz Franzrueti|Ab See|||Wasserbezug|<scale>0.5</scale>|8.8641|47.20356||Flugplatz Franzrueti Ab See|Flugplatz Franzrueti Ab See|https://api3.geo.admin.ch/color/0,255,0/marker-24@2x.png|8.8641,47.20356
