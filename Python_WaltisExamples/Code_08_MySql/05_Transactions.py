@@ -55,7 +55,6 @@ userName = "root"
 password = "admin"
 
 try:
-
     print(f"Connecting to '{dbSchema:s}' with user '{userName:s}'....", end="", flush=True)
     # https://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
     conn = mysql.connector.connect(
