@@ -18,7 +18,7 @@
 import mysql.connector
 
 print("Connecting to BZU....", end="", flush=True)
-mydb = mysql.connector.connect(
+conn = mysql.connector.connect(
   host     = "localhost",
   user     = "root",
   passwd   = "admin",
@@ -26,7 +26,8 @@ mydb = mysql.connector.connect(
 )
 print("completed!")
 
-mycursor = mydb.cursor()
+conn.autocommit = False
+mycursor = conn.cursor()
 
 doSplittingStrasse = True
 print("\nMigrating Data: splitting 'strasse' into 'strasse' and 'hausnummer'")
@@ -59,7 +60,7 @@ if doSplittingStrasse:
                           WHERE adress_id = """ + str(aRec[0])
         print(updateSQL)
         mycursor.execute(updateSQL)
-    mydb.commit()
+    conn.commit()
 else:
     print("This step is disabled!\n")
 
@@ -79,7 +80,7 @@ if doExportOrte:
     """
     print(stm_exportOrte)
     mycursor.execute(stm_exportOrte)
-    mydb.commit()
+    conn.commit()
 else:
     print("This step is disabled!\n")
 
@@ -104,7 +105,7 @@ if doOrteReference:
         updateSQL = f"  UPDATE adressen SET orte_fk=(SELECT ort_id FROM orte WHERE name = '{ortStr:s}' AND plz = {plzStr:s}) WHERE ort='{ortStr:s}' AND plz={plzStr:s}"
         print(updateSQL)
         mycursor.execute(updateSQL)
-    mydb.commit()
+    conn.commit()
 else:
     print("This step is disabled!\n")
 
@@ -140,7 +141,7 @@ if doVerifyData:
        """
        print(stm_removeRedundantData)
        mycursor.execute(stm_removeRedundantData)
-       mydb.commit()
+       conn.commit()
 
        print("\nSet FK to NOT NULL")
        stm_addNN_constraint = """
@@ -150,7 +151,7 @@ if doVerifyData:
        """
        print(stm_addNN_constraint)
        mycursor.execute(stm_addNN_constraint)
-       mydb.commit()
+       conn.commit()
 
        stm_joinAdressen = """
            SELECT
