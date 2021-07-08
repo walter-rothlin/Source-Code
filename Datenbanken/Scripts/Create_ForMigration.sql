@@ -45,6 +45,10 @@ INSERT INTO `adressen` (`vorname`, `nachname`, `strasse`, `plz`, `ort`)
 -- Tabelle anpassen
 ALTER TABLE `adressen` 
     ADD COLUMN `hausnummer` VARCHAR(10) NULL AFTER `strasse`;
+    
+-- Datensätze mutieren (Nicht hardcodiert, sondern via Python-Script
+-- UPDATE `adressen` SET `strasse`='Peterliwiese',   `hausnummer`='33'  WHERE `adress_id`=1;
+
 
 -- -----------------------------------------------------------------------------------------------
 -- Weiter normalisieren (Orte in neue Tabelle auslagern)
@@ -73,3 +77,15 @@ ALTER TABLE `adressen`
      ON DELETE RESTRICT   -- ON DELETE NO ACTION
      ON UPDATE CASCADE;   -- ON UPDATE NO ACTION
 
+-- Orte auslagern
+-- --------------
+
+-- Orte einfüllen, manually
+-- INSERT INTO `orte` (`ort_id`, `plz`, `name`) VALUES (1, 8854, 'Siebnen');
+
+-- FK-Setzen
+-- UPDATE `adressen` SET `orte_fk`=(SELECT ort_id FROM orte WHERE name = 'Siebnen' AND plz = 8854) WHERE `ort`='Siebnen' AND plz=8854;
+
+
+-- Ueberprüft ob Migration richtig war
+-- Redundante Felder (Attributte löschen)

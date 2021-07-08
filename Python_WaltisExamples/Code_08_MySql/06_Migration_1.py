@@ -52,7 +52,11 @@ if doSplittingStrasse:
         strasseStr = " ".join(strasseListe[:-1])
         hausnummer = strasseListe[-1]
 
-        updateSQL = "   UPDATE adressen SET strasse='" + strasseStr + "', hausnummer='" + hausnummer + "' WHERE adress_id = " + str(aRec[0])
+        updateSQL = """   
+                          UPDATE adressen SET 
+                                 strasse='""" + strasseStr + """', 
+                                 hausnummer='""" + hausnummer + """' 
+                          WHERE adress_id = """ + str(aRec[0])
         print(updateSQL)
         mycursor.execute(updateSQL)
     mydb.commit()
@@ -126,6 +130,8 @@ if doVerifyData:
     myresult = mycursor.fetchall()
     if len(myresult) == 0:
        print("     all fine!!!!!!")
+
+       print("\nRemove redundant columns")
        stm_removeRedundantData = """
             -- Redundante Felder (Attributte löschen)
             ALTER TABLE `adressen` 
@@ -136,6 +142,7 @@ if doVerifyData:
        mycursor.execute(stm_removeRedundantData)
        mydb.commit()
 
+       print("\nSet FK to NOT NULL")
        stm_addNN_constraint = """
             -- After migration set FK to NOT NULL
             ALTER TABLE `adressen`
