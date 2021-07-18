@@ -1,0 +1,7 @@
+Montag:Einkaufen
+Dienstag:Zahnarzt
+Mittwoch:Blumen gießen
+Donnerstag:Noch kein Termin
+Freitag:Müll rausbringen
+Samstag:Grill reinigen
+Sonntag:Ausschlafen

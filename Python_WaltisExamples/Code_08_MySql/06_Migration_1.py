@@ -22,7 +22,8 @@ conn = mysql.connector.connect(
   host     = "localhost",
   user     = "root",
   passwd   = "admin",
-  database = "BZU"
+  database = "BZU",
+  auth_plugin = 'mysql_native_password'
 )
 print("completed!")
 

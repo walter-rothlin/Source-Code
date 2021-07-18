@@ -1,0 +1,1 @@
+print("__init__.py des regulaeren Pakets Crypt wurde aufgerufen")

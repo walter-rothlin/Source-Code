@@ -16,13 +16,13 @@ import mysql.connector  # mysql-connector-python not default mässiger one
 
 print("Connecting to sakila....", end="", flush=True)
 mydb = mysql.connector.connect(
-  host     = "localhost",
-  user     = "root",
-  passwd   = "admin",
-  database = "sakila"
+  host        = "localhost",
+  user        = "root",
+  passwd      = "admin",
+  database    = "sakila",
+  auth_plugin = 'mysql_native_password'
 )
 print("completed!")
-stm_selectCities = "SELECT * FROM city"
 
 stm_selectCities = """
     SELECT
