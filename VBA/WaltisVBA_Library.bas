@@ -205,11 +205,13 @@ Attribute VB_Name = "WaltisVBA_Library"
 ' 05-Jan-2021    V1.128 Walter Rothlin      Added convert_AsciiToUnicode
 ' 08-Feb-2021    V1.129 Walter Rothlin      Added Moodle Questions generator
 ' 08-Feb-2021    V1.130 Walter Rothlin      Added Bruch functions
+' 14_Jun-2021    V1.131 Walter Rothlin      Changed signedFigure
+'                                                   roundDoubleAsString
 ' END-----------------------------------------------------------------------
 
 Dim PrimMaxColums
 
-Public Const Version_WaltisVBA_Library As String = "V1.129"
+Public Const Version_WaltisVBA_Library As String = "V1.131"
 
 Public Const Pi As Double = 3.14159265358979
 Public Const e  As Double = 2.71828182845905
@@ -2542,7 +2544,7 @@ Sub regExBeispiel()
     Set objMatch = Nothing
 End Sub
 
-Public Function roundDoubleAsString(ByVal wert As Double, ByVal nachkommaStellen As Integer, Optional ByVal retStrIfZero As String = "EMPTY") As String
+Public Function roundDoubleAsString(ByVal wert As Double, ByVal nachkommaStellen As Integer, Optional ByVal retStrIfZero As String = "0") As String
     Dim roundedVal As Double
     Dim roundedValStr As String
     Dim decTrenner As String
@@ -2575,8 +2577,8 @@ Public Function roundDoubleAsString(ByVal wert As Double, ByVal nachkommaStellen
         End If
         
     End If
-    If (roundedValStr = 0) And (retStrIfZero = "EMPTY") Then
-        roundDoubleAsString = ""
+    If (roundedValStr = 0) Then
+        roundDoubleAsString = retStrIfZero
     Else
         roundDoubleAsString = roundedValStr
     End If
@@ -11771,5 +11773,7 @@ Public Function decodeHammingBits(ByVal transmittedBits As String, Optional ByVa
       dataBits = Mid(transmittedBits, 1, 1) & Mid(transmittedBits, 2, 1) & Mid(transmittedBits, 3, 1) & Mid(transmittedBits, 4, 1) & Mid(transmittedBits, 6, 1) & Mid(transmittedBits, 7, 1) & Mid(transmittedBits, 8, 1) & Mid(transmittedBits, 10, 1)
       decodeHammingBits = Chr(BinToDec(dataBits))
 End Function
+
+
 
 
