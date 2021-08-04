@@ -1,0 +1,1002 @@
+<DATA>
+
+	<ROW>
+		<Vorname>PENELOPE</Vorname>
+		<Nachname>GUINESS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>NICK</Vorname>
+		<Nachname>WAHLBERG</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ED</Vorname>
+		<Nachname>CHASE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JENNIFER</Vorname>
+		<Nachname>DAVIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JOHNNY</Vorname>
+		<Nachname>LOLLOBRIGIDA</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BETTE</Vorname>
+		<Nachname>NICHOLSON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GRACE</Vorname>
+		<Nachname>MOSTEL</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MATTHEW</Vorname>
+		<Nachname>JOHANSSON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JOE</Vorname>
+		<Nachname>SWANK</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHRISTIAN</Vorname>
+		<Nachname>GABLE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ZERO</Vorname>
+		<Nachname>CAGE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KARL</Vorname>
+		<Nachname>BERRY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>UMA</Vorname>
+		<Nachname>WOOD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>VIVIEN</Vorname>
+		<Nachname>BERGEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CUBA</Vorname>
+		<Nachname>OLIVIER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>FRED</Vorname>
+		<Nachname>COSTNER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>HELEN</Vorname>
+		<Nachname>VOIGHT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>DAN</Vorname>
+		<Nachname>TORN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BOB</Vorname>
+		<Nachname>FAWCETT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>LUCILLE</Vorname>
+		<Nachname>TRACY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KIRSTEN</Vorname>
+		<Nachname>PALTROW</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ELVIS</Vorname>
+		<Nachname>MARX</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SANDRA</Vorname>
+		<Nachname>KILMER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CAMERON</Vorname>
+		<Nachname>STREEP</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KEVIN</Vorname>
+		<Nachname>BLOOM</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RIP</Vorname>
+		<Nachname>CRAWFORD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JULIA</Vorname>
+		<Nachname>MCQUEEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WOODY</Vorname>
+		<Nachname>HOFFMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ALEC</Vorname>
+		<Nachname>WAYNE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SANDRA</Vorname>
+		<Nachname>PECK</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SISSY</Vorname>
+		<Nachname>SOBIESKI</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>TIM</Vorname>
+		<Nachname>HACKMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MILLA</Vorname>
+		<Nachname>PECK</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>AUDREY</Vorname>
+		<Nachname>OLIVIER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JUDY</Vorname>
+		<Nachname>DEAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BURT</Vorname>
+		<Nachname>DUKAKIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>VAL</Vorname>
+		<Nachname>BOLGER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>TOM</Vorname>
+		<Nachname>MCKELLEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GOLDIE</Vorname>
+		<Nachname>BRODY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JOHNNY</Vorname>
+		<Nachname>CAGE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JODIE</Vorname>
+		<Nachname>DEGENERES</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>TOM</Vorname>
+		<Nachname>MIRANDA</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KIRK</Vorname>
+		<Nachname>JOVOVICH</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>NICK</Vorname>
+		<Nachname>STALLONE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>REESE</Vorname>
+		<Nachname>KILMER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>PARKER</Vorname>
+		<Nachname>GOLDBERG</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JULIA</Vorname>
+		<Nachname>BARRYMORE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>FRANCES</Vorname>
+		<Nachname>DAY-LEWIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ANNE</Vorname>
+		<Nachname>CRONYN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>NATALIE</Vorname>
+		<Nachname>HOPKINS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GARY</Vorname>
+		<Nachname>PHOENIX</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CARMEN</Vorname>
+		<Nachname>HUNT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MENA</Vorname>
+		<Nachname>TEMPLE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>PENELOPE</Vorname>
+		<Nachname>PINKETT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>FAY</Vorname>
+		<Nachname>KILMER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>DAN</Vorname>
+		<Nachname>HARRIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JUDE</Vorname>
+		<Nachname>CRUISE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHRISTIAN</Vorname>
+		<Nachname>AKROYD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>DUSTIN</Vorname>
+		<Nachname>TAUTOU</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>HENRY</Vorname>
+		<Nachname>BERRY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHRISTIAN</Vorname>
+		<Nachname>NEESON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JAYNE</Vorname>
+		<Nachname>NEESON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CAMERON</Vorname>
+		<Nachname>WRAY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RAY</Vorname>
+		<Nachname>JOHANSSON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ANGELA</Vorname>
+		<Nachname>HUDSON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MARY</Vorname>
+		<Nachname>TANDY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JESSICA</Vorname>
+		<Nachname>BAILEY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RIP</Vorname>
+		<Nachname>WINSLET</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KENNETH</Vorname>
+		<Nachname>PALTROW</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MICHELLE</Vorname>
+		<Nachname>MCCONAUGHEY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ADAM</Vorname>
+		<Nachname>GRANT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SEAN</Vorname>
+		<Nachname>WILLIAMS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GARY</Vorname>
+		<Nachname>PENN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MILLA</Vorname>
+		<Nachname>KEITEL</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BURT</Vorname>
+		<Nachname>POSEY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ANGELINA</Vorname>
+		<Nachname>ASTAIRE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CARY</Vorname>
+		<Nachname>MCCONAUGHEY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GROUCHO</Vorname>
+		<Nachname>SINATRA</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MAE</Vorname>
+		<Nachname>HOFFMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RALPH</Vorname>
+		<Nachname>CRUZ</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SCARLETT</Vorname>
+		<Nachname>DAMON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WOODY</Vorname>
+		<Nachname>JOLIE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BEN</Vorname>
+		<Nachname>WILLIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JAMES</Vorname>
+		<Nachname>PITT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MINNIE</Vorname>
+		<Nachname>ZELLWEGER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GREG</Vorname>
+		<Nachname>CHAPLIN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SPENCER</Vorname>
+		<Nachname>PECK</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KENNETH</Vorname>
+		<Nachname>PESCI</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHARLIZE</Vorname>
+		<Nachname>DENCH</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SEAN</Vorname>
+		<Nachname>GUINESS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHRISTOPHER</Vorname>
+		<Nachname>BERRY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KIRSTEN</Vorname>
+		<Nachname>AKROYD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ELLEN</Vorname>
+		<Nachname>PRESLEY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KENNETH</Vorname>
+		<Nachname>TORN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>DARYL</Vorname>
+		<Nachname>WAHLBERG</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GENE</Vorname>
+		<Nachname>WILLIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MEG</Vorname>
+		<Nachname>HAWKE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHRIS</Vorname>
+		<Nachname>BRIDGES</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JIM</Vorname>
+		<Nachname>MOSTEL</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SPENCER</Vorname>
+		<Nachname>DEPP</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SUSAN</Vorname>
+		<Nachname>DAVIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WALTER</Vorname>
+		<Nachname>TORN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MATTHEW</Vorname>
+		<Nachname>LEIGH</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>PENELOPE</Vorname>
+		<Nachname>CRONYN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SIDNEY</Vorname>
+		<Nachname>CROWE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GROUCHO</Vorname>
+		<Nachname>DUNST</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GINA</Vorname>
+		<Nachname>DEGENERES</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WARREN</Vorname>
+		<Nachname>NOLTE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SYLVESTER</Vorname>
+		<Nachname>DERN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SUSAN</Vorname>
+		<Nachname>DAVIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CAMERON</Vorname>
+		<Nachname>ZELLWEGER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RUSSELL</Vorname>
+		<Nachname>BACALL</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MORGAN</Vorname>
+		<Nachname>HOPKINS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MORGAN</Vorname>
+		<Nachname>MCDORMAND</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>HARRISON</Vorname>
+		<Nachname>BALE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>DAN</Vorname>
+		<Nachname>STREEP</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RENEE</Vorname>
+		<Nachname>TRACY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CUBA</Vorname>
+		<Nachname>ALLEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WARREN</Vorname>
+		<Nachname>JACKMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>PENELOPE</Vorname>
+		<Nachname>MONROE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>LIZA</Vorname>
+		<Nachname>BERGMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SALMA</Vorname>
+		<Nachname>NOLTE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JULIANNE</Vorname>
+		<Nachname>DENCH</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>SCARLETT</Vorname>
+		<Nachname>BENING</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ALBERT</Vorname>
+		<Nachname>NOLTE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>FRANCES</Vorname>
+		<Nachname>TOMEI</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KEVIN</Vorname>
+		<Nachname>GARLAND</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CATE</Vorname>
+		<Nachname>MCQUEEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>DARYL</Vorname>
+		<Nachname>CRAWFORD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GRETA</Vorname>
+		<Nachname>KEITEL</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JANE</Vorname>
+		<Nachname>JACKMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ADAM</Vorname>
+		<Nachname>HOPPER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RICHARD</Vorname>
+		<Nachname>PENN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GENE</Vorname>
+		<Nachname>HOPKINS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RITA</Vorname>
+		<Nachname>REYNOLDS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ED</Vorname>
+		<Nachname>MANSFIELD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MORGAN</Vorname>
+		<Nachname>WILLIAMS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>LUCILLE</Vorname>
+		<Nachname>DEE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>EWAN</Vorname>
+		<Nachname>GOODING</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WHOOPI</Vorname>
+		<Nachname>HURT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CATE</Vorname>
+		<Nachname>HARRIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JADA</Vorname>
+		<Nachname>RYDER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RIVER</Vorname>
+		<Nachname>DEAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ANGELA</Vorname>
+		<Nachname>WITHERSPOON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KIM</Vorname>
+		<Nachname>ALLEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ALBERT</Vorname>
+		<Nachname>JOHANSSON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>FAY</Vorname>
+		<Nachname>WINSLET</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>EMILY</Vorname>
+		<Nachname>DEE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RUSSELL</Vorname>
+		<Nachname>TEMPLE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JAYNE</Vorname>
+		<Nachname>NOLTE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GEOFFREY</Vorname>
+		<Nachname>HESTON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BEN</Vorname>
+		<Nachname>HARRIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MINNIE</Vorname>
+		<Nachname>KILMER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MERYL</Vorname>
+		<Nachname>GIBSON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>IAN</Vorname>
+		<Nachname>TANDY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>FAY</Vorname>
+		<Nachname>WOOD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GRETA</Vorname>
+		<Nachname>MALDEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>VIVIEN</Vorname>
+		<Nachname>BASINGER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>LAURA</Vorname>
+		<Nachname>BRODY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHRIS</Vorname>
+		<Nachname>DEPP</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>HARVEY</Vorname>
+		<Nachname>HOPE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>OPRAH</Vorname>
+		<Nachname>KILMER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CHRISTOPHER</Vorname>
+		<Nachname>WEST</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>HUMPHREY</Vorname>
+		<Nachname>WILLIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>AL</Vorname>
+		<Nachname>GARLAND</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>NICK</Vorname>
+		<Nachname>DEGENERES</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>LAURENCE</Vorname>
+		<Nachname>BULLOCK</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WILL</Vorname>
+		<Nachname>WILSON</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>KENNETH</Vorname>
+		<Nachname>HOFFMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MENA</Vorname>
+		<Nachname>HOPPER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>OLYMPIA</Vorname>
+		<Nachname>PFEIFFER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GROUCHO</Vorname>
+		<Nachname>WILLIAMS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ALAN</Vorname>
+		<Nachname>DREYFUSS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MICHAEL</Vorname>
+		<Nachname>BENING</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>WILLIAM</Vorname>
+		<Nachname>HACKMAN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JON</Vorname>
+		<Nachname>CHASE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GENE</Vorname>
+		<Nachname>MCKELLEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>LISA</Vorname>
+		<Nachname>MONROE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ED</Vorname>
+		<Nachname>GUINESS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JEFF</Vorname>
+		<Nachname>SILVERSTONE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MATTHEW</Vorname>
+		<Nachname>CARREY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>DEBBIE</Vorname>
+		<Nachname>AKROYD</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RUSSELL</Vorname>
+		<Nachname>CLOSE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>HUMPHREY</Vorname>
+		<Nachname>GARLAND</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MICHAEL</Vorname>
+		<Nachname>BOLGER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JULIA</Vorname>
+		<Nachname>ZELLWEGER</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>RENEE</Vorname>
+		<Nachname>BALL</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>ROCK</Vorname>
+		<Nachname>DUKAKIS</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>CUBA</Vorname>
+		<Nachname>BIRCH</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>AUDREY</Vorname>
+		<Nachname>BAILEY</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>GREGORY</Vorname>
+		<Nachname>GOODING</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JOHN</Vorname>
+		<Nachname>SUVARI</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BURT</Vorname>
+		<Nachname>TEMPLE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MERYL</Vorname>
+		<Nachname>ALLEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JAYNE</Vorname>
+		<Nachname>SILVERSTONE</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>BELA</Vorname>
+		<Nachname>WALKEN</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>REESE</Vorname>
+		<Nachname>WEST</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>MARY</Vorname>
+		<Nachname>KEITEL</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>JULIA</Vorname>
+		<Nachname>FAWCETT</Nachname>
+	</ROW>
+
+	<ROW>
+		<Vorname>THORA</Vorname>
+		<Nachname>TEMPLE</Nachname>
+	</ROW>
+</DATA>

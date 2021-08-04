@@ -1,0 +1,31 @@
+Hash	Geschlecht	Nachname	Vorname	Strasse	PLZ	Ort	Land	EmailP	EmailG	TEL_P	Beitrag bezahlt	Bezahlt	Nicht Bezahlt	Mahnung	Domain	Rechnungsbetrag
+94	Familie	Hollenstein	Ruth	Buobental 3	8853	Lachen	CH	ruth.hollenstein@gmail.ch	ruth.hollenstein@bzu.ch	055 442 87 42	Ja	1	0		gmail.ch	13
+93	Familie	Hollenstein	Ruedi	Churerestrasse 14	8853	Lachen	CH	ruedi.hollenstein@gmail.ch	ruedi.hollenstein@bzu.ch	055 442 07 60	Nein	0	1	ruedi.hollenstein@gmail.ch	gmail.ch	1784
+97	Frau	Janser	Maria	Churerstrasse 101	8853	Lachen	CH		maria.janser@bzu.ch	055 280 30 22	Nein	0	1	maria.janser@bzu.ch	Keine	134.56
+98	Frau	Juengling	Claudia	Churerstrasse 21	53175	Bonn	DE	ruedi.juengling@hotmail.com	claudia.juengling@bzu.ch	079 456 3421	Ja	1	0		hotmail.com	134,56
+100	Herr	King	Walter	Churerstrasse 37	78713	Schramberg 	DE		walter.king@bzu.ch	0049 74 22  52 597	Nein	0	1	walter.king@bzu.ch	Keine	-20
+102	Frau	Koch	Romana	Churerstrasse 64	8808	Pfaeffikon	CH	roman.koch@gmail.ch	romana.koch@bzu.ch	055 420 20 53	Ja	1	0		gmail.ch	-20.34
+105	Frau	Koller	Rasi	Dorfplatz 9	8854	Siebnen	CH	rolf.koller@gmail.ch	rasi.koller@bzu.ch	055 440 39 56	Ja	1	0		gmail.ch	1784
+106	Frau	Koepfli	Melanie	Dorfstrasse 40	8045	Zuerich	CH		melanie.koepfli@bzu.ch	044 463 37 53	Nein	0	1	melanie.koepfli@bzu.ch	Keine	1784
+109	Herr	Krieg	Hans	Ebenau 4	8853	Lachen	CH	roes.krieg@gmail.ch	hans.krieg@bzu.ch	055 442 80 32	Nein	0	1	roes.krieg@gmail.ch	gmail.ch	134.56
+110	Frau	Krieg	Rita	Eichwisstrasse 31	8853	Lachen	CH	rita.krieg@gmail.ch	rita.krieg@bzu.ch	055 442 80 32	Nein	0	1	rita.krieg@gmail.ch	gmail.ch	134,56
+112	Familie	Krieg	Roberta	Eisenburgstrasse 40	8853	Lachen	CH		roberta.krieg@bzu.ch	055 442 80 32	Ja	1	0		Keine	134,56
+113	Frau	Krieger	Ricarda	Engelhofstrasse 19	8853	Lachen	CH	richi.krieger@gmail.ch	ricarda.krieger@bzu.ch	055 442 91 70	Nein	0	1	richi.krieger@gmail.ch	gmail.ch	344,56
+116	Herr	Kussberger	Richard	Engelplatz 12	78713	Schramberg 	DE		richard.kussberger@bzu.ch	0049  7422 3872	Ja	1	0		Keine	1561,56
+117	Frau	Kuettel	Rita	Etzelstrasse 1	8832	Wollerau	CH	riccardo.kuettel@gmail.ch	rita.kuettel@bzu.ch	044 784 10 73	Ja	1	0		gmail.ch	134,56
+118	Frau	Laib	Rene	Etzelstrasse 80	8855	Nuolen	CH	rene.laib@gmail.ch	rene.laib@bzu.ch	055 440 32 92	Ja	1	0		gmail.ch	134.56
+120	Frau	Landolt	Margrith	Etzelstrasse 80	8807	Freienbach	CH	rene.landolt@hotmail.com	margrith.landolt@bzu.ch	055 410 19 49	Ja	1	0		hotmail.com	13
+121	Herr	Lang	Reinhard	Eulenweg 24	8853	Lachen	CH		reinhard.lang@bzu.ch	055 442 91 70	Ja	1	0		Keine	1784
+122	Frau	Laeubli	Raphaela	Feldmoostrasse 5	8808	Pf„ffikon	CH	raphael.laeubli@gmail.ch	raphaela.laeubli@bzu.ch	055 410 31 38	Nein	0	1	raphael.laeubli@gmail.ch	gmail.ch	1639
+126	Frau	Lurati	Ramona	Feldstrasse 11	8634	Hombrechtikon	CH	ramona.lurati@gmail.ch	ramona.lurati@bzu.ch	055 534 09 67	Ja	1	0		gmail.ch	1494
+129	Frau	Maechler	Ramona	Feldstrasse 11	8853	Lachen	CH		ramona.maechler@bzu.ch	055 442 17 58	Ja	1	0		Keine	1349
+131	Frau	Maechler	Luisa	Feldstrasse 16	8854	Siebnen	CH		luisa.maechler@bzu.ch	055 440 23 74	Ja	1	0		Keine	13
+128	Frau	Maechler-Diethelm	Paula	Feldstrasse 16	8863	Buttikon	CH		paula.maechler-diethelm@bzu.ch	055 440 33 70	Nein	0	1	paula.maechler-diethelm@bzu.ch	Keine	1784
+132	Frau	Maeder	Pia	Feldstrasse 17c	8807	Freienbach	CH	pia.maeder@gmail.ch	pia.maeder@bzu.ch	055 410 21 40	Nein	0	1	pia.maeder@gmail.ch	gmail.ch	1784
+133	Herr	Mannhart	Pius	Feldstrasse 19	8708	M„nnedorf	CH	pia.mannhart@gmail.ch	pius.mannhart@bzu.ch	044 790 22 00	Ja	1	0		gmail.ch	134.56
+134	Familie	Mannhart	Mia	Felsenstrasse 20	8708	Maennedorf	CH	pia.mannhart@novatrend.ch	mia.mannhart@bzu.ch	044 790 22 00	Ja	1	0		novatrend.ch	167.56
+135	Herr	Marty	Philippe	Fluelastrasse 31a	8853	Lachen	CH		philippe.marty@bzu.ch	055 442 16 29	Ja	1	0		Keine	200.56
+137	Herr	Marty	Peter	Foehnloch 5	8852	Altendorf	CH	peter.marty@gmail.ch	peter.marty@bzu.ch	055 442 30 14	Ja	1	0		gmail.ch	233.56
+												17	10			
+												Bezahlt	Nicht Bezahlt			
+												17	10			

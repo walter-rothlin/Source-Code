@@ -1,0 +1,7 @@
+ReferenzNr|Name|Vorname|Strasse|PLZ|Wohnort|Anzahl|Datum|email|Natel|Lieferung|Bezahlung|Rechnungsbetrag|Kommentar|Bezahlt|Geliefert|TimeStamp|ModBy|TicketNummern|DavonGratis|Beleg|Plaetze|EinlassGewaehrt|QuittungGesendet|PlatzZuteilungGesendet|
+20190002|Ritschbörgschränzer|Elmer Andrea|Bahhofstr. 23|8864|Reichenburg|20|Freitag  20-September-2019|andrea.elmer8864@gmail.com|079 609 08 50|Abholen|Barzahlung|900.00||Nein|Nein|20180921183503|Besteller:Elmer Andrea_Ritschbörgschränzer
+20190003|Schaffhauser|Christina|Galtbrunnen 2b|8855|Wangen|22|Freitag  20-September-2019|christina@schaffhuser.ch|079 817 36 16|Abholen|Barzahlung|990.00||Nein|Nein|20180921185324|Walter_Rothlin|
+20190004|Hintermann|Peter|St. Gallerstr. 66|8853|Lachen|8|Freitag  20-September-2019|hinti@obersee.ch|079 639 74 19|Abholen|Vorauszahlung|360.00|Tisch 35|Nein|Nein|20181002213632|Walter_Rothlin|
+20190005|Schnellmann|Patrick|Bahnhofstrasse 26|8854|Siebnen|10|Freitag  20-September-2019|saeckelmeister@bluewin.ch|079 216 43 84|Abholen|Vorauszahlung|450.00||Nein|Nein|20180921205813|Besteller:Patrick_Schnellmann
+## Marked as Delete: 20190007|Rothlin|Walter|Peterliwiese 33|8855|Wangen|1|Samstag  21-September-2019|walter@rothlin.com|079 368 94 92|eTicket|Vorauszahlung|45||Nein|Nein|20181002215956|Walter_Rothlin||||||||
+20190006|Zosso|Fabienne|Kreuzstrasse 36|8854|Siebnen|12|Freitag  20-September-2019|fabienne.zosso@bluewin.ch|0795767159|eTicket|Vorauszahlung|540.00||Nein|Nein|20181005223205|Besteller:Fabienne_Zosso
