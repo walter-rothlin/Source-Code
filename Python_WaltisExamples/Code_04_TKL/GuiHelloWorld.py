@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
-from tkinter import *
+import tkinter as tk
 
 # IS NOT WORKING ON Walti's Lenovo
 
-master = Tk()
-w=Cnvas(master, width=300, height=200)
+master = tk.Tk()
+w = tk.Canvas(master, width=300, height=200)
 
 # w.QUIT = Button(self)
 # w.QUIT["text"] = "QUIT"
@@ -13,4 +13,4 @@ w=Cnvas(master, width=300, height=200)
 # w.QUIT["command"] =  self.quit
 w.pack()
 
-mainloop()
+tk.mainloop()
