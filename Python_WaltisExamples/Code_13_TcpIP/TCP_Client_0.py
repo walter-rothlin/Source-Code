@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: echo_server.py
+# Name: TCP_Client_0.py
 #
 # Description: Acts as an TCP/IP socket server
 #
