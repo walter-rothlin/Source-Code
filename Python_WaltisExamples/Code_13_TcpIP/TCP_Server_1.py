@@ -33,9 +33,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print("No more data received!")
                     break
                 strReceived = str(data, 'ascii')
-                print("<== ", strReceived)
+                strReceivedParts = strReceived.split(":")
+                fctName = strReceivedParts[0]
+                fctParam = strReceivedParts[1]
 
-                strSent = strReceived.upper()
+                print("<== ", strReceived)
+                print("<== ", strReceivedParts)
+
+                if fctName == "toUpper":
+                    strSent = fctParam.upper()
+                elif fctName == "toLower":
+                    strSent = fctParam.lower()
+                else:
+                    strSent = "ERROR: Unknown Function"
                 data = bytes(strSent, 'ascii')
                 print("==> ", strSent)
                 conn.sendall(data)
