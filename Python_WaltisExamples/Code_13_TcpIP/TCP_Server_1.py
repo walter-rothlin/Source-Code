@@ -9,6 +9,7 @@
 #
 # History:
 # 26-May-2020   Walter Rothlin      Initial Version
+# 24-Sep-2021   Walter Rothlin      Git Test
 # ------------------------------------------------------------------
 
 import socket
@@ -30,7 +31,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 print(f"Server reads data from '{PORT:d}'..")
                 data = conn.recv(1024)  # 1024 is the maximum size of data in bytes
                 if not data:
-                    print("No more data received!")
+                    print("No more data received!!!")
                     break
                 strReceived = str(data, 'ascii')
                 strReceivedParts = strReceived.split(":")
