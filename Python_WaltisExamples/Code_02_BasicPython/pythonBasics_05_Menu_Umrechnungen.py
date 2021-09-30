@@ -38,23 +38,23 @@ while doLoop:
     print("  0: Schluss")
 
     antwort = input("\n  Wähle:")
-    if (antwort == "1"):
-        gradValue=float(input("Grad:"))
+    if antwort == "1":
+        gradValue = float(input("Grad:"))
         print(gradValue, "Grad ==> ", gradValue*pi/halbBogen, "Rad")
 
-    if (antwort == "2"):
-        radValue=float(input("Rad:"))
+    if antwort == "2":
+        radValue = float(input("Rad:"))
         print(gradValue, "Rad ==> ", radValue*halbBogen/pi, "Grad")
 
-    if (antwort == "3"):
-        fahrenheitValue=float(input("Fahrenheit:"))
+    if antwort == "3":
+        fahrenheitValue = float(input("Fahrenheit:"))
         print(gradValue, "Fahrenheit ==> ", (fahrenheitValue - 32) / 1.8, "Celsius")
 
-    if (antwort == "4"):
-        celsiusValue=float(input("Celsius:"))
+    if antwort == "4":
+        celsiusValue = float(input("Celsius:"))
         print(gradValue, "Celsius ==> ", (celsiusValue*1.8) - 32, "Fahrenheit")
 
-    if (antwort == "9"):
+    if antwort == "9":
         feldLength = int(input("Feld 1 Length:"))
         formatStr = "Art: {0:" + str(feldLength) + "d}, Price: {1:8.2f}"
 
@@ -67,7 +67,7 @@ while doLoop:
         print(strOut_1)
         print(strOut_2)
 
-    if (antwort == "0"):
+    if antwort == "0":
         doLoop = False
 
 print("Ende....Done")

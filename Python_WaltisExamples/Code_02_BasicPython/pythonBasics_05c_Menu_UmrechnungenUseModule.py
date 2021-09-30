@@ -37,35 +37,35 @@ while doLoop:
 
 
     antwort = input("\n  Wähle:")
-    if (antwort == "1"):
+    if antwort == "1":
         VT52_cls_home()
         print("Grad --> Bogenmass")
         gradValue = float(input("Grad:"))
         print("Grad={grad:1.2f}  ==> Rad={rad:1.2f}".format(grad=gradValue,rad=grad2Rad(gradValue)))
         halt()
 
-    if (antwort == "2"):
+    if antwort == "2":
         VT52_cls_home()
         print("Bogenmass --> Grad")
         radValue = float(input("Rad:"))
         print("Rad={rad:1.2f}  ==> Grad={grad:1.2f}".format(rad=radValue,grad=rad2Grad(radValue)))
         halt()
 
-    if (antwort == "3"):
+    if antwort == "3":
         VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/fahrenheit-in-celsius.htm
         print("Fahrenheit in Celsius")
         fahrenheitValue = float(input("Fahrenheit:"))
         print("Fahrenheit={fahrenheit:1.2f}  ==> Celsius={celsius:1.2f}".format(fahrenheit=fahrenheitValue,celsius=fahrenheit2Celsius(fahrenheitValue)))
         halt()
 
-    if (antwort == "4"):
+    if antwort == "4":
         VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/celsius-in-fahrenheit.htm
         print("Celsius in Fahrenheit")
         celsiusValue = float(input("Celsius:"))
         print("Celsius={celsius:1.2f}  ==> Fahrenheit={fahrenheit:1.2f}".format(celsius=celsiusValue,fahrenheit=celsius2Fahrenheit(celsiusValue)))
         halt()
 
-    if (antwort == "5"):
+    if antwort == "5":
         VT52_cls_home()
         print("Berechnet die Fakultät")
         upperLimit = int(input("Obergrenze:"))
@@ -73,7 +73,7 @@ while doLoop:
         print("{upper:5d}!  = {fak:7d}".format(upper=upperLimit, fak=fakultaet(obergrenze=upperLimit, untergrenze=lowerLimit)))
         halt()
 
-    if (antwort == "0"):
+    if antwort == "0":
         doLoop = False
 
 print("Ende....Done")

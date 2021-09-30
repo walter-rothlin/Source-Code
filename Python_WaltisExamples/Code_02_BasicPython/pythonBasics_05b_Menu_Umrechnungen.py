@@ -18,20 +18,25 @@ import math
 # ==========
 halbBogen = 180
 
+
 # Bildschirmsteuerung
 # ===================
 def VT52_cls():
-    print("\033[2J",end="", flush=True)
+    print("\033[2J", end="", flush=True)
+
 
 def VT52_home():
-    print("\033[H",end="", flush=True)
+    print("\033[H", end="", flush=True)
+
 
 def VT52_cls_home():
     VT52_cls()
     VT52_home()
 
+
 def halt(prompt="Weiter?"):
     ant = input(prompt)
+
 
 # Test-Funktionen
 # ===============
@@ -48,19 +53,23 @@ def testFormatString():
     print(strOut_1)
     print(strOut_2)
 
+
 # Umrechnungs-Funktionen
 # ======================
 def grad2Rad(grad):
-    return math.pi*grad/halbBogen
+    return math.pi * grad / halbBogen
+
 
 def rad2Grad(rad):
-    return halbBogen*rad/math.pi
+    return halbBogen * rad / math.pi
+
 
 def fahrenheit2Celsius(fahrenheit):
-    return (fahrenheit-32)/1.8
+    return (fahrenheit - 32) / 1.8
+
 
 def celsius2Fahrenheit(celsius):
-    return (celsius*1.8)+32
+    return (celsius * 1.8) + 32
 
 
 # =============
@@ -74,47 +83,50 @@ while doLoop:
     print("  1: Grad in Bogenmass")  # rad  = grad*pi/180
     print("  2: Bogenmass in Grad")  # grad = rad*180/pi
     print()
-    print("  3: Fahrenheit in Celsius")  #32F -> 0°C    100F -> 38.8°C     °C = (°F - 32) / 1.8
-    print("  4: Celsius in Fahrenheit")  #32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
+    print("  3: Fahrenheit in Celsius")  # 32F -> 0°C    100F -> 38.8°C     °C = (°F - 32) / 1.8
+    print("  4: Celsius in Fahrenheit")  # 32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
     print()
     print("  9: Format_String Test")
     print()
     print("  0: Schluss")
 
-
     antwort = input("\n  Wähle:")
-    if (antwort == "1"):
+    if antwort == "1":
         VT52_cls_home()
         print("Grad --> Bogenmass")
-        gradValue=float(input("Grad:"))
-        print("Grad={grad:1.2f}  ==> Rad={rad:1.2f}".format(grad=gradValue,rad=grad2Rad(gradValue)))
+        gradValue = float(input("Grad:"))
+        print("Grad={grad:1.2f}  ==> Rad={rad:1.2f}".format(grad=gradValue, rad=grad2Rad(gradValue)))
         halt("Cont.?")
 
-    if (antwort == "2"):
+    if antwort == "2":
         VT52_cls_home()
         print("Bogenmass --> Grad")
-        radValue=float(input("Rad:"))
-        print("Rad={rad:1.2f}  ==> Grad={grad:1.2f}".format(rad=radValue,grad=rad2Grad(radValue)))
+        radValue = float(input("Rad:"))
+        print("Rad={rad:1.2f}  ==> Grad={grad:1.2f}".format(rad=radValue, grad=rad2Grad(radValue)))
         halt()
 
-    if (antwort == "3"):
-        VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/fahrenheit-in-celsius.htm
+    if antwort == "3":
+        VT52_cls_home()  # http://www.metric-conversions.org/de/temperatur/fahrenheit-in-celsius.htm
         print("Fahrenheit in Celsius")
-        fahrenheitValue=float(input("Fahrenheit:"))
-        print("Fahrenheit={fahrenheit:1.2f}  ==> Celsius={celsius:1.2f}".format(fahrenheit=fahrenheitValue,celsius=fahrenheit2Celsius(fahrenheitValue)))
+        fahrenheitValue = float(input("Fahrenheit:"))
+        print("Fahrenheit={fahrenheit:1.2f}  ==> Celsius={celsius:1.2f}".format(fahrenheit=fahrenheitValue,
+                                                                                celsius=fahrenheit2Celsius(
+                                                                                    fahrenheitValue)))
         halt()
 
-    if (antwort == "4"):
-        VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/celsius-in-fahrenheit.htm
+    if antwort == "4":
+        VT52_cls_home()  # http://www.metric-conversions.org/de/temperatur/celsius-in-fahrenheit.htm
         print("Celsius in Fahrenheit")
-        celsiusValue=float(input("Celsius:"))
-        print("Celsius={celsius:1.2f}  ==> Fahrenheit={fahrenheit:1.2f}".format(celsius=celsiusValue,fahrenheit=celsius2Fahrenheit(celsiusValue)))
-        halt()			
+        celsiusValue = float(input("Celsius:"))
+        print("Celsius={celsius:1.2f}  ==> Fahrenheit={fahrenheit:1.2f}".format(celsius=celsiusValue,
+                                                                                fahrenheit=celsius2Fahrenheit(
+                                                                                    celsiusValue)))
+        halt()
 
-    if (antwort == "9"):
+    if antwort == "9":
         testFormatString()
 
-    if (antwort == "0"):
+    if antwort == "0":
         doLoop = False
 
 print("Ende....Done")
