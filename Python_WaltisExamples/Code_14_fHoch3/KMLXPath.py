@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: KMLParse.py
+# Name: KMLXPath.py
 #
 # Description: Accesses a XML Document via xPath
 # https://riptutorial.com/python/example/29019/searching-the-xml-with-xpath
