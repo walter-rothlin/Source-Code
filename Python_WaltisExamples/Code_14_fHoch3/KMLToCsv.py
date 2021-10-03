@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: hydrantenToCsv.py
+# Name: KMLToCsv.py
 #
 # Description: Converts and XML (Export from Geo-Admin) to an csv File
 #
@@ -13,7 +13,7 @@
 # ------------------------------------------------------------------
 from lxml import etree
 
-ortschaft = 'Kuessnacht'
+ortschaft = 'Kuessnacht_nice'
 baseFor_XSL = 'G:/_WaltisDaten/SourceCode/GitHosted/XML/'
 baseFor_KML = 'G:/_WaltisDaten/SourceCode/GitHosted/Python_WaltisExamples/Code_14_fHoch3/F_hoch_3/FDP_Plakate/'
 baseFor_CSV = baseFor_KML

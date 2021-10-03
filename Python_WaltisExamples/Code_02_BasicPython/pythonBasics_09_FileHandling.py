@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
   print("Anfang eines Files lesen")
   print("------------------------")
-  f = open(testfile_1, "r", , encoding='utf-8')
+  f = open(testfile_1, "r", encoding='utf-8')
   print("Die ersten 5 Zeichen vom File:", f.read(5))
   print("Die ersten 6 Zeichen vom File:", f.read(6))
   print("Die naechste Zeile:", f.readline(), end="")

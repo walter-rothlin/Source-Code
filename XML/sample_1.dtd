@@ -1,0 +1,6 @@
+<!ELEMENT country (population, area, capital)>
+<!ELEMENT population (#PCDATA)>
+<!ELEMENT area (#PCDATA)>
+<!ELEMENT capital (#PCDATA)>
+
+<!ATTLIST country name CDATA #REQUIRED>
