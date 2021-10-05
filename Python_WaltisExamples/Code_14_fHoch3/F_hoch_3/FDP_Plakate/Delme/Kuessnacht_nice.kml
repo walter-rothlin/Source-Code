@@ -1,0 +1,167 @@
+<ns0:kml xmlns:ns0="http://www.opengis.net/kml/2.2" xmlns:ns2="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+  <ns0:Document>
+    <ns0:name>Zeichnung</ns0:name>
+  <ns0:Placemark id="marker_1625636617220">
+      <ns0:ExtendedData>
+        <ns0:Data name="type">
+          <ns0:value>marker</ns0:value>
+        </ns0:Data>
+      </ns0:ExtendedData>
+    <ns0:name>Bahnhof K&#252;ssnacht</ns0:name>
+    <ns0:description>Laternenpfahl, Befestigung mit Kabelbinder</ns0:description>
+    <ns0:Style>
+        <ns0:IconStyle>
+          <ns0:Icon>
+            <ns0:href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</ns0:href>
+          <ns2:w>48</ns2:w>
+          <ns2:h>48</ns2:h>
+          </ns0:Icon>
+        <ns0:hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+        </ns0:IconStyle>
+      <ns0:LabelStyle>
+          <ns0:color>ff0000ff</ns0:color>
+        </ns0:LabelStyle>
+      </ns0:Style>
+    <ns0:Point>
+        <ns0:tessellate>1</ns0:tessellate>
+      <ns0:altitudeMode>clampToGround</ns0:altitudeMode>
+      <ns0:coordinates>8.433825833153792,47.08361681461193,0</ns0:coordinates>
+      </ns0:Point>
+    </ns0:Placemark>
+  <ns0:Placemark id="marker_1625636667074">
+      <ns0:ExtendedData>
+        <ns0:Data name="type">
+          <ns0:value>marker</ns0:value>
+        </ns0:Data>
+      </ns0:ExtendedData>
+    <ns0:name>Luzernerstrasse</ns0:name>
+    <ns0:description>Laternenpfahl, Befestigung mit Kabelbinder</ns0:description>
+    <ns0:Style>
+        <ns0:IconStyle>
+          <ns0:Icon>
+            <ns0:href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</ns0:href>
+          <ns2:w>48</ns2:w>
+          <ns2:h>48</ns2:h>
+          </ns0:Icon>
+        <ns0:hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+        </ns0:IconStyle>
+      <ns0:LabelStyle>
+          <ns0:color>ff0000ff</ns0:color>
+        </ns0:LabelStyle>
+      </ns0:Style>
+    <ns0:Point>
+        <ns0:tessellate>1</ns0:tessellate>
+      <ns0:altitudeMode>clampToGround</ns0:altitudeMode>
+      <ns0:coordinates>8.441374624038165,47.07876907450989,0</ns0:coordinates>
+      </ns0:Point>
+    </ns0:Placemark>
+  <ns0:Placemark id="marker_1625636695688">
+      <ns0:ExtendedData>
+        <ns0:Data name="type">
+          <ns0:value>marker</ns0:value>
+        </ns0:Data>
+      </ns0:ExtendedData>
+    <ns0:name>Artherstrasse</ns0:name>
+    <ns0:description>Laternenpfahl, Befestigung mit Kabelbinder</ns0:description>
+    <ns0:Style>
+        <ns0:IconStyle>
+          <ns0:Icon>
+            <ns0:href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</ns0:href>
+          <ns2:w>48</ns2:w>
+          <ns2:h>48</ns2:h>
+          </ns0:Icon>
+        <ns0:hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+        </ns0:IconStyle>
+      <ns0:LabelStyle>
+          <ns0:color>ff0000ff</ns0:color>
+        </ns0:LabelStyle>
+      </ns0:Style>
+    <ns0:Point>
+        <ns0:tessellate>1</ns0:tessellate>
+      <ns0:altitudeMode>clampToGround</ns0:altitudeMode>
+      <ns0:coordinates>8.456761892435763,47.09341832770208,0</ns0:coordinates>
+      </ns0:Point>
+    </ns0:Placemark>
+  <ns0:Placemark id="marker_1625636717510">
+      <ns0:ExtendedData>
+        <ns0:Data name="type">
+          <ns0:value>marker</ns0:value>
+        </ns0:Data>
+      </ns0:ExtendedData>
+    <ns0:name>Immensee Dorf</ns0:name>
+    <ns0:description>Laternenpfahl, Befestigung mit Kabelbinder, Stefan Christen</ns0:description>
+    <ns0:Style>
+        <ns0:IconStyle>
+          <ns0:Icon>
+            <ns0:href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</ns0:href>
+          <ns2:w>48</ns2:w>
+          <ns2:h>48</ns2:h>
+          </ns0:Icon>
+        <ns0:hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+        </ns0:IconStyle>
+      <ns0:LabelStyle>
+          <ns0:color>ff0000ff</ns0:color>
+        </ns0:LabelStyle>
+      </ns0:Style>
+    <ns0:Point>
+        <ns0:tessellate>1</ns0:tessellate>
+      <ns0:altitudeMode>clampToGround</ns0:altitudeMode>
+      <ns0:coordinates>8.462035484161985,47.09835652574945,0</ns0:coordinates>
+      </ns0:Point>
+    </ns0:Placemark>
+  <ns0:Placemark id="marker_1625636754934">
+      <ns0:ExtendedData>
+        <ns0:Data name="type">
+          <ns0:value>marker</ns0:value>
+        </ns0:Data>
+      </ns0:ExtendedData>
+    <ns0:name>Bahnhofstrasse</ns0:name>
+    <ns0:description>Laternenpfahl, Befestigung mit Kabelbinder</ns0:description>
+    <ns0:Style>
+        <ns0:IconStyle>
+          <ns0:Icon>
+            <ns0:href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</ns0:href>
+          <ns2:w>48</ns2:w>
+          <ns2:h>48</ns2:h>
+          </ns0:Icon>
+        <ns0:hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+        </ns0:IconStyle>
+      <ns0:LabelStyle>
+          <ns0:color>ff0000ff</ns0:color>
+        </ns0:LabelStyle>
+      </ns0:Style>
+    <ns0:Point>
+        <ns0:tessellate>1</ns0:tessellate>
+      <ns0:altitudeMode>clampToGround</ns0:altitudeMode>
+      <ns0:coordinates>8.436321171538019,47.083698802334446,0</ns0:coordinates>
+      </ns0:Point>
+    </ns0:Placemark>
+  <ns0:Placemark id="marker_1625637745313">
+      <ns0:ExtendedData>
+        <ns0:Data name="type">
+          <ns0:value>marker</ns0:value>
+        </ns0:Data>
+      </ns0:ExtendedData>
+    <ns0:name>Luzernerstrasse</ns0:name>
+    <ns0:description>Hansheini Fischli, zwei Plakate, vorg&#228;ngig mit ihm Kontakt aufnehmen</ns0:description>
+    <ns0:Style>
+        <ns0:IconStyle>
+          <ns0:Icon>
+            <ns0:href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</ns0:href>
+          <ns2:w>48</ns2:w>
+          <ns2:h>48</ns2:h>
+          </ns0:Icon>
+        <ns0:hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+        </ns0:IconStyle>
+      <ns0:LabelStyle>
+          <ns0:color>ff0000ff</ns0:color>
+        </ns0:LabelStyle>
+      </ns0:Style>
+    <ns0:Point>
+        <ns0:tessellate>1</ns0:tessellate>
+      <ns0:altitudeMode>clampToGround</ns0:altitudeMode>
+      <ns0:coordinates>8.400422743345214,47.060328405521666</ns0:coordinates>
+      </ns0:Point>
+    </ns0:Placemark>
+  </ns0:Document>
+</ns0:kml>
