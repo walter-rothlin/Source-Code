@@ -43,7 +43,7 @@ class Blinklicht:
 
 # Sortierfunktion für die Farbe eines Blinklichts
 def sortiere_farbe(blinklicht):
-    return blinklicht.farbe
+    return blinklicht.__farbe
 
 
 # Hauptprogramm

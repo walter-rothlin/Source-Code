@@ -22,6 +22,7 @@
 # 30-Apr-2021   Walter Rothlin      Added average(list)
 # 08-Jun-2021   Walter Rothlin      Added readInt, readFloat
 # 17-Jun-2021   Walter Rothlin      Added Mitternachts-Formel
+# 10-Oct-2021   Walter Rothlin      Added placer, underline
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -52,7 +53,7 @@ import requests
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 1.0.0.4")
+    print("waltisLibrary.py: 1.0.0.5")
 
 
 # Bildschirmsteuerung
@@ -1174,6 +1175,9 @@ def generateStringRepeats(len, aStr=" "):
     # generateStringRepeats(6)           => '      '
     return (aStr * len)[:len]
 
+def placer(strichArt="-", laenge=30):
+    return generateStringRepeats(len=laenge, aStr=strichArt)
+
 
 def AUTO_TEST_a_generateStringRepeats(verbal=False):
     testsPerformed = 0
@@ -1219,6 +1223,8 @@ def AUTO_TEST_a_generateStringRepeats(verbal=False):
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
+def underline(titleStr, strichArt="="):
+    return unterstreichen(title=titleStr, aChar=strichArt, end="\n")
 
 def unterstreichen(title, aChar="=", end="\n"):
     # Spezifikation: Unterstreich einen String auf dem Bildschirm
