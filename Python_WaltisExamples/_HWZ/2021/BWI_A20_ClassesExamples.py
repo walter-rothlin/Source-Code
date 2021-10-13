@@ -1,14 +1,9 @@
-# ------------------------------------------------------------------
-# Name: pythonBasics_07a_Classes_Objects_Inheritance.py
-#
-# Description: Example for Inheritance, Class-Variables
+# Description: Example for Inheritance
 #
 # Autor: Walter Rothlin
 #
 # History:
-# 04-Nov-2020   Walter Rothlin      Initial Version
-# 10-Oct-2021   Walter Rothlin      Changed to be complied with PEP-8
-# 12-Oct-2021   Walter Rothlin      Changes wit BWI-A20
+# 12-Oct-2021   Walter Rothlin      Initial Version
 # -------------------------------------------------------------------
 from waltisLibrary import *
 # -------------------------------------------------------------------
@@ -249,10 +244,13 @@ def TEST_ClassF1():
     print("--> Heckfluegel set (Megagross) via setter  :", hamiltonsCar.setHeckfluegeltype("Megagross"))
     print("--> Type        set (A3)        via setter  :", hamiltonsCar.setCarType("A3"))
     print("--> Baujahr     set (2000)      via setter  :", hamiltonsCar.setBaujahr(2000))
-    print("--> Driver      set (Bottas)    via setter  :\n", hamiltonsCar.setDriver(driver_2))
-    print("--> DriversOrt  get             via getter  :", hamiltonsCar.getDriver().getOrt(), "\n")
-
+    print("--> Driver      set (Bottas)    via setter  :", hamiltonsCar.setDriver(driver_2))
     print(hamiltonsCar)
 
 if __name__ == '__main__' and True:
     TEST_ClassF1()
+
+
+
+
+
