@@ -4,6 +4,7 @@
 # Name: SoapClient.py
 #
 # Description: Configures a client by an WSDL and calls a method passing two parameters
+# https://docs.python-zeep.org/en/master/
 #
 # Autor: Walter Rothlin
 #
