@@ -8,7 +8,7 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 12-Oct-2021   Walter Rothlin      Initial Version
+# 12-Oct-2021   Walter Rothlin      Initial Version for BWI-A19
 # ------------------------------------------------------------------
 import zeep
 
