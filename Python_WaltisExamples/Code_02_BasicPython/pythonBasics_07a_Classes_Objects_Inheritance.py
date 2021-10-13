@@ -8,7 +8,7 @@
 # History:
 # 04-Nov-2020   Walter Rothlin      Initial Version
 # 10-Oct-2021   Walter Rothlin      Changed to be complied with PEP-8
-# 12-Oct-2021   Walter Rothlin      Changes wit BWI-A20
+# 12-Oct-2021   Walter Rothlin      Changes done together with BWI-A20
 # -------------------------------------------------------------------
 from waltisLibrary import *
 # -------------------------------------------------------------------
@@ -99,7 +99,7 @@ def TEST_ClassPerson():
     print("\n")
     print(claudia)
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__' and True:
     TEST_ClassPerson()
 
 
@@ -188,7 +188,7 @@ def TEST_ClassCar():
 
     print(johnsCar)
 
-if __name__ == '__main__' and False:
+if __name__ == '__main__' and True:
     TEST_ClassCar()
 
 # -------------------------------------------------------------------

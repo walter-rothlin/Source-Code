@@ -244,11 +244,14 @@ def TEST_ClassF1():
     print("--> Heckfluegel set (Megagross) via setter  :", hamiltonsCar.setHeckfluegeltype("Megagross"))
     print("--> Type        set (A3)        via setter  :", hamiltonsCar.setCarType("A3"))
     print("--> Baujahr     set (2000)      via setter  :", hamiltonsCar.setBaujahr(2000))
-    print("--> Driver      set (Bottas)    via setter  :", hamiltonsCar.setDriver(driver_2))
+    print("--> Driver      set (Bottas)    via setter  :\n", hamiltonsCar.setDriver(driver_2))
+    print("--> DriversOrt  get             via getter  :", hamiltonsCar.getDriver().getOrt(), "\n")
+
     print(hamiltonsCar)
 
 if __name__ == '__main__' and True:
     TEST_ClassF1()
+
 
 
 
