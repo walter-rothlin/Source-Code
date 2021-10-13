@@ -23,6 +23,7 @@
 # 08-Jun-2021   Walter Rothlin      Added readInt, readFloat
 # 17-Jun-2021   Walter Rothlin      Added Mitternachts-Formel
 # 10-Oct-2021   Walter Rothlin      Added placer, underline
+# 13-Oct-2021   Walter Rothlin      Added File_getFileContent
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -1647,6 +1648,18 @@ def File_cleanup(filename, directory, path_sign):
 
 # File manipulation
 # =================
+'''String or ListOfLines'''
+def File_getFileContent(sourceFileFN, returnType="String", lineEnd="\n"):
+    with open("serviceMsg.xml", "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        lines = [aLine.strip('\n\r') for aLine in lines]
+    if returnType == "ListOfLines":
+        return lines
+    elif returnType == "String":
+        return lineEnd.join(lines)
+    else:
+        return "ERROR: File_getFileContent unknown format!"
+
 def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFooter="", aContent=""):
     aTestFile = open(aFileFN, "w")
     if aHeader != "":

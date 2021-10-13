@@ -4,6 +4,7 @@
 # Name: SoapClientToOwnJavaWS.py
 #
 # Description: Calls a WS witten in Java (JEE)
+#              Glassfish must running on teachers node
 #
 # Autor: Walter Rothlin
 #

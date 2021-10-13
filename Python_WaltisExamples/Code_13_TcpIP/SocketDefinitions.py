@@ -49,14 +49,14 @@ def waitForServiceCall(trace=True):
                     print("No more data received!!!")
                     break
                 strReceived = str(data, 'ascii')
-                strSent = serviceHandler(strReceived)
+                strSent = serviceHandlerCsv(strReceived)
 
                 data = bytes(strSent, 'ascii')
                 if trace:
                     print("==> ", strSent)
                 conn.sendall(data)
 
-def serviceHandler(dataReceived, trace=True):
+def serviceHandlerCsv(dataReceived, trace=True):
     strReceivedParts = dataReceived.split(":")
     fctName = strReceivedParts[0]
     fctParam = strReceivedParts[1]
@@ -70,7 +70,7 @@ def serviceHandler(dataReceived, trace=True):
     elif fctName == "toLower":
         dataSentBack = fctParam.lower()
     else:
-        dataSentBack = "ERROR: Unknown Function"
+        dataSentBack = "ERROR: Unknown Function:" + dataReceived
 
     if trace:
         print("==> ", dataSentBack)
