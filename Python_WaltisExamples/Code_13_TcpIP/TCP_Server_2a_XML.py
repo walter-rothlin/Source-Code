@@ -15,8 +15,6 @@
 # ------------------------------------------------------------------
 from SocketDefinitions import *
 
-
-print("\n")
-print(f"TCP/IP Server ready on '{PORT:d}'. Waiting for requests....", end="", flush=True)
-print(waitForServiceCall(True))
+print(f"TCP/IP Server ready on '{PORT:d}'. Waiting for requests....")
+print(waitForServiceCall(xmlMsg=True, trace=True))
 print(f"TCP/IP Server closed on '{PORT:d}'!")

@@ -16,16 +16,32 @@ from waltisLibrary import *
 from SocketDefinitions import *
 import lxml.etree
 
+
+msgTemplate = "serviceMsgTemplate.xml"
+messageFile = "serviceMsg.xml"
+messageSchema = "serviceMsg.xsd"
+
 doLoop = True
 while doLoop:
-    xml_file = lxml.etree.parse("serviceMsg.xml")
-    xml_validator = lxml.etree.XMLSchema(file="serviceMsg.xsd")
+    # Parameter vom Benutzer eingeben
+    fctStr   = input("Fct [toUpper, toLower]:")
+    fctParam = input("Text:")
+    fctParamList = [fctParam]
+
+    # Benutzerparameter in XML speichern
+    prepareRequestMsg(msgTemplate=msgTemplate, msgFile=messageFile, fct=fctStr, parameterList=fctParamList)
+
+    # XML validiern
+    xml_file = lxml.etree.parse(messageFile)
+    xml_validator = lxml.etree.XMLSchema(file=messageSchema)
     is_valid = xml_validator.validate(xml_file)
-    print("XSD Validation:", is_valid)
 
-
-    sendMsg = File_getFileContent("serviceMsg.xml")
-    print("Received:", callService(msg=sendMsg))
+    if is_valid:
+        # Nachricht (Request) senden und Antwort (Response) anzeigen
+        sendMsg = File_getFileContent(messageFile)
+        print("\n\n    Received at client:", callService(msg=sendMsg, trace=True))
+    else:
+        print("XML-Request is not valid document! Not sent to Server!")
     answer = input("Beenden?")
     if answer != "":
         doLoop = False

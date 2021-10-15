@@ -11,31 +11,33 @@
 # 12-Oct-2021   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 import socket
+import xml.etree.ElementTree as ET
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
 
 # client part
-def callService(trace=False, msg=None):
+def callService(msg, trace=False):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if trace:
             print(f"TCP/IP Client connecting to '{PORT:d}'...", end="", flush=True)
         s.connect((HOST, PORT))
         if trace:
             print("...connected!")
-            print("--> ", msg)
+            print("\n--> Request sent from client:\n", msg)
 
         data = bytes(msg, 'ascii')
         s.sendall(data)
 
         data = s.recv(1024)  # 1024 is the maximum size of data in bytes
         strReceived = str(data, 'ascii')
-        return strReceived
         if trace:
-            print("<-- ", strReceived)
+            print("\n<-- Response client received:\n", strReceived)
+
+        return strReceived
 
 # server part
-def waitForServiceCall(trace=True):
+def waitForServiceCall(xmlMsg=True, trace=True):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()
@@ -46,33 +48,73 @@ def waitForServiceCall(trace=True):
                     print(f"Server reads data from '{PORT:d}'..")
                 data = conn.recv(1024)  # 1024 is the maximum size of data in bytes
                 if not data:
-                    print("No more data received!!!")
+                    # print("No more data received!!!")
                     break
-                strReceived = str(data, 'ascii')
-                strSent = serviceHandlerCsv(strReceived)
+                requestMsg = str(data, 'ascii')
 
-                data = bytes(strSent, 'ascii')
                 if trace:
-                    print("==> ", strSent)
+                    print("\nServer received :\n", requestMsg, "\n")
+
+                if xmlMsg:
+                    responseMsg = serviceHandlerXML(requestMsg, trace=trace)
+                else:
+                    responseMsg = serviceHandlerCsv(requestMsg, trace=trace)
+
+                data = bytes(responseMsg, 'ascii')
+                if trace:
+                    print("\nServer sent back:\n", responseMsg, "\n")
                 conn.sendall(data)
 
-def serviceHandlerCsv(dataReceived, trace=True):
-    strReceivedParts = dataReceived.split(":")
+def serviceHandlerCsv(request, trace=True):
+    strReceivedParts = request.split(":")
     fctName = strReceivedParts[0]
     fctParam = strReceivedParts[1]
-
     if trace:
-        print("<== ", dataReceived)
+        print("<== ", request)
         print("<== ", strReceivedParts)
-
     if fctName == "toUpper":
-        dataSentBack = fctParam.upper()
+        response = fctParam.upper()
     elif fctName == "toLower":
-        dataSentBack = fctParam.lower()
+        response = fctParam.lower()
     else:
-        dataSentBack = "ERROR: Unknown Function:" + dataReceived
+        response = "ERROR: Unknown Function-String:\n" + request
+    if trace:
+        print("==> ", response)
+    return response
+
+def serviceHandlerXML(request, trace=True):
+    # reading values from XML-Request
+    root = ET.fromstring(request)
+    secondCountryYear = root.find("./function")
+    fct = secondCountryYear.text
+    parameterList = []
+    for aParam in root.findall("./*/param"):
+        parameterList.append(aParam.text)
 
     if trace:
-        print("==> ", dataSentBack)
+        print("\nfctStr       :", fct)
+        print("\nparameterList:", parameterList)
 
-    return dataSentBack
+    # Business-Logic
+    if fct == "toUpper":
+        response = parameterList[0].upper()
+    elif fct == "toLower":
+        response = parameterList[0].lower()
+    else:
+        response = "ERROR: Unknown Function-String:\n" + request
+
+    return response
+
+def prepareRequestMsg(msgTemplate, msgFile, fct, parameterList):
+    # parsing msgTemplate and replaces values with user input
+    tree = ET.parse(msgTemplate)
+    root = tree.getroot()
+    secondCountryYear = root.find("./function")
+    secondCountryYear.text = fct
+    i = 0
+    for aParam in root.findall("./*/param"):
+        aParam.text = parameterList[i]
+        i += 1
+
+    # save msg in file
+    tree.write(msgFile)

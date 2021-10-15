@@ -14,7 +14,8 @@
 import zeep
 
 # Client config using WSDL
-client = zeep.Client(wsdl='http://desktop-nskdqsg:8080/04_a_Webservice_Simple/FirstWebServiceService?wsdl')
+client = zeep.Client(wsdl='http://10.192.100.97:8080/04_a_Webservice_Simple/FirstWebServiceService?wsdl')   # HWZ LAN
+# client = zeep.Client(wsdl='http://desktop-nskdqsg:8080/04_a_Webservice_Simple/FirstWebServiceService?wsdl')
 
 # Calling Web-Services and display result
 print("Pin()              :", client.service.ping())

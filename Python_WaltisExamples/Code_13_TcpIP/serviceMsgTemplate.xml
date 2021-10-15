@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<Msg version="V1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="serviceMsg.xsd">
+  <function>FunctionName</function>
+  <parameters>
+    <param name="param_1">ParameterValue</param>
+  </parameters>
+</Msg>
