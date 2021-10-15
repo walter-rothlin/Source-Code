@@ -4,16 +4,16 @@
   <xs:complexType name="paramType">
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="name" use="optional"/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
   <xs:complexType name="parametersType">
     <xs:sequence>
-      <xs:element type="paramType" name="param"/>
+      <xs:element type="paramType" name="param" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="MsgType" mixed="true">
+  <xs:complexType name="MsgType">
     <xs:sequence>
       <xs:element type="xs:string" name="function"/>
       <xs:element type="parametersType" name="parameters"/>

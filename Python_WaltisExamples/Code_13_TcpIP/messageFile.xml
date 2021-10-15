@@ -1,6 +1,0 @@
-<Msg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="V1.0" xsi:noNamespaceSchemaLocation="serviceMsg.xsd">
-  <function>toUpper</function>
-  <parameters>
-    <param name="param_1">"hwz"</param>
-  </parameters>
-</Msg>

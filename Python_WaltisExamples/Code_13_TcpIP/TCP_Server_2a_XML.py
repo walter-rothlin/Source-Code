@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: TCP_Server_2.py
+# Name: TCP_Server_2a_XML.py
 #
 # Description: Acts as an TCP/IP socket server
-# https://realpython.com/python-sockets/
 #
 # Autor: Walter Rothlin
 #

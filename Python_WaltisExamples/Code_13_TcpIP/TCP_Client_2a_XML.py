@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: TCP_Client_2.py
+# Name: TCP_Client_2a_XML.py
 #
-# Description: Acts as an TCP/IP socket server
-# https://realpython.com/python-sockets/
+# Description: Sends TCP/IP packeges to a server
 #
 # Autor: Walter Rothlin
 #
@@ -17,9 +16,7 @@ from SocketDefinitions import *
 import lxml.etree
 
 
-msgTemplate = "serviceMsgTemplate.xml"
 messageFile = "serviceMsg.xml"
-messageSchema = "serviceMsg.xsd"
 
 doLoop = True
 while doLoop:
@@ -41,7 +38,8 @@ while doLoop:
         sendMsg = File_getFileContent(messageFile)
         print("\n\n    Received at client:", callService(msg=sendMsg, trace=True))
     else:
-        print("XML-Request is not valid document! Not sent to Server!")
+        print("XML-Request is not a valid document! Not sent to Server!")
+
     answer = input("Beenden?")
     if answer != "":
         doLoop = False

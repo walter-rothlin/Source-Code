@@ -2,6 +2,9 @@
 <Msg version="V1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="serviceMsg.xsd">
   <function>FunctionName</function>
   <parameters>
-    <param name="param_1">ParameterValue</param>
+    <param name="param_1">ParameterValue_1</param>
+    <param name="param_2">ParameterValue_2</param>
+    <param name="param_3">ParameterValue_3</param>
+    <param name="param_4">ParameterValue_4</param>
   </parameters>
 </Msg>

@@ -16,7 +16,11 @@ import xml.etree.ElementTree as ET
 HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
 
-# client part
+msgTemplate   = "serviceMsgTemplate.xml"
+messageSchema = "serviceMsgTemplate.xsd"
+
+# client functions
+# ----------------
 def callService(msg, trace=False):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if trace:
@@ -36,7 +40,8 @@ def callService(msg, trace=False):
 
         return strReceived
 
-# server part
+# server functions
+# ----------------
 def waitForServiceCall(xmlMsg=True, trace=True):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
@@ -113,7 +118,10 @@ def prepareRequestMsg(msgTemplate, msgFile, fct, parameterList):
     secondCountryYear.text = fct
     i = 0
     for aParam in root.findall("./*/param"):
-        aParam.text = parameterList[i]
+        if (i < len(parameterList)):
+            aParam.text = parameterList[i]
+        else:
+            aParam.text = "NotUsed"
         i += 1
 
     # save msg in file
