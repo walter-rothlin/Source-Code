@@ -65,7 +65,7 @@ try:
     )
     print("completed!")
 
-    conn.autocommit = False
+    conn.autocommit = False   # explicit commit and rollback by the application (Front-End)
     cursor = conn.cursor()
 
     showSaldo("Bevor Kontoübertrag")

@@ -3,8 +3,9 @@
 # ------------------------------------------------------------------
 # Name: 04_CRUD.py
 #
-# Description: Connects to mysql and creates a new schema
+# Description: Connects to mysql and creates a new schema, Inserts, Updates and Inserts Data
 #
+# https://www.w3schools.com/python/python_mysql_getstarted.asp
 # Autor: Walter Rothlin
 #
 # History:
@@ -13,8 +14,6 @@
 
 from waltisLibrary import *
 import mysql.connector
-
-# https://www.w3schools.com/python/python_mysql_getstarted.asp
 
 
 print("Connecting to DB....", end="", flush=True)
@@ -25,47 +24,63 @@ mydb = mysql.connector.connect(
 )
 print("completed!\n\n")
 
-
-# Create schema
+# DDL: Create schema
 print("Create schema....", end="", flush=True)
 mycursor = mydb.cursor()
-mycursor.execute("DROP SCHEMA DelMe")
+mycursor.execute("DROP SCHEMA IF EXISTS DelMe")
 mycursor.execute("CREATE DATABASE DelMe")
 mycursor.execute("USE DelMe")
 print("completed!\n\n")
 
-# check available schemas
+# DDL: Check available schemas
 print("Show schemas....", end="", flush=True)
 mycursor.execute("SHOW DATABASES")
-for x in mycursor:
-  print(x)
+for aSchema in mycursor:
+  print(aSchema)
 print("completed!\n\n")
 
-
-# create table
+# DDL: Create table
 print("Create table....", end="", flush=True)
 mycursor.execute("CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))")
 # mycursor.execute("CREATE TABLE customers (name VARCHAR(255), address VARCHAR(255))")
 print("completed!\n\n")
 
-# check available tables
+# DDL: Check available tables
 print("Show tables....", end="", flush=True)
 mycursor.execute("SHOW TABLES")
-for x in mycursor:
-  print(x)
+for aTable in mycursor:
+  print(aTable)
 print("completed!\n\n")
 
 # Insert data into table
-print("Inserts data....\n", end="", flush=True)
+print("Inserts data....")
 sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
 val = ("John", "Highway 21")
 mycursor.execute(sql, val)
-print("1 record inserted, ID:", mycursor.lastrowid)
+print("A single record inserted ", val, " , ID:", mycursor.lastrowid)
 print(mycursor.rowcount, "record inserted.")
 mydb.commit()
-print(mycursor.rowcount, "record inserted.")
+print(mycursor.rowcount, "record inserted.\n")
 
+# Update data from table
+print("Update data....")
+updateSQL = f"  UPDATE customers SET name='Walti' WHERE id=1"
+print(updateSQL, "\n\n")
+mycursor.execute(updateSQL)
+halt("Update commit?")
+mydb.commit()
+halt("After commit?")
 
+# Delete data from table
+print("Delete data....")
+deleteSQL = f"  Delete from customers WHERE id=1"
+print(deleteSQL, "\n\n")
+mycursor.execute(deleteSQL)
+halt("Delete commit?")
+mydb.commit()
+halt("After commit?")
+
+print("Bulk load ... insert")
 sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
 val = [
   ('Peter', 'Lowstreet 4'),
@@ -84,9 +99,9 @@ val = [
 ]
 mycursor.executemany(sql, val)
 print(mycursor.rowcount, "record inserted.")
-halt("Commit?")
+halt("Bulkload commit?")
 mydb.commit()
-halt("After commit!")
+halt("After bulkload commit!")
 print(mycursor.rowcount, "record inserted.")
 print("completed!\n\n")
 
