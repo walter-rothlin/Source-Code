@@ -1,34 +1,34 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 04a_CRUD_Sakila.py
+# Name: 05_Call_StoredProcedure_Sakila.py
 #
 # Description: Connects to sakila and calls stored procedures
+# https://www.mysqltutorial.org/calling-mysql-stored-procedures-python/
+#
 #
 # Autor: Walter Rothlin
 #
 # History:
-# 26-May-2020   Walter Rothlin      Initial Version
+# 18-Oct-2021   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
-
-from waltisLibrary import *
 import mysql.connector as mc # mysql-connector-python not default mässiger one
 import sys
 
-# https://pynative.com/python-mysql-execute-stored-procedure/   Calling stored procedure
+'''
+-- Create_Add_StoredProcedure.sql
+-- ------------------------------
 
-def showTable():
-    print("+------+--------------------------------+")
-    print("| Id   | Country                        |")
-    print("+------+--------------------------------+")
-    for aRec in myResult:
-        print("| {plh:4d} |".format(plh=aRec[0]), end="")
-        print(" {plh:30s} |".format(plh=aRec[1]), end="")
-        print()
-        print("+------+--------------------------------+")
-    print("Records found:", len(myResult), myResult)
+DELIMITER //
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE add_num(IN num1 INT, IN num2 INT, OUT sum INT)
+BEGIN
+SET sum := num1 + num2;
+END //
 
+DELIMITER ;
+
+'''
 # =============================
 # MAIN
 # =============================
@@ -40,7 +40,7 @@ password = "admin"
 try:
     print(f"Connecting to '{dbSchema:s}' with user '{userName:s}'....", end="", flush=True)
     # https://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
-    mydb = mc.connect(
+    conn = mc.connect(
         host=dbServer,
         database=dbSchema,
         user=userName,
@@ -48,34 +48,15 @@ try:
     )
     print("completed!")
 
+    myCursor = conn.cursor()
+    args = (7, 6, 0) # 0 is to hold value of the OUT parameter sum
+    result_args = myCursor.callproc('add_num', args)
+    print("add_num:", args[0], "+", args[1], "=", result_args[2])
+
 except mc.Error as e:
     print("\nError {errNo:d}: {errTxt:s}".format(errNo=e.args[0], errTxt=e.args[1]))
     sys.exit(1)
 
-
-# MAIN
-# -----------------------------
-
-stm_selectCities = """
-    SELECT
-       country_id    AS ID,
-       country       AS Name
-    FROM 
-       country
-    ORDER BY
-       country_id
-"""
-
-myCursor = mydb.cursor()
-myCursor.execute(stm_selectCities)
-myResult = myCursor.fetchall()
-showTable()
-halt()
-
-# single insert
-sql = "INSERT INTO country (country) VALUES (%s)"
-val = ("John")
-myCursor = mydb.cursor()
-myCursor.execute(sql, val)
-showTable()
-halt()
+finally:
+        myCursor.close()
+        conn.close()
