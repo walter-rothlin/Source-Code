@@ -1,0 +1,79 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name: pythonBasics_05c_Menu_UmrechnungenUseModule.py
+#
+# Description: Rechnet verschiedene physikalische Grössen um.
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Oct-2017   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
+
+from waltisLibrary import *
+
+
+# =============
+# Hauptprogramm
+# =============
+doLoop = True
+print(isPrimzahl.__doc__)  # docstring similar to java doc
+while doLoop:
+    VT52_cls_home()
+
+    print("  Umrechnungen")
+    print("  ============")
+    print("  1: Grad in Bogenmass")  # rad  = grad*pi/180
+    print("  2: Bogenmass in Grad")  # grad = rad*180/pi
+    print()
+    print("  3: Fahrenheit in Celsius")  #32F -> 0°C    100F -> 38.8°C     °C = (°F - 32) / 1.8
+    print("  4: Celsius in Fahrenheit")  #32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
+    print()
+    print("  5: Fakultät")
+    print()
+    print("  0: Schluss")
+
+
+    antwort = input("\n  Wähle:")
+    if antwort == "1":
+        VT52_cls_home()
+        print("Grad --> Bogenmass")
+        gradValue = float(input("Grad:"))
+        print("Grad={grad:1.2f}  ==> Rad={rad:1.2f}".format(grad=gradValue,rad=grad2Rad(gradValue)))
+        halt()
+
+    if antwort == "2":
+        VT52_cls_home()
+        print("Bogenmass --> Grad")
+        radValue = float(input("Rad:"))
+        print("Rad={rad:1.2f}  ==> Grad={grad:1.2f}".format(rad=radValue,grad=rad2Grad(radValue)))
+        halt()
+
+    if antwort == "3":
+        VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/fahrenheit-in-celsius.htm
+        print("Fahrenheit in Celsius")
+        fahrenheitValue = float(input("Fahrenheit:"))
+        print("Fahrenheit={fahrenheit:1.2f}  ==> Celsius={celsius:1.2f}".format(fahrenheit=fahrenheitValue,celsius=fahrenheit2Celsius(fahrenheitValue)))
+        halt()
+
+    if antwort == "4":
+        VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/celsius-in-fahrenheit.htm
+        print("Celsius in Fahrenheit")
+        celsiusValue = float(input("Celsius:"))
+        print("Celsius={celsius:1.2f}  ==> Fahrenheit={fahrenheit:1.2f}".format(celsius=celsiusValue,fahrenheit=celsius2Fahrenheit(celsiusValue)))
+        halt()
+
+    if antwort == "5":
+        VT52_cls_home()
+        print("Berechnet die Fakultät")
+        upperLimit = int(input("Obergrenze:"))
+        lowerLimit = int(input("Untergrenze:"))
+        print("{upper:5d}!  = {fak:7d}".format(upper=upperLimit, fak=fakultaet(obergrenze=upperLimit, untergrenze=lowerLimit)))
+        halt()
+
+    if antwort == "0":
+        doLoop = False
+
+print("Ende....Done")
