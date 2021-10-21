@@ -58,7 +58,7 @@ def doKontoUebertrag(connection, cursor, withdrawAmount, fromKontoId, toKontoId,
 
     if trace:
         showKontoUebersicht(connection, cursor, "Abgebucht aber noch nicht eingebucht", 2)
-        halt("Check with workebnch!! Than press RETURN to continue!")
+        halt("Check with workbench!! Than press RETURN to continue!")
 
     # deposit to Sparkonto
     sql_update_query = """Update bankkonto set saldo = saldo + """ + str(withdrawAmount) + """ where id_bankkonto = """ + str(toKontoId)
@@ -66,13 +66,13 @@ def doKontoUebertrag(connection, cursor, withdrawAmount, fromKontoId, toKontoId,
 
     if trace:
         showKontoUebersicht(connection, cursor, "Eingebucht aber noch nicht commited", 2)
-        halt("Check with workebnch!! Than press RETURN to continue!")
+        halt("Check with workbench!! Than press RETURN to continue!")
 
     # Commit your changes
     connection.commit()
     if trace:
         showKontoUebersicht(connection, cursor, "Nach commited", 2)
-        halt("Check with workebnch!! Than press RETURN to continue!")
+        halt("Check with workbench!! Than press RETURN to continue!")
 
 
 dbServer = "localhost"

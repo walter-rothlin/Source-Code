@@ -76,7 +76,7 @@ try:
     cursor.execute(sql_update_query)
 
     showSaldo("Abgebucht aber noch nicht eingebucht", 2)
-    halt("Check with workebnch!! Than press RETURN to continue!")
+    halt("Check with workbench!! Than press RETURN to continue!")
 
 
     # deposit to Sparkonto
