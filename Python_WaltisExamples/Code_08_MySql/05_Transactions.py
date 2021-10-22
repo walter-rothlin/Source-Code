@@ -19,7 +19,6 @@ import mysql.connector
 # https://pynative.com/python-mysql-transaction-management-using-commit-rollback/
 
 def showSaldo(title="", titleLevel=1):
-
     if titleLevel == 1:
         uChar = "="
         abstand = "\n"
@@ -61,7 +60,8 @@ try:
         host=dbServer,
         database=dbSchema,
         user=userName,
-        passwd=password
+        passwd=password,
+        auth_plugin = 'mysql_native_password'
     )
     print("completed!")
 

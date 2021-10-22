@@ -18,9 +18,10 @@ import mysql.connector
 
 print("Connecting to DB....", end="", flush=True)
 mydb = mysql.connector.connect(
-  host     = "localhost",
-  user     = "root",
-  passwd   = "admin"
+  host        = "localhost",
+  user        = "root",
+  passwd      = "admin",
+  auth_plugin = 'mysql_native_password'
 )
 print("completed!\n\n")
 
@@ -31,6 +32,7 @@ mycursor.execute("DROP SCHEMA IF EXISTS DelMe")
 mycursor.execute("CREATE DATABASE DelMe")
 mycursor.execute("USE DelMe")
 print("completed!\n\n")
+halt()
 
 # DDL: Check available schemas
 print("Show schemas....", end="", flush=True)
@@ -38,6 +40,7 @@ mycursor.execute("SHOW DATABASES")
 for aSchema in mycursor:
   print(aSchema)
 print("completed!\n\n")
+halt()
 
 # DDL: Create table
 print("Create table....", end="", flush=True)
@@ -52,7 +55,7 @@ for aTable in mycursor:
   print(aTable)
 print("completed!\n\n")
 
-# Insert data into table
+# DML: Insert data into table
 print("Inserts data....")
 sql = "INSERT INTO customers (name, address) VALUES (%s, %s)"
 val = ("John", "Highway 21")
@@ -62,7 +65,7 @@ print(mycursor.rowcount, "record inserted.")
 mydb.commit()
 print(mycursor.rowcount, "record inserted.\n")
 
-# Update data from table
+# DML: Update data from table
 print("Update data....")
 updateSQL = f"  UPDATE customers SET name='Walti' WHERE id=1"
 print(updateSQL, "\n\n")
@@ -71,7 +74,7 @@ halt("Update commit?")
 mydb.commit()
 halt("After commit?")
 
-# Delete data from table
+# DML: Delete data from table
 print("Delete data....")
 deleteSQL = f"  Delete from customers WHERE id=1"
 print(deleteSQL, "\n\n")
@@ -105,7 +108,7 @@ halt("After bulkload commit!")
 print(mycursor.rowcount, "record inserted.")
 print("completed!\n\n")
 
-# Check data
+# DML: Check data
 print("Show data...\n", end="", flush=True)
 print(mycursor.rowcount, "record inserted.")
 stm_selectCities = """
@@ -117,5 +120,4 @@ stm_selectCities = """
 mycursor.execute(stm_selectCities)
 myresult = mycursor.fetchall()
 print("Records found:", len(myresult), myresult)
-
 print("completed!\n\n")

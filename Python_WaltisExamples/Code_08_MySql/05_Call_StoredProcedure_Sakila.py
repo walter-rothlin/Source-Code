@@ -44,7 +44,8 @@ try:
         host=dbServer,
         database=dbSchema,
         user=userName,
-        passwd=password
+        passwd=password,
+        auth_plugin = 'mysql_native_password'
     )
     print("completed!")
 
