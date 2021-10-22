@@ -42,8 +42,13 @@ class Konto:
             retStr += "+--------+------------+------------+\n"
         return retStr
 
-    def setSaldo(self, newSaldo, autoCommit = True):
+    def setSaldo(self, newSaldo, doCommit = True):
         self.__saldo = newSaldo
+        if self.__cursor is not None:
+            sql_update_query = """Update bankkonto set saldo = """ + str(newSaldo) + """ where id_bankkonto = """ + str(self.__id)
+            self.__cursor.execute(sql_update_query)
+            if doCommit:
+                self.__conn.commit()
 
     def getSaldo(self):
         return self.__saldo
@@ -52,18 +57,33 @@ class Konto:
         return self.__id
 
     # returns effektiver Bezug
-    def bezug(self, amount, autoCommit = True):
+    def bezug(self, amount, doCommit = True):
+        effBezug = 0
         if self.__saldo - amount >= self.__limite:
             self.__saldo -= amount
-            return amount
+            effBezug = amount
         else:
             alterSaldo = self.__saldo
             self.__saldo = self.__limite
-            return alterSaldo - self.__limite
+            effBezug = alterSaldo - self.__limite
+
+        if self.__cursor is not None:
+            sql_update_query = """Update bankkonto set saldo = saldo - """ + str(effBezug) + """ where id_bankkonto = """ + str(self.__id)
+            self.__cursor.execute(sql_update_query)
+            if doCommit:
+                self.__conn.commit()
+        return effBezug
 
     # returns neuer Kontostand
-    def deposit(self, amount, autoCommit = True):
+    def deposit(self, amount, doCommit = True):
         self.__saldo += amount
+
+        if self.__cursor is not None:
+            sql_update_query = """Update bankkonto set saldo = saldo + """ + str(amount) + """ where id_bankkonto = """ + str(self.__id)
+            self.__cursor.execute(sql_update_query)
+            if doCommit:
+                self.__conn.commit()
+
         return self.__saldo
 
 def Test_Konto():
@@ -146,9 +166,12 @@ class Kontoliste:
 
 
     def doKontoUebertrag(self, withdrawAmount, fromKontoId, toKontoId, trace=True):
-        self.getKontoViaID(fromKontoId).bezug(withdrawAmount)
-        self.getKontoViaID(toKontoId).deposit(withdrawAmount)
-
+        try:
+            self.getKontoViaID(fromKontoId).bezug(withdrawAmount, False)
+            self.getKontoViaID(toKontoId).deposit(withdrawAmount, False)
+            self.__conn.commit()
+        except:
+            self.__conn.rollback()
 
 def Test_Kontoliste():
     print("\n")
@@ -156,6 +179,19 @@ def Test_Kontoliste():
     waltisKonties = Kontoliste("Walter Rothlin")
     # print(waltisKonties)
     waltisKonties.showKontoUebersicht()
+    # Test setSaldo()
+    kontoWalti_1 = waltisKonties.getKontoViaID(1)
+    print(kontoWalti_1)
+    kontoWalti_1.setSaldo(2345)
+    print("Bezug   2000:", kontoWalti_1.bezug(2000))
+    print("Bezug   2000:", kontoWalti_1.bezug(2000))
+    print("Deposit 2000:", kontoWalti_1.deposit(2000))
+
+    kontoWalti_2 = waltisKonties.getKontoViaID(2)
+    print(kontoWalti_2)
+    kontoWalti_2.setSaldo(10234)
+
+    # Test Kontouebertrag
     transferAmount = 4000
     print("\n--> transfer from 1 to 2:", transferAmount)
     waltisKonties.doKontoUebertrag(transferAmount, 1, 2)
