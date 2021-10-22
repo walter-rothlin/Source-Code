@@ -12,34 +12,36 @@
 #
 # History:
 # 20-Oct-2021   Walter Rothlin      Initial Version
-# 21-Oct-2021   Walter Rothlin      Added Persitencens Level
+# 21-Oct-2021   Walter Rothlin      Added persitencens layer
 # ------------------------------------------------------------------
 from waltisLibrary import *
 import mysql.connector
 
 class Konto:
-    def __init__(self, id, saldo, limite=0, dbCon=None, dbCursor=None):
+    def __init__(self, id, saldo, limite=0, kontoArt="Unknown", owner="Unknown", dbCon=None, dbCursor=None):
         self.__id = id
         self.__saldo = saldo
         self.__limite = limite
+        self.__kontoArt = kontoArt
+        self.__owner = owner
         self.__conn = dbCon
         self.__cursor = dbCursor
 
     def __str__(self):
-        return "id: {id:6d}    saldo: {saldo:10.2f}    limite: {limite:10.2f}".format(id=self.__id, saldo=self.__saldo, limite=self.__limite)
+        return "id: {id:6d}    saldo: {saldo:10.2f}    limite: {limite:10.2f}    kontoArt: {kArt:20s}    owner: {owner:30s}".format(id=self.__id, saldo=self.__saldo, limite=self.__limite, kArt=self.__kontoArt, owner=self.__owner)
 
-    def toString(self, part="main"):
+    def toString(self, part="main", bilanzsumme=0):
         retStr = ""
         if part == "title":
-            retStr += "+--------+------------+------------+\n"
-            retStr += "| {id:6s} | {saldo:10s} | {limite:10s} |\n".format(id="ID", saldo="Saldo", limite="Limite")
-            retStr += "+--------+------------+------------+\n"
+            retStr += "+--------+------------+------------+----------------------+--------------------------------+\n"
+            retStr += "| {id:6s} | {saldo:10s} | {limite:10s} | {kArt:20s} | {owner:30s} |\n".format(id="ID", saldo="Saldo", limite="Limite", kArt="Konto-Art", owner="Owner")
+            retStr += "+--------+------------+------------+----------------------+--------------------------------+\n"
         if part == "main":
-            retStr += "| {id:6d} | {saldo:10.2f} | {limite:10.2f} |\n".format(id=self.__id, saldo=self.__saldo, limite=self.__limite)
+            retStr += "| {id:6d} | {saldo:10.2f} | {limite:10.2f} | {kArt:20s} | {owner:30s} |\n".format(id=self.__id, saldo=self.__saldo, limite=self.__limite, kArt=self.__kontoArt, owner=self.__owner)
         if part == "footer":
-            retStr += "+--------+------------+------------+\n"
-            retStr += "| Summe: {summe:12.2f} |            |\n".format(summe=55.2)
-            retStr += "+--------+------------+------------+\n"
+            retStr += "+--------+------------+------------+----------------------+--------------------------------+\n"
+            retStr += "| Summe: {summe:12.2f} |            |                      |                                |\n".format(summe=bilanzsumme)
+            retStr += "+--------+------------+------------+----------------------+--------------------------------+\n"
         return retStr
 
     def setSaldo(self, newSaldo, doCommit = True):
@@ -89,7 +91,7 @@ class Konto:
 def Test_Konto():
     print("\n")
     print(unterstreichen("Test-Konto"))
-    sparkonto = Konto(1, 2000, 100)
+    sparkonto = Konto(1, 2000, 100, "Testkonto", "Test-Person")
     print(sparkonto, "\n")
     print("Bezug:   100:", sparkonto.bezug(100))
     print(sparkonto, "\n")
@@ -129,14 +131,18 @@ class Kontoliste:
         sql_show_saldo_query = """
              select 
                   id_bankkonto, 
-                  saldo 
-            from bankkonto;
+                  saldo,
+                  limite,
+                  kontoArt,
+                  owner
+            from bankkonto
+            where owner = '""" + self.__owner + """';
         """
         self.__cursor.execute(sql_show_saldo_query)
         myresult = self.__cursor.fetchall()
         for aRec in myresult:
             # print("| {id:4d} | {saldo:10.2f} |".format(id=aRec[0], saldo=aRec[1]))
-            self.addKonto(Konto(id=aRec[0], saldo=aRec[1], dbCon=self.__conn, dbCursor=self.__cursor))
+            self.addKonto(Konto(id=aRec[0], saldo=aRec[1], limite=aRec[2], kontoArt=aRec[3], owner=aRec[4], dbCon=self.__conn, dbCursor=self.__cursor))
 
 
     def __str__(self):
@@ -151,8 +157,11 @@ class Kontoliste:
     def getKontoViaID(self, id):
         return self.__kontoList[id]
 
-    def showKontoUebersicht(self):
+    def showKontoUebersicht(self, title=None):
+        if title is not None:
+            print("\n\n--->" + title)
         print(unterstreichen("Kontoübersicht von " + str(self.__owner)))
+        bilanzSumme = 0
         firstTime = True
         aKonto = None
         for aKontoKey in self.__kontoList:
@@ -162,13 +171,14 @@ class Kontoliste:
                 print(aKonto.toString("title"), end="")
 
             print(aKonto.toString(), end="")
-        print(aKonto.toString("footer"), end="")
+            bilanzSumme += (aKonto.getSaldo())
+        print(aKonto.toString("footer", bilanzSumme), end="")
 
 
     def doKontoUebertrag(self, withdrawAmount, fromKontoId, toKontoId, trace=True):
         try:
-            self.getKontoViaID(fromKontoId).bezug(withdrawAmount, False)
-            self.getKontoViaID(toKontoId).deposit(withdrawAmount, False)
+            effWithDraw = self.getKontoViaID(fromKontoId).bezug(withdrawAmount, False)
+            self.getKontoViaID(toKontoId).deposit(effWithDraw, False)
             self.__conn.commit()
         except:
             self.__conn.rollback()
@@ -178,8 +188,10 @@ def Test_Kontoliste():
     print(unterstreichen("Test-Kontoliste"))
     waltisKonties = Kontoliste("Walter Rothlin")
     # print(waltisKonties)
-    waltisKonties.showKontoUebersicht()
-    # Test setSaldo()
+    waltisKonties.showKontoUebersicht(title="Nach Initialisierung (lesen von DB)")
+
+    # Test Konto-Classe
+    print("\n ---> Test Konto")
     kontoWalti_1 = waltisKonties.getKontoViaID(1)
     print(kontoWalti_1)
     kontoWalti_1.setSaldo(2345)
@@ -190,16 +202,24 @@ def Test_Kontoliste():
     kontoWalti_2 = waltisKonties.getKontoViaID(2)
     print(kontoWalti_2)
     kontoWalti_2.setSaldo(10234)
+    waltisKonties.showKontoUebersicht(title="Nach manuellem Konto setzen")
 
     # Test Kontouebertrag
-    transferAmount = 4000
-    print("\n--> transfer from 1 to 2:", transferAmount)
-    waltisKonties.doKontoUebertrag(transferAmount, 1, 2)
-    waltisKonties.showKontoUebersicht()
-    print("\n--> transfer from 2 to 1:", transferAmount)
-    waltisKonties.doKontoUebertrag(transferAmount, 2, 1)
-    waltisKonties.showKontoUebersicht()
+    print("\n ---> Test Kontoübertrag")
+    fromKonto = readInt("Belastungskonto (From): ", min=1, max=2)
+    toKonto   = readInt("Gutschriftskonto (To) : ", min=1, max=2)
+    transferAmount = readFloat("Uebertrags-Betrag: ", min=10, max=10000)
 
+    waltisKonties.doKontoUebertrag(transferAmount, fromKonto, toKonto)
+    waltisKonties.showKontoUebersicht(title=" After: {fff:3d} --> {tAm:1.2f} --> {ttt:3d}".format(fff=fromKonto, ttt=toKonto, tAm=transferAmount))
+
+    waltisKonties.doKontoUebertrag(transferAmount, toKonto, fromKonto)
+    waltisKonties.showKontoUebersicht(title=" After: {ttt:3d} --> {tAm:1.2f} --> {fff:3d}".format(fff=fromKonto, ttt=toKonto, tAm=transferAmount))
+
+    # Set back to original amounts
+    kontoWalti_1.setSaldo(2000)
+    kontoWalti_2.setSaldo(5000)
+    waltisKonties.showKontoUebersicht(title="After set back to original amounts")
 
 if __name__ == '__main__':
     if True:

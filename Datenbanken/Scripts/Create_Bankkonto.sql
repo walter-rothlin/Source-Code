@@ -7,6 +7,7 @@
 --
 -- History:
 -- 15-May-2020   Walter Rothlin      Initial Version
+-- 22-Oct-2021   Walter Rothlin	     Added some more attributes
 -- ---------------------------------------------------------------------------------------------
 
 -- Neues Schema kreieren
@@ -19,12 +20,15 @@ USE `MyBank`;
 
 DROP TABLE IF EXISTS bankkonto;
 CREATE TABLE IF NOT EXISTS bankkonto (
-  id_bankkonto int(11) NOT NULL AUTO_INCREMENT,
-  saldo double NOT NULL DEFAULT 0,
+  id_bankkonto int(11)     NOT NULL AUTO_INCREMENT,
+  saldo        double      NOT NULL DEFAULT 0,
+  limite       double      NOT NULL DEFAULT 0,
+  kontoArt     varchar(15),
+  owner        varchar(25),
   PRIMARY KEY (id_bankkonto)
 );
 
-INSERT INTO `bankkonto` VALUES (1,2000),(2,5000);
-
-
--- INSERT INTO `bankkonto` VALUES (1,1000),(2,35050),(3,200),(4,36000),(5,9);
+INSERT INTO `bankkonto` VALUES 
+         (1,2000,-100,'Lohnkonto','Walter Rothlin'),
+         (2,5000,0,'Sparkonto','Walter Rothlin'),
+         (3,10000,0,'Sparkonto','Claudia Collet Rothlin');
