@@ -81,7 +81,7 @@ def createPdfFromImgFolder(sourceFolder, pdfName, destinationFolder):
     filesInFolder.sort()
     imgList = []
     for file in filesInFolder:
-        if (file != ".DS_Store" and file[file.index('.'):] == ".jpg"):  # Mac OS creats a .DS_Store file which can't be converted to a pdf
+        if file != ".DS_Store" and file[file.index('.'):] == ".jpg":  # Mac OS creats a .DS_Store file which can't be converted to a pdf
             image1 = Image.open(sourceFolder + file)
             img1 = image1.convert('RGB')
             print(" Appending File: " + file)
