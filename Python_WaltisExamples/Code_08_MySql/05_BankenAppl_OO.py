@@ -12,6 +12,7 @@
 #
 # History:
 # 20-Oct-2021   Walter Rothlin      Initial Version
+# 31-Oct-2021   Walter Rothlin      fixed hardcoded Bilanzsummen Berechnung
 # ------------------------------------------------------------------
 from waltisLibrary import *
 import mysql.connector
