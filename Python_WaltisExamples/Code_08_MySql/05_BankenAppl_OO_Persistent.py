@@ -172,7 +172,6 @@ class Kontoliste:
         bilanzSumme = self.getBilanzSumme()
         print(aKonto.toString("footer", bilanzSumme), end="")
 
-
     def doKontoUebertrag(self, withdrawAmount, fromKontoId, toKontoId, trace=True):
         try:
             effWithDraw = self.getKontoViaID(fromKontoId).bezug(withdrawAmount, False)
@@ -185,7 +184,7 @@ class Kontoliste:
         bilanzSumme = 0
         for aKontoKey in self.__kontoList:
             aKonto = self.__kontoList[aKontoKey]
-            bilanzSumme += aKonto.getSaldo
+            bilanzSumme += aKonto.getSaldo()
         return bilanzSumme
 
 def Test_Kontoliste():

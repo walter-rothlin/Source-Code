@@ -25,7 +25,7 @@ class Konto:
     def __str__(self):
         return "id: {id:6d}    saldo: {saldo:10.2f}    limite: {limite:10.2f}".format(id=self.__id, saldo=self.__saldo, limite=self.__limite)
 
-    def toString(self, part="main"):
+    def toString(self, part="main", bilanzsumme=0):
         retStr = ""
         if part == "title":
             retStr += "+--------+------------+------------+\n"
@@ -35,7 +35,7 @@ class Konto:
             retStr += "| {id:6d} | {saldo:10.2f} | {limite:10.2f} |\n".format(id=self.__id, saldo=self.__saldo, limite=self.__limite)
         if part == "footer":
             retStr += "+--------+------------+------------+\n"
-            retStr += "| Summe: {summe:12.2f} |            |\n".format(summe=55.2)
+            retStr += "| Summe: {summe:12.2f} |            |\n".format(summe=bilanzsumme)
             retStr += "+--------+------------+------------+\n"
         return retStr
 
@@ -109,8 +109,15 @@ class Kontoliste:
                 print(aKonto.toString("title"), end="")
 
             print(aKonto.toString(), end="")
-        print(aKonto.toString("footer"), end="")
+        bilanzSumme = self.getBilanzSumme()
+        print(aKonto.toString("footer", bilanzSumme), end="")
 
+    def getBilanzSumme(self):
+        bilanzSumme = 0
+        for aKontoKey in self.__kontoList:
+            aKonto = self.__kontoList[aKontoKey]
+            bilanzSumme += aKonto.getSaldo()
+        return bilanzSumme
 
     def doKontoUebertrag(self, withdrawAmount, fromKontoId, toKontoId, trace=True):
         self.getKontoViaID(fromKontoId).bezug(withdrawAmount)
