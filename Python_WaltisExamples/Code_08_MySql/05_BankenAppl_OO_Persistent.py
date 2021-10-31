@@ -12,7 +12,7 @@
 #
 # History:
 # 20-Oct-2021   Walter Rothlin      Initial Version
-# 21-Oct-2021   Walter Rothlin      Added persitencens layer
+# 21-Oct-2021   Walter Rothlin      Added persistence layer
 # ------------------------------------------------------------------
 from waltisLibrary import *
 import mysql.connector
@@ -161,7 +161,6 @@ class Kontoliste:
         if title is not None:
             print("\n\n--->" + title)
         print(unterstreichen("Kontoübersicht von " + str(self.__owner)))
-        bilanzSumme = 0
         firstTime = True
         aKonto = None
         for aKontoKey in self.__kontoList:
@@ -169,9 +168,8 @@ class Kontoliste:
             if firstTime:
                 firstTime = False
                 print(aKonto.toString("title"), end="")
-
             print(aKonto.toString(), end="")
-            bilanzSumme += (aKonto.getSaldo())
+        bilanzSumme = self.getBilanzSumme()
         print(aKonto.toString("footer", bilanzSumme), end="")
 
 
@@ -182,6 +180,13 @@ class Kontoliste:
             self.__conn.commit()
         except:
             self.__conn.rollback()
+
+    def getBilanzSumme(self):
+        bilanzSumme = 0
+        for aKontoKey in self.__kontoList:
+            aKonto = self.__kontoList[aKontoKey]
+            bilanzSumme += aKonto.getSaldo
+        return bilanzSumme
 
 def Test_Kontoliste():
     print("\n")
