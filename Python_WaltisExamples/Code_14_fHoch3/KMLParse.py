@@ -13,13 +13,13 @@
 
 from xml.dom import minidom
 
-doc = minidom.parse("G:/_WaltisDaten/SourceCode/GitHosted/XML/sample_2.xml")
+dom = minidom.parse("G:/_WaltisDaten/SourceCode/GitHosted/XML/sample_2.xml")
 
 # doc.getElementsByTagName returns NodeList
-name = doc.getElementsByTagName("name")[0]
+name = dom.getElementsByTagName("name")[0]
 print(name.firstChild.data)
 
-staffs = doc.getElementsByTagName("staff")
+staffs = dom.getElementsByTagName("staff")
 print("+-----+----------------+----------------+")
 print("|{id:5s}| {name:15s}| {sal:15s}|".format(id="id:", name="nickname:", sal="salary:"))
 print("+-----+----------------+----------------+")

@@ -20,7 +20,7 @@ data = """<link rel="index" href="/index.php" />
 <link rel="shortcut icon" href="/img/all/favicon.ico" />
 """
 
-d = etree.HTML(data)
+dom = etree.HTML(data)
 
-value = d.xpath('//link[@rel="shortcut icon"]/@href')
+value = dom.xpath('//link[@rel="shortcut icon"]/@href')
 print(value)
