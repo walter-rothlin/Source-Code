@@ -14,13 +14,13 @@ import re
 # https://www.datacamp.com/community/tutorials/python-regular-expression-tutorial?utm_source=adwords_ppc&utm_campaignid=898687156&utm_adgroupid=48947256715&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=332602034343&utm_targetid=aud-299261629574:dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1030659&gclid=CjwKCAjwvMqDBhB8EiwA2iSmPDR31NV8fqfswUZIlUbCzfBvH4Cpe9F1tazVNK5HJBj3j4w-bnDQbBoCZv8QAvD_BwE
 
 pattern = r"Cookie"
-sequence = "Cookie"
+sequence = "Cookie is enabled"
 if re.match(pattern, sequence):
     print("(0a):", "Match!")
 else:
     print("(0a):", "Not a match!")
 
-print("(0b):", re.search(r'Co.k.e', 'Cookie').group())
+print("(0b):", re.search(r'Co.k.e', 'Coxkie are enabled! Noch mehr Coxkie').group())
 
 statement = 'Please contact us at: support@datacamp.com'
 regExStr = r'([\w\.-]+)@([\w\.-]+)'
@@ -31,7 +31,7 @@ if statement:
   print("(0c): Host:", match.group(2)) # The host (group 2)
 
 print()
-print("(1):", re.findall(r'Co.k.e', 'Cookie mit noch mehr Cookies, Cookie und noch mehr Coxkxe'))
+print("(1):", re.findall(r'Co.k.e', 'Cookie und noch mehr Coxkxe'))
 print("(2):", re.findall(r'^Eat', "Eat a cake! Eat it!"))
 print("(3):", re.findall(r'E.t', "Ect a cake! Ebt it!"))
 print("(4):", re.findall(r'cake$', "Cake! Let's eat cake"))
