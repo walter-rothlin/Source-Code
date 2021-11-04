@@ -5,11 +5,21 @@ import re
 pattern = r"Cookie"
 sequence = "Cookie"
 if re.match(pattern, sequence):
-    print("Match!")
+    print("(0a):", "Match!")
 else:
-    print("Not a match!")
+    print("(0a):", "Not a match!")
 
+print("(0b):", re.search(r'Co.k.e', 'Cookie').group())
 
+statement = 'Please contact us at: support@datacamp.com'
+regExStr = r'([\w\.-]+)@([\w\.-]+)'
+match = re.search(regExStr, statement)
+if statement:
+  print("(0c): Email address:", match.group()) # The whole matched text
+  print("(0c): Username:", match.group(1)) # The username (group 1)
+  print("(0c): Host:", match.group(2)) # The host (group 2)
+
+print()
 print("(1):", re.findall(r'Co.k.e', 'Cookie'))
 print("(2):", re.findall(r'^Eat', "Eat a cake! Eat it!"))
 print("(3):", re.findall(r'E.t', "Ect a cake! Ebt it!"))

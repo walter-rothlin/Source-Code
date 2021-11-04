@@ -121,7 +121,7 @@ class Kontoliste:
         return bilanzSumme
 
     def doKontoUebertrag(self, withdrawAmount, fromKontoId, toKontoId, trace=True):
-        self.getKontoViaID(fromKontoId).bezug(withdrawAmount)
+        withdrawAmount = self.getKontoViaID(fromKontoId).bezug(withdrawAmount)
         self.getKontoViaID(toKontoId).deposit(withdrawAmount)
 
 

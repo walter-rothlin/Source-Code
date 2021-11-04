@@ -25,17 +25,22 @@ print("Request:\n", requestStr)
 print("Response:\n", responseStr, "\n")
 
 print("Parsed values:")
-namespaces = {'tel': 'http://tel.search.ch/api/spec/result/1.0/'} # add more as needed
+namespaces = {'tel': 'http://tel.search.ch/api/spec/result/1.0/',
+              'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/'} # add more as needed
 dom = etree.HTML(responseStr)
+## value = dom.xpath('//feed')
+## totResults = value.find("totalResults", namespaces).text
+## print("totResults:", totResults)
+
 value = dom.xpath('//entry')
-print("  Elemnts found  :", len(value))
+print("  Elements found  :", len(value))
 
 for aEntry in value:
-    telNr = aEntry.find("name", namespaces).text
+    telNr = aEntry.find("phone", namespaces).text
     zip = aEntry.find("zip", namespaces).text
-    content = aEntry.find("content").text
+    content = aEntry.find("content", namespaces).text
     print("  aEntry  :", aEntry)
-    print("  Content :", content)
+    print("  Content :\n   ", content)
     print("  telNr   :", telNr)
     print("  Zip     :", zip)
     print()

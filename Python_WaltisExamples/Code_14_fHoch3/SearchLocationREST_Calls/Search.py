@@ -14,7 +14,7 @@ import json
 from lxml import etree
 import time
 
-searchCriteria = "Peterliwiese%2033"
+searchCriteria = "Peterliwiese%203"
 
 # map.geo.admin: https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText=Peterliwiese%2033&lang=en&type=locations
 # API: https://api3.geo.admin.ch/services/sdiservices.html
@@ -25,11 +25,14 @@ responseStr = requests.get(requestStr)
 jsonResponse = json.loads(responseStr.text)
 print("Request:\n", requestStr)
 print("Response:\n", jsonResponse, "\n")
-print("Parsed values:")
+recNr = 1
+print("Parsed values (Records found:{recCount:2d}):".format(recCount=len(jsonResponse['results'])))
 for entry in jsonResponse['results']:
+    print("\nRecord No: ", recNr)
     print("  detail  :", entry['attrs']['detail'])
     print("  lon     :", entry['attrs']['lon'])
     print("  lat     :", entry['attrs']['lat'])
+    recNr += 1
 
 print("-----------------------------------------------------------------")
 # search.ch: https://tel.search.ch/api/?q=Walter%20Rothlin%208855&key=8e8a84fd0f10d3b44920e49bc3b06a37
@@ -44,17 +47,18 @@ print("Request:\n", requestStr)
 print("Response:\n", responseStr, "\n")
 
 print("Parsed values:")
-namespaces = {'tel': 'http://tel.search.ch/api/spec/result/1.0/'} # add more as needed
+namespaces = {'tel': 'http://tel.search.ch/api/spec/result/1.0/',
+              'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/'} # add more as needed
 dom = etree.HTML(responseStr)
 value = dom.xpath('//entry')
-print("  Elemnts found  :", len(value))
+print("  Elements found  :", len(value))
 
 for aEntry in value:
-    telNr = aEntry.find("name", namespaces).text
+    telNr = aEntry.find("phone", namespaces).text
     zip = aEntry.find("zip", namespaces).text
-    content = aEntry.find("content").text
+    content = aEntry.find("content", namespaces).text
     print("  aEntry  :", aEntry)
-    print("  Content :", content)
+    print("  Content :\n   ", content)
     print("  telNr   :", telNr)
     print("  Zip     :", zip)
     print()

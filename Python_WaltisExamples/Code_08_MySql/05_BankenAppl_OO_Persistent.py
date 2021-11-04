@@ -121,7 +121,8 @@ class Kontoliste:
             host=self.__dbServer,
             database=self.__dbSchema,
             user=self.__userName,
-            passwd=self.__password
+            passwd=self.__password,
+            auth_plugin = 'mysql_native_password'
         )
         print("completed!")
         self.__conn.autocommit = False   # explicit commit and rollback by the application (Front-End)

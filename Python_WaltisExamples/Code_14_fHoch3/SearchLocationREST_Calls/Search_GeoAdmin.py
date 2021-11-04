@@ -12,7 +12,7 @@
 import requests
 import json
 
-searchCriteria = "Peterliwiese%2033"
+searchCriteria = "Peterliwiese%203"
 
 # map.geo.admin: https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText=Peterliwiese%2033&lang=en&type=locations
 # API: https://api3.geo.admin.ch/services/sdiservices.html
@@ -23,10 +23,13 @@ responseStr = requests.get(requestStr)
 jsonResponse = json.loads(responseStr.text)
 print("Request:\n", requestStr)
 print("Response:\n", jsonResponse, "\n")
-print("Parsed values:")
+recNr = 1
+print("Parsed values (Records found:{recCount:2d}):".format(recCount=len(jsonResponse['results'])))
 for entry in jsonResponse['results']:
+    print("\nRecord No: ", recNr)
     print("  detail  :", entry['attrs']['detail'])
     print("  lon     :", entry['attrs']['lon'])
     print("  lat     :", entry['attrs']['lat'])
+    recNr += 1
 
 print("-----------------------------------------------------------------")
