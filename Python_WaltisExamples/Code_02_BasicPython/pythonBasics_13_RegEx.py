@@ -1,3 +1,14 @@
+# ------------------------------------------------------------------
+# Name: pythonBasics_13_RegEx.py
+#
+# Description: Test-Programm zu RegEX
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 04-Nov-2021   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 import re
 
 # https://www.datacamp.com/community/tutorials/python-regular-expression-tutorial?utm_source=adwords_ppc&utm_campaignid=898687156&utm_adgroupid=48947256715&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=332602034343&utm_targetid=aud-299261629574:dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1030659&gclid=CjwKCAjwvMqDBhB8EiwA2iSmPDR31NV8fqfswUZIlUbCzfBvH4Cpe9F1tazVNK5HJBj3j4w-bnDQbBoCZv8QAvD_BwE
