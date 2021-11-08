@@ -11,6 +11,7 @@
 
 import requests
 from lxml import etree
+import xml.etree.ElementTree as ET
 
 
 # search.ch: https://tel.search.ch/api/?q=Walter%20Rothlin%208855&key=8e8a84fd0f10d3b44920e49bc3b06a37
@@ -22,16 +23,30 @@ requestStr = serviceURL.format(search=searchCriteria, appId=appId)
 responseStr = requests.get(requestStr).content
 
 print("Request:\n", requestStr)
-print("Response:\n", responseStr, "\n")
+print("Response:\n", responseStr, "\n\n\n")
 
-print("Parsed values:")
+
 namespaces = {'tel': 'http://tel.search.ch/api/spec/result/1.0/',
               'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/'} # add more as needed
-dom = etree.HTML(responseStr)
-## value = dom.xpath('//feed')
-## totResults = value.find("totalResults", namespaces).text
-## print("totResults:", totResults)
 
+print("Parsed values:")
+## reading XML directly from file
+# tree = ET.parse('country_data.xml')
+# root = tree.getroot()
+
+
+# https://docs.python.org/2/library/xml.etree.elementtree.html#parsing-xml-with-namespaces
+dom = ET.fromstring(responseStr)
+print("Root:", dom.tag, "(", dom.attrib, ")")
+for child in dom:
+    print("     Child:", child.tag, "   (", child.attrib, ")")
+print("title     :", dom.find('{http://www.w3.org/2005/Atom}title').text)
+print("totResults:", dom.find('{http://a9.com/-/spec/opensearchrss/1.0/}totalResults').text)
+
+
+print("\n\nvia XPath:")
+
+dom = etree.HTML(responseStr)
 value = dom.xpath('//entry')
 print("  Elements found  :", len(value))
 

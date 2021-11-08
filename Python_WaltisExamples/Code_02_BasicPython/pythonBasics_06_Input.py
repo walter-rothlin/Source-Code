@@ -9,11 +9,10 @@ name = input("What's your name? ")
 print("Nice to meet you " + name + "!")
 age = int(input("What is your age? "))
 print("So " + name + ", you are already " + str(age) + " years old!")
-print("name:   value:",name,"    type:",type(name))
-print("age :   value:",age ,"    type:",type(age))
+print("name:   value:", name, "    type:", type(name))
+print("age :   value:", age , "    type:", type(age))
 print("\n")
 
 calcStr = input("Rechnung (z.B. 5*6-2): ")
-print(calcStr," = ",eval(calcStr))
-
+print(calcStr, " = ", eval(calcStr))
 
