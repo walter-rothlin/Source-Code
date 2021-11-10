@@ -25,6 +25,7 @@
 # 10-Oct-2021   Walter Rothlin      Added placer, underline
 # 13-Oct-2021   Walter Rothlin      Added File_getFileContent
 # 16-Oct-2021   Walter Rothlin      Added printProgressBar
+# 10-Nov-2021   Walter Rothlin      Added getRange
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -1206,6 +1207,69 @@ def generateStringRepeats(len, aStr=" "):
     # generateStringRepeats(6)           => '      '
     return (aStr * len)[:len]
 
+def getRange(startVal = 0, endVal = 8, inc=1):
+    doLoop = True
+    retList = []
+    i = startVal
+    while doLoop:
+        if inc > 0:
+            if i <= endVal:
+                retList.append(i)
+                i += inc
+            else:
+                doLoop = False
+        elif inc < 0:
+            if i >= endVal:
+                retList.append(i)
+                i += inc
+            else:
+                doLoop = False
+        else:
+            doLoop = False
+    return retList
+
+def AUTO_TEST_getRange(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "getRange"
+
+    testsPerformed += 1
+    istList = getRange(3, 8)
+    expList = [3, 4, 5, 6, 7, 8]
+    if str(istList) != str(expList):
+        testsFailed += 1
+        print("Error in getRange")
+        print("    Ist:", str(istList))
+        print("    Exp:", str(expList))
+        print()
+
+    testsPerformed += 1
+    istList = getRange(3, 8, 2)
+    expList = [3, 5, 7]
+    if str(istList) != str(expList):
+        testsFailed += 1
+        print("Error in getRange")
+        print("    Ist:", str(istList))
+        print("    Exp:", str(expList))
+        print()
+
+    testsPerformed += 1
+    istList = getRange(0, -10, -3)
+    expList = [0, -3, -6, -9]
+    if str(istList) != str(expList):
+        testsFailed += 1
+        print("Error in getRange")
+        print("    Ist:", str(istList))
+        print("    Exp:", str(expList))
+        print()
+
+    if verbal:
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
+
 def placer(strichArt="-", laenge=30):
     return generateStringRepeats(len=laenge, aStr=strichArt)
 
@@ -2126,7 +2190,7 @@ def calcNullstellen_checked(a, b, c, ParameterCheck=True, ParamCheckErrorMsg="Fa
 # ===========================================================
 
 if __name__ == '__main__':
-    autoTest = False
+    autoTest = True
 
     if not autoTest:
         pass  # NOP in Python
@@ -2137,7 +2201,7 @@ if __name__ == '__main__':
         # TEST_readln(verbal=True)
         # TEST_get_sup_super()
         # TEST_calcNulstellen()
-        TEST_printProgressBar()
+        # TEST_printProgressBar()
 
     # Automated Tests
     # ===============
@@ -2202,6 +2266,11 @@ if __name__ == '__main__':
         testStat = AUTO_TEST_a_isFloatEquals(verbal=doVerbal)
         totalTests[0] += testStat[0]
         totalTests[1] += testStat[1]
+
+        testStat = AUTO_TEST_getRange(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
+
 
         deleteDir("./TestData")
         if doVerbal:

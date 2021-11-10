@@ -14,7 +14,7 @@ data = {
 with open("data_file.json", "w") as write_file:
     json.dump(data, write_file, indent=4)
 
-#Deserialization: JSON-String to dictonary
+# Deserialization: JSON-String to dictonary
 json_string = """
 {
     "researcher": {
