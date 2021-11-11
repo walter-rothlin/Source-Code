@@ -11,20 +11,26 @@ x = "hello"
 assert x == "hello"
 assert x == "hello", "You have entred not 'hello'"   # this will be passed to the Ctr of the exception
 
+
 # via raise: calls Ctr from an exception and string
+x = 5555
 if not type(x) is int:
     ## pass # NOP
     raise TypeError("Only integers are allowed")
+else:
+    print(x, "is an int!!!")
+
 
 
 # Except an exception
 # -------------------
 
+x = "hello"
 # assert: if returns False, AssertionError is raised with text:
 try:
     assert x == "hello", "all fine! Not really an error!"
-    assert x == "goodbye", "You have entred not 'hello'"
-    assert x == "BZU Uster", "You have entred not 'hello'"
+    assert x != "goodbye", "You have entred not 'hello'"
+    assert x != "BZU Uster", "You have entred not 'hello'"
 except AssertionError as error:
     print("Error happend! ", error)
     print("Error details: ", sys.exc_info())

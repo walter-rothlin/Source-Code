@@ -208,7 +208,7 @@ def readInt_00(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mu
             error = True
     return userInputInt
 
-def readFloat_0(prompt="float=", errPreMsg="Falsche Eingabe:", errPostMsg="   Must be a float!"):
+def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
     error = True
     while error:
         try:
