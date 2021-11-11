@@ -31,7 +31,7 @@ class SymCrypterEncrypter:
       return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
       # return chr(ord(aChar) + shift)
 
-   def encrypt(self,klartext):
+   def encrypt(self, klartext):
       keyIndex = 0
       geheimtext = ""
       for aChar in klartext:
@@ -46,7 +46,7 @@ class SymCrypterEncrypter:
             geheimtext = geheimtext + aSecretChr
       return geheimtext
 
-   def decrypt(self,geheimtext):
+   def decrypt(self, geheimtext):
       keyIndex = 0
       encryptedtext = ""
       for aChar in geheimtext:

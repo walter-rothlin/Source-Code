@@ -26,6 +26,7 @@
 # 13-Oct-2021   Walter Rothlin      Added File_getFileContent
 # 16-Oct-2021   Walter Rothlin      Added printProgressBar
 # 10-Nov-2021   Walter Rothlin      Added getRange
+# 11-Nov-2021   Walter Rothlin      Added RegEx
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -58,6 +59,9 @@ import requests
 def waltisPythonLib_Version():
     print("waltisLibrary.py: 1.0.0.5")
 
+# Regular-Expressions
+# ===================
+regEx_email = r'([\w\.-]+)@([\w\.-]+)'
 
 # Bildschirmsteuerung
 # ===================

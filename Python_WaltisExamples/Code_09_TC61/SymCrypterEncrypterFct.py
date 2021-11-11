@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------
-# Name: Shiffre.py
+# Name: SymCrypterEncrypterFct.py
 #
 # Description: Crypto Maschine in Python
 #
@@ -33,9 +33,6 @@ def encrypt(klartext, key):
             geheimtext = geheimtext + aSecretChr
     return geheimtext
 
-def decrypt(chiffrat, key):
-    return "Klartext"
-
 def decrypt(geheimtext, key):
   keyIndex = 0
   encryptedtext = ""
@@ -51,11 +48,13 @@ def decrypt(geheimtext, key):
         encryptedtext = encryptedtext + decryptedChar
   return encryptedtext
 
+
+# ================
+# Main starts here
+# ================
 key = 'superGeheim007'
 
-klartext = '''Hello World!
-Dies ist ein langer Text!
-'''
+klartext = '''Hello World! Dies ist ein langer Text!'''
 
 
 
@@ -68,5 +67,5 @@ print()
 dechiffrat = decrypt(chiffrat, key)
 print("Chiffrat:", chiffrat)
 print("Dechiffrat:", dechiffrat, "   Key:", key)
-print("Klartext:", klartext)
+print("Klartext  :", klartext)
 print()
