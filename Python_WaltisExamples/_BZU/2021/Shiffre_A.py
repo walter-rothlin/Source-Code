@@ -33,9 +33,6 @@ def encrypt(klartext, key):
             geheimtext = geheimtext + aSecretChr
     return geheimtext
 
-def decrypt(chiffrat, key):
-    return "Klartext"
-
 def decrypt(geheimtext, key):
   keyIndex = 0
   encryptedtext = ""
@@ -57,16 +54,20 @@ klartext = '''Hello World!
 Dies ist ein langer Text!
 '''
 
+# klartext = input("Klartext:")
+# print("Klartext:", klartext)
 
 
+radius = float(input("Radius:"))
+print("r =", radius, "   U =", 2*radius*3.1415926)
 
-chiffrat = encrypt(klartext, key)
-print("Klartext:", klartext, "   Key:", key)
-print("Chiffrat:", chiffrat)
-print()
-
-dechiffrat = decrypt(chiffrat, key)
-print("Chiffrat:", chiffrat)
-print("Dechiffrat:", dechiffrat, "   Key:", key)
-print("Klartext:", klartext)
-print()
+# chiffrat = encrypt(klartext, key)
+# print("Klartext:", klartext, "   Key:", key)
+# print("Chiffrat:", chiffrat)
+# print()
+#
+# dechiffrat = decrypt(chiffrat, key)
+# print("Chiffrat:", chiffrat)
+# print("Dechiffrat:", dechiffrat, "   Key:", key)
+# print("Klartext:", klartext)
+# print()

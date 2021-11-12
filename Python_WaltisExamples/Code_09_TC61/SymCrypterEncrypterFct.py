@@ -9,6 +9,7 @@
 # 05-Nov-2021   Walter Rothlin      Initial Version
 # 11-Nov-2021   Walter Rothlin      Implemented Ringbuffer Shifter, encrypter, decrypter
 # ------------------------------------------------------------------
+import math
 
 def shifter(sChr, sh):
     retVal = chr(ord(sChr) + sh)
@@ -22,50 +23,59 @@ def encrypt(klartext, key):
     keyIndex = 0
     geheimtext = ""
     for aChar in klartext:
-        if (aChar >= "") and (aChar <= "~"):
+        if (aChar >= " ") and (aChar <= "~"):
             aKeyChr = key[keyIndex]
             shifter = ord(aKeyChr)
             aSecretChr = shiftChr(aChar, shifter)
             # print(aChar, " (Rigth-Shift: ord(", aKeyChr, ") ", shifter, ") --> ", aSecretChr, sep="")
-            keyIndex = keyIndex + 1
+            keyIndex += 1
             if (keyIndex >= len(key)):
                 keyIndex = 0
-            geheimtext = geheimtext + aSecretChr
+            geheimtext += aSecretChr
     return geheimtext
 
 def decrypt(geheimtext, key):
   keyIndex = 0
   encryptedtext = ""
   for aChar in geheimtext:
-     if (aChar >= "") and (aChar <= "~"):
+     if (aChar >= " ") and (aChar <= "~"):
         aKeyChr = key[keyIndex]
         shifter = ord(aKeyChr)
         decryptedChar = shiftChr(aChar, -shifter)
         # print(aChar, " (Left-Shift:        ", -shifter, ") --> ", decryptedChar, sep="", end="\n\n")
-        keyIndex = keyIndex + 1
+        keyIndex += 1
         if (keyIndex >= len(key)):
            keyIndex = 0
-        encryptedtext = encryptedtext + decryptedChar
+        encryptedtext += decryptedChar
   return encryptedtext
 
 
 # ================
 # Main starts here
 # ================
-key = 'superGeheim007'
+doLoop = True
+while doLoop:
+    print(" Crypt-Maschine V1.0")
+    print(" ===================")
+    print()
+    print("1: Entschluesseln")
+    print("2: Verschluesseln")
+    print()
+    print("0: Ende")
+    print()
+    ant = input("    Wähle:")
+    print("\n\n")
+    if ant == "1":
+        print("Entschluesseln")
+        chiffrat = input("Geheimtext:")
+        key = input("Key:")
+        print(decrypt(chiffrat, key))
 
-klartext = '''Hello World! Dies ist ein langer Text!'''
+    elif ant == "2":
+        print("Verschluesseln")
+        klartext = input("Klartext:")
+        key = input("Key:")
+        print(encrypt(klartext, key))
 
-
-
-
-chiffrat = encrypt(klartext, key)
-print("Klartext:", klartext, "   Key:", key)
-print("Chiffrat:", chiffrat)
-print()
-
-dechiffrat = decrypt(chiffrat, key)
-print("Chiffrat:", chiffrat)
-print("Dechiffrat:", dechiffrat, "   Key:", key)
-print("Klartext  :", klartext)
-print()
+    elif ant == "0":
+        doLoop = False
