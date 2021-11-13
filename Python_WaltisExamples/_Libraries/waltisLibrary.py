@@ -27,6 +27,7 @@
 # 16-Oct-2021   Walter Rothlin      Added printProgressBar
 # 10-Nov-2021   Walter Rothlin      Added getRange
 # 11-Nov-2021   Walter Rothlin      Added RegEx
+# 13-Nov-2021   Walter Rothlin      Added crypto functions (shiftChr(), chipher(), encrypt(), decrypt())
 # ------------------------------------------------------------------
 import inspect
 import math
@@ -2188,6 +2189,113 @@ def calcNullstellen_checked(a, b, c, ParameterCheck=True, ParamCheckErrorMsg="Fa
     else:
         return calcNullstellen(a, b, c)
 
+# Symetrische Cryptographie
+# =========================
+def shifter(sChr, sh):
+    retVal = chr(ord(sChr) + sh)
+    return retVal
+
+
+# shifter using a ringbuffer (source
+def shiftChr(aChar, shift):
+    if (aChar >= " ") and (aChar <= "~"):
+        return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
+    else:
+        return aChar
+
+
+# using comprehension
+def chipher(text, cipherKey, encript=False):
+    return "".join([element[1] for element in
+                    [[string_in_list,
+                      shiftChr(string_in_list, (1 if encript else -1) * ord(cipherKey[i % len(cipherKey)]))]
+                     for i, string_in_list in zip(range(len(text)), text)]])
+
+def encrypt(klartext, cipherKey):
+    return chipher(klartext, cipherKey, encript = True)
+
+
+def decrypt(geheimtext, cipherKey):
+    return chipher(geheimtext, cipherKey, encript = False)
+
+def encrypt_old(klartext, aKey):
+    keyIndex = 0
+    geheimtext = ""
+    for aChar in klartext:
+        aKeyChr = aKey[keyIndex]
+        shifter = ord(aKeyChr)
+        aSecretChr = shiftChr(aChar, shifter)
+        # print(aChar, " (Rigth-Shift: ord(", aKeyChr, ") ", shifter, ") --> ", aSecretChr, sep="")
+        keyIndex += 1
+        if (keyIndex >= len(aKey)):
+            keyIndex = 0
+        geheimtext += aSecretChr
+    return geheimtext
+
+
+def decrypt_old(geheimtext, aKey):
+    keyIndex = 0
+    encryptedtext = ""
+    for aChar in geheimtext:
+        aKeyChr = aKey[keyIndex]
+        shifter = ord(aKeyChr)
+        decryptedChar = shiftChr(aChar, -shifter)
+        # print(aChar, " (Left-Shift:        ", -shifter, ") --> ", decryptedChar, sep="", end="\n\n")
+        keyIndex += 1
+        if (keyIndex >= len(aKey)):
+            keyIndex = 0
+        encryptedtext += decryptedChar
+    return encryptedtext
+
+
+def AUTO_TEST_CryptDecrypt(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "CryptDecrypt"
+
+    klartext = "Hallo"
+    keyStr = "12"
+
+    testsPerformed += 1
+    # -------------------------------------------------------------------------------
+    fct = "encrypt()"
+    # -------------------------------------------------------------------------------
+    case = 1
+    chiffrat = encrypt(klartext, keyStr)
+    chiffratOld = encrypt_old(klartext, keyStr)
+    if chiffrat != chiffratOld:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Result: ", chiffrat, "   Expected:", chiffratOld, end="\n\n")
+        testsFailed += 1
+
+
+    testsPerformed += 1
+    # -------------------------------------------------------------------------------
+    fct = "decrypt()"
+    # -------------------------------------------------------------------------------
+    case = 1
+    dechiffrat = decrypt(chiffrat, keyStr)
+    dechiffratOld = decrypt_old(chiffratOld, keyStr)
+    if dechiffrat != dechiffratOld:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Result: ", dechiffrat, "   Expected:", dechiffratOld, end="\n\n")
+        testsFailed += 1
+
+    testsPerformed += 1
+    # -------------------------------------------------------------------------------
+    fct = "encrypt() and decrypt()"
+    # -------------------------------------------------------------------------------
+    if dechiffrat != klartext:
+        print("Error in testSuite:   ", testSuite, ":   ", fct, "    case:", case, sep="")
+        print("    Result: ", dechiffrat, "   Expected:", klartext, end="\n\n")
+        testsFailed += 1
+
+    if verbal:
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
+    return [testsPerformed, testsFailed]
 
 # ===========================================================
 # MAIN
@@ -2272,6 +2380,10 @@ if __name__ == '__main__':
         totalTests[1] += testStat[1]
 
         testStat = AUTO_TEST_getRange(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
+
+        testStat = AUTO_TEST_CryptDecrypt(verbal=doVerbal)
         totalTests[0] += testStat[0]
         totalTests[1] += testStat[1]
 

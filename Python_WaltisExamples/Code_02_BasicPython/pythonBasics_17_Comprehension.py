@@ -48,3 +48,4 @@ print("list:", [string_in_list for string_in_list in my_list_a if string_in_list
 print("dict:", {a : b for a, b in zip(my_list_a, my_list_b)})
 print("sets:", {a     for a, b in zip(my_list_a, my_list_b)})
 
+# weitere comprehension siehe waltisLibrary.py under Symetrische Cryptographie
