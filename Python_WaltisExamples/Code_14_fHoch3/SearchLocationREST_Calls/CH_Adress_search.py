@@ -121,7 +121,7 @@ def getResults_search_ch(searchCriteriaEncoded, doTrace = False):
 while resultsFound > 1:
     searchCriteria = input("Suchkriterium:")
     if len(searchCriteria) == 0:
-        print("Loop beenden!")
+        print("Application stopped!")
         break
 
     searchCriteriaEncoded = searchCriteria.replace(" ", "%20")
@@ -130,8 +130,10 @@ while resultsFound > 1:
     print("Records found with geo.admin.ch:{recCount:2d}".format(recCount=resultsFoundInMapGeoAdmin))
     print(json.dumps(results, indent=4))
 
-    if resultsFoundInMapGeoAdmin != 1:
-        results = getResults_search_ch(searchCriteriaEncoded, False)
-        resultsFoundInTelSearch = results['count']
-        print("Records found with search.ch   :{recCount:2d}".format(recCount=resultsFoundInTelSearch))
-        print(json.dumps(results, indent=4))
+    results = getResults_search_ch(searchCriteriaEncoded, False)
+    resultsFoundInTelSearch = results['count']
+    print("Records found with search.ch   :{recCount:2d}".format(recCount=resultsFoundInTelSearch))
+    print(json.dumps(results, indent=4))
+
+    if resultsFoundInTelSearch == 1 and resultsFoundInMapGeoAdmin == 1:
+        print("====>>   Combine results <<======")
