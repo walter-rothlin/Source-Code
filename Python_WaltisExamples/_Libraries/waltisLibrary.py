@@ -28,7 +28,16 @@
 # 10-Nov-2021   Walter Rothlin      Added getRange
 # 11-Nov-2021   Walter Rothlin      Added RegEx
 # 13-Nov-2021   Walter Rothlin      Added crypto functions (shiftChr(), chipher(), encrypt(), decrypt())
+# 22-Nov-2021   Walter Rothlin      Added readFile
+# 22-Nov-2021   Walter Rothlin      Added Search and XML fct: dictify, getFieldFromTelSearchXML
+#                                        getResultsFromAdressSearch, getResults_search_ch, getResults_geoAdmin
 # ------------------------------------------------------------------
+
+# toDo:
+#  def File_readWithInludes returns noting
+
+# ------------------------------------------------------------------
+
 import inspect
 import math
 import os
@@ -40,6 +49,11 @@ from pathlib import Path
 import re
 from time import sleep
 
+from rich import print
+import json
+from lxml import etree
+import xml.etree.ElementTree as ET
+import urllib.parse
 
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
@@ -1747,9 +1761,13 @@ def File_cleanup(filename, directory, path_sign):
 
 # File manipulation
 # =================
+def readFile(sourceFileFN, lineEnd="\n"):
+    return File_getFileContent(sourceFileFN, returnType="String", lineEnd=lineEnd)
+
 '''String or ListOfLines'''
 def File_getFileContent(sourceFileFN, returnType="String", lineEnd="\n"):
-    with open("serviceMsg.xml", "r", encoding="utf-8") as f:
+    # with open(sourceFileFN, "r", encoding="utf-8") as f:
+    with open(sourceFileFN, "r", encoding="utf-8") as f:
         lines = f.readlines()
         lines = [aLine.strip('\n\r') for aLine in lines]
     if returnType == "ListOfLines":
@@ -2296,6 +2314,159 @@ def AUTO_TEST_CryptDecrypt(verbal=False):
               ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
+# geo.admin search / tel.search
+# =============================
+def getResults_geoAdmin(searchCriteriaEncoded, appId = "", doTrace = False):
+    serviceURL = "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText={search:2s}&lang=en&type=locations"
+    requestStr = serviceURL.format(search=searchCriteriaEncoded)
+    responseStr = requests.get(requestStr)
+    jsonResponse = json.loads(responseStr.text)
+    print("Request:\n", requestStr) if doTrace else False
+    print("Response:\n", jsonResponse, "\n") if doTrace else False
+    returnJSON = {'criteria' : searchCriteriaEncoded,
+                  'count' : int(len(jsonResponse['results'])),
+                  'results' : []}
+
+    recNr = 1
+    # print("Parsed values (Records found:{recCount:2d}):".format(recCount=len(jsonResponse['results'])))
+    for entry in jsonResponse['results']:
+        details = entry['attrs']['detail']
+        lon = entry['attrs']['lon']
+        lat = entry['attrs']['lat']
+        x = entry['attrs']['x']
+        y = entry['attrs']['y']
+        details = {'details' : details,
+                   'longitude' : lon,
+                   'latitude' : lat,
+                   'ch_x' : x,
+                   'ch_y' : y}
+        returnJSON['results'].append(details)
+        print("\nRecord No: ", recNr) if doTrace else False
+        print("  detail  :", details) if doTrace else False
+        print("  lon     :", lon) if doTrace else False
+        print("  lat     :", lat) if doTrace else False
+        print("  x       :", x) if doTrace else False
+        print("  y       :", y) if doTrace else False
+        recNr += 1
+    return returnJSON
+
+def getFieldFromTelSearchXML(searchCH_Entry, namespaces, fieldname="type"):
+    try:
+        # print("++++++++++++++++++::::", fieldname, ":::")
+        node = searchCH_Entry.find(fieldname, namespaces)
+        # if fieldname == "extra":
+            # print("----------------->")
+            # print(node.text)
+            # print(node.xPath("@type").text)
+            # print("+++++++++++++++++>")
+        retVal = node.text
+    except AttributeError:
+        retVal = ""
+    return retVal
+
+
+def getResults_search_ch(searchCriteriaEncoded, appId = "8e8a84fd0f10d3b44920e49bc3b06a37", doTrace = False):
+    serviceURL = "https://tel.search.ch/api/?q={search:2s}&key={appId:2s}"
+    requestStr = serviceURL.format(search=searchCriteriaEncoded, appId=appId)
+    responseStr = requests.get(requestStr).content
+    print("Request:\n", requestStr) if doTrace else False
+    ## print("Response:\n", responseStr, "\n\n\n")  if doTrace else False
+
+
+    namespaces = {'tel': 'http://tel.search.ch/api/spec/result/1.0/',
+                  'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/'} # add more as needed
+    dom = ET.fromstring(responseStr)
+    countFound = int(dom.find('{http://a9.com/-/spec/opensearchrss/1.0/}totalResults').text)
+    returnJSON = {'criteria' : searchCriteriaEncoded,
+                  'count' : countFound,
+                  'results' : []}
+    dom = etree.HTML(responseStr)
+    value = dom.xpath('//entry')
+    print("  Elements found  :", len(value)) if doTrace else False
+
+    for aEntry in value:
+        entryType = getFieldFromTelSearchXML(aEntry, namespaces, "type")
+        name = getFieldFromTelSearchXML(aEntry, namespaces, "name")
+        subname = getFieldFromTelSearchXML(aEntry, namespaces, "subname")
+        firstname = getFieldFromTelSearchXML(aEntry, namespaces, "firstname")
+        street = getFieldFromTelSearchXML(aEntry, namespaces, "street")
+        streetno = getFieldFromTelSearchXML(aEntry, namespaces, "streetno")
+        zip = getFieldFromTelSearchXML(aEntry, namespaces, "zip")
+        city = getFieldFromTelSearchXML(aEntry, namespaces, "city")
+        canton = getFieldFromTelSearchXML(aEntry, namespaces, "canton")
+        country = getFieldFromTelSearchXML(aEntry, namespaces, "country")
+        telNr = getFieldFromTelSearchXML(aEntry, namespaces, "phone")
+        telNrExtra = getFieldFromTelSearchXML(aEntry, namespaces, "extra")
+        content = getFieldFromTelSearchXML(aEntry, namespaces, "content")
+        details = {'entryType': entryType,
+                   'name' : name,
+                   'subname' : subname,
+                   'firstname': firstname,
+                   'street' : street,
+                   'streetno': streetno,
+                   'zip': zip,
+                   'city': city,
+                   'canton' : canton,
+                   'country': country,
+                   'telNr': telNr,
+                   'telNrExtra': telNrExtra,
+                   'content': content
+                  }
+        returnJSON['results'].append(details)
+
+        print("  aEntry  :", aEntry) if doTrace else False
+        print("  Content :\n", content) if doTrace else False
+        print("  telNr   :", telNr) if doTrace else False
+        print("  Zip     :", zip) if doTrace else False
+        print() if doTrace else False
+
+    return returnJSON
+
+
+def getResultsFromAdressSearch(searchCriteriaEncoded, doTrace = False):
+
+    results = getResults_search_ch(searchCriteriaEncoded, doTrace=doTrace)
+    resultsFoundInTelSearch = results['count']
+    print("Records found with AdressSearch   :{recCount:2d}".format(recCount=resultsFoundInTelSearch)) if doTrace else False
+    print(json.dumps(results, indent=4)) if doTrace else False
+    for i in range(results['count']):
+        # print("i:", i, results['results'][i]['street']) if doTrace else False
+        # print("i:", i, results['results'][i]['streetno']) if doTrace else False
+        # print("i:", i, results['results'][i]['zip']) if doTrace else False
+        # print("i:", i, results['results'][i]['city']) if doTrace else False
+        # print() if doTrace else False
+        searchCriteria = str(results['results'][i]['street']) + ' ' + results['results'][i]['streetno'] + ', ' + results['results'][i]['zip'] + ' ' + results['results'][i]['city']
+        print("searchCriteria:", searchCriteria) if doTrace else False
+        searchCriteriaEncoded = urllib.parse.quote_plus(searchCriteria)
+        resultsGoeAdmin = getResults_geoAdmin(searchCriteriaEncoded, doTrace=doTrace)
+        if resultsGoeAdmin['count'] > 0:
+            # print("resultsGoeAdmin:", resultsGoeAdmin['results'][0]) if doTrace else False
+            results['results'][i]['geoDetails'] = resultsGoeAdmin['results'][0]['details']
+            results['results'][i]['longitude'] = resultsGoeAdmin['results'][0]['longitude']
+            results['results'][i]['latitude'] = resultsGoeAdmin['results'][0]['latitude']
+            results['results'][i]['ch_x'] = resultsGoeAdmin['results'][0]['ch_x']
+            results['results'][i]['ch_y'] = resultsGoeAdmin['results'][0]['ch_y']
+    return results
+
+def dictify(context, names):
+    node = context.context_node
+    rv = []
+    rv.append('__dictify_start_marker__')
+    names = names.split('|')
+    for n in names:
+        if n.startswith('@'):
+            val = node.attrib.get(n[1:])
+            if val != None:
+                rv.append(n)
+                rv.append(val)
+        else:
+            children = node.findall(n)
+            for child_node in children:
+                rv.append(n)
+                rv.append(child_node.text)
+    rv.append('__dictify_end_marker__')
+    return rv
 
 # ===========================================================
 # MAIN

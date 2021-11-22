@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!-- <?xml version="1.0" encoding="utf-8" ?>   -->
+<feed xml:lang="de" xmlns="http://www.w3.org/2005/Atom" xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/" xmlns:tel="http://tel.search.ch/api/spec/result/1.0/">
+  <id>https://tel.search.ch/api/8e8a84fd0f10d3b44920e49bc3b06a37/cbb4125347194913781ae311e4f93ec2</id>
+  <title type="text">tel.search.ch API Search Results</title>
+  <generator version="1.0" uri="https://tel.search.ch">tel.search.ch</generator>
+  <updated>2021-11-22T14:23:21+01:00</updated>
+  <link href="https://tel.search.ch/result?all=Walter+Rothlin,8855" rel="alternate" type="text/html" />
+  <link href="http://tel.search.ch/api/?q=Walter+Rothlin,8855&amp;key=8e8a84fd0f10d3b44920e49bc3b06a37" type="application/atom+xml" rel="self" />
+  <openSearch:totalResults>2</openSearch:totalResults>
+  <openSearch:startIndex>1</openSearch:startIndex>
+  <openSearch:itemsPerPage>10</openSearch:itemsPerPage>
+  <openSearch:Query role="request" searchTerms=" " startPage="1"></openSearch:Query>
+  <openSearch:Image height="1" width="1" type="image/gif">https://www.search.ch/audit/CP/tel/de/api</openSearch:Image>
+  <entry>
+    <id>urn:uuid:b425aa1141dd622b</id>
+    <updated>2019-03-22T23:45:07+01:00</updated>
+    <published>2019-03-22T23:45:07+01:00</published>
+    <title type="text">Rothlin-Collet, Walter und Claudia</title>
+    <content type="text">Rothlin-Collet, Walter und Claudia
+    Peterliwiese 33
+    8855 Wangen SZ
+    *055 460 14 40</content>
+    <tel:nopromo>*</tel:nopromo>
+    <author>
+      <name>tel.search.ch</name>
+    </author>
+    <link href="https://tel.search.ch/wangen/peterliwiese-33/walter-und-claudia-rothlin-collet" title="Details" rel="alternate" type="text/html" />
+    <link href="https://tel.search.ch/vcard/Rothlin-Collet.vcf?key=b425aa1141dd622b" type="text/x-vcard" title="VCard Download" rel="alternate" />
+    <link href="https://tel.search.ch/edit/?id=b425aa1141dd622b" rel="edit" type="text/html" />
+    <tel:pos>1</tel:pos>
+    <tel:id>b425aa1141dd622b</tel:id>
+    <tel:type>Person</tel:type>
+    <tel:name>Rothlin-Collet</tel:name>
+    <tel:firstname>Walter und Claudia</tel:firstname>
+    <tel:street>Peterliwiese</tel:street>
+    <tel:streetno>33</tel:streetno>
+    <tel:zip>8855</tel:zip>
+    <tel:city>Wangen</tel:city>
+    <tel:canton>SZ</tel:canton>
+    <tel:country>ch</tel:country>
+    <tel:phone>+41554601440</tel:phone>
+    <tel:extra type="Mobile">+41793689422</tel:extra>
+    <tel:copyright>Daten: Swisscom Directories AG</tel:copyright>
+  </entry>
+  <entry>
+    <id>urn:uuid:2a7f4c7fdd96d60b</id>
+    <updated>2019-03-26T05:31:37+01:00</updated>
+    <published>2019-03-26T05:31:37+01:00</published>
+    <title type="text">Rothlin, Walter</title>
+    <content type="text">Rothlin, Walter
+    Automech.
+    Etzelstrasse 7
+    8855 Wangen SZ
+    055 440 21 71</content>
+    <author>
+      <name>tel.search.ch</name>
+    </author>
+    <link href="https://tel.search.ch/wangen/etzelstrasse-7/walter-rothlin" title="Details" rel="alternate" type="text/html" />
+    <link href="https://tel.search.ch/vcard/Rothlin.vcf?key=2a7f4c7fdd96d60b" type="text/x-vcard" title="VCard Download" rel="alternate" />
+    <link href="https://tel.search.ch/edit/?id=2a7f4c7fdd96d60b" rel="edit" type="text/html" />
+    <tel:pos>2</tel:pos>
+    <tel:id>2a7f4c7fdd96d60b</tel:id>
+    <tel:type>Person</tel:type>
+    <tel:name>Rothlin</tel:name>
+    <tel:firstname>Walter</tel:firstname>
+    <tel:occupation>Automech.</tel:occupation>
+    <tel:street>Etzelstrasse</tel:street>
+    <tel:streetno>7</tel:streetno>
+    <tel:zip>8855</tel:zip>
+    <tel:city>Wangen</tel:city>
+    <tel:canton>SZ</tel:canton>
+    <tel:country>ch</tel:country>
+    <tel:phone>+41554402171</tel:phone>
+    <tel:copyright>Daten: Swisscom Directories AG</tel:copyright>
+  </entry>
+</feed>
