@@ -4,6 +4,7 @@
 # Name: waltisLibrary.py
 #
 # Description: Library - Module (Source in ExamplesPyton/_Libraries/waltisLibrary.py)
+# https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/waltisLibrary.py
 #
 # Autor: Walter Rothlin
 #

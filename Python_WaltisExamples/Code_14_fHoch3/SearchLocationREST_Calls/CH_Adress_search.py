@@ -8,9 +8,8 @@
 # History:
 # 14-Nov-2021   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
-
 from waltisLibrary import *
-
+# https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/waltisLibrary.py
 
 doTrace = False
 resultsFound = 10000
