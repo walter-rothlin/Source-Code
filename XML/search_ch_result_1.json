@@ -1,0 +1,148 @@
+{
+   "@lang": "de",
+   "id": "https://tel.search.ch/api/8e8a84fd0f10d3b44920e49bc3b06a37/cbb4125347194913781ae311e4f93ec2",
+   "title": {
+      "@type": "text",
+      "#text": "tel.search.ch API Search Results"
+   },
+   "generator": {
+      "@version": "1.0",
+      "@uri": "https://tel.search.ch",
+      "#text": "tel.search.ch"
+   },
+   "updated": "2021-11-22T14:23:21+01:00",
+   "link": [
+      {
+         "@href": "https://tel.search.ch/result?all=Walter+Rothlin,8855",
+         "@rel": "alternate",
+         "@type": "text/html"
+      },
+      {
+         "@href": "http://tel.search.ch/api/?q=Walter+Rothlin,8855&key=8e8a84fd0f10d3b44920e49bc3b06a37",
+         "@type": "application/atom+xml",
+         "@rel": "self"
+      }
+   ],
+   "totalResults": "2",
+   "startIndex": "1",
+   "itemsPerPage": "10",
+   "Query": {
+      "@role": "request",
+      "@searchTerms": "",
+      "@startPage": "1"
+   },
+   "Image": {
+      "@height": "1",
+      "@width": "1",
+      "@type": "image/gif",
+      "#text": "https://www.search.ch/audit/CP/tel/de/api"
+   },
+   "entry": [
+      {
+         "id": [
+            "urn:uuid:b425aa1141dd622b",
+            "b425aa1141dd622b"
+         ],
+         "updated": "2019-03-22T23:45:07+01:00",
+         "published": "2019-03-22T23:45:07+01:00",
+         "title": {
+            "@type": "text",
+            "#text": "Rothlin-Collet, Walter und Claudia"
+         },
+         "content": {
+            "@type": "text",
+            "#text": "Rothlin-Collet, Walter und Claudia\n    Peterliwiese 33\n    8855 Wangen SZ\n    *055 460 14 40"
+         },
+         "nopromo": "*",
+         "author": {
+            "name": "tel.search.ch"
+         },
+         "link": [
+            {
+               "@href": "https://tel.search.ch/wangen/peterliwiese-33/walter-und-claudia-rothlin-collet",
+               "@title": "Details",
+               "@rel": "alternate",
+               "@type": "text/html"
+            },
+            {
+               "@href": "https://tel.search.ch/vcard/Rothlin-Collet.vcf?key=b425aa1141dd622b",
+               "@type": "text/x-vcard",
+               "@title": "VCard Download",
+               "@rel": "alternate"
+            },
+            {
+               "@href": "https://tel.search.ch/edit/?id=b425aa1141dd622b",
+               "@rel": "edit",
+               "@type": "text/html"
+            }
+         ],
+         "pos": "1",
+         "type": "Person",
+         "name": "Rothlin-Collet",
+         "firstname": "Walter und Claudia",
+         "street": "Peterliwiese",
+         "streetno": "33",
+         "zip": "8855",
+         "city": "Wangen",
+         "canton": "SZ",
+         "country": "ch",
+         "phone": "+41554601440",
+         "extra": {
+            "@type": "Mobile",
+            "#text": "+41793689422"
+         },
+         "copyright": "Daten: Swisscom Directories AG"
+      },
+      {
+         "id": [
+            "urn:uuid:2a7f4c7fdd96d60b",
+            "2a7f4c7fdd96d60b"
+         ],
+         "updated": "2019-03-26T05:31:37+01:00",
+         "published": "2019-03-26T05:31:37+01:00",
+         "title": {
+            "@type": "text",
+            "#text": "Rothlin, Walter"
+         },
+         "content": {
+            "@type": "text",
+            "#text": "Rothlin, Walter\n    Automech.\n    Etzelstrasse 7\n    8855 Wangen SZ\n    055 440 21 71"
+         },
+         "author": {
+            "name": "tel.search.ch"
+         },
+         "link": [
+            {
+               "@href": "https://tel.search.ch/wangen/etzelstrasse-7/walter-rothlin",
+               "@title": "Details",
+               "@rel": "alternate",
+               "@type": "text/html"
+            },
+            {
+               "@href": "https://tel.search.ch/vcard/Rothlin.vcf?key=2a7f4c7fdd96d60b",
+               "@type": "text/x-vcard",
+               "@title": "VCard Download",
+               "@rel": "alternate"
+            },
+            {
+               "@href": "https://tel.search.ch/edit/?id=2a7f4c7fdd96d60b",
+               "@rel": "edit",
+               "@type": "text/html"
+            }
+         ],
+         "pos": "2",
+         "type": "Person",
+         "name": "Rothlin",
+         "firstname": "Walter",
+         "occupation": "Automech.",
+         "street": "Etzelstrasse",
+         "streetno": "7",
+         "zip": "8855",
+         "city": "Wangen",
+         "canton": "SZ",
+         "country": "ch",
+         "phone": "+41554402171",
+         "copyright": "Daten: Swisscom Directories AG"
+      }
+   ]
+}
