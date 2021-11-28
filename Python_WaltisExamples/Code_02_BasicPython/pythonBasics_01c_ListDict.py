@@ -174,7 +174,7 @@ print(capital_country)
 # ------------
 capital_country = {"United States":
                        {"Capitol": "Washington",
-                        "Präsident": "Donald Trup",
+                        "Präsident": "Donald Trump",
                         "Population": 328000000, },
                    "Switzerland":
                        {"Capitol": "Bern",

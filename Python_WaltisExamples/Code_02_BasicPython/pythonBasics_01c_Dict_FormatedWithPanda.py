@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import pandas as pd
+
 emp_details = {'Employee': {'Dave': {'ID': '001',
                                      'Salary': 2000,
                                      'Designation':'Python Developer'},

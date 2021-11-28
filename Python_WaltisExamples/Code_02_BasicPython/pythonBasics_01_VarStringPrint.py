@@ -1,22 +1,26 @@
 #!/usr/bin/python3
 
-#@author Walter Rothlin
-#@version 1.0
-#@since 03-Aug-2017
-#@help
-#Help of command 'pythonBasics_01'
+# ------------------------------------------------------------------
+# Name: pythonBasics_01_VarStringPrint.py
 #
+# Description: Examples of vars strings and print as well as formatted strings
 #
+# Autor: Walter Rothlin
 #
-#@history:
-#03-Aug-2017  Walter Rothlin        Initial Version
-#19-Sep-2017  Walter Rothlin        Added more format string
-#26-Dec-2017  Walter Rothlin        String formats
-#
-#End of help for command 'pythonBasics_01_VarStringPrint'
+# History:
+# 03-Aug-2017   Walter Rothlin      Initial Version
+# 19-Sep-2017   Walter Rothlin      Added more format string
+# 26-Dec-2017   Walter Rothlin      String formats
+# 28-Nov-2021   Walter Rothlin      Added f-Strings
+# ------------------------------------------------------------------
 
 import sys
 import os
+i = 10
+print(f"Hallo {i:20d} {i*5:_<20d}:")
+print(f"Hallo {i*10:20x}")
+
+exit(0)
 
 print("pythonBasics_01_VarStringPrint.py.........")
 print("-->", sys.argv[0])
