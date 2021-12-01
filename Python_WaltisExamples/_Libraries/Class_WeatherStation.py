@@ -10,6 +10,7 @@
 # 28-Nov-2021   Walter Rothlin      Initial Version ()
 # ------------------------------------------------------------------
 from waltisLibrary import *
+import gzip
 
 class WeatherStation:
     """
@@ -98,7 +99,58 @@ class WeatherStation:
                           )
             return self.__result
 
+    @staticmethod
+    def GetCities():
+        """
+        Downloads all available cities for data of OpenWeather and gives output as an array of cities.
+        """
+        cities = []
+        url = "https://bulk.openweathermap.org/sample/city.list.json.gz"
+        req = requests.get(url)
+        obj = gzip.decompress(req.content)
+        jsonData = json.loads(obj)
+
+        for key in jsonData:
+            cities.append(key["name"])
+        output = cities
+        return output
+
+    @staticmethod
+    def ValidateCity(city=None):
+        """
+        Validates inserted city against the downloaded cities from GetCities Method.
+        If city is empty an input will ask for feed.
+        If city is wrong an output will warn and stop further processing.
+        Cities can be used case-insensitive.
+        """
+        output = None
+        cities = WeatherStation.GetCities()
+
+        for item in range(len(cities)):
+            cities[item] = cities[item].upper()
+
+        if city is None:
+            response = input("Enter city name: ")
+            response = response.upper()
+            if response not in cities:
+                print(f"City NOT found: {response}")
+                exit()
+            else:
+                print(f"City found: {response}.")
+                output = response
+        else:
+            city = city.upper()
+            if city not in cities:
+                print(f"City NOT found: {city}")
+                exit()
+            else:
+                print(f"City found: {city}")
+                output = city
+
+        return output
+
     # Static Method a reference implementation
+    @staticmethod
     def weatherPolling(ort="Uster",
                        pollingTime=5,
                        mode=None,
@@ -140,4 +192,6 @@ class WeatherStation:
 
 
 if __name__ == "__main__":
+    help(WeatherStation)
+    # print("Available cities:\n", WeatherStation.GetCities())
     WeatherStation.weatherPolling(ort=None, pollingTime=None)

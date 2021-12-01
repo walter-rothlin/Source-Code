@@ -1,4 +1,27 @@
-
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert
+#      - Keine User-Eingaben möglich
+#
+# Class Design und Implementation:
+#      + Diagramm stimmt grösstenteils mit Code überein (+ / - für private / public)
+#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
+#      - __init__ unnötige parameter und die relevanten haben keine Default values
+#      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
+#      - Alle Instance Variablen sind public
+#      + __str__ mit format-strings implementiert
+#
+# Test:
+#      + Test (positive) implementiert
+#
+# Note: 5.0
+#
+# Fragen:
+#    Auf welcher Zeile wird der Request zum Web-Service abgesendet?
+#    Wann wird __init__ aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+# ------------------------------------------------------------------
 import requests
 
 

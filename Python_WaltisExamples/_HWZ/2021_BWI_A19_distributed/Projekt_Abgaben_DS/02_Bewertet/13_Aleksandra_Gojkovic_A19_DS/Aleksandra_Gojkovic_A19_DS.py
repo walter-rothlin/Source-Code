@@ -12,7 +12,36 @@
 # Hiermit bestätige ich, Aleksandra Gojkovic, dass ich die folgenden Zeilen Code selbständig geschrieben habe und
 # Codesnippets, die ich wiederverwendet habe, entsprechend gekennzeichnet habe.
 # ---------------------------------------------------------------------------------------------------------------------
-
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert
+#      + User-Eingaben möglich
+#      - Falsche Usereingaben werden abgefangen, aber keine Nachfrage sondern Abbruch
+#      - Die geworfenen Exceptions werden in der Applikation nicht gefangen und behandelt.
+#
+# Class Design und Implementation:
+#      + Design-Diagramm vorhanden
+#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
+#      + __init__ alle relevanten Argumente mit funktionierenden Default Werten
+#      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
+#      - Alle Instance Variablen sind public
+#      + __str__ mit format-strings implementiert
+#      + docStrings beschreiben die Interfaces der public Methoden
+#      + Exception Handling in den Methoden verwendet
+#      + Eigenen (generische) JSON Struktur für die Resultat-Rückgabe
+#
+# Test:
+#      + Test (positive/negative) implementiert
+#      ++ Test gut dokumentiert und wiederverwendbar
+#      ++ help() mit docString implementiert
+#
+# Note: 5.5
+#
+# Fragen:
+#    Auf welcher Zeile wird der Request zum Web-Service abgesendet?
+#    Wann wird __init__ aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+# ------------------------------------------------------------------
 
 import json
 import requests

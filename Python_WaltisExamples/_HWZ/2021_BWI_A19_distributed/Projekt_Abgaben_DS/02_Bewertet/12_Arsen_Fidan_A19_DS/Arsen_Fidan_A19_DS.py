@@ -11,7 +11,34 @@
 # Version: 1.0
 # Documentation: BWI-A19_LNW_DMS_ArsenFidan.pdf
 # ------------------------------------------------------------------
-
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert
+#      + User-Eingaben möglich
+#      + Falsche Usereingaben werden abgefangen
+#
+# Class Design und Implementation:
+#      - Kein Design-Diagramm vorhanden
+#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
+#      - __init__ ein relevantes Argument (ort) fehlt
+#      + __init__ Argumente haben funktionierende Default values
+#      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
+#      - Alle Instance Variablen sind public
+#      + __str__ mit format-strings implementiert
+#      + docStrings beschreiben die Interfaces der public Methoden
+#      + bewusst static methoden eingesetzt GetCities()
+#
+# Test:
+#      + Test (positive/negative) implementiert
+#      ++ Test gut dokumentiert und wiederverwendbar
+#
+# Note: 5.5
+#
+# Fragen:
+#    Auf welcher Zeile wird der Request zum Web-Service abgesendet?
+#    Wann wird __init__ aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+# ------------------------------------------------------------------
 import requests
 import json
 import gzip
