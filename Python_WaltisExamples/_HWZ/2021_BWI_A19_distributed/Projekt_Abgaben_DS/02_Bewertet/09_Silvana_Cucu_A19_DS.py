@@ -16,7 +16,7 @@
 # Test:
 #      - Keine Test (positive wie negative) implementiert
 #
-# Note: 4.0
+# Note: 4.5
 #
 # Fragen:
 #    Wo und wie wird der Request zum Web-Service abgesendet?
