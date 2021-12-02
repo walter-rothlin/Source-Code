@@ -13,16 +13,22 @@ from waltisLibrary import *
 import gzip
 
 class WeatherStation:
+    waltisAppID = "144747fd356c86e7926ca91ce78ce170"
     """
     A class to get information about the weather.
     Uses an REST-Webservice i.e. OpenWeather
     API            : https://openweathermap.org/current
     Example Request: https://api.openweathermap.org/data/2.5/weather?q=uster&appid=144747fd356c86e7926ca91ce78ce170&units=metric&lang=de
-
+    Similar Class  : # PyOWM is a client Python wrapper library for OpenWeatherMap (OWM) web APIs https://github.com/csparpa/pyowm
+ 
     Usage:
     waltisWetterstation = WeatherStation(location=ort, mode=mode, units=units, lang=lang, serviceURL=serviceURL, appId=appId)
     if waltisWetterstation.getStatusMsg() == 'ok':
         weatherData = waltisWetterstation.getCurrentWeather()
+
+    z.B.    Stadtname         : Uster
+            Breitengrad (lat): 47.3471
+            Längengrad  (lon): 8.7209
     """
 
     def __init__(self,
@@ -31,7 +37,7 @@ class WeatherStation:
                  units='metric',
                  lang='de',
                  serviceURL="https://api.openweathermap.org/data/2.5/weather",
-                 appId="144747fd356c86e7926ca91ce78ce170"):
+                 appId=waltisAppID):
         self.__location = location.lower()
         self.__mode = mode
         self.__units = units
@@ -100,7 +106,7 @@ class WeatherStation:
             return self.__result
 
     @staticmethod
-    def GetCities():
+    def getAviableCities():
         """
         Downloads all available cities for data of OpenWeather and gives output as an array of cities.
         """
@@ -116,7 +122,23 @@ class WeatherStation:
         return output
 
     @staticmethod
-    def ValidateCity(city=None):
+    def searchClosestCity(lat=47.3471, lon=8.7209, maxCount = 2, appid=waltisAppID):
+        """
+        Downloads close cities for given lat/lon   ==> Uster.
+        """
+        cityResponse = requests.get('http://api.openweathermap.org/geo/1.0/reverse?' +
+                                'lat=' + str(lat) + '&' +
+                                'lon=' + str(lon) + '&' +
+                                'limit=' + str(maxCount) + '&' +
+                                'appid=' + appid)
+        if cityResponse.status_code != 200:
+            cityResponseJson = json.loads(cityResponse.text)
+        else:
+            cityResponseJson = json.loads(cityResponse.text)
+        return cityResponseJson
+
+    @staticmethod
+    def validateCity(city=None):
         """
         Validates inserted city against the downloaded cities from GetCities Method.
         If city is empty an input will ask for feed.
@@ -156,8 +178,7 @@ class WeatherStation:
                        mode=None,
                        units='metric',
                        lang='de',
-                       serviceURL="https://api.openweathermap.org/data/2.5/weather",
-                       appId="144747fd356c86e7926ca91ce78ce170"):
+                       serviceURL="https://api.openweathermap.org/data/2.5/weather"):
         if pollingTime is None:
             pollingTime = readFloat("Polling-Time [s]:", min=1, max=3600)
 
@@ -168,7 +189,7 @@ class WeatherStation:
                 if ort == "":
                     ort = 'Uster'
 
-            waltisWetterstation = WeatherStation(location=ort, mode=mode, units=units, lang=lang, serviceURL=serviceURL, appId=appId)
+            waltisWetterstation = WeatherStation(location=ort, mode=mode, units=units, lang=lang, serviceURL=serviceURL)
 
             if waltisWetterstation.getStatusMsg() != 'ok':
                 print("User Input incorrect:", waltisWetterstation.getStatusMsg())
@@ -194,4 +215,6 @@ class WeatherStation:
 if __name__ == "__main__":
     help(WeatherStation)
     # print("Available cities:\n", WeatherStation.GetCities())
+    print("Closest cities:\n", WeatherStation.searchClosestCity())
+
     WeatherStation.weatherPolling(ort=None, pollingTime=None)
