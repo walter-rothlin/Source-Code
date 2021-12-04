@@ -1,5 +1,6 @@
 # ------------------------------------------------------------------
-# Name: Class_Wetterstation.py
+# Name  : Class_Wetterstation.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_Wetterstation.py
 #
 # Description: DAO for Wetter-Daten using openWeather API
 # https://openweathermap.org/current

@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: waltisLibrary.py
+# Name  : waltisLibrary.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/waltisLibrary.py
 #
-# Description: Library - Module (Source in ExamplesPyton/_Libraries/waltisLibrary.py)
-# https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/waltisLibrary.py
+# Description: Library - Module
+#
 #
 # Autor: Walter Rothlin
 #
@@ -32,6 +33,7 @@
 # 22-Nov-2021   Walter Rothlin      Added readFile
 # 22-Nov-2021   Walter Rothlin      Added Search and XML fct: dictify, getFieldFromTelSearchXML
 #                                        getResultsFromAdressSearch, getResults_search_ch, getResults_geoAdmin
+# 04-Dec-2021   Walter Rothlin      Added getMenuStrFromList
 # ------------------------------------------------------------------
 
 # toDo:
@@ -1153,6 +1155,18 @@ def AUTO_TEST_addParity(verbal=False):
               ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
+def getMenuStrFromList(aList, titel="Menu-Items", indent="    ", itmeFormat="{i:2d}: {menuText:1s}", itemNrOffest=1, unterstreichen="-"):
+    retList = [(indent + itmeFormat).format(i=i + itemNrOffest, menuText=p) for i, p in zip(range(len(aList)), aList)]
+    if unterstreichen is not None:
+        retStr = indent + titel + "\n" + indent + unterstreichen*len(titel) + "\n"  + "\n".join(retList)
+    else:
+        retStr = indent + titel + "\n" + "\n".join(retList)
+    return retStr
+
+def TEST_getMenuFromList(verbal=False):
+    menuList = ["Grad to Kelvin", "Kelvin to Grad", "Rad to Grad", "Grad to Rad"]
+    print(getMenuStrFromList(menuList))
 
 
 def showASCII_Table(firstVal=33, lastVal=126, sep=" --> ", end="\n"):
@@ -2486,6 +2500,7 @@ if __name__ == '__main__':
         # TEST_get_sup_super()
         # TEST_calcNulstellen()
         # TEST_printProgressBar()
+        # TEST_getMenuFromList()
 
     # Automated Tests
     # ===============
