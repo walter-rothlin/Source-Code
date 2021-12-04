@@ -12,6 +12,7 @@
 # 19-Sep-2017   Walter Rothlin      Added more format string
 # 26-Dec-2017   Walter Rothlin      String formats
 # 28-Nov-2021   Walter Rothlin      Added f-Strings
+# 04-Dec-2021   Walter Rothlin      Added Type-Hints
 # ------------------------------------------------------------------
 
 import sys
@@ -19,6 +20,7 @@ import os
 i = 10
 print(f"Hallo {i:20d} {i*5:_<20d}:")
 print(f"Hallo {i*10:20x}")
+
 
 exit(0)
 
@@ -43,9 +45,9 @@ print("\n\n")
 print("# print mit variables and string conncationation ")
 print("# ---------------------------------------------- ")
 name    = "Rothlin"       # String
-vorname = "Tobias"
+vorname : str = "Tobias"  # with Type-Hints
 a, b, isFinished    = 100, 5.56, False                                # int, float, boolean
-print(name,vorname,a,b,isFinished)                                    # einzelne Argumente Default of sep is " "
+print(name, vorname, a, b, isFinished)                                # einzelne Argumente Default of sep is " "
 print(name + " " + vorname +  " " + str(a) + " " + str(b) + " " + str(isFinished))       # string conncatination
 
 count   = 50 * 2                      # Integer type
@@ -53,7 +55,7 @@ print("Count:",count, sep=" :: ")     # einzelne Argumente Default of sep is " "
 print("Count: " + str(count))         # type conversion
 
 betrag  = 2008.55                     # Float type
-print("Betrag:",betrag)
+print("Betrag:", betrag)
 print("Betrag: " + str(betrag))
 print("\n\n")
 

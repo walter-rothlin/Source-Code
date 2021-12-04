@@ -10,7 +10,8 @@
 # History:
 # 25-Sep-2020   Walter Rothlin      Initial Version
 # 27-Sep-2020   Walter Rothlin      Added to GitHub
-# 19-Oct_2021   Walter Rothlin      Changes for BWI-A20
+# 19-Oct-2021   Walter Rothlin      Changes for BWI-A20
+# 12-Dec-2021   Walter Rothlin      Added examples with Type Hints
 # ------------------------------------------------------------------
 import math
 
@@ -23,6 +24,12 @@ def sayHello(firstname=None, anrede="Hallo"):
     else:
         return anrede + " " + firstname
 
+# With Type Hints
+def sayHelloWithTypeHints(firstname : str = None, anrede : str = "Hallo") -> str:
+    if firstname is None:
+        return anrede
+    else:
+        return anrede + " " + firstname
 
 # =============
 # Hauptprogramm
