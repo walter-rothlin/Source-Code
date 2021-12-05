@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 02_drawGraph.py
+# Name  : 02_drawGraph.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_07_MatPlotLib/02_drawGraph.py
 #
 # Description: Zeichnet einen linearen Graphen
 #

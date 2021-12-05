@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 00_LoadAndShowPicture.py
+# Name  : 00_LoadAndShowPicture.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_07_MatPlotLib/00_LoadAndShowPicture.py
 #
 # Description: Lädt ein Bild und zeichnet ins Bild geometrische Figuren
 #

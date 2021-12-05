@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 01_LoadPicViaURLAndDrawInIt.py
+# Name  : 01_LoadPicViaURLAndDrawInIt.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_07_MatPlotLib/01_LoadPicViaURLAndDrawInIt.py
 #
 # Description: Lädt ein Bild und zeichnet ins Bild geometrische Figuren
 #

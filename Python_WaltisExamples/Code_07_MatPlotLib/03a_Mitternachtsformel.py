@@ -1,3 +1,21 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : 03a_Mitternachtsformel.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_07_MatPlotLib/03a_Mitternachtsformel.py
+#
+# Description: Zeichnet eine Parabel
+#
+# Autor: Walter Rothlin
+#
+# !!!! Falls Fehler “runtimeError: package fails to pass a sanity check”
+# !!!!   check File | Settings | Python Interpreter
+# !!!! 1.19.4 hat auf Windows einen Fehler!
+# !!!!    pip install numpy==1.19.3
+#
+# History:
+# 22.4.21   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 from math import sqrt as wurzel
 import matplotlib.pyplot as plt
 import numpy as np
