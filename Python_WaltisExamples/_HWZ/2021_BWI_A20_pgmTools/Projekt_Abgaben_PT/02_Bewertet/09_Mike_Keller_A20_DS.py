@@ -22,6 +22,32 @@
 # 30.11.2021    Mike Keller     Refactoring
 # 01.12.2021    Mike Keller     Added ShutdownHelper
 # ----------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      - Keine Reference-Applikation und ohne User Input
+#
+# Class Design und Implementation:
+#      + Eigene Klassen vorhanden
+#      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
+#      + __init__ alle wichtige Parameter und haben sinnvolle Default-Werte
+#      + Alle Instance Variablen sind private
+#      + OnlyChanges implementiert
+#      + Ringbuffer implementiert
+#      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
+#      + Kein Exceptionhandling in der Klasse oder in der Applikation
+#
+# Test:
+#      ++ Sinnvolle automatisierte Test implementiert
+#
+# Note: 5.5
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 import csv
 import datetime
 import requests

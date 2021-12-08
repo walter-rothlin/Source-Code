@@ -1,3 +1,32 @@
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert ohne User Input ist möglich
+#      - Kein Titel nur Header im file
+#      - Runden nicht implementiert
+#
+# Class Design und Implementation:
+#      + Eigene Klasse vorhanden
+#      + Ueberzeugt mit Einfach- und Klarheit
+#      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
+#      - __init__ wichtige Parameter fehlen und haben keine sinnvolle Default-Werte
+#      - Alle Instance Variablen sind public
+#      - OnlyChanges nicht implementiert
+#      - Ringbuffer nicht implementiert
+#      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
+#      - Kein Exceptionhandling in der Klasse oder in der Applikation
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 4.5
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 import csv
 from datetime import datetime
 import json

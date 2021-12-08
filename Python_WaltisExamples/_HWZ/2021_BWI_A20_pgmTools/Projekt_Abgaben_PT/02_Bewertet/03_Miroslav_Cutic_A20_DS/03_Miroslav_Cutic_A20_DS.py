@@ -3,26 +3,26 @@
 # Reference-Applikation:
 #      + Funktioniert und User Input ist möglich
 #      - keine Startime im Header
-#      - Header wird bei Append (restart mit gleichem filename) nochmals appended
 #      - Unsinnige User-Eingaben können zum Absturz führen
-#      - Kein Output / Lebenszeichen im Onlychanges Mode
 #      - Runden nicht implementiert
+#      - csv file hat delimiter am Zeilenende
 #
 # Class Design und Implementation:
+#      +++ funktionierende sehr einfache Lösung
 #      + Eigene Klasse ohne reuse
-#      - Notwendige (__eq__ __str__ ) Methoden nicht vorhanden
-#      - __init__ wichtige parameter haben keine/falsche Default-Werte
-#      - Alle Instance Variablen sind public
+#      + Notwendige (__init__ __str__ ) Methoden vorhanden
+#      ++ Einfachheit der Klasse
+#      + __init__ wichtige Parameter haben sinnvolle Default-Werte
+#      + Alle Instance Variablen sind private
 #      ++ OnlyChanges funktioniert (ohne Toleranz)
-#      - Immer Ringbuffer eingeschaltet
+#      ++ Ringbuffer funktioniert
 #      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
 #      - Kein Exceptionhandling in der Klasse oder in der Applikation
-#      - Header str innerhalb der __init__ erstellen anhand der headerListe
 #
 # Test:
 #      - Keine Test implementiert
 #
-# Note: 4.5
+# Note: 5.5 (wegen fehlendem exception handling und tests)
 #
 # Fragen:
 #    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?

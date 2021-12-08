@@ -7,7 +7,37 @@ from os import remove
 
 # Logger Klasse
 # -----------------------------------------------
-
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und minimaler User Input ist möglich
+#      - Unsinnige User-Eingaben können zum Absturz führen
+#      - Runden nicht implementiert
+#      - Kein Lebenszeichen sichtbar
+#      - viel Redundanz im Code
+#
+# Class Design und Implementation:
+#      + Eigene Klasse vorhanden
+#      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
+#      - __init__ wichtige Parameter fehlen und haben keine sinnvolle Default-Werte
+#      - Alle Instance Variablen sind public
+#      - save muss private sein und von log_info,... aufegrufen werden
+#      - OnlyChanges implementiert
+#      + Ringbuffer implementiert
+#      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
+#      - Kein Exceptionhandling in der Klasse oder in der Applikation
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 4.5
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 
 class Logger:
     def __init__(self, filename, spalten, delimiter="|", loglevel_aktiv=None, ringbuffer_size=4):

@@ -18,7 +18,29 @@ URL Tested:
 - https://api.kucoin.com/api/v1/market/stats?symbol=BTC-USDT
 
 '''
-
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      - Bei Usereingaben sind mögliche Werte in [] nicht sinnvoll
+#      - User-Eingaben können zum Absturz führen
+#      - Sehr komplex und nicht intuitiv
+#
+# Class Design und Implementation:
+#      - viel zu viele Klassen, Relevante Logger-Klasse nicht vorhanden
+#      - verstehe die Klassen nicht (total ca 2500 Zeilen Code!)
+#
+# Test:
+#      + Test implementiert
+#
+# Note: 4.5 Am Ziel vorbei aber viel geleistet
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 
 import requests
 import json

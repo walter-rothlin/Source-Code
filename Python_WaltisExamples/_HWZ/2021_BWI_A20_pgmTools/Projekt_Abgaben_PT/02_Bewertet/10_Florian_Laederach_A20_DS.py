@@ -12,6 +12,34 @@
 # 01-Dec-2021, Florian Läderach: 1.3 Added properties for delimiter, filename and path
 # 02-Dec-2021, Florian Läderach: 1.4 Added two logging strategies, corrected the title row with field names
 # ------------------------------------------------------------------
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Reference-Applikation mit minimalem User-Input
+#      - zusätzliche Leerzeilen im Header
+#      - Argumente mit Setter nicht über __init__ obwohl __init__ dazu vorbereitet wäre
+#
+# Class Design und Implementation:
+#      + Eigene Klassen vorhanden
+#      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
+#      + __init__ alle wichtige Parameter und haben sinnvolle Default-Werte
+#      - Nicht alle Instance Variablen sind private
+#      + OnlyChanges implementiert
+#      - Ringbuffer nicht implementiert
+#      - Einigen Methoden könnten private (startlog) oder private static sein (bessere encapsulation)
+#      - Exceptionhandling in der Klasse oder in der Applikation
+#
+# Test:
+#      - keine Reusable Tests implementiert
+#
+# Note: 4.5
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 # ------------------------Imports-----------------------------------
 
 import requests
@@ -134,7 +162,7 @@ appId = "144747fd356c86e7926ca91ce78ce170"
 x = Logger()
 x.delimiter = "¦"
 x.filename = "Test"
-x.path = "C:\\Users\\FLA\\PycharmProjects\\Programming Introduction\\Semester2\\"
+# x.path = "C:\\Users\\FLA\\PycharmProjects\\Programming Introduction\\Semester2\\"    # WR changed it to test it
 x.strategy = 1
 
 while True:

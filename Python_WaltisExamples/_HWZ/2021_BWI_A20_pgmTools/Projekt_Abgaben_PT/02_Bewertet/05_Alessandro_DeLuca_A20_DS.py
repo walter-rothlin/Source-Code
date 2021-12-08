@@ -10,6 +10,38 @@
 # 30-Nov-2021   Alessandro De Luca  created changeOnly/logEverything method
 # 02-Dec-2021   Alessandro De Luca  created user input
 # ------------------------------------------------------------------
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und minimaler User Input ist möglich
+#      -- Kein Title und kein Header im File vorhanden
+#      - Unsinnige User-Eingaben können zum Absturz führen
+#      - Runden nicht implementiert
+#      - Kein Lebenszeichen sichtbar
+#      - viel Redundanz im Code
+#
+# Class Design und Implementation:
+#      + Eigene Klasse vorhanden
+#      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
+#      - __init__ wichtige Parameter fehlen und haben keine sinnvolle Default-Werte
+#      - __init__ nimmt bereits log-Data entgegen
+#      - Alle Instance Variablen sind public
+#      + OnlyChanges implementiert
+#      + Ringbuffer implementiert
+#      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
+#      - Kein Exceptionhandling in der Klasse oder in der Applikation
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 4.0
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 import logging
 import requests
 import json

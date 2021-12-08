@@ -34,6 +34,7 @@
 # 22-Nov-2021   Walter Rothlin      Added Search and XML fct: dictify, getFieldFromTelSearchXML
 #                                        getResultsFromAdressSearch, getResults_search_ch, getResults_geoAdmin
 # 04-Dec-2021   Walter Rothlin      Added getMenuStrFromList
+# 06-Dec-2021   Walter Rothlin      Added getFilenameWithoutExtension, getFilenameExtension, addTimestampToFileName, getPath
 # ------------------------------------------------------------------
 
 # toDo:
@@ -1692,6 +1693,23 @@ def loadAndSaveFileFromURL(url='http://google.com/favicon.ico'):
 
 # File and Directory operations
 # =============================
+def getFilenameWithoutExtension(fileName):
+    return fileName[:fileName.index(".")]
+
+def getFilenameExtension(fileName):
+    return fileName[fileName.index("."):]
+
+def addTimestampToFileName(fileName, timestampFormat="%Y_%m_%d"):
+    indexBeforeFileType = fileName.index(".")
+    fileName = fileName[:indexBeforeFileType] + "_" + datetime.now().strftime(timestampFormat) + fileName[indexBeforeFileType:]
+    return fileName
+
+def getPath(filename = None):
+    if filename is None or len(filename) == 0:
+        return os.path.abspath(os.getcwd()) + "\\"
+    else:
+        return "TBI 06.12.2021"
+
 def createDirIfNotExists(dir_path="./TestData", access_rights=0o755, verbal=False):
     try:
         ## os.mkdir(dir_path, access_rights)

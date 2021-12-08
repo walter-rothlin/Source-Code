@@ -8,6 +8,35 @@
 # 01.12.2021 -  Finalize
 # 02.12.2021 -  Finalize 2.0
 #======================================================================
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      - Keine Startime im Header
+#      - Unsinnige User-Eingaben können zum Absturz führen
+#      - Runden nicht implementiert
+#
+# Class Design und Implementation:
+#      + Eigene Klasse vorhanden
+#      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
+#      + __init__ wichtige Parameter vorhanden und haben sinnvolle Default-Werte
+#      - Alle Instance Variablen sind public
+#      + OnlyChanges implementiert
+#      - Ringbuffer nicht implementiert
+#      ++ Einfaches Interface zur Klasse (Name der Klasse???)
+#      - Kein Exceptionhandling in der Klasse oder in der Applikation
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 4.5
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 
 #======================================================================
 #Imports
