@@ -33,7 +33,7 @@ URL Tested:
 # Test:
 #      + Test implementiert
 #
-# Note: 4.5 Am Ziel vorbei aber viel geleistet
+# Note: 5.5 Am Ziel vorbei aber viel geleistet
 #
 # Fragen:
 #    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?

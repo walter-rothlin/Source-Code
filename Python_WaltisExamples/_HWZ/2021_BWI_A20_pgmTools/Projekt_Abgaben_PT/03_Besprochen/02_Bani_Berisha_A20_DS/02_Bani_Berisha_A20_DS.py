@@ -11,7 +11,7 @@
 # Class Design und Implementation:
 #      + Eigene Klasse ohne reuse
 #      - Notwendige (__eq__ __str__ ) Methoden nicht vorhanden
-#      - __init__ wichtige parameter haben keine/falsche Default-Werte
+#      + __init__ wichtige parameter haben Default-Werte
 #      - Alle Instance Variablen sind public
 #      ++ OnlyChanges funktioniert (ohne Toleranz)
 #      - Immer Ringbuffer eingeschaltet
