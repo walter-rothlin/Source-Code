@@ -10,6 +10,34 @@
 # 28-Nov-2021   Lorenzo L Q     Initial Version Logger & TestLogger
 # 30-Nov-2021   Lorenzo L Q     Functions overworked. Reduced rendundance. Organized tests.
 # ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      + User-Eingaben mit Vorschlägen/Auswahlmöglichkeiten
+#      + Unsinnige User-Eingaben werden abgefangen
+#
+# Class Design und Implementation:
+#      + Eigene Klasse has a csv (reuse)
+#      + Notwendige (__eq__ __str__ ) Methoden  vorhanden
+#      + __init__ wichtige parameter vorhanden (OnlyChanges, FixedSlices, New/Append,....) mit sinvollen Default values
+#      + __init__ default valus nicht sprechend (nur ein Buchstaben)
+#      + Alle Instance Variablen sind private / protected
+#      + OnlyChanges funktioniert (ohne Toleranz)
+#      + Ringbuffer implementiert (fixed Slices)
+#      - Einigen Methoden könnten private sein (den Path on the fly zu ändern ist nicht sinnvoll)
+#      + Exceptionhandling in der Klasse
+#
+# Test:
+#      + Test implementiert mit statistics
+#
+# Note: 6.0
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 import os
 import requests
 import json

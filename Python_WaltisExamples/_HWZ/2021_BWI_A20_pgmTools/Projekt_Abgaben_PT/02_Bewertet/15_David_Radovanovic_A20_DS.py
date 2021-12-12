@@ -13,7 +13,33 @@
 #   31.11.2021  Unit Tests
 #
 # ---------------------------------------------------------------------------------------------------------------------
-
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      + User-Eingaben  alle mit Vorschlägen/Auswahlmöglichkeiten
+#      + Unsinnige User-Eingaben werden abgefangen
+#      + Lebenszeichen vorhanden
+#      - Runden nicht implementiert
+#
+# Class Design und Implementation:
+#      + Eigene Klasse has a csv (reuse)
+#      - Notwendige (__eq__ __str__ ) Methoden nicht vorhanden
+#      - __init__ wichtige parameter fehlen (OnlyChanges, FixedSlices, New/Append,....)
+#      + Alle Instance Variablen sind private
+#      -- OnlyChanges, FixedSlices, New/Append,.... ist nicht in der Klasse implementiert (Reuse nicht möglich)
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 4.0
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 # IMPORTS
 from datetime import datetime
 import logging

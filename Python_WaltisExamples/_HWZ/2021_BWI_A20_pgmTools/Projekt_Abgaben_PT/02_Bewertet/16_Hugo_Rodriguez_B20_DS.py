@@ -1,3 +1,25 @@
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      - Unsinnige User-Eingaben können zum Absturz führen
+#      - Runden nicht implementiert
+#      - kein Timestamp im Header
+#
+# Class Design und Implementation:
+#      - Funktionen ohne Declaration via Cut/Past übernommen
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 4.0 (Ohne Declaration der Source Core Part des Codes kopiert!!)
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 # ---
 # Diverse Imports
 # ---

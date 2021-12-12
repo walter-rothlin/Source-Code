@@ -42,7 +42,7 @@ import time
 import csv
 import pathlib
 import requests
-
+file:/G:/_WaltisDaten/SourceCode/GitHosted/Python_WaltisExamples/_HWZ/2021_BWI_A20_pgmTools/Projekt_Abgaben_PT/01_Abgegeben/files/test_01.csv
 
 class Logger:
     onlychanges = False

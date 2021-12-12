@@ -1,3 +1,33 @@
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      + User-Eingaben mit Vorschlägen/Auswahlmöglichkeiten
+#      - Unsinnige User-Eingaben können zum Absturz führen
+#
+# Class Design und Implementation:
+#      + Eigene Klasse
+#      - Notwendige (__eq__ __str__ ) Methoden nicht vorhanden
+#      - __init__ wichtige Parameter fehlen (OnlyChanges, FixedSlices, Ringbuffersize, New/Append,....)
+#      - __init__ Parameter haben nur wenige Defaultwerte
+#      - Alle Instance Variablen sind public
+#      + OnlyChanges funktioniert (ohne Toleranz)
+#      + Ein Ringbuffer implementiert (fixed Slices)
+#      - Einigen Methoden könnten private
+#      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
+#      - Kein Exceptionhandling in der Klasse
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 5.0
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 import datetime
 import json
 import os

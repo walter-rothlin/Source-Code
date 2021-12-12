@@ -1,3 +1,36 @@
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      - Nur User-Eingabe der Pooling-Time möglich
+#      - Unsinnige User-Eingaben können zum Absturz führen
+#
+# Class Design und Implementation:
+#      + Eigene Klasse
+#      - Notwendige (__eq__ __str__ ) Methoden nicht vorhanden
+#      + __init__ wichtige Parameter vorhanden (OnlyChanges, FixedSlices, Ringbuffersize, New/Append,....)
+#      + __init__ Parameter haben alle sinnvolle Defaultwerte
+#      - Alle Instance Variablen sind public oder protected (nicht private)
+#      - file-extension ohne Prüfung (rest.log.csv!!)
+#      + OnlyChanges funktioniert (mit runden / Toleranz)
+#      + Ein Ringbuffer implementiert (fixed Slices)
+#      - check_ringbuffer() muss private sein und von log() intern aufgerufen werden
+#      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
+#      - Kein Exceptionhandling in der Klasse
+#      + comprehensions verwendet (Wo?)
+#      - ungenügend dokumentiert (docStrings)
+#
+# Test:
+#      - Nur zwei Test mit geringer Test-Abdeckung implementiert
+#
+# Note: 4.5
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 from datetime import datetime
 import requests
 import json
@@ -137,7 +170,7 @@ while True:
     lat = jsonResponse['coord']['lat']
     cloud = jsonResponse['weather'][0]['description']
     int_values = temp, pressure, humidity, lon, lat
-    int_to_str = [str(round(i, 1)) for i in int_values]
+    int_to_str = [str(round(i, 1)) for i in int_values]    # WR comprehension verwendet, super!
     log_line = l.delimiter.join(int_to_str) + l.delimiter + cloud
     print(log_line)
     l.log("Info", log_line)              #do logging / create instanz

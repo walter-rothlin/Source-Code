@@ -1,3 +1,33 @@
+# ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert und User Input ist möglich
+#      - Startime nicht im Header
+#      - Unsinnige User-Eingaben können zum Absturz führen
+#      - Runden nicht implementiert
+#
+# Class Design und Implementation:
+#      + Eigene Klasse vorhanden
+#      - unnötige module instanziert (tkinter?)
+#      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
+#      - __init__ wichtige Parameter fehlen und haben keine sinnvolle Default-Werte
+#      - Alle Instance Variablen sind public
+#      + OnlyChanges implementiert
+#      - Ringbuffer mit fixer Grösse implementiert
+#      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
+#      - Kein Exceptionhandling in der Klasse oder in der Applikation
+#
+# Test:
+#      - Keine Test implementiert
+#
+# Note: 4.5
+#
+# Fragen:
+#    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?
+#    Wann wird __init__ ihrer Klasse aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+#    Wo wird unterschieden zwischen changesOnly True/False?
+# ------------------------------------------------------------------
 import datetime
 import json
 import os
