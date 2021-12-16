@@ -16,7 +16,7 @@ def getPage(num, subfolder, booknumber):
     r = requests.get(url=ApiEndpoint, headers=headers)
     if not os.path.exists(subfolder):
         os.mkdir(subfolder)
-        print("Directory ", subfolder, " Created ")
+        print("Directory: ", subfolder, " Created!")
 
     print("loading page number from server: " + str(num) +"\tresponse status: " + str(r.status_code))
 
@@ -54,8 +54,8 @@ def getPdf(listOFBooks):
     print(listOFBooks[0][0])
     for book in listOFBooks:
         print("creating book: " + book[0])
-        pageCrawler(1,book[0],book[1])
-        createPdfFromImgFolder(book[0]+'/', book[0], outputPdf/")
+        pageCrawler(1, book[0], book[1])
+        createPdfFromImgFolder(book[0]+'/', book[0], "outputPdf/")
 
 
 

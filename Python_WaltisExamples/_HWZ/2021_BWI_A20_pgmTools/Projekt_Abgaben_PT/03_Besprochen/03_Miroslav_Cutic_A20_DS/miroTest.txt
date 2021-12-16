@@ -1,7 +1,0 @@
-# <Name>miroTest_2021_12_06.txt</Name>
-Timestamp;Level;name;country;feels_like;temp;pressure;
-2021-12-06 10:32:56;INFO;Uster;CH;-1.75;0.84;1013;
-2021-12-06 10:33:01;INFO;Uster;CH;-1.75;0.84;1013;
-2021-12-06 10:33:05;INFO;Uster;CH;-1.75;0.84;1013;
-2021-12-06 10:33:09;INFO;Uster;CH;-1.75;0.84;1013;
-2021-12-06 10:33:13;INFO;Uster;CH;-1.75;0.84;1013;

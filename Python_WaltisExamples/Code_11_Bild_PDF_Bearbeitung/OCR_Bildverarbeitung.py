@@ -42,7 +42,7 @@ def imgCrop(source, destinationFolder, xPosStart, xWidth, yPosStart, yWidth, fil
     else:
         listOfImgToSave.append(CroppedImg)
 
-    currentIndex = 0;
+    currentIndex = 0
     for img in listOfImgToSave:
         print("Saving cropped file: " + destinationFolder + sourceFileName + str(currentIndex) + fileType)
         if(smartPageDetection != None):
