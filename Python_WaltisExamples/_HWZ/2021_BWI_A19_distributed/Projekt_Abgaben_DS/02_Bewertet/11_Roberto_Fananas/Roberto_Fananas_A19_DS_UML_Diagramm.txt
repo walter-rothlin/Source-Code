@@ -1,0 +1,18 @@
++——————————————————————+
+|    Wetterstation     |
+|——————————————————————|
+| api_response         |
+| appid                |
+| einheiten            |
+| stadt                |
+| temp                 |
+| truebung             |
+| url                  |
+| wind                 |
+|———————————-——————————|
+| __init__             |
+| __str__              |
+| __eq__               |
+| temperatur_aktuell   |
+| zusaetzliche_angaben |
++——————————————————————+

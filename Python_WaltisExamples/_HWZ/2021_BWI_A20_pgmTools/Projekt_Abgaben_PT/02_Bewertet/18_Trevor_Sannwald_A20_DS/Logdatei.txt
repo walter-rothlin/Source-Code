@@ -1,0 +1,2 @@
+# <Name>G:\_WaltisDaten\SourceCode\GitHosted\Python_WaltisExamples\_HWZ\2021_BWI_A20_pgmTools\Projekt_Abgaben_PT\01_Abgegeben\18_Trevor_Sannwald_A20_DS\2021-12-17 11:02:28.236772</Name>
+timestamp|levelname|temp|pressure|humidity|lon|lat|cloud
