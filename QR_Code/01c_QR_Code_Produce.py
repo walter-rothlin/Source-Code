@@ -26,4 +26,4 @@ qr = qrcode.QRCode(
 qr.add_data("https://www.fh-hwz.ch/")
 qr.make(fit=True)
 img = qr.make_image(fill_color="red", back_color="black")
-img.save("medium.png")
+img.save("QR-CodesImages/01c_hwzLink.png")

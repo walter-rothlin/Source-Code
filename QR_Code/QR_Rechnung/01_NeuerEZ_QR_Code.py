@@ -1,3 +1,18 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : 01_NeuerEZ_QR_Code.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/QR_Code/QR_Rechnung/01_NeuerEZ_QR_Code
+#
+# Description: Generates the QR-Code for e new Einzahlungsschein
+#
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 03-Jan-2022   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
 import io
 
 import qrcode
@@ -70,6 +85,7 @@ data = {
 }
 
 fileAsString = create_qr_code(data)
-f = open("newQrCode.svg", "w")
+f = open("NewEZ_Examples/01_NewEZ_QrCode.svg", "w")
 f.write(fileAsString)
 f.close()
+print('Neuer EZ QR Code:', 'NewEZ_Examples/01_NewEZ_QrCode.svg')
