@@ -2,6 +2,8 @@
 
 # ------------------------------------------------------------------
 # Name  : 01b_QR_Code_Read.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/QR_Code/01b_QR_Code_Read.py
+#
 #
 # Description: Decodes an QR-Code using cv2 module
 # https://towardsdatascience.com/create-and-read-qr-code-using-python-9fc73376a8f9

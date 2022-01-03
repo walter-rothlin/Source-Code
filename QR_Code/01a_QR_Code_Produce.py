@@ -14,7 +14,7 @@
 # 03-Jan-2022   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-import qrcode #Generate QR Code
+import qrcode
 
 img = qrcode.make('Hello World')
 img.save('helloWorld.png')

@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : 01c_QR_Code_Produce.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/QR_Code/01c_QR_Code_Produce.py
 #
 # Description: Generates a QR-Code using qrcode module
 # https://towardsdatascience.com/create-and-read-qr-code-using-python-9fc73376a8f9
