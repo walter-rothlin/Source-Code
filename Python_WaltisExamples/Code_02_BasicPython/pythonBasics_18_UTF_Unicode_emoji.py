@@ -28,7 +28,7 @@ print("    0 to     127 	\\u0000     to \\u007F      U.S. ASCII                 
 print("  128 to    2047 	\\u0080     to \\u07FF 	    Most Latinic alphabets                          :", "ę ± ƌ ñ")
 print(" 2048 to   65535 	\\u0800     to \\uFFFF      Additional parts of the multilingual plane (BMP):", "ത ᄇ ᮈ ‰")
 print("65536 to 1114111 	\\U00010000 to \\U0010FFFF  Other                                           :", "𝕂 𐀀 😓 🂲")
-print("Spezial-Zeichen: 📌 🌡️ 🌪 ⛅ ☁ 🌞 📅 α β γ δ")
+print("Spezial-Zeichen:  📌 🌡️ 🌪 ⛅ ☁ 🌞 📅 α β γ δ")
 print("Emoji:", '\u1F642')
 print("greek_alphabet :", greek_alphabet)
 

@@ -87,5 +87,6 @@ FlagWidth, FlagHeight = Flag.size
 XFlagPos = int(QrWidth/2 - FlagWidth/2)
 YFlagPos = int(QrHeight/2 - FlagHeight/2)
 img.paste(Flag, (XFlagPos, YFlagPos))
-img.save("./QRCode.png", "PNG")
+img.save("NewEZ_Examples/03_QRCode.png", "PNG")
+print('Neuer EZ QR Code:', 'NewEZ_Examples/03_QRCode.png')
 

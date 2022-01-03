@@ -1,4 +1,18 @@
-# importing the requests library
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : 02_Neuer_EZ_Calling_A_Rest_Hack.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/QR_Code/QR_Rechnung/02_Neuer_EZ_Calling_A_Rest_Hack.py
+#
+# Description: Generates the QR-Code for e new Einzahlungsschein
+#
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 03-Jan-2022   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
 import requests
 import json
 
@@ -93,6 +107,7 @@ data = {
 r = requests.post(url=ApiEndpoint, json=data, headers=headers)
 
 # extracting response text
+print("response....\n", r.text, "\nEND")
 pastebin_url = r.text
 
 ezResponse = json.loads(pastebin_url)
@@ -269,24 +284,24 @@ ezSVG = '''<?xml version="1.0" encoding="UTF-8"?>
 </svg>
 '''
 
-with open('../../QR_Code/QR_Rechnung/Gen_EZ.pdf', 'wb') as f:
+with open('NewEZ_Examples/02_Gen_EZ.pdf', 'wb') as f:
     f.write(pdfResponse.content)
 
-f = open("../../QR_Code/QR_Rechnung/Gen_QR.svg", "w")
+f = open("NewEZ_Examples/02_Gen_QR.svg", "w")
 f.write(qrCodeSvg)
 f.close()
 
-f = open("../../QR_Code/QR_Rechnung/Gen_EZ.svg", "w")
+f = open("NewEZ_Examples/02_Gen_EZ.svg", "w")
 f.write(ezSVG)
 f.close()
 
-with open('Gen_EZ.pdf', 'wb') as f:
-    f.write(pdfResponse.content)
-
-f = open("Gen_QR.svg", "w")
-f.write(qrCodeSvg)
-f.close()
-
-f = open("Gen_EZ.svg", "w")
-f.write(ezSVG)
-f.close()
+# with open('Gen_EZ.pdf', 'wb') as f:
+#     f.write(pdfResponse.content)
+#
+# f = open("Gen_QR.svg", "w")
+# f.write(qrCodeSvg)
+# f.close()
+#
+# f = open("Gen_EZ.svg", "w")
+# f.write(ezSVG)
+# f.close()
