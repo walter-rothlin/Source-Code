@@ -12,7 +12,7 @@
 #      - keine Default-Werte
 #      - Alle Instance Variablen sind public
 #      - OnlyChanges nicht implementiert
-#      - Ringbuffer nicht implementiert
+#      + Ringbuffersize implementiert
 #      - Einigen Methoden könnten private (startlog) oder private static sein (bessere encapsulation)
 #      - Exceptionhandling in der Klasse oder in der Applikation
 #

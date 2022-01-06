@@ -10,7 +10,7 @@
 #      + Eigene Klasse vorhanden
 #      - unnötige module instanziert (tkinter?)
 #      - Notwendige (__eq__ __str__ ) Methoden nicht implementiert
-#      - __init__ wichtige Parameter fehlen und haben keine sinnvolle Default-Werte
+#      - __init__ Parameter haben keine sinnvolle Default-Werte
 #      - Alle Instance Variablen sind public
 #      + OnlyChanges implementiert
 #      - Ringbuffer mit fixer Grösse implementiert

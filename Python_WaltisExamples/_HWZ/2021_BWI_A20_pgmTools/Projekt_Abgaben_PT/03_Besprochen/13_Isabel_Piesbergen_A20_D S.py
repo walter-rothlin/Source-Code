@@ -2,7 +2,7 @@
 # Review-Results:
 # Reference-Applikation:
 #      + Funktioniert und User Input ist möglich
-#      - Nur User-Eingabe der Pooling-Time möglich
+#      - Nur User-Eingabe der Pooling-Time and location möglich
 #      - Unsinnige User-Eingaben können zum Absturz führen
 #
 # Class Design und Implementation:
@@ -23,7 +23,7 @@
 # Test:
 #      - Nur zwei Test mit geringer Test-Abdeckung implementiert
 #
-# Note: 4.5
+# Note: 5.0
 #
 # Fragen:
 #    Auf welcher Zeile wird das Objekt Ihrer Logger-Class kreiert?

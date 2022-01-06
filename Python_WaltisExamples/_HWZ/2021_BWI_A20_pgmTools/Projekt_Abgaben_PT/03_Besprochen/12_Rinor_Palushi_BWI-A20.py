@@ -8,14 +8,11 @@
 # Class Design und Implementation:
 #      + Eigene Klasse
 #      - Notwendige (__eq__ __str__ ) Methoden nicht vorhanden
-#      - __init__ wichtige Parameter fehlen (OnlyChanges, FixedSlices, Ringbuffersize, New/Append,....)
 #      - __init__ Parameter haben nur wenige Defaultwerte
 #      - Alle Instance Variablen sind public
 #      + OnlyChanges funktioniert (ohne Toleranz)
 #      + Ein Ringbuffer implementiert (fixed Slices)
-#      - Einigen Methoden könnten private
 #      - Einigen Methoden könnten private oder private static sein (bessere encapsulation)
-#      - Kein Exceptionhandling in der Klasse
 #
 # Test:
 #      - Keine Test implementiert
