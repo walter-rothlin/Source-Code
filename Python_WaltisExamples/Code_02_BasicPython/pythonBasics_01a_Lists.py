@@ -1,14 +1,35 @@
 #!/usr/bin/python3
 
-
-
+# ------------------------------------------------------------------
+# Name  : pythonBasics_01a_Lists.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_01a_Lists.py
+#
+# Description: Introduction to Lists
+#
 # List is a collection which is ordered and changeable. Allows duplicate members.
 # Tuple is a collection which is ordered and unchangeable. Allows duplicate members.
 # Set is a collection which is unordered and unindexed. No duplicate members.
 # Dictionary is a collection which is unordered and changeable. No duplicate members.
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 30-Dec-2021   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
 
+# Listen in Python
+nameListe = ['Walti',
+             "Felix",
+             "Hans",
+             'Lukas']
+print(nameListe)
+print(nameListe[1], len(nameListe))
+for aName in nameListe:
+    print("aName:", aName[0:3], aName[-1], aName[-3:], len(aName))
 
-
+nameListe.sort()
+print(nameListe)
 
 # Method	    Description
 # -------------------------

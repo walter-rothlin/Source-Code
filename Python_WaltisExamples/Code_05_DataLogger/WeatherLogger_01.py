@@ -1,5 +1,6 @@
 # ------------------------------------------------------------------
-# Name: WeatherLogger.py
+# Name  : WeatherLogger.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_05_DataLogger/WeatherLogger_01.py
 #
 # Description: Polling REST Service and write values to console
 # https://openweathermap.org/current

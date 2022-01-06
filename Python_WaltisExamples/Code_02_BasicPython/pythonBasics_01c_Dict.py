@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: pythonBasics_01c_Dict.py
+# Name  : pythonBasics_01c_Dict.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_01c_Dict.py
+
 #
 # Description: Examples for Dictonaries
 #
@@ -12,7 +14,31 @@
 # 28-Nov-2021   Walter Rothlin      Added some more specifics
 # ------------------------------------------------------------------
 import json
+# Dictonaries in Python
+capitols = {
+    "Schweiz" : "Bern",
+    "Deutschland" : "Berlin",
+    "Oestreich" : "Wien",
+    "Italien" : "Rom",
+    "Frankreich" : "Paris",
+    "Lichtenstein" : "Vaduz"
+}
 
+print(capitols)
+print(capitols["Schweiz"])
+for aKey in capitols:
+    print(aKey, " --> ", capitols[aKey])
+
+# combinations of dicts and dicts
+countries = {
+    "Schweiz": {"capitol": "Bern", "Population" : "8 Mio", "currencies" : ["franken", "rappen"]},
+    "Deutschland": {"capitol": "Berlin", "Population" : "83 Mio", "currencies" : ["euro", "pence"]}
+}
+
+print(countries["Schweiz"]["capitol"], countries["Deutschland"]["Population"])
+print(countries["Schweiz"]["currencies"][0])
+
+# 2.Beispiel
 capital_country = {"United States": "Washington",
                    "US": "Washington",
                    "Canada": "Ottawa",
