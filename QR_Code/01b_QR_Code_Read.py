@@ -17,7 +17,7 @@
 # ------------------------------------------------------------------
 import cv2
 
-img = cv2.imread('QR-CodesImages/01a_helloWorld.png')
+img = cv2.imread('QR-CodesImages/01a_01_helloWorld.png')
 
 det = cv2.QRCodeDetector()
 val, pts, st_code = det.detectAndDecode(img)
