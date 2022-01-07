@@ -17,8 +17,15 @@
 # ------------------------------------------------------------------
 import cv2
 
-img = cv2.imread('QR-CodesImages/01a_01_helloWorld.png')
+qrCodeListe = ['QR-CodesImages/01a_01_helloWorld.png',
+               'QR-CodesImages/01a_02_multiLineText.png',
+               'QR-CodesImages/01a_03_Link.png',
+               'QR-CodesImages/01a_04_Email.png',
+               'QR-CodesImages/01a_05_VCard.png']
 
-det = cv2.QRCodeDetector()
-val, pts, st_code = det.detectAndDecode(img)
-print(val)
+
+for aQR_CodeFile in qrCodeListe:
+    img = cv2.imread(aQR_CodeFile)
+    det = cv2.QRCodeDetector()
+    val, pts, st_code = det.detectAndDecode(img)
+    print("reading:", aQR_CodeFile, "\n", val, "\n\n", sep="")

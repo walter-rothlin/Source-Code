@@ -14,12 +14,58 @@
 # 03-Jan-2022   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-from waltisLibrary import *
 import qrcode
 
-qr_valueText = input("QR-Value:")
-filename = 'QR-CodesImages/01b_helloWorld.png'
+def createQR_Code(text="Hello World!", filename="QR_CodeProduced.png", trace=True):
+    img = qrcode.make(text)
+    img.save(filename)
+    if trace:
+        print(filename)
 
-img = qrcode.make(qr_valueText)
-img.save(filename)
-print("QR-Code saved: ", filename)
+
+# Simple-Text
+# ===========
+createQR_Code(text='Hallo BZU!!!!!', filename='QR-CodesImages/01a_01_helloWorld.png')
+
+
+# Multiline-Text
+# ==============
+qrText = '''Dies ist ein langer Text!!!
+2.Zeile
+'''
+fName = 'QR-CodesImages/01a_02_multiLineText.png'
+createQR_Code(text=qrText, filename=fName)
+
+
+# Link
+# ====
+qrText = 'https://www.fh-hwz.ch'
+fName = 'QR-CodesImages/01a_03_Link.png'
+createQR_Code(text=qrText, filename=fName)
+
+
+# Email
+# =====
+qrText = 'MATMSG:TO:walter@rothlin.com;SUB:Gegenstand gefunden;BODY:Ich habe Ihr Gegenstand gefunden!;;'
+fName = 'QR-CodesImages/01a_04_Email.png'
+createQR_Code(text=qrText, filename=fName)
+
+
+# VCard
+# =====
+qrText = '''BEGIN:VCARD
+VERSION:3.0
+N:Rothlin;Walter
+FN:Walter Rothlin
+ORG:
+TITLE:
+ADR:;;Peterliwiese 33;Wangen;SZ;8855;Schweiz
+TEL;WORK;VOICE:+41 55 460 14 40
+TEL;CELL:+41 79 368 94 22
+TEL;FAX:
+EMAIL;WORK;INTERNET:walter@rothlin.com
+URL:
+END:VCARD
+'''
+fName = 'QR-CodesImages/01a_05_VCard.png'
+createQR_Code(text=qrText, filename=fName)
