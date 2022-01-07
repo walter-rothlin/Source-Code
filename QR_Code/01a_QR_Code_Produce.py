@@ -17,7 +17,7 @@
 import qrcode
 
 # Simple-Text
-img = qrcode.make('Hello World!!!')
+img = qrcode.make('Hello BZU!')
 img.save('QR-CodesImages/01a_01_helloWorld.png')
 print('QR-CodesImages/01a_01_helloWorld.png')
 
