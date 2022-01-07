@@ -46,7 +46,12 @@ createQR_Code(text=qrText, filename=fName)
 
 # Email
 # =====
-qrText = 'MATMSG:TO:walter@rothlin.com;SUB:Gegenstand gefunden;BODY:Ich habe Ihr Gegenstand gefunden!;;'
+qrText = '''MATMSG:TO:walter@rothlin.com;walter.rothlin@bzu.ch;
+SUB:Eine anfrage via QR - Code;
+BODY:Hallo Schule, hier ist eine Anfrage
+via QR - Code!
+Freundliche Grüsse;;
+'''
 fName = 'QR-CodesImages/01a_04_Email.png'
 createQR_Code(text=qrText, filename=fName)
 
