@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: 03_SelectSakila.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/03_SelectSakila.py
 #
 # Description: Connects to sakila and queries data
 #

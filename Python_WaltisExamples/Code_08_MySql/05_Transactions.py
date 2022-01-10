@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: 05_Transactions.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/05_Transactions.py
 #
 # Description: Connects to MyBank and demonstrates a transaction (Kontoübertrag)
 #

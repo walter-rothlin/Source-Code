@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: 05_BankenAppl_OO.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/05_BankenAppl_OO.py
 #
 # Description: Implements Kontoübertrag (OO-Lösung)
 #

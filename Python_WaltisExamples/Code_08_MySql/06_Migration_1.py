@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: 06_Migration_1.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/06_Migration_1.py
 #
 # Description: Migration the date after normalizing the schema
 #               1) splitting 'strasse' into 'strasse' and 'hausnummer'
