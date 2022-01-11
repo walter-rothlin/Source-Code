@@ -6,7 +6,7 @@
 #
 # Class Design und Implementation:
 #      + Diagramm stimmt grösstenteils mit Code überein (+ / - für private / public)
-#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
+#      + Notwendige (__init__ __str__ __eq__) Methoden vorhanden
 #      - __init__ unnötige parameter und die relevanten haben keine Default values
 #      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
 #      - Alle Instance Variablen sind public

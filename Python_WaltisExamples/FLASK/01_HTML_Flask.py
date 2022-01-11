@@ -23,6 +23,7 @@ def index():
     return '''<H1>Hello Requester!</H1>
     Einige Links zur Applikation:</BR>
     <UL>
+        <LI><A href='http://www.fh-hwz.ch'>HWZ</A></LI>
         <LI><A href='/emojiOverview'>Page mit Emojis</A></LI>
         <LI><A href='/echo?lastName=Rothlin&firstName=Walti'>HTML-Page with parameter</A></LI>
         <LI><A href='/rest?firstName=Felix&lastName=Muster'>JSON response with parameter</A></LI>

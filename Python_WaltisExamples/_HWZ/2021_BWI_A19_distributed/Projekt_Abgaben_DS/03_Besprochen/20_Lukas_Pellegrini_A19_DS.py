@@ -16,12 +16,11 @@ https://www.youtube.com/watch?v=s_4ZrtQs8Do&ab_channel=ArjanCodes
 #      + Design stimmt mit Implementation überein
 #      -- Funktioniert nicht (Syntax-Error)
 #      + User-Eingaben möglich
-#      - stürzt aber schon bei sinnvollen Eingaben ab
 #      + Falsche Usereingaben werden abgefangen
 #      + gut documentiert mit docStrings
 #
 # Class Design und Implementation:
-#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
+#      + Notwendige (__init__ __str__ __eq__) Methoden vorhanden
 #      - __init__ mit allen relevanten Argument vorhanden
 #      + __init__ Argumente haben funktionierende Default values
 #      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
@@ -33,7 +32,7 @@ https://www.youtube.com/watch?v=s_4ZrtQs8Do&ab_channel=ArjanCodes
 # Test:
 #      + UNit Tests geschrieben
 #
-# Note: 4.5
+# Note: 5.0
 #
 # Fragen:
 #    Auf welcher Zeile wird der Request zum Web-Service abgesendet?

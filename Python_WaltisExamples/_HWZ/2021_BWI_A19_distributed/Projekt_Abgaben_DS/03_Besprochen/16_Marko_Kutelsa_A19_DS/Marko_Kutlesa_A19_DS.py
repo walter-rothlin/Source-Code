@@ -11,7 +11,29 @@
 #https://github.com/Keith-Howard/Weather-Data/blob/main/main.py
 #https://stackoverflow.com/questions/61154233/getting-attribute-error-while-creating-a-class-to-fetch-weather-data-in-python
 # ------------------------------------------------------------------
-
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert
+#      - Keine user-Eingaben möglich
+#
+# Class Design und Implementation:
+#      + Design-Diagramm vorhanden und stimmt mit Implementation überein
+#      + Notwendige (__init__ __str__ __eq__) Methoden vorhanden
+#      - __init__ nicht alle relevanten Argumente vorhanden
+#      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
+#      + Alle Instance Variablen sind private
+#      + Exception Handling für City implementiert
+#
+# Test:
+#      + Tests (positive/negative) implementiert
+#
+# Note: 5.0
+#
+# Fragen:
+#    Auf welcher Zeile wird der Request zum Web-Service abgesendet?
+#    Wann wird __init__ aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+# ------------------------------------------------------------------
 #import tkinter as tk
 import requests
 import time
