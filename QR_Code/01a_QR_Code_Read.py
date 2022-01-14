@@ -15,6 +15,12 @@
 # 03-Jan-2022   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
+# ------------------------------------------------------------------
+#  VORSICHT: PyCharm installiert falsches Module! Manuel installieren über Terminal:
+#  ev muss vorher pip updated werden (via Terminal):
+#  python -m pip install --upgrade pip
+#  pip install opencv-python
+#
 import cv2
 
 img = cv2.imread('QR-CodesImages/01a_01_helloWorld.png')

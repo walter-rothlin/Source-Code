@@ -15,10 +15,10 @@
 #
 # ------------------------------------------------------------------
 #  VORSICHT: PyCharm installiert falsches Module! Manuel installieren über Terminal:
+# ev muss vorher pip updated werden (via Terminal):
+#  python -m pip install --upgrade pip
 #  pip install qrcode[pil]
 #
-# ev muss vorher pip updated werden (via Terminal): python -m pip install --upgrade pip
-
 import qrcode
 
 # Simple-Text

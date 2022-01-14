@@ -4,7 +4,7 @@
 # Name  : 01_NeuerEZ_QR_Code.py
 # Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/QR_Code/QR_Rechnung/01_NeuerEZ_QR_Code
 #
-# Description: Generates the QR-Code for e new Einzahlungsschein
+# Description: Generates the QR-Code for a new Einzahlungsschein
 #
 #
 # Autor: Walter Rothlin
