@@ -35,6 +35,7 @@
 #                                        getResultsFromAdressSearch, getResults_search_ch, getResults_geoAdmin
 # 04-Dec-2021   Walter Rothlin      Added getMenuStrFromList
 # 06-Dec-2021   Walter Rothlin      Added getFilenameWithoutExtension, getFilenameExtension, addTimestampToFileName, getPath
+# 15-Jan-2022   Walter Rothlin      Added File_remove
 # ------------------------------------------------------------------
 
 # toDo:
@@ -46,13 +47,10 @@ import inspect
 import math
 import os
 import shutil
-import sys
 import time
 import datetime
 from pathlib import Path
 import re
-from time import sleep
-
 from rich import print
 import json
 from lxml import etree
@@ -1768,6 +1766,15 @@ def File_removeOldLogs(files, maxLogFiles=10):
         oldestFile = min(files, key=os.path.getctime)
         os.remove(oldestFile)
         files = File_getAllLogFiles(".")
+
+def File_remove(fullFileName, verbal=True):
+    if os.path.exists(fullFileName):
+        if verbal:
+            print("Datei {} löschen".format(fullFileName))
+        os.remove(fullFileName)
+    else:
+        if verbal:
+            print("Die Datei {} existiert nicht".format(fullFileName))
 
 
 def File_cleanup(filename, directory, path_sign):
