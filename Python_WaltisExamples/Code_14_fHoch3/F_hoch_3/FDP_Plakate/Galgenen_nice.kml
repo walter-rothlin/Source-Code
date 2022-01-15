@@ -1,0 +1,33 @@
+<ns0:kml xmlns:ns0="http://www.opengis.net/kml/2.2" xmlns:ns2="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
+  <ns0:Document>
+    <ns0:name>Zeichnung</ns0:name>
+  <ns0:Placemark id="marker_1642102494575">
+      <ns0:ExtendedData>
+        <ns0:Data name="type">
+          <ns0:value>marker</ns0:value>
+        </ns0:Data>
+      </ns0:ExtendedData>
+    <ns0:name>01_Galgenen</ns0:name>
+    <ns0:description>beim Feuerwehrlokal
+Vor- und R&#252;ckseite</ns0:description>
+    <ns0:Style>
+        <ns0:IconStyle>
+          <ns0:Icon>
+            <ns0:href>https://api3.geo.admin.ch/color/255,0,0/marker-24@2x.png</ns0:href>
+          <ns2:w>48</ns2:w>
+          <ns2:h>48</ns2:h>
+          </ns0:Icon>
+        <ns0:hotSpot x="24" y="4.799999999999997" xunits="pixels" yunits="pixels" />
+        </ns0:IconStyle>
+      <ns0:LabelStyle>
+          <ns0:color>ff0000ff</ns0:color>
+        </ns0:LabelStyle>
+      </ns0:Style>
+    <ns0:Point>
+        <ns0:tessellate>1</ns0:tessellate>
+      <ns0:altitudeMode>clampToGround</ns0:altitudeMode>
+      <ns0:coordinates>8.872837874460659,47.183084964492664</ns0:coordinates>
+      </ns0:Point>
+    </ns0:Placemark>
+  </ns0:Document>
+</ns0:kml>

@@ -33,9 +33,9 @@ def indent(elem, level=0):
     return elem
 
 
-sourceFN = 'Kuessnacht.kml'
-sourceNiceFN = 'Kuessnacht_nice.kml'
-destinationFN = 'Kuessnacht.csv'
+sourceFN = 'Galgenen.kml'
+sourceNiceFN = 'Galgenen_nice.kml'
+destinationFN = 'Galgenen.csv'
 
 baseFor_KML = 'G:/_WaltisDaten/SourceCode/GitHosted/Python_WaltisExamples/Code_14_fHoch3/F_hoch_3/FDP_Plakate/'
 baseFor_XSL = 'G:/_WaltisDaten/SourceCode/GitHosted/XML/'
