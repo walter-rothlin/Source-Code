@@ -2,15 +2,19 @@
 
 # ------------------------------------------------------------------
 # Name  : Remove_Duplicate_Images.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_11_Bild_PDF_Bearbeitung/Remove_Duplicate_Images
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_11_Bild_PDF_Bearbeitung/Remove_Duplicate_Images.py
 #
-# Description: Löscht in einem Verzeichnis alle doppelten Bilder (Inhalt des Bildes wird verglichen)
+# Description: Löscht in einem Verzeichnis alle doppelten Bilder (Inhalt des Bildes wird verglichen) und auch Textdateien mit gleichem Inhalt
 #
 # Autor: Isabel Piesbergen
 #
 # History:
 # 14-Jan_2022   Isabel Piesbergen   Initial Version (von Piesbergen Isabel (BWI-A20))
-# 20-Jan-2022   Walter Rothlin      Fixed iteration and compares each picture with each other
+# 19-Jan-2022   Walter Rothlin      Fixed iteration and compares each picture with each other
+# 20-Jan-2022   Walter Rothlin      Added .txt .py .jpg
+# ------------------------------------------------------------------
+#   To Do:
+#   1) .gif ist not working
 # ------------------------------------------------------------------
 import os
 from PIL import ImageStat
@@ -131,7 +135,7 @@ def deleteDuplicateFile(directoryPath, fileType, doDelete=False, verbal=True):
 # Main
 # =================================
 directoryList = r'G:\_WaltisDaten\SourceCode\GitHosted\Python_WaltisExamples\Code_11_Bild_PDF_Bearbeitung\JPG_Bilder'
-fileTypesToCompare = [".jpg", ".txt", ".py"] # , ".gif"]
+fileTypesToCompare = [".jpg", ".txt", ".py"]
 
 for aFileType in fileTypesToCompare:
     deleteDuplicateFile(directoryList, aFileType, doDelete = False, verbal=True)
