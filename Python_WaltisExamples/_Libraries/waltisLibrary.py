@@ -1767,14 +1767,23 @@ def File_removeOldLogs(files, maxLogFiles=10):
         os.remove(oldestFile)
         files = File_getAllLogFiles(".")
 
-def File_remove(fullFileName, verbal=True):
+
+def File_remove(fullFileName, verbal=True, withFullName=True):
+    fname = os.path.basename(fullFileName)
     if os.path.exists(fullFileName):
-        if verbal:
-            print("Datei {} löschen".format(fullFileName))
         os.remove(fullFileName)
+        if verbal:
+            if withFullName:
+                print("File {} deleted!".format(fullFileName))
+            else:
+                print("File {} deleted!".format(fname))
+
     else:
         if verbal:
-            print("Die Datei {} existiert nicht".format(fullFileName))
+            if withFullName:
+                print("Die Datei {} existiert nicht".format(fullFileName))
+            else:
+                print("Die Datei {} existiert nicht".format(fname))
 
 
 def File_cleanup(filename, directory, path_sign):
