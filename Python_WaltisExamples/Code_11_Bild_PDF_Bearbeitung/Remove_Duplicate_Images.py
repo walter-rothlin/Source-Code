@@ -35,7 +35,7 @@ def File_remove(fullFileName, verbal=True, withFullName=True):
                 print("Die Datei {} existiert nicht".format(fname))
 
 def removeImg2_ifSameAsImg1(pathToImg1, pathToImg2, doDelete = False, verbal=True):
-    oneDeleted = False
+    fileDeleted = None
     fname1 = os.path.basename(pathToImg1)
     fname2 = os.path.basename(pathToImg2)
     if verbal:
@@ -54,37 +54,84 @@ def removeImg2_ifSameAsImg1(pathToImg1, pathToImg2, doDelete = False, verbal=Tru
             if len(pathToImg1) <= len(pathToImg2):
                 if doDelete:
                     File_remove(pathToImg2, verbal=True, withFullName=False)
-                    oneDeleted = True
+                    fileDeleted = pathToImg2
             else:
                 if doDelete:
                     File_remove(pathToImg1, verbal=True, withFullName=False)
-                    oneDeleted = True
+                    fileDeleted = pathToImg1
     else:
         if verbal:
             print(pathToImg1, "Same File-Path!!!")
-    return oneDeleted
+    return fileDeleted
+
+
+def removeTxt2_ifSameAsTxt1(pathTo1, pathTo2, doDelete = False, verbal=True):
+    fileDeleted = None
+    fname1 = os.path.basename(pathTo1)
+    fname2 = os.path.basename(pathTo2)
+    if verbal:
+        print("Compare: ", fname1)
+        print("         ", fname2)
+
+    if pathTo1 != pathTo2:
+        with open(pathTo1, "r", encoding='utf-8') as f:
+            content_1 = f.readlines()
+        with open(pathTo2, "r", encoding='utf-8') as f:
+            content_2 = f.readlines()
+        if content_1 == content_2:
+            if verbal:
+                print("   --> Duplicates: ", fname1)
+                print("                   ", fname2)
+            if len(pathTo1) <= len(pathTo2):
+                if doDelete:
+                    File_remove(pathTo2, verbal=True, withFullName=False)
+                    fileDeleted = pathTo2
+            else:
+                if doDelete:
+                    File_remove(pathTo1, verbal=True, withFullName=False)
+                    fileDeleted = pathTo1
+    else:
+        if verbal:
+            print(pathTo1, "Same File-Path!!!")
+    return fileDeleted
+
+def deleteDuplicateFile(directoryPath, fileType, doDelete=False, verbal=True):
+    duplicateFound = True
+    duplicates = []
+    fileDeleted = None
+    while duplicateFound:
+        fileList = [i for i in os.listdir(directoryPath) if i.endswith(fileType)]
+        print("\n\n===>> Files ({ext:1s}) found ({anz:1d}):".format(anz=len(fileList), ext=fileType), fileList)
+        duplicateFound = False
+        i1 = 0
+        for file_1 in fileList[:-1]:
+            i1 += 1
+            for file_2 in fileList[i1:]:
+                pathTo1 = os.path.join(directoryPath, file_1)
+                pathTo2 = os.path.join(directoryPath, file_2)
+                if fileType == ".jpg" or fileType == ".gif":
+                    fileDeleted = removeImg2_ifSameAsImg1(pathTo1, pathTo2, doDelete=True, verbal=True)
+                if fileType == ".txt" or fileType == ".py":
+                    fileDeleted = removeTxt2_ifSameAsTxt1(pathTo1, pathTo2, doDelete=True, verbal=True)
+                if fileDeleted is not None:
+                    if fileDeleted != "":
+                        duplicates.append(fileDeleted)
+                    duplicateFound = True
+                    break
+            if fileDeleted is not None:
+                break
+            print("\n")
+
+    print("===>> ", len(duplicates), "Files deleted:")
+    for aSingleDuplicate in duplicates:
+        print("   {fName:1s}".format(fName=os.path.basename(aSingleDuplicate)))
+
 
 # =================================
 # Main
 # =================================
-image_folder = r'G:\_WaltisDaten\SourceCode\GitHosted\Python_WaltisExamples\Code_11_Bild_PDF_Bearbeitung\JPG_Bilder'
-ending = ".jpg"
-ending = ".gif"
+directoryList = r'G:\_WaltisDaten\SourceCode\GitHosted\Python_WaltisExamples\Code_11_Bild_PDF_Bearbeitung\JPG_Bilder'
+fileTypesToCompare = [".jpg", ".txt", ".py"] # , ".gif"]
 
-duplicateFound = True
-while duplicateFound:
-    image_files = [i for i in os.listdir(image_folder) if i.endswith(ending)]
-    print("Imgages (.jpg) found ({anz:1d}):".format(anz=len(image_files)), image_files)
-    duplicateFound = False
-    i1 = 0
-    for pic_1 in image_files[:-1]:
-        i1 += 1
-        for pic_2 in image_files[i1:]:
-            pathToImg1 = os.path.join(image_folder, pic_1)
-            pathToImg2 = os.path.join(image_folder, pic_2)
-            duplicateFound = removeImg2_ifSameAsImg1(pathToImg1, pathToImg2, doDelete = True, verbal=True)
-            if duplicateFound:
-                break
-        if duplicateFound:
-            break
-        print("\n")
+for aFileType in fileTypesToCompare:
+    deleteDuplicateFile(directoryList, aFileType, doDelete = False, verbal=True)
