@@ -1,4 +1,30 @@
 # ------------------------------------------------------------------
+# Review-Results:
+# Reference-Applikation:
+#      + Funktioniert
+#      + User-Eingaben möglich
+#      + Unsinnige Usereingaben werden abgefangen
+#
+# Class Design und Implementation:
+#      + Diagramm stimmt grösstenteils mit Code überein (+ / - für private / public)
+#      + Notwendige (__init__ __str__ __eq__) Methoden vorhanden
+#      -- Nicht OO und keine Klasse die in der App instanziert wird
+#      - __init__ unnötige parameter und die relevanten haben keine Default values
+#      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
+#      - Alle Instance Variablen sind public
+#
+# Test:
+#      + Test (positive) implementiert
+#
+# Note: 4.5
+#
+# Fragen:
+#    Auf welcher Zeile wird der Request zum Web-Service abgesendet?
+#    Auf welcher Zeile wird ein Objekt ihrer Wetter-Klasse kreiert
+#    Wann wird __init__ aufgerufen?
+#    Wie kann ein Applikations-Entwickler seine eigenen AppId verwenden?
+# ------------------------------------------------------------------
+# ------------------------------------------------------------------
 # Name: Wetterstation.py
 #
 # Description: Does a search via REST request to openweather.org (JSON) to give back

@@ -8,7 +8,7 @@
 #
 # Class Design und Implementation:
 #      + Diagramm stimmt mit Code überein (+ / - für private / public)
-#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
+#      + Notwendige (__init__ __str__ __eq__) Methoden vorhanden
 #      + __init__ nötige Parameter haben sinnvolle Default values
 #      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
 #      - Nicht alle Instance Variablen sind public
@@ -16,7 +16,7 @@
 # Test:
 #      + Test (positive) implementiert
 #
-# Note: 5.0
+# Note: 5.5
 #
 # Fragen:
 #    Auf welcher Zeile wird der Request zum Web-Service abgesendet?

@@ -6,8 +6,8 @@
 #      - Funktioniert nicht mit sinnlosen Parametern
 #
 # Class Design und Implementation:
-#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
-#      - __init__ mit allen relevanten Argument vorhanden
+#      + Notwendige (__init__ __str__ __eq__) Methoden vorhanden
+#      + __init__ mit allen relevanten Argument vorhanden
 #      + __init__ Argumente haben funktionierende Default values
 #      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
 #      - lese-argumente (z.B. pressure) sollten auf None intitialisiert werden (eigentlich gat nicht nötig)

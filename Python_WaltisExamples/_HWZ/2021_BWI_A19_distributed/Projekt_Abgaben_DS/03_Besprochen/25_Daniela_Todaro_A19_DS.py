@@ -7,7 +7,7 @@
 #
 # Class Design und Implementation:
 #      + Diagramm stimmt mit Code überein (+ / - für private / public)
-#      + Notwendige (__eq__ __str__ __eq__) Methoden vorhanden
+#      + Notwendige (__init__ __str__ __eq__) Methoden vorhanden
 #      - __init__ nicht alle wichtigen parameter sind definiert und die relevanten haben keine sinnvolle values
 #      - __init__ macht keinen Request und somit kann die Gültigkeit des Ortes nicht bei der Instanzierung ueberprüft werden
 #      - userinput in den public methoden ist nicht reusable
