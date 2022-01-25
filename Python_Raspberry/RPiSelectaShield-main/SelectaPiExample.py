@@ -1,4 +1,7 @@
 #!/usr/bin/python3s
+
+# Source: https://github.com/HeCoding180/RPiSelectaShield  25.1.22 Timo Widmer
+
 import SelectaShieldLibrary as Selecta
 
 SelectaShield = Selecta.SelectaPi(HomeAllMotors=True, DrinkNames=("Cola", "Cola", "Sprite", "Fanta", "Valser", "Valser"))

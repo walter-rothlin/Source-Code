@@ -1,3 +1,6 @@
+
+# Source: https://github.com/HeCoding180/RPiSelectaShield  25.1.22 Timo Widmer
+
 import RPi.GPIO as GPIO
 import time
 
