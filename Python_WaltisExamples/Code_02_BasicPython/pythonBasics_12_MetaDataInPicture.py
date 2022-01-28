@@ -11,19 +11,25 @@
 # https://pillow.readthedocs.io/en/stable/reference/Image.html#examples    Bildverarbeitung
 # http://metapicz.com/#landing  Web-Applikation zum Meta-Tags auslesen
 #
+# Auf Windows mit File-Explorer Properties --> Details
+#
 # History:
 # 22.4.21   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
-
-
 from PIL import Image
+from time import sleep
 
-img = Image.open('Vogt-7.JPG')
+
+img = Image.open('Bilder/Vogt-7.JPG')
+# img = Image.open('Bilder/Bruch_1.jpg')
+# img = Image.open('Bilder/Screenshot.png')
+
 exif_data = img._getexif()
-print(exif_data)
+print("Meta-Data", exif_data)
 
-
-for anEntryKey in exif_data:
-    print(anEntryKey, "-->", exif_data[anEntryKey])
-
-img.rotate(45).show()
+if exif_data is not None:
+    for anEntryKey in exif_data:
+        print(anEntryKey, "-->", exif_data[anEntryKey])
+for angle in range(1, 45, 10):
+    img.rotate(angle).show()
+    sleep(0.5)
