@@ -30,6 +30,9 @@ print("Meta-Data", exif_data)
 if exif_data is not None:
     for anEntryKey in exif_data:
         print(anEntryKey, "-->", exif_data[anEntryKey])
-for angle in range(1, 45, 10):
-    img.rotate(angle).show()
-    sleep(0.5)
+
+
+
+# for angle in range(1, 45, 10):
+#     img.rotate(angle).show()
+#     sleep(0.5)
