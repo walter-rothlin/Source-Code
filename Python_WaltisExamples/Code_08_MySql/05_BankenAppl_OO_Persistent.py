@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 05_BankenAppl_OO.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/05_BankenAppl_OO.py
+# Name: 05_BankenAppl_OO_Persistent.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/05_BankenAppl_OO_Persistent.py
 #
 # Description: Implements Kontoübertrag (OO-Lösung)
 #
