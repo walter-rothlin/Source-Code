@@ -25,6 +25,7 @@ def imgCrop(source, xPosStart, xWidth, yPosStart, yWidth):
 def PageNumDetection(OriginalImg, PageNumberPositionInImg):
     ImgOfPageNumber = OriginalImg[PageNumberPositionInImg[0]: PageNumberPositionInImg[1], PageNumberPositionInImg[2]:PageNumberPositionInImg[3]]
     custom_config = r'--oem 3 --psm 6 outputbase digits'
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
     pageNumber = pytesseract.image_to_string(ImgOfPageNumber, config=custom_config)
     print("Page Number found: " + str(pageNumber))
     pageNumber = pageNumber.rstrip("\f")
@@ -39,10 +40,11 @@ cv2.imshow("Output", frame)
 cv2.waitKey(0)
 
 
+
 croppedImage = imgCrop(originalPicture, 0, 800, 0, 600)
 cv2.imshow("Output", croppedImage)
 cv2.imwrite("./TestOutputFiles/BMS_Mathe_006_Cropped.bmp", croppedImage)
 cv2.imwrite("./TestOutputFiles/BMS_Mathe_006_Cropped.jpg", croppedImage)
 cv2.waitKey(0)
 
-print(PageNumDetection(croppedImage, [0, 30, 0, 30]))
+print(PageNumDetection(croppedImage, [100, 200, 100, 100]))
