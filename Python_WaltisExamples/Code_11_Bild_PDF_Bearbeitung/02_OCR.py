@@ -1,3 +1,20 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name: 02_OCR.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_11_Bild_PDF_Bearbeitung/02_OCR.py
+#
+# Description: Lädt ein bild und macht in einem Bereich OCR
+#
+# Installationshinweis: Tesseract muss installiert sein!
+#                          for Windows https://github.com/UB-Mannheim/tesseract/wiki
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 03-Feb-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 import cv2
 import pytesseract
 
