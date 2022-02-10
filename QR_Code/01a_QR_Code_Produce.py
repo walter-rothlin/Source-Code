@@ -22,6 +22,6 @@
 import qrcode
 
 # Simple-Text
-img = qrcode.make('Hallo Lego-Spieler')
+img = qrcode.make('ABCDEFG 007')
 img.save('QR-CodesImages/01a_01_helloWorld.png')
 print('QR-CodesImages/01a_01_helloWorld.png')
