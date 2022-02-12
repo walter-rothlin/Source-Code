@@ -21,7 +21,7 @@ print("Connecting to DB....", end="", flush=True)
 mydb = mysql.connector.connect(
   host        = "localhost",
   user        = "root",
-  passwd      = "admin",
+  password    = "admin",
   auth_plugin = 'mysql_native_password'
 )
 print("completed!\n\n")

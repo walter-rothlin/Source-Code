@@ -22,7 +22,7 @@ print("Connecting to BZU....", end="", flush=True)
 conn = mysql.connector.connect(
   host     = "localhost",
   user     = "root",
-  passwd   = "admin",
+  password = "admin",
   database = "BZU",
   auth_plugin = 'mysql_native_password'
 )

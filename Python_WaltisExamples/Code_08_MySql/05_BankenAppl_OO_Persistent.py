@@ -122,7 +122,7 @@ class Kontoliste:
             host=self.__dbServer,
             database=self.__dbSchema,
             user=self.__userName,
-            passwd=self.__password,
+            password=self.__password,
             auth_plugin = 'mysql_native_password'
         )
         print("completed!")

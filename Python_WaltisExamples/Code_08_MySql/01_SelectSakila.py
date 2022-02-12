@@ -19,7 +19,7 @@ print("Connecting to sakila....", end="", flush=True)
 mydb = mysql.connector.connect(
   host        = "localhost",
   user        = "root",
-  passwd      = "admin",
+  password    = "admin",
   database    = "sakila",
   auth_plugin = 'mysql_native_password'
 )

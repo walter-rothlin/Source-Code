@@ -27,7 +27,7 @@ try:
         host=dbServer,
         database=dbSchema,
         user=userName,
-        passwd=password
+        password=password
     )
     print("completed!")
 
