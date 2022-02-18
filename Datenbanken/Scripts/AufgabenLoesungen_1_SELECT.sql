@@ -5,13 +5,14 @@
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin
--- Description: Aufgaben und Lösungen zu DML
+-- Description: Aufgaben und Loesungen zu DML
 --
 -- History:
 -- 15-May-2020   Walter Rothlin      Initial Version
 -- 02-Feb-2021   Walter Rothlin		 Adapded for BWI-A19
 -- 09-Jun-2021   Walter Rothlin      Explained "Safe Updates"
 -- 18-Jun-2021   Walter Rothlin      Added more functions
+-- 18-Feb-2022   Walter Rothlin      Minor changes
 -- ---------------------------------------------------------------------------------------------
 
 -- END title

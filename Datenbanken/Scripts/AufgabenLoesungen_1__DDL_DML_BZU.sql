@@ -3,7 +3,7 @@
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin
--- Description: Kreiert ein neues Schema und eine Adressen-Tabelle. Daten-Sätze werden erfasst.
+-- Description: Kreiert ein neues Schema und eine Adressen-Tabelle. Daten-Saetze werden erfasst.
 --              Danach wird normalisiert und eine View erstellt
 --
 -- History:
@@ -12,6 +12,7 @@
 -- 25-Jun-2020   Walter Rothlin      Added Stored-Procedures
 -- 05-Jun-2021   Walter Rothlin      Merged with HWZ Script
 -- 16-Jun-2021   Walter Rothlin      Changes for HWZ
+-- 18-Feb-2022   Walter Rothlin      Minor changes
 -- ---------------------------------------------------------------------------------------------
 
 -- Neues Schema kreieren
