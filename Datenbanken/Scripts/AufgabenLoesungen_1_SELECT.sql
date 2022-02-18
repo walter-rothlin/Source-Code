@@ -265,7 +265,7 @@ FROM (
        sum(P.amount) AS Umsatz
     FROM 
        payment AS P
-    LEFT JOIN customer as C on C.customer_id = P.customer_id
+    LEFT JOIN customer AS C on C.customer_id = P.customer_id
     GROUP BY
        P.customer_id
     ORDER BY
@@ -275,6 +275,27 @@ WHERE
     UmsatzListe.Umsatz > 170;
     
 
+-- 1.14.2) Erstellen Sie eine Listen mit allen Städten und die dazugehörenden Länder.
+SELECT
+	A.city AS Stadt,
+    B.country AS Land
+FROM
+	city as A
+INNER JOIN country AS B ON A.country_id = B.country_id;
+
+SELECT
+	A.city AS Stadt,
+    B.country AS Land
+FROM
+	city as A
+JOIN country AS B ON A.country_id = B.country_id;
+
+SELECT
+	A.city AS Stadt,
+    B.country AS Land
+FROM
+	city as A
+LEFT JOIN country AS B ON A.country_id = B.country_id;
 
 -- 1.14) Noch nicht loesen!!!!
 --       In der staff table hat es ein Attribute picture vom Type BLOB. Googeln Sie, was das fuer ein Type ist und 
