@@ -9,7 +9,7 @@
 --
 -- History:
 -- 15-May-2020   Walter Rothlin      Initial Version
--- 02-Feb-2021   Walter Rothlin	     Adapded for BWI-A19
+-- 02-Feb-2021   Walter Rothlin	     Adapted for BWI-A19
 -- 09-Jun-2021   Walter Rothlin      Explained "Safe Updates"
 -- 18-Jun-2021   Walter Rothlin      Added more functions
 -- 18-Feb-2022   Walter Rothlin      Minor changes
@@ -45,7 +45,7 @@ FROM
 
 -- 1.2) Beschrifte die Resultat-Tabelle von 1.1 mit Vorname und Nachname als Spalten-Header
 SELECT 
-    sakila.act.first_name AS Vorname,
+    sakila.act.first_name AS `Vorname`,
     last_name  AS Nachname
 FROM
     sakila.actor AS act;
@@ -85,7 +85,7 @@ FROM
     actor
 ORDER BY Nachname;
 
--- 1.6) Von wie viele Schauspieler hat es im DVD im Store?
+-- 1.6) Von wie vielen Schauspieler hat es DVD im Store?
 SELECT 
     COUNT(last_name)
 FROM
