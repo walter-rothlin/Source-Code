@@ -1,4 +1,4 @@
-Attribute VB_Name = "EXCEL_VBA_Loesung_01"
+
 ' Mathematische (Formel) Implementationen
 ' =======================================
 Function CalcRechteck(laenge As Double, breite As Double) As Double
