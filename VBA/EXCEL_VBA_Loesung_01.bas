@@ -5,7 +5,7 @@
 ' A = Laenge * Breite
 '
 ' Falls Laenge oder Breite <0 sind, wird Wert 0 zurückgegeben.
-Function CalcRechteck(laenge As Double, breite As Double) As Double
+Public Function CalcRechteck(ByVal laenge As Double, breite As Double) As Double
     If (laenge < 0) Or (breite < 0) Then
         CalcRechteck = 0
     Else
@@ -89,7 +89,7 @@ End Function
 ' Mathematische (Formel) Implementationen
 ' =======================================
 ' Die Fct gibt die Summe von 1/1 + 1/2 + 1/3 + 1/4 +…+ 1/n zurück.
-' Ist n <= 0 wird 0 zurück gegeben. Default von n ist 100.
+' Ist n <= 0 wird 0 zurück gegeben. Default von n ist 0.
 Function AddFractions(Optional n As Integer = 0) As Double
     Dim retVal As Double
     retVal = 1
