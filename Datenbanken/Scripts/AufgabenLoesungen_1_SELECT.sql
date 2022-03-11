@@ -13,6 +13,7 @@
 -- 09-Jun-2021   Walter Rothlin      Explained "Safe Updates"
 -- 18-Jun-2021   Walter Rothlin      Added more functions
 -- 18-Feb-2022   Walter Rothlin      Minor changes
+-- 11-Mar-2022   Walter Rothlin      Minor corrections
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
