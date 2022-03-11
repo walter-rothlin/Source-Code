@@ -366,7 +366,7 @@ FROM
 WHERE 
     date(last_update) = STR_TO_DATE('February 15, 2006','%M %d,%Y');
 
--- 2.1.2) mit STR_TO_DATE in where clause (Effizienter! Wieso?)
+-- 2.1.2) mit DATE_FORMAT in where clause (Nicht so effizient! Wieso?)
 SELECT 
     first_name AS Vorname,
     last_name AS Nachname,
