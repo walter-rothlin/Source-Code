@@ -206,7 +206,7 @@ SELECT
    sum(P.amount)
 FROM 
    payment AS P
-LEFT JOIN customer AS C ON C.customer_id = P.customer_id
+LEFT OUTER JOIN customer AS C ON C.customer_id = P.customer_id
 GROUP BY
    P.customer_id
 ORDER BY
@@ -223,7 +223,7 @@ SELECT
    sum(P.amount)    AS Umsatz
 FROM 
    payment as P
-LEFT JOIN customer as C on C.customer_id = P.customer_id
+LEFT OUTER JOIN customer as C on C.customer_id = P.customer_id
 WHERE P.customer_id < 5
 GROUP BY
    P.customer_id
@@ -266,7 +266,7 @@ FROM (
        sum(P.amount) AS Umsatz
     FROM 
        payment AS P
-    LEFT JOIN customer AS C on C.customer_id = P.customer_id
+    LEFT OUTER JOIN customer AS C on C.customer_id = P.customer_id
     GROUP BY
        P.customer_id
     ORDER BY
@@ -289,14 +289,14 @@ SELECT
     B.country AS Land
 FROM
 	city as A
-JOIN country AS B ON A.country_id = B.country_id;
+INNER JOIN country AS B ON A.country_id = B.country_id;
 
 SELECT
 	A.city AS Stadt,
     B.country AS Land
 FROM
 	city as A
-LEFT JOIN country AS B ON A.country_id = B.country_id;
+LEFT OUTER JOIN country AS B ON A.country_id = B.country_id;
 
 -- 1.14) Noch nicht loesen!!!!
 --       In der staff table hat es ein Attribute picture vom Type BLOB. Googeln Sie, was das fuer ein Type ist und 
@@ -376,7 +376,7 @@ SELECT
 FROM
     actor
 WHERE 
-    DATE_FORMAT(last_update, '%Y-%M-%d') = "2006-February-15";
+    DATE_FORMAT(last_update, '%Y-%M-%d') = '2006-February-15';
 
 -- 2.2) liste alle Schauspielern (Vorname, Nachname und LAST_UPDATE [yyyy-mon-dd]), bei welchen der Vorname mit A beginnt und der zweitletzte Buchstabe im Vornamen ebenfalls  ein A ist sowie der Nachname nicht ALLEN oder BAILEY ist.
 SELECT 
