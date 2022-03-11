@@ -275,7 +275,7 @@ WHERE
     UmsatzListe.Umsatz > 170;
     
 
--- 1.14.2) Erstellen Sie eine Listen mit allen Städten und die dazugehörenden Länder.
+-- 1.14.2) Erstellen Sie eine Listen mit allen Staedten und die dazugehoerenden Laender.
 SELECT
 	A.city AS Stadt,
     B.country AS Land
