@@ -1,3 +1,7 @@
+-- For BWI-A20 Database
+--
+-- 15.3.22	First day
+
 SELECT
 	f.description AS Beschreibung,
 	f.title       AS Titel,
@@ -5,12 +9,13 @@ SELECT
 FROM
 	film  AS f,
     actor AS a
-WHERE a.first_name = 'PENELOPE';
+WHERE a.first_name = 'PENELOPE';  -- String Literal
 
 SELECT
 	ci.city       AS Stadt,
-    ci.country_id AS `id Land`,
-    co.country    AS Land
+    ci.country_id AS `id Land`,   -- Namensbegrenzung
+    co.country    AS Land,
+    co.last_update
 FROM city AS ci
 INNER JOIN country AS co ON ci.country_id = co.country_id;
 
