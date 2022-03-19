@@ -14,7 +14,7 @@
 -- 18-Jun-2021   Walter Rothlin      Added more functions
 -- 18-Feb-2022   Walter Rothlin      Minor changes
 -- 11-Mar-2022   Walter Rothlin      Minor corrections
--- 17-Mar-2022	 Walter Rothlin		 Added Date_Format Str_To_Date section
+-- 17-Mar-2022	 Walter Rothlin      Added Date_Format Str_To_Date section
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -306,8 +306,6 @@ LEFT OUTER JOIN country AS B ON A.country_id = B.country_id;
 -- Date_Format() Str_To_Date()
 -- ===========================
 -- https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
--- 2.1.1) liste alle Mitarbeiter (staff) mit (Vorname, Nachname und LAST_UPDATE im format [yyyy-mon-dd hh:mm:ss]) auf, sowie den entsprechenden Wochentag,
---        wann die Daten-Sätze geändert wurden. Sortiere nach Aenderungs-Datum.
 --
 -- %a     Abbreviated weekday name (Sun..Sat)
 -- %b     Abbreviated month name (Jan..Dec)
@@ -341,6 +339,11 @@ LEFT OUTER JOIN country AS B ON A.country_id = B.country_id;
 -- %Y     Year, numeric, four digits
 -- %y     Year, numeric (two digits)
 -- %%     A literal % character
+--
+
+-- 2.1.1) liste alle Mitarbeiter (staff) mit (Vorname, Nachname und LAST_UPDATE im format [yyyy-mon-dd hh:mm:ss]) auf, 
+--        sowie den entsprechenden Wochentag,
+--        wann die Daten-Saetze geaendert wurden. Sortiere nach Aenderungs-Datum.
 SELECT 
     first_name AS Vorname,
     last_name AS Nachname,
@@ -361,8 +364,9 @@ FROM
 ORDER BY last_update;
 
 
--- 2.1.2) Suchen Sie in actor nach Eintraegen, welche am 15.2.2006 geändert wurden. 
+-- 2.1.2) Suchen Sie in actor nach Eintraegen, welche am 15.2.2006 geaendert wurden. 
 --        Verwenden Sie STR_TO_DATE in where clause (Effizienter als mit DATE_FORMAT!)
+--        last_update e.g. 2022-February-15 and Weekday
 SELECT 
     first_name AS Vorname,
     last_name AS Nachname,
@@ -375,19 +379,19 @@ WHERE
 
 
 -- 2.1.2.1) last_update e.g. 3 AM Uhr 57
-SELECT staff_id, email, DATE_FORMAT(last_update, '%l%p Uhr %i') from staff;
+SELECT staff_id, email, DATE_FORMAT(last_update, '%l%p Uhr %i') FROM staff;
 
 
 -- 2.1.2.2) last_update e.g. 3 Uhr 57
-SELECT staff_id, email, DATE_FORMAT(last_update, '%k Uhr %i') from staff;
+SELECT staff_id, email, DATE_FORMAT(last_update, '%k Uhr %i') FROM staff;
 
 
 -- 2.1.3) Machen Sie einen neue Eintraege in der staff Tabelle mit ihren Angaben.
 -- ------------------------------------------------------------------------------
---        Erstellen Sie weiter ein SQL für einen Update und Delete dieses Tabelle / Eintrages
---        und testen Sie ihre Lösungen
+--        Erstellen Sie weiter ein SQL fuer einen Update und Delete dieses Tabelle / Eintrages
+--        und testen Sie ihre Loesungen
 
--- 2.1.3.1) staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: Wed, 15.Feb 2006 03-57-16
+-- 2.1.3.1) SELECT staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: Wed, 15.Feb 2006 03-57-16
 --          Sortiere nach Aenderungs-Datum.
 SELECT
 	staff_id,
@@ -398,7 +402,7 @@ FROM staff
 ORDER BY last_update;
 
 
--- 2.1.3.2) staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: 2006-February-15
+-- 2.1.3.2) SELECT staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: 2006-February-15
 --          Filtere nach einem bestimmten Aenderungs-Datum. Sortiere nach Aenderungs-Datum.
 --          Verwenden Sie DATE_FORMAT in where clause (Nicht so effizient! Wieso?)
 SELECT 
@@ -413,7 +417,7 @@ WHERE
 ORDER BY last_update;
 
 
--- 2.1.3.3) staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: Wed, 15.Feb 2006 03-57-16
+-- 2.1.3.3) SELECT staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: Wed, 15.Feb 2006 03-57-16
 --          Filtere nach einem bestimmten Aenderungs-Datum. Sortiere nach Aenderungs-Datum.
 --          Verwenden Sie STR_TO_DATE() in where clause (Effizienter! Wieso?)
 SELECT
@@ -426,13 +430,14 @@ WHERE last_update >= STR_TO_DATE('18.03.2022 ','%d.%m.%Y') AND
       last_update <  STR_TO_DATE('19.03.2022','%d.%m.%Y')
 ORDER BY last_update;
 
+
 -- 2.1.3.4) Suchen Sie alle Eintraege in der Tabelle staff, welche am 17. Maerz 22 geändert wurden
 SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%d.%M %Y %H:%i:%s') FROM staff
 WHERE DATE_FORMAT(last_update, '%d.%m.%Y') = '17.03.2022' ORDER BY last_update;
 
 
--- 2.1.3.5) Fügen sie zwei neuen Daten-Saetze hinzug und definieren Sie den PK 200, 201
---          und ueberpruefe mit den SELECTS das Resultat
+-- 2.1.3.5) Fuegen sie zwei neuen Daten-Saetze hinzug und definieren Sie den PK 200, 201
+--          und ueberpruefe mit den SELECTS das Resultat (checken sie last_update)
 INSERT INTO 
        staff
        (staff_id, first_name, last_name, address_id, email           , username     , store_id, active) VALUES 
@@ -442,7 +447,7 @@ INSERT INTO
 
 -- 2.1.3.6) Fügen sie zwei neuen Daten-Saetze hinzug und definieren Sie den PK 50, 51 und setze das last_update Datum auf
 --          '18.03.2022 00:00:00' und '18.03.2022 00:00:01'
---          und ueberpruefe mit den SELECTS das Resultat
+--          und ueberpruefe mit den SELECTS das Resultat  (checken sie last_update)
 INSERT INTO 
        staff
        (staff_id, first_name, last_name, address_id, email           , username     , store_id, active, last_update) VALUES 
