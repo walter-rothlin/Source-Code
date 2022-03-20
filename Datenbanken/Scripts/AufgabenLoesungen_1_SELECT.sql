@@ -15,6 +15,7 @@
 -- 18-Feb-2022   Walter Rothlin      Minor changes
 -- 11-Mar-2022   Walter Rothlin      Minor corrections
 -- 17-Mar-2022	 Walter Rothlin      Added Date_Format Str_To_Date section
+-- 20-Mar-2022	 Walter Rothlin      Added DATE and TIME functions
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -366,7 +367,7 @@ ORDER BY last_update;
 
 -- 2.1.2) Suchen Sie in actor nach Eintraegen, welche am 15.2.2006 geaendert wurden. 
 --        Verwenden Sie STR_TO_DATE in where clause (Effizienter als mit DATE_FORMAT!)
---        last_update e.g. 2022-February-15 and Weekday
+--        last_update e.g. 2006-02-15 03:57:16 --> 2006-February-15 and Wednesday
 SELECT 
     first_name AS Vorname,
     last_name AS Nachname,
@@ -378,12 +379,27 @@ WHERE
     date(last_update) = STR_TO_DATE('February 15, 2006','%M %d,%Y');
 
 
--- 2.1.2.1) last_update e.g. 3 AM Uhr 57
-SELECT staff_id, email, DATE_FORMAT(last_update, '%l%p Uhr %i') FROM staff;
+-- 2.1.2.1) last_update e.g. 2006-02-15 03:57:16 --> 3 AM Uhr 57
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%l%p Uhr %i') FROM staff;
 
+-- 2.1.2.2) last_update e.g. 2006-02-15 03:57:16 --> 3 Uhr 57
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%k Uhr %i') FROM staff;
 
--- 2.1.2.2) last_update e.g. 3 Uhr 57
-SELECT staff_id, email, DATE_FORMAT(last_update, '%k Uhr %i') FROM staff;
+-- 2.1.2.3) last_update e.g. 2006-02-15 03:57:16 --> Treffpunkt: Wednesday 03:02 am See
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, 'Treffpunkt: %W %h:%m am See') FROM staff;
+
+-- 2.1.2.4) last_update e.g. 2006-02-15 03:57:16 --> 20060215035716
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%Y%m%d%h%i%s') FROM staff;
+
+-- 2.1.2.5) last_update e.g. 2006-02-15 03:57:16 --> 20060215--035716
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%Y%m%d--%h%i%s') FROM staff;
+
+-- 2.1.2.6) last_update e.g. 2006-02-15 03:57:16 --> 03:57:16 AM
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%r') FROM staff;
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%h:%i:%s %p') FROM staff;
+
+-- 2.1.2.7) last_update e.g. 2006-02-15 03:57:16 --> 03-57 AM
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%h-%i %p') FROM staff;
 
 
 -- 2.1.3) Machen Sie einen neue Eintraege in der staff Tabelle mit ihren Angaben.
@@ -394,7 +410,7 @@ SELECT staff_id, email, DATE_FORMAT(last_update, '%k Uhr %i') FROM staff;
 -- 2.1.3.1) SELECT staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: Wed, 15.Feb 2006 03-57-16
 --          Sortiere nach Aenderungs-Datum.
 SELECT
-	staff_id,
+    staff_id,
     first_name,
     last_name,
     DATE_FORMAT(last_update, '%a, %d.%b %Y %H-%i-%s')  -- Wed, 15.Feb 2006 03-57-16
@@ -421,7 +437,7 @@ ORDER BY last_update;
 --          Filtere nach einem bestimmten Aenderungs-Datum. Sortiere nach Aenderungs-Datum.
 --          Verwenden Sie STR_TO_DATE() in where clause (Effizienter! Wieso?)
 SELECT
-	staff_id,
+    staff_id,
     first_name,
     last_name,
     DATE_FORMAT(last_update, '%a, %d.%b %Y %H-%i-%s')  -- e.g. Fri, 18.Mar 2022 00-00-00
@@ -445,7 +461,7 @@ INSERT INTO
        (201     ,'Felix 1'  , 'Meier'  , 4         , 'Felix@meier.ch', 'felix.meier', 2       , 1);
 
 
--- 2.1.3.6) Fügen sie zwei neuen Daten-Saetze hinzug und definieren Sie den PK 50, 51 und setze das last_update Datum auf
+-- 2.1.3.6) Fuegen sie zwei neuen Daten-Saetze hinzug und definieren Sie den PK 50, 51 und setze das last_update Datum auf
 --          '18.03.2022 00:00:00' und '18.03.2022 00:00:01'
 --          und ueberpruefe mit den SELECTS das Resultat  (checken sie last_update)
 INSERT INTO 
@@ -497,6 +513,72 @@ WHERE last_update  = STR_TO_DATE('17.03.2022', '%d.%m.%Y') ORDER BY last_update;
 SELECT email, last_update, DATE_FORMAT(last_update, '%d.%M %Y %H:%i:%s') FROM staff
 WHERE last_update > STR_TO_DATE('17.03.2022 10','%d.%m.%Y %H');
 
+-- 2.1.9) NOW(), CURTIME()
+SELECT DATE_FORMAT(NOW()    , '%d.%M %Y %H:%i:%s'),
+       DATE_FORMAT(CURTIME(), '%H:%i:%s')
+FROM staff;
+
+-- 2.1.9) ADDDATE(), DATE_ADD(), ADDTIME(), PERIODE_ADD
+SELECT DATE_FORMAT(NOW()               ,'%d.%M %Y %H:%i:%s'),
+       DATE_FORMAT(ADDDATE(NOW(),  60) ,'%d.%M %Y %H:%i:%s'),  -- 60 Tage spaeter
+       DATE_FORMAT(ADDDATE(NOW(), -10) ,'%d.%M %Y %H:%i:%s'),  -- 10 Tage frueher
+       DATE_ADD(NOW(),INTERVAL 1 DAY)     AS `+1 DAY`,
+       DATE_ADD(NOW(),INTERVAL 1 MONTH)   AS `+1 MONTH`,
+       DATE_ADD(NOW(),INTERVAL 1 YEAR)    AS `+1 YEAR`,
+       DATE_ADD(NOW(),INTERVAL 1 HOUR)    AS `+1 HOUR`,
+       DATE_ADD(NOW(),INTERVAL 1 MINUTE)  AS `+1 MINUTE`,
+       DATE_ADD(NOW(),INTERVAL 1 SECOND)  AS `+1 SECOND`
+FROM staff;
+
+-- 2.1.10) DATEDIFF(), DATE_SUB(), SUBTIME(), PERIOD_DIFF, TIMEDIFF()
+SELECT DATEDIFF(NOW(),ADDDATE(NOW(),  60)),
+       DATEDIFF(NOW(),ADDDATE(NOW(), -10)),
+       DATE_SUB(NOW(),INTERVAL 1 MONTH)   AS `-1 MONTH`;
+
+-- 2.1.10.1) Wie alt (in Tagen) sind Sie heute?       
+SELECT DATEDIFF(NOW(),STR_TO_DATE('05.08.1960', '%d.%m.%Y'));
+
+-- 2.1.10.2) An welchem Datum sind/waren Sie 10000 Tage alt?       
+SELECT ADDDATE(STR_TO_DATE('05.08.1960', '%d.%m.%Y'), 10000);
+
+-- 2.1.10.3) An welchem Datum sind/waren Sie 25000 Tage alt?       
+SELECT ADDDATE(STR_TO_DATE('05.08.1960', '%d.%m.%Y'), 25000);
+
+-- 2.1.10.4) In wievielen Tagen sind Sie 25000 Tage alt?
+SELECT DATEDIFF(ADDDATE(STR_TO_DATE('05.08.1960', '%d.%m.%Y'), 25000),NOW());
+
+-- 2.1.11) GET_FORMAT()
+SELECT 
+	GET_FORMAT(DATE,'USA'),
+    GET_FORMAT(DATE,'EUR'),
+    GET_FORMAT(DATE,'ISO'),
+    GET_FORMAT(DATE,'INTERNAL'),
+    GET_FORMAT(TIME,'USA'),
+    GET_FORMAT(DATETIME,'EUR');
+
+SELECT staff_id, email, 
+       last_update, 
+       DATE_FORMAT(last_update, GET_FORMAT(DATETIME, 'EUR')) AS `DATETIME EUR`, 
+       DATE_FORMAT(last_update, GET_FORMAT(DATE,     'USA')) AS `DATE     USA`
+FROM staff;
+
+-- 2.1.12) LAST_DAY()
+SELECT 
+	LAST_DAY('2004-02-05')                            AS `Last date of month`, -- --> '2004-02-29'
+    WEEK(STR_TO_DATE('2004-02-05',' %Y-%m-%d'))       AS `Week Nr`,            -- --> '5'
+    WEEKOFYEAR(STR_TO_DATE('2004-02-05',' %Y-%m-%d')) AS `Kalenderwoche`;       -- --> '6' 
+
+-- 2.1.13) Vor wievielen Tagen wurden die Einträge geändert? 
+--         Sortiert das kürzlich geänderte zu erst!       
+SELECT 
+   last_name,
+   first_name,
+   last_update,
+   DATEDIFF(NOW(),last_update) AS `Days back changed`
+FROM staff
+ORDER BY last_update DESC;
+   
+   
 -- END date_functions
 
 
