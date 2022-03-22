@@ -1,6 +1,6 @@
 -- For BWI-A20 Database
 --
--- 15.3.22	First day
+-- 15.3.22	1st and 2nd day
 
 SELECT
 	f.description AS Beschreibung,
