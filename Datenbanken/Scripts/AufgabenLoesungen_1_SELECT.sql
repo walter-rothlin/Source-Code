@@ -1121,7 +1121,7 @@ INNER JOIN country ON city.country_id = country.country_id
 WHERE city.country_id = (SELECT country_id from country where country = 'Lichtenstein'); 
 
 --  CRUD 2c)  Koorigieren Sie den Namen von 'Schan' auf 'Schaan'
---            Mögliche Fehlermeldung: "Safe Updates". Forbid UPDATEs and DELETEs with no key in WHERE clause
+--            Moegliche Fehlermeldung: "Safe Updates". Forbid UPDATEs and DELETEs with no key in WHERE clause
 --            --> Workbench: Edit -> Preferences -> SQL Editor (Uncheck box at the end of the screen)
 UPDATE city SET city='Schaan' WHERE city='Schan';
 
