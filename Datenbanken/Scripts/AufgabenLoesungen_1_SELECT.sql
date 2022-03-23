@@ -1070,7 +1070,7 @@ CREATE VIEW test_city_country AS
         INNER JOIN country ON city.country_id=country.country_id
      ORDER BY city.city ASC;
 
-select Stadt, Land from test_city_country;
+SELECT Stadt, Land FROM test_city_country;
 
 -- END views
 
@@ -1094,31 +1094,31 @@ INSERT INTO city (city,country_id) VALUES
 
 --  CRUD 2a)  Wie lauten die beiden PKs dieser beiden Orte?    
 SELECT
-    city_id,
-    city,
-    country_id
+    city_id     AS Id,
+    city        AS Stadt,
+    country_id  AS CountryId
 FROM
     city
 WHERE country_id = 111;
 
 SELECT
-    city_id,
-    city,
-    country_id
+    city_id     AS Id,
+    city        AS Stadt,
+    country_id  AS CountryId
 FROM
     city
 WHERE country_id = (SELECT country_id from country where country = 'Lichtenstein');
 
 --  CRUD 2b)  Erstellen sie eine Liste mit den Orten und dem Landesnamen von Lichtenstein (inner Join)
 SELECT
-    city_id,
-    city,
-    country.country_id,
-    country.country
+    ci.city_id          AS Id,
+    ci.city             AS Stadt,
+    co.country_id       AS CountryId,
+    co.country          AS Land
 FROM
-    city
-INNER JOIN country ON city.country_id = country.country_id
-WHERE city.country_id = (SELECT country_id from country where country = 'Lichtenstein'); 
+    city AS ci
+INNER JOIN country AS co ON ci.country_id = co.country_id
+WHERE ci.country_id = (SELECT country_id from country where country = 'Lichtenstein'); 
 
 --  CRUD 2c)  Koorigieren Sie den Namen von 'Schan' auf 'Schaan'
 --            Moegliche Fehlermeldung: "Safe Updates". Forbid UPDATEs and DELETEs with no key in WHERE clause
@@ -1140,11 +1140,11 @@ DELETE FROM country WHERE country = 'Lichtenstein';
 SELECT country_id from country where country = 'Lichtenstein';    
 
 SELECT
-    city_id,
-    city,
-    country_id
+    ci.city_id          AS Id,
+    ci.city             AS Stadt,
+    ci.country_id       AS CountryId
 FROM
-    city
+    city AS ci
 WHERE country_id = (SELECT country_id from country where country = 'Lichtenstein');
 
 --  CRUD 4)  Setzen Sie die Originalsprache von den Filmen 'ACADEMY DINOSAUR', 'ACE GOLDFINGER' auf 'Mandarin' 
@@ -1203,10 +1203,34 @@ UPDATE film SET original_language_id=NULL WHERE film_id=5;
 
 UPDATE film SET original_language_id=(SELECT language_id FROM language WHERE name='Schweizerdeutsch') WHERE title='AFRICAN EGG';
 
---  U1.5)   Loeschen Sie diese 3 neu zugefuegten Sprachen wieder! Wieso geht das nicht?
+--  U1.5) Erstellen Sie eine Abfrage von film (mit den richtigen joins) mit  title, original_language und language
+SELECT
+     f.film_id      AS Id,
+     f.title        AS Title,
+     lang.name      AS Sprache,
+     orgLang.name   AS Originalsprache
+FROM
+     film AS f
+INNER JOIN      language AS lang    ON f.language_id          = lang.language_id
+LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+
+--  U1.6) Erstellen eine View FILM_SPRACHEN
+DROP VIEW IF EXISTS FILM_SPRACHEN;
+CREATE VIEW FILM_SPRACHEN AS
+	SELECT
+		 f.film_id      AS Id,
+		 f.title        AS Title,
+		 lang.name      AS Sprache,
+		 orgLang.name   AS Originalsprache
+	FROM
+		 film AS f
+	INNER JOIN      language AS lang    ON f.language_id          = lang.language_id
+	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+
+--  U1.7)   Loeschen Sie diese 3 neu zugefuegten Sprachen wieder! Wieso geht das nicht?
 DELETE FROM language WHERE name in ('Schweizerdeutsch', 'Suiss Italian', 'Dutch');
 
---  U1.6)   Setzen Sie zuerst bei alle Filmen, welche einer dieser zugefuegten Sprachen als Original-Sprache gesetzt haben, diese wieder auf NULL 
+--  U1.8)   Setzen Sie zuerst bei alle Filmen, welche einer dieser zugefuegten Sprachen als Original-Sprache gesetzt haben, diese wieder auf NULL 
 UPDATE film SET original_language_id=NULL WHERE original_language_id in (SELECT language_id FROM language WHERE name IN ('Schweizerdeutsch', 'Suiss Italian', 'Dutch'));
 
 
