@@ -16,6 +16,7 @@
 -- 11-Mar-2022   Walter Rothlin      Minor corrections
 -- 17-Mar-2022	 Walter Rothlin      Added Date_Format Str_To_Date section
 -- 20-Mar-2022	 Walter Rothlin      Added DATE and TIME functions
+-- 25-Mar-2022	 Walter Rothlin      Added Variablen
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -385,7 +386,7 @@ SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%l%p Uhr %i') FRO
 -- 2.1.2.2) last_update e.g. 2006-02-15 03:57:16 --> 3 Uhr 57
 SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%k Uhr %i') FROM staff;
 
--- 2.1.2.3) last_update e.g. 2006-02-15 03:57:16 --> Treffpunkt: Wednesday 03:02 am See
+-- 2.1.2.3) last_update e.g. 2006-02-15 03:57:16 --> Treffpunkt: Wednesday 03:57 am See
 SELECT staff_id, email, last_update, DATE_FORMAT(last_update, 'Treffpunkt: %W %h:%m am See') FROM staff;
 
 -- 2.1.2.4) last_update e.g. 2006-02-15 03:57:16 --> 20060215035716
@@ -568,8 +569,8 @@ SELECT
     WEEK(STR_TO_DATE('2004-02-05',' %Y-%m-%d'))       AS `Week Nr`,            -- --> '5'
     WEEKOFYEAR(STR_TO_DATE('2004-02-05',' %Y-%m-%d')) AS `Kalenderwoche`;       -- --> '6' 
 
--- 2.1.13) Vor wievielen Tagen wurden die Einträge geändert? 
---         Sortiert das kürzlich geänderte zu erst!       
+-- 2.1.13) Vor wievielen Tagen wurden die Eintraege geändert? 
+--         Sortiert das kürzlich geaenderte zu erst!       
 SELECT 
    last_name,
    first_name,
@@ -615,7 +616,7 @@ SELECT
 FROM 
     film
 WHERE
-    rating = 'PG' AND    -- e.g. Parental Guidance (Amerikanische Alterbeschraenkung)
+    rating LIKE '%PG%' AND    -- e.g. Parental Guidance (Amerikanische Alterbeschraenkung)
     find_in_set('Trailers', special_features);
 
 -- 2.4) Erstellen Sie eine Liste mit allen Namen und Vorname von staff, welche nur den Anfangsbuchstaben des Vornamen mit einem . getrennt vom vollstaendigen Nachnamen auflistet.
@@ -625,7 +626,7 @@ SELECT
 FROM
     staff;
     
--- 2.5) Von welchen Schauspielern (Vorname und Nachname) hat der Store Filme? Liste diese in einer JASON Struktur auf!
+-- 2.5) Von welchen Schauspielern (Vorname und Nachname) hat der Store Filme? Liste diese in einer JSON Struktur auf!
 --       https://dev.mysql.com/doc/refman/5.7/en/json-creation-functions.html#function_json-array
 SELECT 
     JSON_OBJECT("Vorname", first_name, "Nachname",last_name) AS JSON
@@ -1070,7 +1071,7 @@ CREATE VIEW test_city_country AS
         INNER JOIN country ON city.country_id=country.country_id
      ORDER BY city.city ASC;
 
-SELECT Stadt, Land FROM test_city_country;
+S Stadt, Land from test_city_country;
 
 -- END views
 
@@ -1215,7 +1216,7 @@ INNER JOIN      language AS lang    ON f.language_id          = lang.language_id
 LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 --  U1.6) Erstellen eine View FILM_SPRACHEN
-DROP VIEW IF EXISTS FILM_SPRACHEN;
+DROP VIEW IF EXISTS FILM_SPRACHEN; 
 CREATE VIEW FILM_SPRACHEN AS
 	SELECT
 		 f.film_id      AS Id,
@@ -1375,7 +1376,28 @@ SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
 -- END ownFunctions
 
 
+-- START variablen
+-- Variablen
+-- =========
+SET @dolphin:='BZUöäü';
+SELECT LENGTH(@dolphin), CHAR_LENGTH(@dolphin);
+SELECT 'HAlloäöü';
+SELECT @dolphin;
 
+-- DECLARE @MyCounter INT;
+-- SET @MyCounter = 0;
+
+-- WHILE (@MyCounter < 26)
+-- BEGIN;
+
+--        (@MyCounter,
+--         CHAR( ( @MyCounter + ASCII('a') ) )
+--        );
+
+--    SET @MyCounter = @MyCounter + 1;
+-- END;
+
+-- END variablen
 
 -- START procedures
 -- STORED PROCEDURES

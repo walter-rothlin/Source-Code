@@ -41,6 +41,7 @@ for aElement in zip(range(len(my_list_a)), my_list_a):
   print("      zipped tuples:", aElement)
 print()
 
+
 print("list:", [str(i) + ":" + string_in_list for i,  string_in_list in zip(range(len(my_list_a)), my_list_a)])
 print("list:", [str(int_in_list) + ":" + string_in_list for int_in_list,  string_in_list in zip(my_list_b, my_list_a)])
 print("list:", [string_in_list for string_in_list in my_list_a if string_in_list[0] == 'h'])

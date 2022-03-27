@@ -21,8 +21,9 @@ i = 10
 print(f"Hallo {i:20d} {i*5:_<20d}:")
 print(f"Hallo {i*10:20x}")
 
+vorname = "Walti"
+print(f"hallo{vorname:_^20s}")
 
-exit(0)
 
 print("pythonBasics_01_VarStringPrint.py.........")
 print("-->", sys.argv[0])
