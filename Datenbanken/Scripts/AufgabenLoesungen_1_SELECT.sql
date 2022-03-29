@@ -443,7 +443,7 @@ SELECT
     last_name,
     DATE_FORMAT(last_update, '%a, %d.%b %Y %H-%i-%s')  -- e.g. Fri, 18.Mar 2022 00-00-00
 FROM staff
-WHERE last_update >= STR_TO_DATE('18.03.2022 ','%d.%m.%Y') AND
+WHERE last_update >= STR_TO_DATE('18.03.2022','%d.%m.%Y') AND
       last_update <  STR_TO_DATE('19.03.2022','%d.%m.%Y')
 ORDER BY last_update;
 
