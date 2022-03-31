@@ -1453,6 +1453,8 @@ SELECT @dolphin;
     CALL isCountryExits('Lichtenstein', false);
     CALL getCountryId('Lichtenstein', @country_pk);
     SELECT @country_pk;
+    
+    SELECT * FROM country WHERE country = 'Lichtenstein';
 
 
 -- STO_03) Schreiben sie eine Stored-Procedure bei welcher 2 Parameter uebergeben werden koennen. 
