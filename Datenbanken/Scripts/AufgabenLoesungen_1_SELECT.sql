@@ -1300,6 +1300,9 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 -- START ownFunctions
 -- FUNCTIONS
 -- =========
+-- PL/SQL: https://www.tutorialspoint.com/plsql/index.htm
+--         https://www.oracletutorial.com/plsql-tutorial/
+
 -- Schreiben sie eine eigene Function gemaess Spezification
 
 -- Bei folgendem Fehler:
@@ -1310,7 +1313,7 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 
 
 
---  Fct 1.0)  Nimmt eine PLZ und hängt CH- vorne an.
+--  Fct 1.0)  Nimmt eine PLZ und haengt CH- vorne an.
 --            SELECT formatPLZ(8855);     -- --> CH-8855
 DROP FUNCTION IF EXISTS formatPLZ;
 Delimiter //
@@ -1321,7 +1324,7 @@ END
 //
 DELIMITER ;
 
-SELECT formatPLZ(8855);     -- --> CH-8855
+SELECT formatPLZ(8854) AS PLZ_Formated;     -- --> CH-8855
 
 
 --  Fct 2.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
