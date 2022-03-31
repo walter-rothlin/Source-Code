@@ -1300,17 +1300,18 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 -- START ownFunctions
 -- FUNCTIONS
 -- =========
--- Schreiben sie eine eigene Function gemäss Spezification
+-- Schreiben sie eine eigene Function gemaess Spezification
 
 -- Bei folgendem Fehler:
 --    Error Code: 1418. This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
 
--- noch folgendes ausführen
+-- noch folgendes ausfuehren
 --    SET GLOBAL log_bin_trust_function_creators = 1;
+
+
 
 --  Fct 1.0)  Nimmt eine PLZ und hängt CH- vorne an.
 --            SELECT formatPLZ(8855);     -- --> CH-8855
-
 DROP FUNCTION IF EXISTS formatPLZ;
 Delimiter //
 CREATE FUNCTION formatPLZ(p_input_plz SMALLINT) RETURNS CHAR(50)
@@ -1323,9 +1324,8 @@ DELIMITER ;
 SELECT formatPLZ(8855);     -- --> CH-8855
 
 
---  Fct 2.0) Nimmt eine Zeichenkette und hängt Hallo: vorne an.
+--  Fct 2.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
 --           SELECT sayHello('Walti');-- --> Hallo: Walti
-
 DROP FUNCTION IF EXISTS sayHello;
 -- DROP FUNCTION IF EXISTS HelloFct;
 Delimiter //
@@ -1357,7 +1357,7 @@ SELECT firstUpper("Herr");  -- --> Herr
 SELECT firstUpper("hERR");  -- --> Herr
 
 
---  Fct 4.0) Nimmt eine Zeichenkette und hängt Hallo: vorne an.
+--  Fct 4.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
 --           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
 --           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
 DROP FUNCTION IF EXISTS getAnrede;
