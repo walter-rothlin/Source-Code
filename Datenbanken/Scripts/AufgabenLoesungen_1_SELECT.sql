@@ -1300,7 +1300,8 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 -- START ownFunctions
 -- FUNCTIONS
 -- =========
--- PL/SQL: https://www.tutorialspoint.com/plsql/index.htm
+-- PL/SQL: https://de.wikipedia.org/wiki/PL/SQL#Zahlenvariablen
+--         https://www.tutorialspoint.com/plsql/index.htm
 --         https://www.oracletutorial.com/plsql-tutorial/
 
 -- Schreiben sie eine eigene Function gemaess Spezification
@@ -1430,7 +1431,7 @@ SELECT @dolphin;
                country LIKE searchQuery;
         END IF;
     END//
-
+    DELIMITER ;
     CALL isCountryExits('GermanY', false);
     CALL isCountryExits('GermanY', true);
 
@@ -1440,7 +1441,7 @@ SELECT @dolphin;
 --         Der PK dieses Landes wird als Parameter zurueck gegeben
     DROP PROCEDURE IF EXISTS getCountryId;
     DELIMITER $$
-    CREATE PROCEDURE getCountryId(IN landesNamen VARCHAR(50), out land_id SMALLINT(5))
+    CREATE PROCEDURE getCountryId(IN landesNamen VARCHAR(50), OUT land_id SMALLINT(5))
     BEGIN
         IF((SELECT COUNT(*) FROM country WHERE country = landesNamen) = 0) THEN
             INSERT INTO country(`country`) VALUES (landesNamen);
@@ -1449,6 +1450,7 @@ SELECT @dolphin;
     END$$
     DELIMITER ;
 
+    CALL isCountryExits('Lichtenstein', false);
     CALL getCountryId('Lichtenstein', @country_pk);
     SELECT @country_pk;
 
