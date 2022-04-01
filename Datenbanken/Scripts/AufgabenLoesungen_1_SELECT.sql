@@ -1179,6 +1179,9 @@ FROM
 INNER JOIN language AS lang    ON f.language_id          = lang.language_id
 INNER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
+
+SELECT original_language_id from film;
+
 --  U1.2)  Fuegen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und 'Dutch' in die Tabelle language 
 SELECT * FROM language;
 INSERT INTO language (name) VALUES ('Schweizerdeutsch');
@@ -1189,20 +1192,29 @@ INSERT INTO language (name) VALUES
     ('Suiss Italian'), 
     ('Dutch');
 
+SELECT * FROM language;
 
 --  U1.3)   Setzen Sie fuer die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
 UPDATE film SET original_language_id=1 WHERE film_id=1;  -- English
 UPDATE film SET original_language_id=2 WHERE film_id=2;  -- Italian
 
---  U1.4)   Setzen Sie fuer den Filme mit der AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
+--  U1.4)   Setzen Sie fuer den Filme mit dem Titel AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
 SELECT language_id FROM language where name = 'Schweizerdeutsch';
-SELECT film_id, title, original_language_id FROM film WHERE title='AFRICAN EGG';
+SELECT film_id, title, original_language_id, last_update FROM film WHERE title='AFRICAN EGG';
+
 UPDATE film SET original_language_id=7 WHERE film_id=5;
+UPDATE film SET original_language_id=7 WHERE title='AFRICAN EGG';
+
 SELECT film_id, title, original_language_id FROM film WHERE film_id=5;
 
 UPDATE film SET original_language_id=NULL WHERE film_id=5;
 
-UPDATE film SET original_language_id=(SELECT language_id FROM language WHERE name='Schweizerdeutsch') WHERE title='AFRICAN EGG';
+
+UPDATE film SET original_language_id=(
+                       SELECT language_id 
+                       FROM language 
+                       WHERE name='Schweizerdeutsch') 
+WHERE title='AFRICAN EGG';
 
 --  U1.5) Erstellen Sie eine Abfrage von film (mit den richtigen joins) mit  title, original_language und language
 SELECT
@@ -1215,7 +1227,7 @@ FROM
 INNER JOIN      language AS lang    ON f.language_id          = lang.language_id
 LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
---  U1.6) Erstellen eine View FILM_SPRACHEN
+--  U1.6) Erstellen Sie eine View FILM_SPRACHEN mit dem Join von oben
 DROP VIEW IF EXISTS FILM_SPRACHEN; 
 CREATE VIEW FILM_SPRACHEN AS
 	SELECT
@@ -1228,11 +1240,19 @@ CREATE VIEW FILM_SPRACHEN AS
 	INNER JOIN      language AS lang    ON f.language_id          = lang.language_id
 	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
+SELECT * FROM film_sprachen;
+
 --  U1.7)   Loeschen Sie diese 3 neu zugefuegten Sprachen wieder! Wieso geht das nicht?
 DELETE FROM language WHERE name in ('Schweizerdeutsch', 'Suiss Italian', 'Dutch');
 
+
 --  U1.8)   Setzen Sie zuerst bei alle Filmen, welche einer dieser zugefuegten Sprachen als Original-Sprache gesetzt haben, diese wieder auf NULL 
-UPDATE film SET original_language_id=NULL WHERE original_language_id in (SELECT language_id FROM language WHERE name IN ('Schweizerdeutsch', 'Suiss Italian', 'Dutch'));
+UPDATE film SET original_language_id=NULL 
+WHERE original_language_id in (
+             SELECT language_id 
+             FROM language 
+             WHERE name IN ('Schweizerdeutsch', 'Suiss Italian', 'Dutch')
+             );
 
 
 -- END uebung_1
