@@ -207,11 +207,12 @@ Attribute VB_Name = "WaltisVBA_Library"
 ' 08-Feb-2021    V1.130 Walter Rothlin      Added Bruch functions
 ' 14_Jun-2021    V1.131 Walter Rothlin      Changed signedFigure
 '                                                   roundDoubleAsString
+' 04-Apr-2022    V1.132 Walter Rothlin      Added RenameWorksheet
 ' END-----------------------------------------------------------------------
 
 Dim PrimMaxColums
 
-Public Const Version_WaltisVBA_Library As String = "V1.131"
+Public Const Version_WaltisVBA_Library As String = "V1.132"
 
 Public Const Pi As Double = 3.14159265358979
 Public Const e  As Double = 2.71828182845905
@@ -4746,6 +4747,14 @@ Function RemoveFormatsFromWorksheet(Optional ByVal sheetName As String = "")
     End With
     RemoveFormatsFromWorksheet = True
 End Function
+
+Public Function RenameWorksheet(ByVal wsNumber As Integer, ByVal newSheetName As String) As Integer
+    Dim retVal As Integer
+    retVal = 0
+    Worksheets(wsNumber).name = newSheetName
+    RenameWorksheet = retVal
+End Function
+
 
 ' functions calculating fractions (Bruch)
 ' ======================================================
