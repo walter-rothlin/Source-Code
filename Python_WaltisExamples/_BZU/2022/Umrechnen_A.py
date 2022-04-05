@@ -2,6 +2,8 @@
 
 # ------------------------------------------------------------------
 # Name: umrechnungen.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_BZU/2022/Umrechnen_A.py
+#
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
 #
