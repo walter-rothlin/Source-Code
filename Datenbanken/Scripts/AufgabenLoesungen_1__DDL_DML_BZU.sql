@@ -35,10 +35,13 @@ CREATE TABLE IF NOT EXISTS `adressen` (
   PRIMARY KEY (`adress_id`));
   
 -- Adressen einfüllen
-INSERT INTO `adressen` (`vorname`, `nachname`, `strasse`, `plz`, `ort`) VALUES ('Walter',   'Rothlin',  'Peterliwiese 33',   8855, 'Wangen');
-INSERT INTO `adressen` (`vorname`, `nachname`, `strasse`, `plz`, `ort`) VALUES ('Claudia',  'Collet',   'Peterliwiese 33',   8855, 'Wangen');
-INSERT INTO `adressen` (`vorname`, `nachname`, `strasse`, `plz`, `ort`) VALUES ('Michaela', 'Stöhr',    'Züricherstr. 42c',  8854, 'Siebnen');
-INSERT INTO `adressen` (`vorname`, `nachname`, `strasse`, `plz`, `ort`) VALUES ('Josef',    'Friedlos', 'Ochsenbodenweg 7a', 8855, 'Nuolen');
+INSERT 
+    INTO `adressen` (`adress_id`, `vorname`, `nachname`, `strasse`, `plz`, `ort`) 
+	VALUES 
+        (1,'Walter',   'Rothlin',  'Peterliwiese 33',   8855, 'Wangen'),
+        (2,'Claudia',  'Collet',   'Peterliwiese 33',   8855, 'Wangen'),
+        (3,'Michaela', 'Stöhr',    'Züricherstr. 42c',  8854, 'Siebnen'),
+        (4,'Josef',    'Friedlos', 'Ochsenbodenweg 7a', 8855, 'Nuolen');
 
 -- Check der Daten
 SELECT
@@ -164,7 +167,7 @@ SELECT
      `orte`.`name`
 FROM `adressen`
 JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`
-WHERE `adressen`.`plz` <> `orte`.`plz` or 
+WHERE `adressen`.`plz` <> `orte`.`plz` OR 
       `adressen`.`ort` <> `orte`.`name`;
 
 -- Redundante Felder (Attributte löschen)
@@ -187,6 +190,41 @@ SELECT
     `orte`.`name`           AS `Ort`
 FROM `adressen`
 JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`;
+
+
+-- view
+DROP VIEW IF EXISTS `V_ADRESSEN`;
+CREATE VIEW `V_ADRESSEN` AS
+	SELECT
+		`adressen`.`vorname`    AS `Vorname`,
+		`adressen`.`nachname`   AS `Nachname`,
+		`adressen`.`strasse`    AS `Strasse`,
+		`adressen`.`hausnummer` AS `Haus Nummer`,
+		`orte`.`plz`            AS `PLZ`,
+		`orte`.`name`           AS `Ort`
+	FROM `adressen`
+	JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`;
+    
+SELECT * FROM V_ADRESSEN;
+    
+-- Benutzersicht wieder herstellen wie zu Begin
+ALTER TABLE `adressen` 
+RENAME TO  `p_adressen`;
+
+DROP VIEW IF EXISTS `V_ADRESSEN`;
+DROP VIEW IF EXISTS `ADRESSEN`;
+CREATE VIEW `ADRESSEN` AS
+	SELECT
+		`adressen`.`vorname`    AS `Vorname`,
+		`adressen`.`nachname`   AS `Nachname`,
+		`adressen`.`strasse`    AS `Strasse`,
+		`adressen`.`hausnummer` AS `Haus Nummer`,
+		`orte`.`plz`            AS `PLZ`,
+		`orte`.`name`           AS `Ort`
+	FROM `p_adressen` AS adressen
+	JOIN `orte` ON `adressen`.`orte_fk` = `orte`.`ort_id`;
+
+SELECT * FROM ADRESSEN;
 
 -- ===============================================================================================
 -- Everything from Scratch
