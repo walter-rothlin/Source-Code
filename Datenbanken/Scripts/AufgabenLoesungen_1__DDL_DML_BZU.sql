@@ -13,6 +13,7 @@
 -- 05-Jun-2021   Walter Rothlin      Merged with HWZ Script
 -- 16-Jun-2021   Walter Rothlin      Changes for HWZ
 -- 18-Feb-2022   Walter Rothlin      Minor changes
+-- 05-Apr-2022   Walter Rothlin      Changes for BWI-A20
 -- ---------------------------------------------------------------------------------------------
 
 -- Neues Schema kreieren
