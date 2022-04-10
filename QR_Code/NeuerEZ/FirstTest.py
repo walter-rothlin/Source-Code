@@ -6,22 +6,62 @@ from SwissQRInvoiceGenerator import *
 
 
 if __name__ == '__main__':
-    data = {
-        "creditor_iban": "CH4000777003656120095",
-        "creditor_name": "Tobias Rothlin",
-        "creditor_address": "Peterliwiese 33",
-        "creditor_zip_code": "8855",
-        "creditor_city": "Wangen SZ",
-        "creditor_country": "CH",
-        "debtor_name": "Hans Muster",
-        "debtor_address": "Sonnenstrasse 31",
-        "debtor_zip_code": "2000",
-        "debtor_city": "Schöningen",
-        "debtor_country": "CH",
-        "amount": "5.00",
-        "currency": "CHF",
-        "reference_type": "QRR",
-        "reference_number": "210000000003139471430009017",
-        "additional_information": "Test123",
+    addr_walti = {
+        "name": "Walter Rothlin",
+        "address": "Peterliwiese 33",
+        "zip_code": "8855",
+        "city": "Wangen SZ",
+        "country": "CH",
     }
-    createQRInvoice(data)
+
+    addr_tobias = {
+        "name": "Tobias Rothlin",
+        "address": "Peterliwiese 33",
+        "zip_code": "8855",
+        "city": "Wangen SZ",
+        "country": "CH",
+    }
+
+    ibanNr = {
+        "raiffeisen_walti": "CH9580808006989422343",
+        "csuh_walti":       "CH8704835041184041000",
+        "cslachen_walti":   "CH3904835056306331000",
+        "post_lohn_tobias": "CH6709000000303904208",
+        "post_lohn_lukas":  "CH2709000000319272638",
+        "post_spar_tobias": "CH1509000000922735753",
+        "post_spar_lukas":  "CH6809000000924135382",
+    }
+
+    pdfName = "GeneratedInvoices/Test_Invoice_OnlyEZ"
+    htmlName = "GeneratedInvoices/Test_Invoice_OnlyEZ.html"
+    createQRInvoice(
+        generateQRInvoiceData(
+            ibanNr["post_lohn_tobias"],
+            addr_tobias,
+            addr_walti,
+            amount="20.00",
+            additional_information="Trinkgeld Genossengemeinde"),
+        pdfName=pdfName,
+        htmlName=htmlName)
+
+    print("Produced following files:")
+    print("    --> ", pdfName)
+    print("    --> ", htmlName)
+
+
+    pdfName = "GeneratedInvoices/Test_Invoice"
+    htmlName = "GeneratedInvoices/Test_Invoice.html"
+    createQRInvoice(
+        generateQRInvoiceData(
+            ibanNr["post_lohn_tobias"],
+            addr_tobias,
+            addr_walti,
+            amount="20.00",
+            additional_information="Trinkgeld Genossengemeinde"),
+        invoice_text_html="",
+        pdfName=pdfName,
+        htmlName=htmlName)
+
+    print("Produced following files:")
+    print("    --> ", pdfName)
+    print("    --> ", htmlName)

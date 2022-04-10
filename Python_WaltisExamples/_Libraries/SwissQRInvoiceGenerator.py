@@ -91,7 +91,7 @@ def create_qr_code(json):
     return xml_str
 
 
-def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
+def createQRInvoice(json, invoice_text_html="", returnHTML=False, pdfName="Invoice", htmlName=None, wkthmlPath="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"):
     """
         Creates a swiss QR invoice with the provided data.
         If returnHTML = True the function will not convert the html file to a pdf but instead return it as a string
@@ -297,7 +297,7 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
         clear: both;
     }
 </style>
-<body>
+<body>""" + f"{invoice_text_html}" + """
 <div style="page-break-before: always;"></div>
 <div id="slip">
     <div id="cutHorizontal">
@@ -684,6 +684,10 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
 </body>
 </html>
     """
+    if htmlName is not None:
+        f = open(htmlName, "w", encoding='utf-8')
+        f.write(template)
+        f.close()
     if returnHTML:
         return template
     else:
@@ -691,9 +695,39 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
         import platform
         config = None
         if platform.system() == "Windows":
-            config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+            config = pdfkit.configuration(wkhtmltopdf=wkthmlPath)
         pdfkit.from_string(template, pdfName + ".pdf", options=options,
                            configuration=config)
+
+def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, currecny='CHF', reference=None, additional_information=""):
+    invoice_data = {
+        "creditor_iban": creditor_iban,
+        "creditor_name": creditor_addr["name"],
+        "creditor_address": creditor_addr["address"],
+        "creditor_zip_code": creditor_addr["zip_code"],
+        "creditor_city": creditor_addr["city"],
+        "creditor_country": creditor_addr["country"],
+
+        "debtor_name": debitor_addr["name"],
+        "debtor_address": debitor_addr["address"],
+        "debtor_zip_code": debitor_addr["zip_code"],
+        "debtor_city": debitor_addr["city"],
+        "debtor_country": debitor_addr["country"],
+
+        "amount": amount,
+        "currency": currecny,
+
+        "reference_type": "NON",
+        "reference_number": "",
+
+        "additional_information": additional_information,
+    }
+
+    if reference is not None:
+        invoice_data["reference_type"] = reference["reference_type"]
+        invoice_data["reference_number"] = reference["reference_number"]
+
+    return invoice_data
 
 
 if __name__ == '__main__':
