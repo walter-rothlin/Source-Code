@@ -75,7 +75,8 @@ def doKontoUebertrag(connection, cursor, withdrawAmount, fromKontoId, toKontoId,
         showKontoUebersicht(connection, cursor, "Nach commited", 2)
         halt("Check with workbench!! Than press RETURN to continue!")
 
-
+# Hauptprogramm
+# =============
 dbServer = "localhost"
 dbSchema = "MyBank"
 userName = "root"

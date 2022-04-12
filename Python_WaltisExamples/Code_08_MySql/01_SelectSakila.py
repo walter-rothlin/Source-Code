@@ -12,7 +12,7 @@
 # 26-May-2020   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 
-# Install driver first: python -m pip install mysql-connector
+# Install driver first: python -m pip install mysql-connector-python
 import mysql.connector  # mysql-connector-python not default mässiger one
 
 print("Connecting to sakila....", end="", flush=True)

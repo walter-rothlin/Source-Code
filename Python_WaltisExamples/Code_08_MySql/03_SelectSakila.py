@@ -36,7 +36,7 @@ except mc.Error as e:
     print("\nError {errNo:d}: {errTxt:s}".format(errNo=e.args[0], errTxt=e.args[1]))
     sys.exit(1)
 
-
+searchCriteria = "JO"
 stm_selectCities = """
     SELECT
        JSON_OBJECT(
@@ -47,7 +47,7 @@ stm_selectCities = """
     FROM 
        customer_list
     WHERE
-       name like 'JO%'
+       name like '""" + searchCriteria + """%'
     ORDER BY name;
 """
 

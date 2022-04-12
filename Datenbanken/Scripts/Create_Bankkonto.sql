@@ -1,5 +1,7 @@
 -- ---------------------------------------------------------------------------------------------
 -- Create_Bankkonto.sql
+--
+-- Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/Create_Bankkonto.sql
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin
