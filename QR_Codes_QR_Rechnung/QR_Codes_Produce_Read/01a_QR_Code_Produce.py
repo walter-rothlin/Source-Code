@@ -23,5 +23,5 @@ import qrcode
 
 # Simple-Text
 img = qrcode.make('ABCDEFG 007')
-img.save('QR-CodesImages/01a_01_helloWorld.png')
-print('QR-CodesImages/01a_01_helloWorld.png')
+img.save('../QR-Codes_Images/01a_01_helloWorld.png')
+print('../QR-Codes_Images/01a_01_helloWorld.png')

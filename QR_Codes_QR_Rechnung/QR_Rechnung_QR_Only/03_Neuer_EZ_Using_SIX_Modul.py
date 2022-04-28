@@ -49,7 +49,7 @@ qr.add_data(
 1
 """ + recipient_iban + """
 S
-""" + recipient_firstname +  recipient_name + "\n" +
+""" + recipient_firstname + recipient_name + "\n" +
 recipient_street + "\n" +
 str(recipient_no) + "\n" +
 recipient_plz + "\n" +

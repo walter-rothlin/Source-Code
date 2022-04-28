@@ -18,7 +18,7 @@ from waltisLibrary import *
 import qrcode
 
 qr_valueText = input("QR-Value:")
-filename = 'QR-CodesImages/01b_helloWorld.png'
+filename = '../QR-Codes_Images/01b_helloWorld.png'
 
 img = qrcode.make(qr_valueText)
 img.save(filename)

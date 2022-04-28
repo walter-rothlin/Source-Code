@@ -17,11 +17,11 @@
 # ------------------------------------------------------------------
 import cv2
 
-qrCodeListe = ['QR-CodesImages/01a_01_helloWorld.png',
-               'QR-CodesImages/01a_02_multiLineText.png',
-               'QR-CodesImages/01a_03_Link.png',
-               'QR-CodesImages/01a_04_Email.png',
-               'QR-CodesImages/01a_05_VCard.png']
+qrCodeListe = ['../QR-Codes_Images/01a_01_helloWorld.png',
+               '../QR-Codes_Images/01a_02_multiLineText.png',
+               '../QR-Codes_Images/01a_03_Link.png',
+               '../QR-Codes_Images/01a_04_Email.png',
+               '../QR-Codes_Images/01a_05_VCard.png']
 
 
 for aQR_CodeFile in qrCodeListe:
