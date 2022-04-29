@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: 01_SelectSakila.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/01_SelectSakila.py
+# Name: 01b_SelectSakila.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/01b_SelectSakila.py
 #
-# Description: Connects to sakila and queries data
+# Description: Connects to sakila and queries data by attribute names
 #
 # Autor: Walter Rothlin
 #
@@ -36,7 +36,7 @@ stm_selectCities = """
        city like 'O%'
 """
 
-mycursor = mydb.cursor()
+mycursor = mydb.cursor(dictionary=True)
 mycursor.execute(stm_selectCities)
 myresult = mycursor.fetchall()
 
@@ -46,9 +46,9 @@ print("+------+--------------------------------+------------+")
 print("| Id   | City                           | Country ID |")
 print("+------+--------------------------------+------------+")
 for aRec in myresult:
-    print("| {plh:4d} |".format(plh=aRec[0]), end="")
-    print(" {plh:30s} |".format(plh=aRec[1]), end="")
-    print(" {plh:10d} |".format(plh=aRec[2]), end="")
+    print("| {plh:4d} |".format(plh=aRec['ID']), end="")
+    print(" {plh:30s} |".format(plh=aRec['Name']), end="")
+    print(" {plh:10d} |".format(plh=aRec['Country']), end="")
     print()
     print("+------+--------------------------------+------------+")
 

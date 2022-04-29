@@ -22,10 +22,16 @@ import sys
 
 DELIMITER //
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE add_num(IN num1 INT, IN num2 INT, OUT sum INT)
+CREATE PROCEDURE add_num(IN num1 INT, IN num2 INT, OUT sum INT)
 BEGIN
-SET sum := num1 + num2;
-END //
+     SET sum := num1 + num2;
+END 
+
+CREATE PROCEDURE add_sub_num(IN num1 FLOAT, IN num2 FLOAT, OUT sum FLOAT, OUT diff FLOAT)
+BEGIN
+      SET sum  := num1 + num2;
+      SET diff := num1 - num2;
+END//
 
 DELIMITER ;
 
@@ -51,9 +57,22 @@ try:
     print("completed!")
 
     myCursor = conn.cursor()
-    args = (7, 6, 0) # 0 is to hold value of the OUT parameter sum
+
+    # calling add_num
+    args = ("7", 6, 'x')      # 'x' in the Tuple will be replaced by OUT-Value
     result_args = myCursor.callproc('add_num', args)
+    print("     args       :", args)
+    print("     result_args:", result_args)
     print("add_num:", args[0], "+", args[1], "=", result_args[2])
+
+    # calling add_sub_num
+    args = ("7", 6.4, 'x', 'y')
+    result_args = myCursor.callproc('add_sub_num', args)
+    print("     args       :", args)
+    print("     result_args:", result_args)
+    print("add_sub_num:", args[0], "+", args[1], "=", result_args[2])
+    print("add_sub_num:", args[0], "-", args[1], "=", result_args[3])
+
 
 except mc.Error as e:
     print("\nError {errNo:d}: {errTxt:s}".format(errNo=e.args[0], errTxt=e.args[1]))

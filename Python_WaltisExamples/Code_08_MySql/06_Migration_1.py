@@ -104,7 +104,13 @@ if doOrteReference:
     for aRec in myresult:
         plzStr = str(aRec[1])
         ortStr = str(aRec[2])
-        updateSQL = f"  UPDATE adressen SET orte_fk=(SELECT ort_id FROM orte WHERE name = '{ortStr:s}' AND plz = {plzStr:s}) WHERE ort='{ortStr:s}' AND plz={plzStr:s}"
+        updateSQL = f"""  UPDATE adressen 
+                          SET orte_fk=(SELECT ort_id 
+                                       FROM orte 
+                                       WHERE name = '{ortStr:s}' AND 
+                                             plz = {plzStr:s}) 
+                          WHERE ort='{ortStr:s}' AND 
+                                plz={plzStr:s}"""
         print(updateSQL)
         mycursor.execute(updateSQL)
     conn.commit()
