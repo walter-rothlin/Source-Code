@@ -1168,7 +1168,8 @@ WHERE title in ('ACADEMY DINOSAUR', 'ACE GOLDFINGER');
 -- Uebung 1
 -- ==============
 --  Machen Sie folgende Aenderungen in skaila:
---  U1.1) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language
+--  U1.1) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language. 
+--        Wieso gibt es keine Resultate?
 SELECT
      f.film_id      AS Id,
      f.title        AS Title,
@@ -1179,8 +1180,19 @@ FROM
 INNER JOIN language AS lang    ON f.language_id          = lang.language_id
 INNER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
+--  U1.1a) Welche Filme haben eine original_language_id gesetzt?
+SELECT original_language_id FROM film WHERE original_language_id IS NOT NULL;
 
-SELECT original_language_id from film;
+--  U1.1b) Erstellen Sie ein SELECT, so dass alle Filme im Resultset erscheinen?
+SELECT
+     f.film_id      AS Id,
+     f.title        AS Title,
+     lang.name      AS Sprache,
+     orgLang.name   AS Originalsprache
+FROM
+     film AS f
+INNER      JOIN language AS lang    ON f.language_id          = lang.language_id
+LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 --  U1.2)  Fuegen Sie drei weitere Sprache 'Schweizerdeutsch', 'Suiss Italian' und 'Dutch' in die Tabelle language 
 SELECT * FROM language;
@@ -1192,6 +1204,7 @@ INSERT INTO language (name) VALUES
     ('Suiss Italian'), 
     ('Dutch');
 
+--  U1.2a)  Was fuer IDs haben diese neuen Sprachen bekommen?
 SELECT * FROM language;
 
 --  U1.3)   Setzen Sie fuer die beiden Filme mit der film_id 1 und 2 die original_language_id auf 1 resp 2
