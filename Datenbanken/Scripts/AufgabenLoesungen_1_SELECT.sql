@@ -664,11 +664,13 @@ FROM
 -- START metaData
 -- Meta-Daten abfragen
 -- ===================
+
 -- 3.0a) Welche Tabellen hat es in sakila?
-SHOW tables;
+SHOW FULL TABLES;
+SHOW TABLES;
 
 -- 3.0b) Welche Tabellen hat es in sakila, welche mit a beginnen?
-SHOW tables WHERE Tables_in_sakila like 'a%';
+SHOW TABLES WHERE Tables_in_sakila like 'a%';
 
 -- 3.0c) Welche Attributte hat die Tabelle language?
 DESCRIBE language;
@@ -682,18 +684,26 @@ SELECT * FROM INFORMATION_SCHEMA.TABLES;
     
 -- 3.1a) Liste alle Tabellen und Type, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
 SELECT 
-    table_schema, 
-    table_name, 
-    table_type
+    TABLE_SCHEMA, 
+    TABLE_NAME, 
+    TABLE_TYPE
 FROM
     INFORMATION_SCHEMA.TABLES
 WHERE
-    table_name LIKE '%film%' AND
-    table_schema = 'sakila'
+    TABLE_NAME LIKE '%film%' AND
+    TABLE_SCHEMA = 'sakila'
 ORDER BY 
-    table_schema,
-    table_name,
-    table_type;
+    TABLE_SCHEMA,
+    TABLE_NAME,
+    TABLE_TYPE;
+    
+SELECT 
+    TABLE_NAME, 
+    TABLE_TYPE 
+FROM 
+    INFORMATION_SCHEMA.TABLES 
+WHERE 
+    TABLE_SCHEMA = 'sakila';
 
 -- 3.2) liste alle Attribute (mit Type) aller Tabellen in der DB (im Schema) sakila auf.
 SELECT 
@@ -706,8 +716,8 @@ SELECT
 FROM
     INFORMATION_SCHEMA.COLUMNS
 WHERE
-    table_schema = 'sakila'
-ORDER BY table_schema , Table_NAME , column_name;
+    TABLE_SCHEMA = 'sakila'
+ORDER BY TABLE_SCHEMA , TABLE_NAME , COLUMN_NAME;
 
 
 -- 3.3 Liste alle Attribute der Tabelle film aus
