@@ -673,7 +673,8 @@ SHOW tables WHERE Tables_in_sakila like 'a%';
 -- 3.0c) Welche Attributte hat die Tabelle language?
 DESCRIBE language;
 
-
+-- 3.0d) Welche Attributte hat die Tabelle film, welche language enthalten?
+DESCRIBE film;   -- WHERE Field like '%language%'; funktioniert nicht!!!!!
 
 -- 3.1) Was finden Sie fuer Informationen in der Tabelle INFORMATION_SCHEMA.TABLES
 --      https://dev.mysql.com/doc/mysql-infoschema-excerpt/8.0/en/information-schema.html
@@ -696,9 +697,9 @@ ORDER BY
 
 -- 3.2) liste alle Attribute (mit Type) aller Tabellen in der DB (im Schema) sakila auf.
 SELECT 
-    table_schema,
+    TABLE_SCHEMA,
     TABLE_NAME,
-    column_name,
+    COLUMN_NAME,
     DATA_TYPE,
     IS_NULLABLE,
     COLUMN_DEFAULT
