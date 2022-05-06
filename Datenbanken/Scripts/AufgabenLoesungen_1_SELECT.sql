@@ -1182,11 +1182,11 @@ WHERE title in ('ACADEMY DINOSAUR', 'ACE GOLDFINGER');
 -- Uebung 1: Update, Insert und Delete (C RUD)
 -- ===========================================
 
--- C: Fügen Sie drei neue Sprachen in die language Tabelle ein.
+-- C: Fuegen Sie drei neue Sprachen in die language Tabelle ein.
 -- R: Listen Sie alle Filme mit language und original_language
 -- U: Danach setzen Sie bei zwei Filmen die original_language auf eine dieser Sprachen.
 -- R: Listen Sie alle Filme mit language und original_language
--- D: Löschen Sie die alle neuen Sprachen und setzen Sie die original_language der beiden Filme wieder auf NULL.
+-- D: Loeschen Sie die alle neuen Sprachen und setzen Sie die original_language der beiden Filme wieder auf NULL.
 
 
 --  U1.1) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language. 
