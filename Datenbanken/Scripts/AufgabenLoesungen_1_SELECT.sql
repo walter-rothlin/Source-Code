@@ -1245,7 +1245,7 @@ UPDATE film SET original_language_id=1 WHERE film_id=1;  -- English
 UPDATE film SET original_language_id=2 WHERE film_id=2;  -- Italian
 
 --  U1.4)   Setzen Sie fuer den Filme mit dem Titel AFRICAN EGG die original_language_id auf 'Schweizerdeutsch'
-SELECT language_id FROM language where name = 'Schweizerdeutsch';
+SELECT language_id FROM language WHERE name = 'Schweizerdeutsch';
 SELECT film_id, title, original_language_id, last_update FROM film WHERE title='AFRICAN EGG';
 
 UPDATE film SET original_language_id=7 WHERE film_id=5;
@@ -1287,6 +1287,15 @@ CREATE VIEW FILM_SPRACHEN AS
 	LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 SELECT * FROM film_sprachen;
+
+-- U1.6.1) Geben Sie die Anzahl der Filme aus, welche als language.name "English" haben.
+SELECT 
+    COUNT(film.title) AS Anzahl 
+FROM film 
+INNER JOIN language ON film.language_id = language.language_id 
+WHERE language.name = "English" 
+GROUP BY film.language_id;
+
 
 --  U1.7)   Loeschen Sie diese 3 neu zugefuegten Sprachen wieder! Wieso geht das nicht?
 DELETE FROM language WHERE name in ('Schweizerdeutsch', 'Suiss Italian', 'Dutch');
