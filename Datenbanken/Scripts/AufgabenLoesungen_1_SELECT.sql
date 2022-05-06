@@ -1188,6 +1188,8 @@ WHERE title in ('ACADEMY DINOSAUR', 'ACE GOLDFINGER');
 -- R: Listen Sie alle Filme mit language und original_language
 -- D: Loeschen Sie die alle neuen Sprachen und setzen Sie die original_language der beiden Filme wieder auf NULL.
 
+--  U1.0) Setzen Sie bei allen Filmen die Original_Language_ID auf NULL
+UPDATE film SET original_language_id = NULL;
 
 --  U1.1) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language. 
 --        Wieso gibt es keine Resultate?
