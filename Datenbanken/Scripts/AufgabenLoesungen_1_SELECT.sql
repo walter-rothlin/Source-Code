@@ -667,14 +667,19 @@ FROM
 -- 3.0a) Welche Tabellen hat es in sakila?
 SHOW tables;
 
--- 3.0b) Welche Attributte hat die Tabelle language?
+-- 3.0b) Welche Tabellen hat es in sakila, welche mit a beginnen?
+SHOW tables WHERE Tables_in_sakila like 'a%';
+
+-- 3.0c) Welche Attributte hat die Tabelle language?
 DESCRIBE language;
+
+
 
 -- 3.1) Was finden Sie fuer Informationen in der Tabelle INFORMATION_SCHEMA.TABLES
 --      https://dev.mysql.com/doc/mysql-infoschema-excerpt/8.0/en/information-schema.html
 SELECT * FROM INFORMATION_SCHEMA.TABLES;
     
--- 3.1a) Liste alle Tabellen, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
+-- 3.1a) Liste alle Tabellen und Type, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
 SELECT 
     table_schema, 
     table_name, 
@@ -690,7 +695,6 @@ ORDER BY
     table_type;
 
 -- 3.2) liste alle Attribute (mit Type) aller Tabellen in der DB (im Schema) sakila auf.
---      https://dev.mysql.com/doc/refman/5.7/en/columns-table.html
 SELECT 
     table_schema,
     TABLE_NAME,
