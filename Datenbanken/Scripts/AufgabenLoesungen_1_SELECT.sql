@@ -664,8 +664,14 @@ FROM
 -- START metaData
 -- Meta-Daten abfragen
 -- ===================
+-- 3.0a) Welche Tabellen hat es in sakila?
+SHOW tables;
+
+-- 3.0b) Welche Attributte hat die Tabelle language?
+DESCRIBE language;
+
 -- 3.1) Was finden Sie fuer Informationen in der Tabelle INFORMATION_SCHEMA.TABLES
---      https://dev.mysql.com/doc/refman/5.7/en/tables-table.html
+--      https://dev.mysql.com/doc/mysql-infoschema-excerpt/8.0/en/information-schema.html
 SELECT * FROM INFORMATION_SCHEMA.TABLES;
     
 -- 3.1a) Liste alle Tabellen, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
