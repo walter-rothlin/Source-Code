@@ -664,9 +664,11 @@ FROM
 -- START metaData
 -- Meta-Daten abfragen
 -- ===================
-
--- 3.1) liste alle Tabellen, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
+-- 3.1) Was finden Sie fuer Informationen in der Tabelle INFORMATION_SCHEMA.TABLES
 --      https://dev.mysql.com/doc/refman/5.7/en/tables-table.html
+SELECT * FROM INFORMATION_SCHEMA.TABLES;
+    
+-- 3.1a) Liste alle Tabellen, welche im Namen film enthalten, in der DB (im Schema) sakila auf und zeige deren Type an.
 SELECT 
     table_schema, 
     table_name, 
@@ -674,7 +676,8 @@ SELECT
 FROM
     INFORMATION_SCHEMA.TABLES
 WHERE
-    table_name LIKE '%film%'
+    table_name LIKE '%film%' AND
+    table_schema = 'sakila'
 ORDER BY 
     table_schema,
     table_name,
@@ -1165,9 +1168,16 @@ WHERE title in ('ACADEMY DINOSAUR', 'ACE GOLDFINGER');
 
 
 -- START uebung_1
--- Uebung 1
--- ==============
---  Machen Sie folgende Aenderungen in skaila:
+-- Uebung 1: Update, Insert und Delete (C RUD)
+-- ===========================================
+
+-- C: Fügen Sie drei neue Sprachen in die language Tabelle ein.
+-- R: Listen Sie alle Filme mit language und original_language
+-- U: Danach setzen Sie bei zwei Filmen die original_language auf eine dieser Sprachen.
+-- R: Listen Sie alle Filme mit language und original_language
+-- D: Löschen Sie die alle neuen Sprachen und setzen Sie die original_language der beiden Filme wieder auf NULL.
+
+
 --  U1.1) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language. 
 --        Wieso gibt es keine Resultate?
 SELECT
