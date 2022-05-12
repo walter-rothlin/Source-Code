@@ -29,7 +29,7 @@ print("Meta-Data", exif_data)
 
 if exif_data is not None:
     for anEntryKey in exif_data:
-        print(anEntryKey, "-->", exif_data[anEntryKey])
+        print(anEntryKey, " --> ", exif_data[anEntryKey])
 
 
 

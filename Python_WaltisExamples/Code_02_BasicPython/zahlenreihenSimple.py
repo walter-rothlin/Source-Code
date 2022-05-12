@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: zahlenreihenSimple.py
+# Name  : zahlenreihenSimple.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/zahlenreihenSimple.py
+#
 #
 # Description: Generiert Zahlenreihen
 #

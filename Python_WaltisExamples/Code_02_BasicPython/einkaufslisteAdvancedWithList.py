@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: einkaufslisteAdvancedWithList.py
+# Name  : einkaufslisteAdvancedWithList.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/einkaufslisteAdvancedWithList.py
 #
 # Description: Formatiert eine Shoppingliste
 #

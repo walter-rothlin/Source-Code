@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: pythonBasics_06a_PrimzahlenRechner.py
+# Name  : pythonBasics_06a_PrimzahlenRechner.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_06a_PrimzahlenRechner.py
 #
 # Description: Rechnet mit Primzahlen.
 #

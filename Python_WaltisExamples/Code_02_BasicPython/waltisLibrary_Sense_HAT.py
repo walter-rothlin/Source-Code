@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: waltisLibrary.py
+# Name  : waltisLibrary_Sense_HAT.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/waltisLibrary_Sense_HAT.py
+#
 #
 # Description: Library - Module (Source in ExamplesPyton/waltisLibrary.py)
 #

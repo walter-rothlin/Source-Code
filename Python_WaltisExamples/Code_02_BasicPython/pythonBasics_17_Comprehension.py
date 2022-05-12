@@ -1,5 +1,9 @@
+#!/usr/bin/python3
+
 # ------------------------------------------------------------------
-# Name: pythonBasics_17_Comprehension.py
+# Name  : pythonBasics_17_Comprehension.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_17_Comprehension.py
+#
 #
 # Description: Examples with Comprehensions
 #  https://www.w3schools.com/python/python_lists_comprehension.asp

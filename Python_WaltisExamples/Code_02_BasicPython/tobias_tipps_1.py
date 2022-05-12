@@ -1,3 +1,17 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : tobias_tipps_1.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/tobias_tipps_1.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 #Abstraktionen / Comprehensions
 
 a = [1,3,4,5,6,7,8]

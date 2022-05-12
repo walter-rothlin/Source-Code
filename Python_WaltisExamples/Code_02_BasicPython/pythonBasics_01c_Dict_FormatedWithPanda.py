@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : pythonBasics_01c_Dict_FormatedWithPanda.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_01c_Dict_FormatedWithPanda.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 import pandas as pd
 
 emp_details = {'Employee': {'Dave': {'ID': '001',

@@ -1,5 +1,16 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : pythonBasics_08b_Sleep.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_08b_Sleep.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 from threading import Timer
 import time
 

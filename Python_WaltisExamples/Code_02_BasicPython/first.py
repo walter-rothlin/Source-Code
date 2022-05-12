@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : pythonBasics_03_CheckConditionalOperators.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_03_CheckConditionalOperators.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 from __future__ import print_function
 import sys
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: PruefungsVorbereitung_1.py
+# Name  : PruefungsVorbereitung_1.py
 # Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/PruefungsVorbereitung_1.py
 
 #
@@ -22,11 +22,11 @@
 #   -------
 myString = "Hal'\"lo"
 myString = '"' + "Hallo" + '"'
-myString = 'Hallo'
+myString = 'Er sagte:"Hallo"'
 myString = 'Hal\nlo'
 myString = '''
 Hallo BZU
-Hallo Uster
+Hallo "Hallo" Uster
 '''
 
 #   Zahlen / Boolean
@@ -54,7 +54,7 @@ print(100*".")
 #input()
 
 #F Strings
-print("hallo {a:06.2f} {b:06.2f} {c:06.2f}.".format(a=15.3, b=3.12645, c=2.5236))
+print("hallo {a:06.2f} {b:06.2f} {c:06.2f}.".format(b=3.12645, a=15.3, c=2.5236))
 print("hallo {a:06.2f} {b:06.2f} {c:06.2f}.".format(a=150.3, b=139.12445, c=420.5236))
 
 #Mathematische Operationen

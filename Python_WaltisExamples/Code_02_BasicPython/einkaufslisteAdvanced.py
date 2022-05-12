@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: einkaufslisteAdvanced.py
+# Name  : einkaufslisteAdvanced.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/einkaufslisteAdvanced.py
 #
 # Description: Formatiert eine Shoppingliste
 #
@@ -10,6 +11,23 @@
 # History:
 # 12-Dec-2019   Walter Rothlin      Initial Version
 # 26-Nov_2020   Walter Rothlin      Advanced Version
+# ------------------------------------------------------------------
+
+
+
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name: einkaufsliste.py
+
+#
+# Description: Formatiert eine Shoppingliste
+#
+# Autor: Walter Rothlin
+#
+# History:
+# # 12-Dec-2019   Walter Rothlin      Initial Version
+#
 # ------------------------------------------------------------------
 from datetime import datetime as DateTime
 

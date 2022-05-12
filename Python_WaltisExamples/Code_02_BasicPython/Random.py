@@ -1,3 +1,17 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : Random.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/Random.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 import random
 import time
 

@@ -1,18 +1,17 @@
 #!/usr/bin/python3
 
-#@author Walter Rothlin
-#@version 1.0
-#@since 03-Aug-2017
-#@help
-#Help of command 'pythonBasics_01'
+# ------------------------------------------------------------------
+# Name  : pythonBasics_04_MathOps.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_04_MathOps.py
 #
+# Description:
 #
+# Autor: Walter Rothlin
 #
-#@history:
-#03-Aug-2017  Walter Rothlin        Initial Version
-#19-Sep-2017  Walter Rothlin        Added math
-#			
-#End of help for command 'pythonBasics_04_MathOps.py'
+# History:
+# 03-Aug-2017  Walter Rothlin        Initial Version
+# 19-Sep-2017  Walter Rothlin        Added math
+# ------------------------------------------------------------------
 
 import math      # https://docs.python.org/2/library/math.html
 

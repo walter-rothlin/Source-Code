@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: pythonBasics_10_exceptionHandling.py
+# Name  : pythonBasics_10_exceptionHandling.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_10_exceptionHandling.py
+#
 #
 # Description: Berechnet die Nullstellen einer quadratischen Funktion
 #

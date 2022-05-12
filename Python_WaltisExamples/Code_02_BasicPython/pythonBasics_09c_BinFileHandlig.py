@@ -12,7 +12,7 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 22-Jan-2022   Walter Rothlin      Initial Version
+# 23-Jan-2022   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
 from waltisLibrary import *

@@ -2,6 +2,8 @@
 
 # ------------------------------------------------------------------
 # Name: zahlenreihen.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/zahlenreihen.py
+#
 #
 # Description: Generiert Zahlenreihen
 #

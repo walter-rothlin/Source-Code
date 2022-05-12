@@ -2,14 +2,16 @@
 
 # ------------------------------------------------------------------
 # Name: einkaufsliste.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/einkaufsliste.py
+
 #
 # Description: Formatiert eine Shoppingliste
 #
 # Autor: Walter Rothlin
 #
 # History:
-# 12-Dec-2019   Walter Rothlin      Initial Version
-
+# # 12-Dec-2019   Walter Rothlin      Initial Version
+#
 # ------------------------------------------------------------------
 from datetime import datetime as DateTime
 

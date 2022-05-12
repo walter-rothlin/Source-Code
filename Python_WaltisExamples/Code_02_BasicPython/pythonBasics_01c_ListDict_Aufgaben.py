@@ -1,8 +1,20 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : pythonBasics_01c_ListDict_Aufgaben.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_01c_ListDict_Aufgaben.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 
 # =======================
 # Uebung zu List und Dict
 # =======================
-
 
 
 " List [value,value,....] "    # doc-string

@@ -1,4 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : pythonBasics_07_Classes_Objects.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_07_Classes_Objects.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 
 class Employee:
    'Common base class for all employees'

@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : pythonBasics_08a_SleepSimple.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_08a_SleepSimple.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
 import time
 
 delayTime = float(input("Delay [s]:"))

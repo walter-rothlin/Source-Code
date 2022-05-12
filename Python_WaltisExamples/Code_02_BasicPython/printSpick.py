@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
 # ----------------------------------------
+# Name  : printSpick.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/printSpick.py
 #
-# Name:        printSpick.py
 # Description: Testet den print Befehl
 # Author:      Walter Rothlin
 #

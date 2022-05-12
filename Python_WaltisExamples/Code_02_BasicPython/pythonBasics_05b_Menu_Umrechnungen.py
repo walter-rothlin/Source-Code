@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: pythonBasics_05b_Menu_Umrechnungen.py
+# Name  : pythonBasics_05b_Menu_Umrechnungen.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_05b_Menu_Umrechnungen.py
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
 #

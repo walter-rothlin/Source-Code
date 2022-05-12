@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: pythonBasics_01_VarStringPrint.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_01_VarStringPrint.py
 #
 # Description: Examples of vars strings and print as well as formatted strings
 #

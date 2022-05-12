@@ -1,5 +1,9 @@
+#!/usr/bin/python3
+
 # ------------------------------------------------------------------
 # Name: pythonBasics_18_UTF_Unicode_emoji.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_18_UTF_Unicode_emoji.py
+#
 #
 # Description: Example to work with Hex, Bin, Oct and Dezimals
 # UTF-8: https://realpython.com/python-encodings-guide/

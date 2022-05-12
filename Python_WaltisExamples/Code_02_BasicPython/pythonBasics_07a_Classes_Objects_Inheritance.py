@@ -1,5 +1,8 @@
+#!/usr/bin/python3
+
 # ------------------------------------------------------------------
 # Name: pythonBasics_07a_Classes_Objects_Inheritance.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_07a_Classes_Objects_Inheritance.py
 #
 # Description: Example for Inheritance, Class-Variables
 #

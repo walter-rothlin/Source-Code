@@ -1,3 +1,16 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : pythonBasics_08d_Timer.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_08d_Timer.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 import time
 from threading import Timer
 
@@ -8,7 +21,7 @@ def hello(firstname="No", lastName="Name", anz=3, delay=3.0):
         time.sleep(delay)
 
 
-# Testfälle
+# Testfï¿½lle
 hello()
 # hello("Felix")
 # hello("Felix", "Muster", 1)

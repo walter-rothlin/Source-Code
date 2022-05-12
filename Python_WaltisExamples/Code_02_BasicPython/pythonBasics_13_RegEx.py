@@ -1,5 +1,9 @@
+#!/usr/bin/python3
+
 # ------------------------------------------------------------------
-# Name: pythonBasics_13_RegEx.py
+# Name  : pythonBasics_13_RegEx.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_13_RegEx.py
+#
 #
 # Description: Test-Programm zu RegEX
 #

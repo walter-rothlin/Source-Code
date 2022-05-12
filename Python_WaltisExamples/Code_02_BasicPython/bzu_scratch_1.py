@@ -1,13 +1,17 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: bzu_scratch.py
+# Name: bzu_scratch_1.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/bzu_scratch_1.py
+
 #
-# Description: Demo
+# Description:
 #
 # Autor: Walter Rothlin
 #
 # History:
+# 01-Apr-2022	Walter Rothlin		Initial Version mit Header
+#
 # ------------------------------------------------------------------
 
 betrag = 12.5635

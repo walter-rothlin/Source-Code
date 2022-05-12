@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: pythonBasics_05c_Menu_UmrechnungenUseModule.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_05c_Menu_UmrechnungenUseModule.py
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
 #

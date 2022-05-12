@@ -1,4 +1,16 @@
+#!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : pythonBasics_01c_Dict_JSON.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_01c_Dict_JSON.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 24-Dec-2022   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 import json
 
 # see https://realpython.com/python-json/
