@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: PruefungsVorbereitung_1.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicsPython/PruefungsVorbereitung_1.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/PruefungsVorbereitung_1.py
 
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
@@ -15,7 +15,11 @@
 #
 # ------------------------------------------------------------------
 
-#Daten Typen
+# Daten Typen
+# ===========
+
+#   Strings
+#   -------
 myString = "Hal'\"lo"
 myString = '"' + "Hallo" + '"'
 myString = 'Hallo'
@@ -25,6 +29,8 @@ Hallo BZU
 Hallo Uster
 '''
 
+#   Zahlen / Boolean
+#   ----------------
 myInt = 15
 myFloat = 15.63234
 myBool = False
