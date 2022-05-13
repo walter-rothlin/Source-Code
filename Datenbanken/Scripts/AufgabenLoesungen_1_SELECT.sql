@@ -1402,8 +1402,19 @@ DELIMITER ;
 
 SELECT formatPLZ(8854) AS PLZ_Formated;     -- --> CH-8855
 
+--  Fct 2.0) Gibt 'Hallo!!' zurueck.
+--           SELECT sayHelloSimple();-- --> Hallo!!
+DROP FUNCTION IF EXISTS sayHelloSimple;
+Delimiter //
+CREATE FUNCTION sayHelloSimple() RETURNS CHAR(50)
+BEGIN
+  RETURN  'Hallo!!';
+END//
 
---  Fct 2.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
+SELECT sayHelloSimple();
+
+
+--  Fct 2.1) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
 --           SELECT sayHello('Walti');-- --> Hallo: Walti
 DROP FUNCTION IF EXISTS sayHello;
 -- DROP FUNCTION IF EXISTS HelloFct;
