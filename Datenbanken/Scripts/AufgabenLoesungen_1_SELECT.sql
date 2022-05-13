@@ -1388,6 +1388,7 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 --    SET GLOBAL log_bin_trust_function_creators = 1;
 
 
+--  -------------------------------------------------------------
 --  Fct 1.0) Gibt 'Hallo!!' zurueck.
 --           SELECT sayHelloSimple();-- --> Hallo!!
 DROP FUNCTION IF EXISTS sayHelloSimple;
