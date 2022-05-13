@@ -1388,8 +1388,35 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 --    SET GLOBAL log_bin_trust_function_creators = 1;
 
 
+--  Fct 1.0) Gibt 'Hallo!!' zurueck.
+--           SELECT sayHelloSimple();-- --> Hallo!!
+DROP FUNCTION IF EXISTS sayHelloSimple;
+Delimiter //
+CREATE FUNCTION sayHelloSimple() RETURNS CHAR(50)
+BEGIN
+  RETURN  'Hoi!!';
+END//
 
---  Fct 1.0)  Nimmt eine PLZ und haengt CH- vorne an.
+-- Testen
+SELECT sayHelloSimple();
+SELECT 'Hello???';
+
+--  -------------------------------------------------------------
+--  Fct 2.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
+--           SELECT sayHello('Walti');-- --> Hallo: Walti
+DROP FUNCTION IF EXISTS sayHello;
+-- DROP FUNCTION IF EXISTS HelloFct;
+Delimiter $$$
+CREATE FUNCTION sayHello(p_input_string CHAR(20)) RETURNS CHAR(50)
+BEGIN
+  RETURN  CONCAT('Hallo: ', p_input_string);
+END$$$
+
+-- Testen
+SELECT sayHello('Walti');-- --> Hallo: Walti
+
+--  -------------------------------------------------------------
+--  Fct 2.1)  Nimmt eine PLZ und haengt CH- vorne an.
 --            SELECT formatPLZ(8855);     -- --> CH-8855
 DROP FUNCTION IF EXISTS formatPLZ;
 Delimiter //
@@ -1400,33 +1427,27 @@ END
 //
 DELIMITER ;
 
+-- Testen
 SELECT formatPLZ(8854) AS PLZ_Formated;     -- --> CH-8855
 
---  Fct 2.0) Gibt 'Hallo!!' zurueck.
---           SELECT sayHelloSimple();-- --> Hallo!!
-DROP FUNCTION IF EXISTS sayHelloSimple;
+--  -------------------------------------------------------------
+--  Fct 2.2)  Nimmt einen Laendercode und eine PLZ und haengt diese mit 
+--            einem - zusammen.
+--            SELECT formatPLZ('D', 8855);     -- --> D-8855
+DROP FUNCTION IF EXISTS formatPLZinternational;
 Delimiter //
-CREATE FUNCTION sayHelloSimple() RETURNS CHAR(50)
+CREATE FUNCTION formatPLZinternational(p_countryCode CHAR(50), p_input_plz SMALLINT) RETURNS CHAR(50)
 BEGIN
-  RETURN  'Hallo!!';
-END//
+   RETURN  concat(p_countryCode, '-', p_input_plz);
+END
+//
+DELIMITER ;
 
-SELECT sayHelloSimple();
+-- Testen
+SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
+SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
-
---  Fct 2.1) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
---           SELECT sayHello('Walti');-- --> Hallo: Walti
-DROP FUNCTION IF EXISTS sayHello;
--- DROP FUNCTION IF EXISTS HelloFct;
-Delimiter //
-CREATE FUNCTION sayHello(p_input_string CHAR(20)) RETURNS CHAR(50)
-BEGIN
-  RETURN  CONCAT('Hallo: ', p_input_string);
-END//
-
-SELECT sayHello('Walti');-- --> Hallo: Walti
-
-
+--  -------------------------------------------------------------
 --  Fct 3.0) Nimmt eine Zeichenkette und macht den 1.Buchstaben Uppercase und die restlichen Lowercase
 --           SELECT firstUpper("herr");  -- --> Herr
 --           SELECT firstUpper("HERR");  -- --> Herr
@@ -1441,12 +1462,13 @@ END
 //
 DELIMITER ;
 
+-- Testen
 SELECT firstUpper("herr");  -- --> Herr
 SELECT firstUpper("HERR");  -- --> Herr
 SELECT firstUpper("Herr");  -- --> Herr
 SELECT firstUpper("hERR");  -- --> Herr
 
-
+--  -------------------------------------------------------------
 --  Fct 4.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
 --           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
 --           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
@@ -1459,6 +1481,7 @@ END
 //
 DELIMITER ;
 
+-- Testen
 SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
 SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
 
