@@ -36,6 +36,7 @@
 # 04-Dec-2021   Walter Rothlin      Added getMenuStrFromList
 # 06-Dec-2021   Walter Rothlin      Added getFilenameWithoutExtension, getFilenameExtension, addTimestampToFileName, getPath
 # 15-Jan-2022   Walter Rothlin      Added File_remove
+# 19-May-2022   Walter Rothlin      Added howManyDigitsAreInString
 # ------------------------------------------------------------------
 
 # toDo:
