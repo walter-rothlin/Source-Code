@@ -990,7 +990,7 @@ def isPrimzahl(aZahl):
                     True / False
     '''
     isPrim = False
-    if ((aZahl == 1) or (aZahl == 2)):
+    if aZahl == 1 or aZahl == 2:
         isPrim = True
     else:
         isPrim = True
@@ -998,7 +998,7 @@ def isPrimzahl(aZahl):
         # print("Obergrenze:",obergrenze)
         for i in range(2, obergrenze + 1):
             # print("    Test: aZahl % i = ",aZahl,"%",i,"=",aZahl % i)
-            if ((aZahl % i) == 0):
+            if (aZahl % i) == 0:
                 isPrim = False
     return isPrim
 
