@@ -1,15 +1,15 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: Umrechnungen_B.py
+# Name: pythonBasics_05b_Menu_Umrechnungen.py
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
 #
 # Autor: Walter Rothlin
 #
 # History:
-# 01-Apr-2022	Walter Rothlin		Initial Version
-# 07-Apr-2022	Tobias Rothlin		Eigene Functions mit Parametern
+# 26-Sep-2017   Walter Rothlin      Initial Version
+# 24-Oct-2017	Walter Rothlin		Eigene Functions mit Parametern
 #
 # ------------------------------------------------------------------
 import math
