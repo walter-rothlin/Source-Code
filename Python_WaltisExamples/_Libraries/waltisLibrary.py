@@ -1087,6 +1087,37 @@ def TEST_Primzahlen():
 
 # String Functions
 # ================
+def howManyDigitsAreInString_Classic(aString, trace=False):
+    count = 0
+    for c in aString:
+        if c >= '0' and c <= '9':
+            count += 1
+    if trace:
+        print("howManyDigitsAreInString_Classic:", aString, count)
+    return count
+
+def howManyDigitsAreInString_WithComprehension(aString, trace=False):
+    count = len([d for d in aString if d >= '0' and d <= '9'])
+    if trace:
+        print("howManyDigitsAreInString_WithComprehension:", aString, "--> ", count)
+    return count
+
+def howManyDigitsAreInString_WithRegEx(aString, trace=False):
+    import re
+
+    copmiledRe = re.compile(r'\d')
+    count = len(copmiledRe.findall(aString))
+    if trace:
+        print("howManyDigitsAreInString_WithRegEx:", aString, "--> ", count)
+    return count
+
+
+def howManyDigitsAreInString(aString, trace=False):
+    # return howManyDigitsAreInString_Classic(aString, trace=trace)
+    # return howManyDigitsAreInString_WithComprehension(aString, trace=trace)
+    return howManyDigitsAreInString_WithRegEx(aString, trace=trace)
+
+
 def addParity(binStr, oddParity=True):
     anzOne = 0
     for aBit in binStr:

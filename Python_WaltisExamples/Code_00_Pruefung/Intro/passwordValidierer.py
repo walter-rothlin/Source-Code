@@ -9,26 +9,37 @@
 def howManyDigitsAreInString_Classic(aString, trace=False):
     count = 0
     for c in aString:
-        if ord(c) >= ord('0') and ord(c) <= ord('9'):
+        if c >= '0' and c <= '9':
             count += 1
     if trace:
-        print("howManyDigitsAreInString:", aString, count)
+        print("howManyDigitsAreInString_Classic:", aString, count)
     return count
 
 def howManyDigitsAreInString_WithComprehension(aString, trace=False):
-    count = len([d for d in aString if ord(d) >= ord('0') and ord(d) <= ord('9')])
+    count = len([d for d in aString if d >= '0' and d <= '9'])
     if trace:
-        print("howManyDigitsAreInString:", aString, "--> ", count)
+        print("howManyDigitsAreInString_WithComprehension:", aString, "--> ", count)
     return count
 
-def howManyDigitsAreInString(aString, trace=False):
-    return howManyDigitsAreInString_Classic(aString, trace=False)
+def howManyDigitsAreInString_WithRegEx(aString, trace=False):
+    import re
 
+    copmiledRe = re.compile(r'\d')
+    count = len(copmiledRe.findall(aString))
+    if trace:
+        print("howManyDigitsAreInString_WithRegEx:", aString, "--> ", count)
+    return count
+
+
+def howManyDigitsAreInString(aString, trace=False):
+    # return howManyDigitsAreInString_Classic(aString, trace=trace)
+    # return howManyDigitsAreInString_WithComprehension(aString, trace=trace)
+    return howManyDigitsAreInString_WithRegEx(aString, trace=trace)
 
 def valid_passwort(password, trace=False):
     retVal = False
     if len(password) > 6:
-        if howManyDigitsAreInString(password) >= 1:
+        if len([d for d in password if d >= '0' and d <= '9']) >= 1: # using comprehensions
             retVal = True
         else:
             retVal = False
@@ -41,9 +52,6 @@ def valid_passwort(password, trace=False):
 
 if __name__ == '__main__':
     print("Passwort prüfen:")
-    howManyDigitsAreInString("01Walti9", True)
-    howManyDigitsAreInString("Walti", True)
-    howManyDigitsAreInString("123456", True)
 
     # Diese "asserts" helfen für die Selbstkontrolle, sind alle Asssert Ok - dann funktioniert ihr Prorgramm
     assert valid_passwort('kurz') == False
