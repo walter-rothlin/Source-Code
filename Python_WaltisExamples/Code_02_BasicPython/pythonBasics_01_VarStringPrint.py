@@ -12,13 +12,15 @@
 # 03-Aug-2017   Walter Rothlin      Initial Version
 # 19-Sep-2017   Walter Rothlin      Added more format string
 # 26-Dec-2017   Walter Rothlin      String formats
-# 28-Nov-2021   Walter Rothlin      Added f-Strings
+# 28-Nov-2021   Walter Rothlin      Added f-Strings available with Python 3.6 and higher
 # 04-Dec-2021   Walter Rothlin      Added Type-Hints
 # ------------------------------------------------------------------
 
 import sys
 import os
 i = 10
+aString = "walti"
+print(f'{aString:^30s}:{aString:>8s}:{aString:3s}:')  # available with Python 3.6 and higher
 print(f"Hallo {i:20d} {i*5:_<20d}:")
 print(f"Hallo {i*10:20x}")
 
@@ -46,17 +48,17 @@ print("\n\n")
 
 print("# print mit variables and string conncationation ")
 print("# ---------------------------------------------- ")
-name    = "Rothlin"       # String
-vorname : str = "Tobias"  # with Type-Hints
-a, b, isFinished    = 100, 5.56, False                                # int, float, boolean
+name = "Rothlin"         # String
+vorname: str = "Tobias"  # with Type-Hints
+a, b, isFinished = 100, 5.56, False                                # int, float, boolean
 print(name, vorname, a, b, isFinished)                                # einzelne Argumente Default of sep is " "
-print(name + " " + vorname +  " " + str(a) + " " + str(b) + " " + str(isFinished))       # string conncatination
+print(name + " " + vorname + " " + str(a) + " " + str(b) + " " + str(isFinished))       # string conncatination
 
-count   = 50 * 2                      # Integer type
-print("Count:",count, sep=" :: ")     # einzelne Argumente Default of sep is " "
+count = 50 * 2                        # Integer type
+print("Count:", count, sep=" :: ")    # einzelne Argumente Default of sep is " "
 print("Count: " + str(count))         # type conversion
 
-betrag  = 2008.55                     # Float type
+betrag = 2008.55                      # Float type
 print("Betrag:", betrag)
 print("Betrag: " + str(betrag))
 print("\n\n")
@@ -76,7 +78,7 @@ print("{p_s:^10s}; ;{p_i:^7d}; --> ;{p_f:^12.2f};".format(p_s=name, p_i=count, p
 print("\n")
 strOut = "Art: {0:5d}, Price per Unit: {1:8.2f}, {{".format(4523,59.058)               # position parameter; escape { is {{
 print(strOut)  # Art:  4523, Price per Unit:    59.06,
-strOut1 = "Art: {art:5d}, Price per Unit: {price:8.2f},".format(art=53,price=1259.058) # named parameter
+strOut1 = "Art: {art:5d}, Price per Unit: {price:8.2f},".format(art=53, price=1259.058)     # named parameter
 print(strOut1) # Art:    53, Price per Unit:  1259.06,
 print("\n")
 # rjust, ljust, center
@@ -114,7 +116,7 @@ retType = type(o1str)
 print("OCT:", o1str, retType)
 print("OCT: {oct1:10o}    DEC: {oct2:10}\n".format(oct1=o0, oct2=o0))
 
-print("h0 * b0 * o0 = ",h0*b0*o0)
+print("h0 * b0 * o0 = ", h0*b0*o0)
 print("\n")
 
 print("# Complexe Zahlen ")
