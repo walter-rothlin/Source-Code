@@ -1,5 +1,11 @@
+# Walter Rothlin 19.05.2022
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_00_Pruefung/Intro/P3.py
+
+
 # coding=utf8
 # Programmier - Aufgabe 3
+
+
 
 
 def index2_WR(text, symbol):

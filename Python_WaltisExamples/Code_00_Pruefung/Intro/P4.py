@@ -1,3 +1,7 @@
+# Walter Rothlin 19.05.2022
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_00_Pruefung/Intro/P4.py
+
+
 # coding=utf8
 # Programmier - Aufgabe 4
 
