@@ -17,7 +17,7 @@ import piplates.DAQCplate as DAQC
 
 class StromSensorLEM:
 
-    def __init__(self,name, plateAdr ,pinNr, toleranz=1, vorkomma=10, nachkomma=2, offset=-0):
+    def __init__(self, name, plateAdr ,pinNr, toleranz=1, vorkomma=10, nachkomma=2, offset=-0):
         self.name             = name
         self.plateAdr         = plateAdr
         self.pinNr            = pinNr

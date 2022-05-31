@@ -39,7 +39,7 @@ def howManyDigitsAreInString(aString, trace=False):
 def valid_passwort(password, trace=False):
     retVal = False
     if len(password) > 6:
-        if len([d for d in password if d >= '0' and d <= '9']) >= 1: # using comprehensions
+        if len([d for d in password if '0' <= d <= '9']) >= 1:   # using comprehensions
             retVal = True
         else:
             retVal = False
@@ -54,9 +54,10 @@ if __name__ == '__main__':
     print("Passwort prüfen:")
 
     # Diese "asserts" helfen für die Selbstkontrolle, sind alle Asssert Ok - dann funktioniert ihr Prorgramm
-    assert valid_passwort('kurz') == False
-    assert valid_passwort('muchlonger') == False
-    assert valid_passwort('12345') == False
-    assert valid_passwort('längerse45') == True
-    assert valid_passwort('sha5') == False
+    assert valid_passwort('kurz') is False
+    assert valid_passwort('muchlonger') is False
+    assert valid_passwort('12345') is False
+    assert valid_passwort('längerse45') is True
+    assert valid_passwort('sha5') is False
     print("Wenn alles korrekt ist, dann wird diese Zeile ausgegeben !")
+

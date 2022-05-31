@@ -113,7 +113,7 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
-    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
     # Print New Line on Complete
     if iteration == total:
         print()
@@ -1097,7 +1097,7 @@ def howManyDigitsAreInString_Classic(aString, trace=False):
     return count
 
 def howManyDigitsAreInString_WithComprehension(aString, trace=False):
-    count = len([d for d in aString if d >= '0' and d <= '9'])
+    count = len([d for d in aString if '0' <= d <= '9'])
     if trace:
         print("howManyDigitsAreInString_WithComprehension:", aString, "--> ", count)
     return count
