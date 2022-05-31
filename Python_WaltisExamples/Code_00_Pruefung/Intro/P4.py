@@ -30,7 +30,6 @@ def sonnenstand(time):
         return "Keine Sonne!"
 
 if __name__ == '__main__':
-    print("Sonnenstand:")
 
     # Diese "asserts" helfen für die Selbstkontrolle, sind alle Asssert Ok - dann funktioniert ihr Prorgramm
     assert sonnenstand("07:00") == 15

@@ -19,7 +19,7 @@ def calc_list_1(array):
 
 def calc_list(array):
     """
-        Summiere die Elemente mit einem graden Index (0,2, etc.) und multipliziere die erhalten Summe mit dem letzten Element.
+        Summiere die Elemente mit einem geraden Index (0,2, etc.) und multipliziere die erhalten Summe mit dem letzten Element.
         Das Ergebnis wird als int zurückgegeben
         Falls eine leere Liste übergeben wird, so wird 0 zurückgegeben ---> siehe auch asserts
     """
@@ -30,7 +30,7 @@ def calc_list(array):
                 summe += array[i]
         return int(summe * array[-1])
     else:
-        return summe
+        return 0
 
 
 # Diese "asserts" helfen für die Selbstkontrolle, sind alle Asssert Ok - dann funktioniert ihr Prorgramm

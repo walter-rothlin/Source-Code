@@ -10,6 +10,7 @@
 # Vorbedingungen: Die Eingabe enthält Worte oder Zahlen. Es gibt keine Worte die aus Zahlen und Buchstaben bestehen
 # 0 < len(words) < 100
 
+
 def containsWordDigits(aWort):
     if len([d for d in aWort if '0' <= d <= '9']) >= 1:
         return False
@@ -24,6 +25,9 @@ def check_wort(words):
         return False
 
 from string import digits
+def check_wort_fabian_A21(words):
+    return len(words.translate(str.maketrans('', '', digits)).split()) >= 3
+
 def check_wort_2(words):
     remove_digits = str.maketrans('', '', digits)
     res = words.translate(remove_digits)
