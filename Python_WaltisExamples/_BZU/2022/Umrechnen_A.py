@@ -1,57 +1,21 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: pythonBasics_05b_Menu_Umrechnungen.py
+# Name:  Umrechnungen_A.py
+# https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_BZU/2022/Umrechnen_A.py
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
 #
 # Autor: Walter Rothlin
 #
 # History:
-# 26-Sep-2017   Walter Rothlin      Initial Version
-# 24-Oct-2017	Walter Rothlin		Eigene Functions mit Parametern
+# 31-Mar-2022   Walter Rothlin      Initial Version
+# 07-Apr-2022	Tobias Rothlin		Menu-Struktur, Loop, case
+# 14-Apr-2022	Tobias Rothlin		Formeln implementiert, Eigene Funktionen
+# 02-Jun-2022   Walter Rothlin      Eigenes Module
 #
 # ------------------------------------------------------------------
-import math
-
-# Konstanten
-# ==========
-halbBogen = 180
-
-
-
-# Bildschirmsteuerung
-# ===================
-def halt(prompt="Weiter?"):
-    ants= input(prompt)
-
-
-def isFloat(inputStirng):
-    return inputStirng.replace('.','',1).replace('-','',1).isdigit()
-
-
-# Umrechnungs-Funktionen
-# ======================
-def grad2Rad(grad):
-    return math.pi * grad / halbBogen
-
-
-def rad2Grad(rad):
-    return halbBogen * rad / math.pi
-
-
-def fahrenheit2Celsius(fahrenheit):
-    return (fahrenheit - 32) / 1.8
-
-
-def celsius2Fahrenheit(celsius):
-    return (celsius * 1.8) + 32
-
-def sin(x,einheit="rad"): #'deg'
-    if einheit == "rad":
-        return math.sin(x)
-    else:
-        return math.sin(grad2Rad(x))
+from Library_A import *
 
 # =============
 # Hauptprogramm
@@ -67,7 +31,7 @@ while doLoop:
     print("  3: Fahrenheit in Celsius")  # 32F -> 0°C    100F -> 38.8°C     °C = (°F - 32) / 1.8
     print("  4: Celsius in Fahrenheit")  # 32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
     print()
-    print("  5: Sin(x)",mode)  # 32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
+    print("  5: Sin(x)", mode)  # 32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
     print()
     print("  9: Format_String Test")
     print()

@@ -1,11 +1,24 @@
-# Walter Rothlin 19.05.2022
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_00_Pruefung/Intro/passwordValidierer.py
+#!/usr/bin/python3
 
-# coding=utf8
-# Probe Programmier - Aufgabe
-# Passwort muss länger als 6 Zeichen lang sein.
-# Passwort muss mindestens eine Zahl enthalten
-# Rückgabe: entweder Passwort ist valid: True, Passwort ist ungültig: False
+# ------------------------------------------------------------------
+# Name  : passwordValidierer.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_00_Pruefung/Intro/passwordValidierer_Aufgabe.py
+#
+# Description: Checked ob ein Passwort den Regeln entspricht.
+#   1) Passwort muss länger als 6 Zeichen lang sein.
+#   1a) Passwort muss länger als n Zeichen lang sein (als Argument zu übergeben)
+#   2) Passwort muss mindestens eine Ziffer enthalten
+#   2a) Passwort muss mindestens n Ziffern enthalten (als Argument zu übergeben)
+#
+#   Rückgabe: entweder Passwort ist valid: True, Passwort ist ungültig: False
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 02-Jun-2022   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
+
 
 def howManyDigitsAreInString_Classic(aString, trace=False):
     count = 0
@@ -37,7 +50,7 @@ def howManyDigitsAreInString(aString, trace=False):
     # return howManyDigitsAreInString_WithComprehension(aString, trace=trace)
     return howManyDigitsAreInString_WithRegEx(aString, trace=trace)
 
-def valid_passwort(password, trace=False):
+def is_valid_passwort(password, trace=False):
     retVal = False
     if len(password) > 6:
         if len([d for d in password if '0' <= d <= '9']) >= 1:   # using comprehensions
@@ -55,10 +68,11 @@ if __name__ == '__main__':
     print("Passwort prüfen:")
 
     # Diese "asserts" helfen für die Selbstkontrolle, sind alle Asssert Ok - dann funktioniert ihr Prorgramm
-    assert valid_passwort('kurz') is False
-    assert valid_passwort('muchlonger') is False
-    assert valid_passwort('12345') is False
-    assert valid_passwort('längerse45') is True
-    assert valid_passwort('sha5') is False
+    assert is_valid_passwort('muchlonger') is True
+    assert is_valid_passwort('12345666') is True
+    assert is_valid_passwort('längerse45') is True
+    assert is_valid_passwort('kurz') is False
+    assert is_valid_passwort('12345') is False
+    assert is_valid_passwort('sha5') is False
     print("Wenn alles korrekt ist, dann wird diese Zeile ausgegeben !")
 

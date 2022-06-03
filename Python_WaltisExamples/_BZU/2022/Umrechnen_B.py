@@ -1,53 +1,27 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: pythonBasics_05b_Menu_Umrechnungen.py
+# Name : Umrechnungen_B.py
+# https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_BZU/2022/Umrechnen_B.py
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
 #
 # Autor: Walter Rothlin
 #
 # History:
-# 26-Sep-2017   Walter Rothlin      Initial Version
-# 24-Oct-2017	Walter Rothlin		Eigene Functions mit Parametern
+# 31-Mar-2022   Walter Rothlin      Initial Version
+# 07-Apr-2022	Tobias Rothlin		Menu-Struktur, Loop, case
+# 14-Apr-2022	Tobias Rothlin		Formeln implementiert, Eigene Funktionen
+# 02-Jun-2022   Walter Rothlin      Eigenes Module
 #
 # ------------------------------------------------------------------
-import math
-
-# Konstanten
-# ==========
-halbBogen = 180
-
-
-
-# Bildschirmsteuerung
-# ===================
-def halt(prompt="Weiter?"):
-    ant = input(prompt)
-
-
-# Umrechnungs-Funktionen
-# ======================
-def grad2Rad(grad):
-    return math.pi * grad / halbBogen
-
-
-def rad2Grad(rad):
-    return halbBogen * rad / math.pi
-
-
-def fahrenheit2Celsius(fahrenheit):
-    return (fahrenheit - 32) / 1.8
-
-
-def celsius2Fahrenheit(celsius):
-    return (celsius * 1.8) + 32
-
+from Library_B import *
 
 # =============
 # Hauptprogramm
 # =============
 doLoop = True
+mode = "rad"
 while doLoop:
     print("  Umrechnungen (V5b.0)")
     print("  ====================")
@@ -56,6 +30,8 @@ while doLoop:
     print()
     print("  3: Fahrenheit in Celsius")  # 32F -> 0°C    100F -> 38.8°C     °C = (°F - 32) / 1.8
     print("  4: Celsius in Fahrenheit")  # 32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
+    print()
+    print("  5: Sin(x)", mode)  # 32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
     print()
     print("  9: Format_String Test")
     print()
@@ -79,8 +55,33 @@ while doLoop:
         halt()
     if antwort == "4":
         print("Celsius in Fahrenheit")
-        celsiusValue = float(input("Celsius:"))
-        print(f"Celsius={celsiusValue:1.2f}  ==> Fahrenheit={celsius2Fahrenheit(celsiusValue):1.2f}")
+        inputValue = input("Celsius:")
+        if isFloat(inputValue):
+            celsiusValue = float(inputValue)
+            print(f"Celsius={celsiusValue:1.2f}  ==> Fahrenheit={celsius2Fahrenheit(celsiusValue):1.2f}")
+            halt()
+        else:
+            print("Input value not Float!")
+
+    if antwort == "5":
+        print("Sin(x)")
+        inputStr = input("sin: ")
+        if isFloat(inputStr):
+            print(f"sin({float(inputStr):1.2f}) = {sin(float(inputStr), mode):1.2f}")
+        else:
+            if inputStr == "r":
+                mode = "rad"
+                print(f"Mode:{mode}")
+            elif inputStr == "d":
+                mode = "deg"
+                print(f"Mode:{mode}")
+            else:
+                print("Error not valid code")
+            inputStr = input("sin: ")
+            if isFloat(inputStr):
+                print(
+                    f"sin({float(inputStr):1.2f}) = {sin(float(inputStr), mode):1.2f}")
+
         halt()
     if antwort == "0":
         doLoop = False
