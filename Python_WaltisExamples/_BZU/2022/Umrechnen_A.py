@@ -13,7 +13,7 @@
 # 07-Apr-2022	Tobias Rothlin		Menu-Struktur, Loop, case
 # 14-Apr-2022	Tobias Rothlin		Formeln implementiert, Eigene Funktionen
 # 02-Jun-2022   Walter Rothlin      Eigenes Module
-#
+# 03-Jun-2022   Walter Rothlin      Kleine Aenderungen
 # ------------------------------------------------------------------
 from Library_A import *
 
