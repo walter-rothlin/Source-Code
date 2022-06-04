@@ -46,6 +46,8 @@ if __name__ == '__main__':
         "post_lohn_lukas":  "CH2709000000319272638",
         "post_spar_tobias": "CH1509000000922735753",
         "post_spar_lukas":  "CH6809000000924135382",
+        "szkb_liegenschaft_remo": "CH9800777001683190170",
+        "szkb_privat_remo": "CH28 0077 7001 6831 9007 2",
         "feuerwehr_wangen_oktoberfest": "CH41 0077 7005 8249 1145 5"
     }
 
