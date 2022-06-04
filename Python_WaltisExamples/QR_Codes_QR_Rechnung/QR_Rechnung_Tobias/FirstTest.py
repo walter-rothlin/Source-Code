@@ -30,6 +30,14 @@ if __name__ == '__main__':
         "country": "CH",
     }
 
+    addr_remo = {
+        "name": "Remo Collet",
+        "address": "Kapellstr. 5",
+        "zip_code": "8854",
+        "city": "Siebnen",
+        "country": "CH",
+    }
+
     addr_fw = {
         "name": "Feuerwehrverein",
         "address": " Wangen-Nuolen",
@@ -95,6 +103,40 @@ if __name__ == '__main__':
             addr_leer,
             amount="0.00",
             additional_information="Tickets: Ihre Nummer angeben!"),
+        invoice_text_html="",
+        pdfName=pdfName,
+        htmlName=htmlName)
+
+    print("Produced following files:")
+    print("    --> ", pdfName)
+    print("    --> ", htmlName)
+
+    pdfName = "GeneratedInvoices/Remo_Liegenschaft"
+    htmlName = "GeneratedInvoices/Remo_Liegenschaft.html"
+    createQRInvoice(
+        generateQRInvoiceData(
+            ibanNr["szkb_liegenschaft_remo"],
+            addr_remo,
+            addr_leer,
+            amount="0.00",
+            additional_information=""),
+        invoice_text_html="",
+        pdfName=pdfName,
+        htmlName=htmlName)
+
+    print("Produced following files:")
+    print("    --> ", pdfName)
+    print("    --> ", htmlName)
+
+    pdfName = "GeneratedInvoices/Remo_Privat"
+    htmlName = "GeneratedInvoices/Remo_Privat.html"
+    createQRInvoice(
+        generateQRInvoiceData(
+            ibanNr["szkb_privat_remo"],
+            addr_remo,
+            addr_leer,
+            amount="0.00",
+            additional_information=""),
         invoice_text_html="",
         pdfName=pdfName,
         htmlName=htmlName)
