@@ -49,7 +49,7 @@ def create_qr_code(json):
     qr_data = "SPC\n" \
               "0200\n" \
               "1\n" \
-              + json["creditor_iban"] \
+              + json["creditor_iban"].replace(" ","") \
               + "\nK\n" \
               + json["creditor_name"] + "\n" \
               + json["creditor_address"] + "\n" \
@@ -78,10 +78,10 @@ def create_qr_code(json):
 
     if closing_tag_pos >= 0:
         swiss_cross = """
-        <rect x="25.9mm" y="25.9mm" class="st0" width="9.2mm" height="9.2mm"/>
-        <rect x="27.5mm" y="27.5mm" width="6mm" height="6mm"/>
-        <rect x="28.5mm" y="30mm" class="st0" width="4mm" height="1mm"/>
-        <rect x="30mm" y="28.5mm" class="st0" width="1mm" height="4mm"/>
+        <rect x="23.9mm" y="23.9mm" class="st0" width="9.2mm" height="9.2mm"/>
+        <rect x="25.5mm" y="25.5mm" width="6mm" height="6mm"/>
+        <rect x="26.5mm" y="28mm" class="st0" width="4mm" height="1mm"/>
+        <rect x="28mm" y="26.5mm" class="st0" width="1mm" height="4mm"/>
         <style type="text/css">.st0{fill:#FFFFFF;}</style>
         """
 
@@ -288,8 +288,8 @@ def createQRInvoice(json, invoice_text_html="", returnHTML=False, pdfName="Invoi
         font-size: 12.9pt;
     }
     #paymentQrCode svg {
-        width: 72.24mm;
-        height: 72.24mm;
+        width: 57mm;
+        height: 57mm;
         margin-left: -3.225mm;
         z-index: -1;
     }
