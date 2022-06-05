@@ -46,6 +46,14 @@ if __name__ == '__main__':
         "country": "CH",
     }
 
+    addr_FG_Aberen = {
+        "name": "Flurgenossenschaft",
+        "address": "'Aberen'",
+        "zip_code": "8858",
+        "city": "Innerthal",
+        "country": "",
+    }
+
     ibanNr = {
         "raiffeisen_walti": "CH9580808006989422343",
         "csuh_walti":       "CH8704835041184041000",
@@ -56,8 +64,27 @@ if __name__ == '__main__':
         "post_spar_lukas":  "CH6809000000924135382",
         "szkb_liegenschaft_remo": "CH98 0077 7001 6831 9017 0",
         "szkb_privat_remo": "CH28 0077 7001 6831 9007 2",
-        "feuerwehr_wangen_oktoberfest": "CH41 0077 7005 8249 1145 5"
+        "feuerwehr_wangen_oktoberfest": "CH41 0077 7005 8249 1145 5",
+        "FG_Abern": "CH90 0077 7003 2922 1166 7"
     }
+
+    pdfName = "GeneratedInvoices/FG_Aberen"
+    htmlName = "GeneratedInvoices/FG_Aberen.html"
+    createQRInvoice(
+        generateQRInvoiceData(
+            ibanNr["FG_Abern"],
+            addr_FG_Aberen,
+            addr_leer,
+            amount="0.00",
+            additional_information=""),
+        invoice_text_html="",
+        pdfName=pdfName,
+        htmlName=htmlName)
+
+    print("Produced following files:")
+    print("    --> ", pdfName)
+    print("    --> ", htmlName)
+
 
     pdfName = "GeneratedInvoices/Remo_Liegenschaft"
     htmlName = "GeneratedInvoices/Remo_Liegenschaft.html"
