@@ -16,6 +16,7 @@
 #
 # History:
 # 02-Jun-2022   Walter Rothlin      Initial Version
+# 09-Jun-2022   Walter Rothlin      Added digitCounts
 #
 # -----------------------------------------------------------------
 def count_figures_in_string(aString):
@@ -25,15 +26,17 @@ def count_figures_in_string(aString):
             count = count + 1
     return count
 
-def is_valid_passwort(password, minLength=6):
+def is_valid_passwort(password, minLength=6, minCountOfFigures=1, showErrorMsg=False):
     if len(password) >= minLength + 1:
-        if count_figures_in_string(password) >= 1:
+        if count_figures_in_string(password) >= minCountOfFigures:
             return True
         else:
-            print(password, "has no figures in it!")
+            if showErrorMsg:
+                print(password, "has no figures in it!")
             return False
     else:
-        print(password, "too short!")
+        if showErrorMsg:
+            print(password, "too short!")
         return False
 
 
@@ -50,11 +53,15 @@ if __name__ == '__main__':
     assert is_valid_passwort('längerse45') is True
     assert is_valid_passwort('kurz') is False
     assert is_valid_passwort('12345') is False
+    assert is_valid_passwort('123456') is False
     assert is_valid_passwort('sha5') is False
 
     assert is_valid_passwort('kurz', 4) is False
     assert is_valid_passwort('kurz', 5) is False
     assert is_valid_passwort('12345', 3) is True
     assert is_valid_passwort('sha5', 2) is True
+
+    assert is_valid_passwort('längerse45', minCountOfFigures=2) is True
+    assert is_valid_passwort('längerse45', minCountOfFigures=3) is False
     print("Wenn alles korrekt ist, dann wird diese Zeile ausgegeben !")
 

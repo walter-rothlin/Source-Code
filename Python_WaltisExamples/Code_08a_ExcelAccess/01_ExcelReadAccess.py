@@ -4,7 +4,7 @@
 from openpyxl import load_workbook
 
 # Load in the workbook
-wb = load_workbook('G:\\_WaltisDaten\\SourceCode\\GitHosted\\Python_WaltisExamples\\Code_08a_ExcelAccess\\TestPythonReadAccess.xlsx')
+wb = load_workbook('TestPythonReadAccess.xlsx')
 
 # Get sheet names
 print(wb.sheetnames)
