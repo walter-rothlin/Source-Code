@@ -1,5 +1,6 @@
 -- ---------------------------------------------------------------------------------------------
--- stammdaten_DDL.sql
+-- Filename: Stammdaten_DDL.sql
+-- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/Stammdaten_DDL.sql
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin
