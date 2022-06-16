@@ -4,7 +4,7 @@ import piplates.DAQCplate as DAQC
 
 class CLASS_TemperaturSensor:
 
-    def __init__(self,name,plateAdr,pinNr,toleranz=1,vorkomma=10,nachkomma=2):
+    def __init__(self, name, plateAdr, pinNr, toleranz=1, vorkomma=10, nachkomma=2):
         self.name = name
         self.plateAdr         = plateAdr
         self.pinNr            = pinNr

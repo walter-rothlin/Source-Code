@@ -37,9 +37,9 @@ while doLoop:
         print("Ist es eine Primzahl?")
         gValue = int(input("Ganze Zahl:"))
         if (isPrimzahl(gValue)):
-            print(gValue,"ist eine Primzahl!!!")
+            print(gValue, "ist eine Primzahl!!!")
         else:
-            print(gValue,"ist KEINE Primzahl!!")
+            print(gValue, "ist KEINE Primzahl!!")
         halt()
 
     if (antwort == "2"):
@@ -57,7 +57,7 @@ while doLoop:
         gValue=int(input("Eine Ganzezahl:"))
         if (isPrimzahl(gValue)):
             print("{g:3d} ist eine Primzahl!!!!".format(g=gValue))
-        print("Von {g:3d} die nächste tiefere Primzahl {np:3d}".format(g=gValue,np=getPrevPrimzahl(gValue)))
+        print("Von {g:3d} die nächste tiefere Primzahl {np:3d}".format(g=gValue, np=getPrevPrimzahl(gValue)))
         halt()
 
     if (antwort == "4"):
@@ -65,7 +65,7 @@ while doLoop:
         print("Liste aller Primzahlen")
         start = int(input("Start:"))
         end   = int(input("Ende :"))
-        print(getPrimezahlenListe(start,end,sep='\n'))
+        print(getPrimezahlenListe(start, end, sep='\n'))
         halt()
 
     if (antwort == "5"):
@@ -93,7 +93,7 @@ while doLoop:
                 print("{iP:5d}: Ist eine Primzahl".format(iP=i))
             else:
                 retStr = getPrimfactors(i)
-                print("{iP:5d}:".format(iP=i),retStr)
+                print("{iP:5d}:".format(iP=i), retStr)
         halt()
 
     if (antwort == "8"):
@@ -107,7 +107,7 @@ while doLoop:
                 print("{iP:5d}: Ist eine Primzahl".format(iP=i))
             else:
                 retStr = getDivisors(i)
-                print("{iP:5d}:".format(iP=i),retStr)
+                print("{iP:5d}:".format(iP=i), retStr)
         halt()
 
     if (antwort == "0"):
