@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     addr_fw = {
         "name": "Feuerwehrverein",
-        "address": " Wangen-Nuolen",
+        "address": "Wangen-Nuolen",
         "zip_code": "8855",
         "city": "Wangen SZ",
         "country": "CH",

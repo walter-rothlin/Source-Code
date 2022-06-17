@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Orte (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `PLZ` VARCHAR(10) NOT NULL,
   `Name` VARCHAR(45) NULL,
-  `Land_id` INT UNSIGNED NULL,
+  `Land_id` INT UNSIGNED NULL DEFAULT 1,
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_Orte_Land1_idx` (`Land_id` ASC) VISIBLE,
@@ -90,9 +90,11 @@ CREATE TABLE IF NOT EXISTS Adressen (
 DROP TABLE IF EXISTS Personen;
 CREATE TABLE IF NOT EXISTS Personen (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Vorname` VARCHAR(45) NOT NULL,
-  `Nachname` VARCHAR(45) NOT NULL,
-  `Kategorien` SET('Buerger','Angestellter','Genossenrat','Bewirtschafter', 'Landteilbesitzer', 'Paechter', 'Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezueger') DEFAULT NULL,
+  `Sex` VARCHAR(5) NULL,
+  `Firma` VARCHAR(45) NULL,
+  `Vorname` VARCHAR(45) NULL,
+  `Nachname` VARCHAR(45) NULL,
+  `Kategorien` SET('Firma','Buerger','Angestellter','Genossenrat','Bewirtschafter', 'Landteilbesitzer', 'Paechter', 'Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezueger') DEFAULT NULL,
   `Geburtstag` DATE NULL,
   `Todestag` DATE NULL,
   `Aufnahmedatum` DATE NULL,
@@ -235,6 +237,7 @@ DROP TABLE IF EXISTS `IBAN` ;
 CREATE TABLE IF NOT EXISTS `IBAN` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Nummer` VARCHAR(26) NOT NULL,
+  `Bezeichnung` VARCHAR(45) NULL,
   `Bankname` VARCHAR(45) NOT NULL,
   `Bankort` VARCHAR(45) NOT NULL,
   `personen_id` INT UNSIGNED NOT NULL,
@@ -246,6 +249,9 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
      REFERENCES `personen` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION);
+
+
+
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
