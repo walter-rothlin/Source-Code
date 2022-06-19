@@ -9,7 +9,8 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 24-Dec-2022   Walter Rothlin      Initial Version
+# 24-Dec-2021   Walter Rothlin      Initial Version
+# 16-Jun_2022   Walter Rothlin      Added split() and join()
 # ------------------------------------------------------------------
 
 # =======================
@@ -35,6 +36,29 @@ n = [1, 2, 3, 4, 5, 6, 7, 8]
 # ? Füge 'bGG' an der 4.Stelle in der Liste b ein und verschiebe alle anderen Elemente nach rechts.
 # ? Sortieren Sie die Liste b alphabetisch aufsteigend
 # ? Löschen Sie die beiden letzten Elemente in der Liste b
+
+# Split / Join
+# ============
+print("Test split!!")
+testCases = """
+Nr    |Fct                   |Param1       |Param2       |Param3       |Expected
+     1|celsius2Fahrenheit    |37.8         |0            |0            |100.04
+     2|celsius2Fahrenheit    |0            |0            |0            |32.0
+     3|fahrenheit2Celsius    |100          |0            |0            |37.78
+     4|rad2Grad              |0            |0            |0            |0
+"""
+# ? splitten sie testCases in eine Liste (listOfLines) von Zeilen
+
+# ? splitten sie nun die Liste (listOfLines) von Zeilen weiter in Spalten
+#   result[] enthält eine liste von listen mit den Elementen der Zeilen
+result = []
+lineNr = 0
+
+
+listOfNames = ['Name', 'Vorname', 'Strasse']
+print("Test join!!")
+# ? erstellen Sie aus der Liste ein csv-String
+
 
 
 # List of List
