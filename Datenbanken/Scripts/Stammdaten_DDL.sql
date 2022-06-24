@@ -250,8 +250,45 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
   ON DELETE NO ACTION
   ON UPDATE NO ACTION);
 
+-- -----------------------------------------------------
+-- View `XXXX`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Ort_Land; 
+CREATE VIEW Ort_Land AS
+	SELECT
+        o.ID            AS ID,
+		o.PLZ           AS PLZ,
+		l.Code          AS Code,
+		o.Name          AS Ort,
+		l.Name          AS Land,
+		l.Landesvorwahl AS Landesvorwahl,
+        -- max(max(l.last_update), max(o.last_update)) AS last_update,
+        max(o.last_update) AS last_update
+	FROM orte as o
+	LEFT OUTER JOIN Land AS l ON  o.Land_id = l.id;
+    
+SELECT
+      P.id AS ID,
+      P.Sex AS Geschlecht,
+      P.Firma AS Firma,
+      P.Vorname AS Vorname,
+      P.Kategorien AS Kategorien,
+      pAdr.Strasse AS Private_Strasse,
+      pAdr.Hausnummer AS Private_Hausnummer,
+      pOrt.PLZ AS Private_PLZ,
+      pOrt.Name AS Private_Ort,
+      pLand.Name AS Private_Land,
+      gAdr.Strasse AS Geschaeft_Strasse,
+      gAdr.Hausnummer AS Geschaeft_Hausnummer,
+      gOrt.PLZ AS Geschaeft_PLZ,
+      gOrt.Name AS Geschaeft_Ort,
+      gLand.Name AS Geschaeft_Land
+FROM Personen AS P
+LEFT OUTER JOIN Adressen AS pAdr ON P.Privat_Adressen_id = pAdr.id
+LEFT OUTER JOIN Ort_Land AS pOrt ON  pAdr.Orte_id = pOrt.id
 
-
+LEFT OUTER JOIN Adressen AS gAdr ON P.Geschaefts_Adressen_id = gAdr.id
+LEFT OUTER JOIN Ort_Land AS gOrt ON  gAdr.Orte_id = gOrt.id;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

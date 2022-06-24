@@ -21,7 +21,8 @@ INSERT INTO `orte` (`id`, `PLZ`, `Name`)
               (2, '8854', 'Siebnen'),
               (3, '8854', 'Galgenen'),
               (4, '8853', 'Lachen'),
-              (5, '8858', 'Innerthal');
+              (5, '8858', 'Innerthal'),
+              (6, '8610', 'Uster');
 
      
 DELETE FROM `adressen`;
@@ -31,19 +32,24 @@ INSERT INTO `adressen` (`id`, `Strasse`, `Hausnummer`, `Orte_id`)
               (3, 'Kapellstr.'  ,  '5' ,  2),
               (4, 'Leuholz'     , '12' ,  1),
               (5, 'Aberen'      , ''   ,  5),
-              (6, 'Wangen-Nuolen', '',  1);
+              (6, 'Wangen-Nuolen', '',  1),
+              (7, 'Krämacherstr.', '15',  6);
               
 DELETE FROM `personen`;
-INSERT INTO `personen` (`id`, `Sex`, `Firma`, `Vorname`, `Nachname`, `Privat_Adressen_id`) 
-       VALUES (1, 'Herr', '', 'Walter' , 'Rothlin-Collet' , 1),
-			  (2, 'Frau', '', 'Claudia', 'Rothlin Rothlin', 1),
-			  (3, 'Herr', '', 'Tobias' , 'Rothlin'        , 1),
-			  (4, 'Herr', '', 'Lukas'  , 'Rothlin'        , 1),
-			  (5, 'Herr', '', 'Walter' , 'Rothlin-Meier'  , 2),
-			  (6, 'Herr', '', 'Remo'   , 'Collet'         , 3),
-			  (7, ''    , 'Genossame Wangen'  , '', ''    , 4),
-			  (8, ''    , 'Flurgenossenschaft', '', ''    , 5),
-			  (9, ''    , 'Feuerwehrverein'   , '', ''    , 6);
+INSERT INTO `personen` (`id`, `Sex`, `Firma`, `Vorname`, `Nachname`, `Kategorien`,`Privat_Adressen_id`, `Geschaefts_Adressen_id`) 
+       VALUES (1, 'Herr', '', 'Walter' , 'Rothlin-Collet' , 'Buerger,Genossenrat,Waermebezueger', 1, 7),
+			  (2, 'Frau', '', 'Claudia', 'Rothlin Rothlin', NULL, 1, NULL),
+			  (3, 'Herr', '', 'Tobias' , 'Rothlin'        , NULL, 1, NULL),
+			  (4, 'Herr', '', 'Lukas'  , 'Rothlin'        , NULL, 1, NULL),
+			  (5, 'Herr', '', 'Walter' , 'Rothlin-Meier'  , 'Buerger,Landteilbesitzer,Waermebezueger', 2, NULL),
+			  (6, 'Herr', '', 'Remo'   , 'Collet'         , NULL, 3, NULL),
+			  (7, ''    , 'Genossame Wangen'  , '', ''    , NULL, 4, NULL),
+			  (8, ''    , 'Flurgenossenschaft', '', ''    , NULL, 5, NULL),
+			  (9, ''    , 'Feuerwehrverein'   , '', ''    , NULL, 6, NULL);
+              
+SELECT * FROM `personen` WHERE FIND_IN_SET('Buerger',`Kategorien`)>0;
+SELECT * FROM `personen` WHERE `Kategorien` LIKE '%Buerger%';
+
 
 DELETE FROM `iban`;
 INSERT INTO `iban` (`id`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `Personen_id`) 
