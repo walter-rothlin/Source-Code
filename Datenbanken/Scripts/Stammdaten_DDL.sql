@@ -121,10 +121,11 @@ CREATE TABLE IF NOT EXISTS Personen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS EMail_Adressen;
 CREATE TABLE IF NOT EXISTS EMail_Adressen (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `eMail` VARCHAR(45) NOT NULL,
-  `Type` VARCHAR(45) NULL,
-  `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `eMail`        VARCHAR(45)  NOT NULL,
+  `Type`         VARCHAR(45)  NULL,
+  `isMain`       TINYINT      NOT NULL DEFAULT 0, 
+  `last_update`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
 
@@ -133,10 +134,10 @@ CREATE TABLE IF NOT EXISTS EMail_Adressen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Personen_has_EMail_Adressen;
 CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Personen_id` INT UNSIGNED NOT NULL,
+  `id`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Personen_id`       INT UNSIGNED NOT NULL,
   `EMail_Adressen_id` INT UNSIGNED NOT NULL,
-  `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_update`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_Personen_has_EMail_Adressen_EMail_Adressen1_idx` (`EMail_Adressen_id` ASC) VISIBLE,
   INDEX `fk_Personen_has_EMail_Adressen_Personen1_idx` (`Personen_id` ASC) VISIBLE,
@@ -157,13 +158,14 @@ CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Telefonnummern` ;
 CREATE TABLE IF NOT EXISTS `Telefonnummern` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Laendercode` INT NULL,
-  `Vorwahl` INT NULL,
-  `Nummer` INT NULL,
-  `Type` ENUM('Privat', 'Geschaeft') NULL,
-  `Endgeraet` ENUM('Festnetz', 'Mobile', 'FAX') NULL,
-  `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id`           INT UNSIGNED                      NOT NULL AUTO_INCREMENT,
+  `Laendercode`  INT                               NULL,
+  `Vorwahl`      INT                               NULL,
+  `Nummer`       INT                               NULL,
+  `Type`         ENUM('Privat', 'Geschaeft')       NULL,
+  `Endgeraet`    ENUM('Festnetz', 'Mobile', 'FAX') NULL,
+  `isMain`       TINYINT                           NOT NULL DEFAULT 0,
+  `last_update`  TIMESTAMP                         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
 
@@ -251,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
   ON UPDATE NO ACTION);
 
 -- -----------------------------------------------------
--- View `XXXX`
+-- Create Views
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Ort_Land; 
 CREATE VIEW Ort_Land AS
@@ -263,34 +265,114 @@ CREATE VIEW Ort_Land AS
 		l.Name          AS Land,
 		l.Landesvorwahl AS Landesvorwahl,
         -- max(max(l.last_update), max(o.last_update)) AS last_update,
-        max(o.last_update) AS last_update
-	FROM orte as o
-	LEFT OUTER JOIN Land AS l ON  o.Land_id = l.id;
-    
-SELECT
-      P.id AS ID,
-      P.Sex AS Geschlecht,
-      P.Firma AS Firma,
-      P.Vorname AS Vorname,
-      P.Kategorien AS Kategorien,
-      pAdr.Strasse AS Private_Strasse,
-      pAdr.Hausnummer AS Private_Hausnummer,
-      pOrt.PLZ AS Private_PLZ,
-      pOrt.Name AS Private_Ort,
-      pLand.Name AS Private_Land,
-      gAdr.Strasse AS Geschaeft_Strasse,
-      gAdr.Hausnummer AS Geschaeft_Hausnummer,
-      gOrt.PLZ AS Geschaeft_PLZ,
-      gOrt.Name AS Geschaeft_Ort,
-      gLand.Name AS Geschaeft_Land
-FROM Personen AS P
-LEFT OUTER JOIN Adressen AS pAdr ON P.Privat_Adressen_id = pAdr.id
-LEFT OUTER JOIN Ort_Land AS pOrt ON  pAdr.Orte_id = pOrt.id
+        o.last_update AS last_update,
+        l.last_update AS l_last_update
+	FROM orte AS o
+	LEFT OUTER JOIN Land AS l ON o.Land_id = l.id;
 
-LEFT OUTER JOIN Adressen AS gAdr ON P.Geschaefts_Adressen_id = gAdr.id
-LEFT OUTER JOIN Ort_Land AS gOrt ON  gAdr.Orte_id = gOrt.id;
+DROP VIEW IF EXISTS Personen_Daten; 
+CREATE VIEW Personen_Daten AS
+	SELECT
+		  P.id AS ID,
+		  P.Sex AS Geschlecht,
+		  P.Firma AS Firma,
+		  P.Vorname AS Vorname,
+		  P.Kategorien AS Kategorien,
+		  pAdr.Strasse AS Private_Strasse,
+		  pAdr.Hausnummer AS Private_Hausnummer,
+		  pOrt.PLZ AS Private_PLZ,
+		  pOrt.Ort AS Private_Ort,
+		  pOrt.Land AS Private_Land,
+		  gAdr.Strasse AS Geschaeft_Strasse,
+		  gAdr.Hausnummer AS Geschaeft_Hausnummer,
+		  gOrt.PLZ AS Geschaeft_PLZ,
+		  gOrt.Ort AS Geschaeft_Ort,
+		  gOrt.Land AS Geschaeft_Land,
+		  P.last_update AS last_update
+	FROM Personen AS P
+	LEFT OUTER JOIN Adressen AS pAdr ON P.Privat_Adressen_id = pAdr.id
+	LEFT OUTER JOIN Ort_Land AS pOrt ON  pAdr.Orte_id = pOrt.id
+	LEFT OUTER JOIN Adressen AS gAdr ON P.Geschaefts_Adressen_id = gAdr.id
+	LEFT OUTER JOIN Ort_Land AS gOrt ON  gAdr.Orte_id = gOrt.id;
+
+DROP VIEW IF EXISTS EMail_Main; 
+CREATE VIEW EMail_Main AS
+	SELECT
+		pEMail.Personen_id       AS Person_id,
+		eMailAdr.eMail           AS eMail
+	FROM Personen_has_EMail_Adressen AS pEMail
+	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_id = eMailAdr.id
+	WHERE
+	   eMailAdr.isMain = 1;
 
 
+-- -----------------------------------------------------
+-- Create Funtions
+-- -----------------------------------------------------
+DROP FUNCTION IF EXISTS getYounger;
+Delimiter //
+CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
+BEGIN
+   IF timeStamp_1 < timeStamp_2 THEN
+         RETURN  timeStamp_1;
+   ELSE
+         RETURN  timeStamp_2;
+   END IF;
+END
+//
+DELIMITER ;
+
+SELECT getYounger(STR_TO_DATE('20050527', '%Y%m%d'), STR_TO_DATE('20050527', '%Y%m%d'));
+
+
+
+DROP FUNCTION IF EXISTS formatPLZinternational;
+Delimiter //
+CREATE FUNCTION formatPLZinternational(p_countryCode CHAR(50), p_input_plz SMALLINT) RETURNS CHAR(50)
+BEGIN
+   RETURN  concat(p_countryCode, '-', p_input_plz);
+END
+//
+DELIMITER ;
+
+-- Testen
+SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
+SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
+
+--  -------------------------------------------------------------
+DROP FUNCTION IF EXISTS firstUpper;
+Delimiter //
+CREATE FUNCTION firstUpper(p_str CHAR(100)) RETURNS CHAR(100)
+BEGIN
+   RETURN  CONCAT(UPPER(LEFT(p_str, 1)), LOWER(RIGHT(p_str,LENGTH(p_str)-1)));
+END
+//
+DELIMITER ;
+
+-- Testen
+SELECT firstUpper("herr");  -- --> Herr
+SELECT firstUpper("HERR");  -- --> Herr
+SELECT firstUpper("Herr");  -- --> Herr
+SELECT firstUpper("hERR");  -- --> Herr
+
+--  -------------------------------------------------------------
+--  Fct 4.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
+--           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
+--           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+DROP FUNCTION IF EXISTS getAnrede;
+Delimiter //
+CREATE FUNCTION getAnrede(p_sex CHAR(20), p_firstname CHAR(20), p_lastname CHAR(20) ) RETURNS CHAR(50)
+BEGIN
+   RETURN  CONCAT(firstUpper(p_sex), ' ', UPPER(LEFT(p_firstname, 1)), '.', firstUpper(p_lastname));
+END
+//
+DELIMITER ;
+
+-- Testen
+SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
+SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+
+   
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

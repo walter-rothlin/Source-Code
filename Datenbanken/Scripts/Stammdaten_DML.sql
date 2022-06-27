@@ -47,9 +47,25 @@ INSERT INTO `personen` (`id`, `Sex`, `Firma`, `Vorname`, `Nachname`, `Kategorien
 			  (8, ''    , 'Flurgenossenschaft', '', ''    , NULL, 5, NULL),
 			  (9, ''    , 'Feuerwehrverein'   , '', ''    , NULL, 6, NULL);
               
-SELECT * FROM `personen` WHERE FIND_IN_SET('Buerger',`Kategorien`)>0;
-SELECT * FROM `personen` WHERE `Kategorien` LIKE '%Buerger%';
+-- SELECT * FROM `personen` WHERE FIND_IN_SET('Buerger',`Kategorien`)>0;
+-- SELECT * FROM `personen` WHERE `Kategorien` LIKE '%Buerger%';
 
+
+DELETE FROM `email_adressen`;
+INSERT INTO `email_adressen` (`id`, `eMail`, `Type`, `isMain`) 
+       VALUES (1, 'walter@rothlin.com',                  'Private',   1),
+              (2, 'walter.rothlin@bzu.ch',               'Schule',    0),
+              (3, 'landwirtschaft@genossame-wangen.ch',  'Genossame', 0),
+              (4, 'tobias@rothlin.com',  'Private', 1),
+              (5, 'claudia@rothlin.com',  'Private', 1);
+              
+DELETE FROM `Personen_has_EMail_Adressen`;
+INSERT INTO `Personen_has_EMail_Adressen` (`id`, `Personen_id`, `EMail_Adressen_id`) 
+       VALUES (1, 1, 1),
+              (2, 1, 2),
+              (3, 1, 3),
+              (4, 3, 4),
+              (5, 2, 5);
 
 DELETE FROM `iban`;
 INSERT INTO `iban` (`id`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `Personen_id`) 
@@ -64,3 +80,11 @@ INSERT INTO `iban` (`id`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `Perso
                (9, 'CH2800777001683190072', 'Privat Remo'      , 'SZKB' , 'Siebnen'  , 6),
                (10, 'CH4100777005824911455', 'Fw Oktoberfest'  , 'SZKB' , 'Siebnen'  , 9),
                (11, 'CH9000777003292211667', 'FG Abern'        , 'SZKB' , 'Siebnen'  , 8);
+               
+-- ----------------------------------------------------------------
+-- Testen der Views
+-- ----------------------------------------------------------------
+
+SELECT * FROM Ort_Land;
+SELECT * FROM Personen_Daten;
+SELECT * FROM EMail_Main;
