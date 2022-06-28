@@ -4,7 +4,7 @@
 # Name  : Car.py
 # Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HWZ/BWI_A21/Car.py
 #
-# Description: Library - Module
+# Description: Beispiel einer Klasse und Sub-Klasse mit Properties,....
 #
 #
 # Autor: Walter Rothlin
@@ -17,6 +17,7 @@
 #                                   Statische Methoden (production_statistik)
 # ------------------------------------------------------------------
 class Car:
+    countOfCars = 0
 
     def __init__(self, marke="Alfa", farbe="weiss", v=0, max_speed=130):
         self.__marke = marke
@@ -24,12 +25,14 @@ class Car:
         self.__speed = v
         self.__maxSpeed = max_speed
         self.__leistung = 75
+        Car.countOfCars += 1
 
     def __str__(self):
         return """
            Marke:""" + self.__marke + """
            Farbe:""" + self.__color + """
-           Speed:""" + str(self.__speed)
+           Speed:""" + str(self.__speed) + """
+           Produced:""" + str(Car.countOfCars)
 
     def set_leistung(self, new_leistung):
         print('set_leistung() has been called!')
@@ -76,6 +79,10 @@ class Car:
 
     def increaseSpeed(self, vDiff):
         self.setSpeed(self.__speed + vDiff)
+
+    @staticmethod
+    def get_production_statistics():
+        return 7890
 
 class Racecar(Car):
     def __init__(self, marke="Ferrari", farbe="rot", v=0, maxSpeed=200, gewicht=800):
@@ -132,3 +139,24 @@ if __name__ == '__main__':
     print("Read Property: ", claudiasCar.enginePower)
     claudiasCar.enginePower = "160.5"
     print("Public Attribute:", claudiasCar.enginePower)
+
+    # Dynamische Attribute
+    claudiasCar.aufkleber = "Baby on board!!"
+    print(claudiasCar.aufkleber)
+    # print(waltisCar.aufkleber) # gibt runtime Fehler
+
+    # Zugriff auf Class-Variables
+    print("Car.countOfCars:", Car.countOfCars)
+    Car.countOfCars = 1000
+    print("Car.countOfCars:", Car.countOfCars)
+    print("claudiasCar.countOfCars:", claudiasCar.countOfCars)
+    claudiasCar.countOfCars = 555  # Not accessing Class variable, creating a dynamic attribute
+    print("Car.countOfCars:", Car.countOfCars)
+    print("waltisCar.countOfCars:", waltisCar.countOfCars)
+    print("claudiasCar.countOfCars:", claudiasCar.countOfCars)
+
+    print("Statistic: ", Car.get_production_statistics())
+    print("Statistic: ", claudiasCar.get_production_statistics())  # not designed for this
+
+
+
