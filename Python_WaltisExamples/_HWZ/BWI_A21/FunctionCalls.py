@@ -13,6 +13,7 @@
 # 28-Jun-2022   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 
+# Positional and Named Arguments
 def func1(a, b=""):
     print(a, b)
 
@@ -21,6 +22,7 @@ func1(567, "Hallo")
 func1(b="Hallo", a=456)
 func1(456, b="Hallo")
 
+# Listen Argumente
 def func2(a, *values):
     print(a)
     for aElement in values:
@@ -31,6 +33,7 @@ func2("Hallo",234, "HWZ", "BWI-A21")
 func2("Hallo", 234)
 print("\n\n")
 
+# Dictonary Argumente
 def func3(a, *values, **keyValues):
     print("a:", a)
     print("values:", values)

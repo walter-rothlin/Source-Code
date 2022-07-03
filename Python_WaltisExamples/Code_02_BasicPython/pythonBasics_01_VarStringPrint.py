@@ -14,10 +14,24 @@
 # 26-Dec-2017   Walter Rothlin      String formats
 # 28-Nov-2021   Walter Rothlin      Added f-Strings available with Python 3.6 and higher
 # 04-Dec-2021   Walter Rothlin      Added Type-Hints
+# 03_Jul_2022   Walter Rothlin      Added Camel, Pascal and Snake-Case
 # ------------------------------------------------------------------
-
 import sys
 import os
+
+
+# Variablen Namen
+einWert ="Diese Variable hat einen Namen in Camel-Case"
+EinWert ="Diese Variable hat einen Namen in Pascel-Case"
+ein_wert ="Diese Variable hat einen Namen in Snake-Case"
+
+# Variablen Type (nicht statische Typisierung sondern Duck-Typing (Eine Ente muss nicht angeschrieben sein, um als Ente erkannt zu werden!)
+aVal = 5
+aVal = 5.0
+aVal = "5.0"
+
+
+# Formatierung
 i = 10
 aString = "walti"
 print(f'{aString:^30s}:{aString:>8s}:{aString:3s}:')  # available with Python 3.6 and higher
