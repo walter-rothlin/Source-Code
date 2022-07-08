@@ -253,6 +253,41 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
   ON UPDATE NO ACTION);
 
 -- -----------------------------------------------------
+-- Create Funtions used in Joins
+-- -----------------------------------------------------
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+DROP FUNCTION IF EXISTS getOlder;
+Delimiter //
+CREATE FUNCTION  getOlder(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
+BEGIN
+   IF timeStamp_1 < timeStamp_2 THEN
+         RETURN  timeStamp_1;
+   ELSE
+         RETURN  timeStamp_2;
+   END IF;
+END
+//
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS getYounger;
+Delimiter //
+CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
+BEGIN
+   IF timeStamp_1 > timeStamp_2 THEN
+         RETURN  timeStamp_1;
+   ELSE
+         RETURN  timeStamp_2;
+   END IF;
+END
+//
+DELIMITER ;
+
+-- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+-- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+
+
+-- -----------------------------------------------------
 -- Create Views
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Ort_Land; 
@@ -264,11 +299,30 @@ CREATE VIEW Ort_Land AS
 		o.Name          AS Ort,
 		l.Name          AS Land,
 		l.Landesvorwahl AS Landesvorwahl,
-        -- max(max(l.last_update), max(o.last_update)) AS last_update,
-        o.last_update AS last_update,
+        getYounger(l.last_update, o.last_update) AS last_update,
+        o.last_update AS o_last_update,
         l.last_update AS l_last_update
 	FROM orte AS o
 	LEFT OUTER JOIN Land AS l ON o.Land_id = l.id;
+
+-- SELECT * FROM Ort_Land;
+
+DROP VIEW IF EXISTS Adress_Daten; 
+CREATE VIEW Adress_Daten AS
+	SELECT
+		a.id           AS ID,
+		a.Strasse      AS Strasse,
+		a.Hausnummer   AS Hausnummer,
+		ol.PLZ	       AS PLZ,
+		ol.Ort	       AS Ort,
+		ol.Land	       AS Land,
+		getYounger(a.last_update, ol.last_update) AS last_update,
+        a.last_update AS a_last_update,
+        ol.last_update AS o_last_update
+	FROM Adressen AS a
+	LEFT OUTER JOIN ORT_LAND AS ol ON ol.ID = a.Orte_ID;
+
+-- SELECT * FROM Adress_Daten;
 
 DROP VIEW IF EXISTS Personen_Daten; 
 CREATE VIEW Personen_Daten AS
@@ -309,23 +363,6 @@ CREATE VIEW EMail_Main AS
 -- -----------------------------------------------------
 -- Create Funtions
 -- -----------------------------------------------------
-DROP FUNCTION IF EXISTS getYounger;
-Delimiter //
-CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
-BEGIN
-   IF timeStamp_1 < timeStamp_2 THEN
-         RETURN  timeStamp_1;
-   ELSE
-         RETURN  timeStamp_2;
-   END IF;
-END
-//
-DELIMITER ;
-
-SELECT getYounger(STR_TO_DATE('20050527', '%Y%m%d'), STR_TO_DATE('20050527', '%Y%m%d'));
-
-
-
 DROP FUNCTION IF EXISTS formatPLZinternational;
 Delimiter //
 CREATE FUNCTION formatPLZinternational(p_countryCode CHAR(50), p_input_plz SMALLINT) RETURNS CHAR(50)
@@ -336,8 +373,8 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
-SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
+-- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
+-- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
 --  -------------------------------------------------------------
 DROP FUNCTION IF EXISTS firstUpper;
@@ -350,10 +387,10 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT firstUpper("herr");  -- --> Herr
-SELECT firstUpper("HERR");  -- --> Herr
-SELECT firstUpper("Herr");  -- --> Herr
-SELECT firstUpper("hERR");  -- --> Herr
+-- SELECT firstUpper("herr");  -- --> Herr
+-- SELECT firstUpper("HERR");  -- --> Herr
+-- SELECT firstUpper("Herr");  -- --> Herr
+-- SELECT firstUpper("hERR");  -- --> Herr
 
 --  -------------------------------------------------------------
 --  Fct 4.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
@@ -369,8 +406,8 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
-SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+-- SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
+-- SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
 
    
 SET SQL_MODE=@OLD_SQL_MODE;

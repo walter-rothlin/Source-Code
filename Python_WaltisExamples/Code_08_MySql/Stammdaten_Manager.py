@@ -38,9 +38,9 @@ mycursor = stammdaten_schema.cursor(dictionary=True)
 mycursor.execute(sql_stm_selectCountries)
 myresult = mycursor.fetchall()
 
-print("Records found:", len(myresult), myresult, myresult[0])
-for aRec in myresult:
-  print(aRec['ID'], aRec['Last_Update'])
+print("Records found:", len(myresult), myresult)
+# for aRec in myresult:
+#   print(aRec['ID'], aRec['Last_Update'])
 
 
 
