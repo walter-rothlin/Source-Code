@@ -10,6 +10,7 @@
 -- 03-Jun-2022   Walter Rothlin      Initial Version
 -- 10-Jun-2022   Walter Rothlin      Modified ERD and added Attributs
 -- 17-Jun_2022   Walter Rothlin		 Added Waermebezueger and its relations
+-- 15-Jul-2022   Walter Rothlin      Added Functions and extended views with functions fields
 -- ---------------------------------------------------------------------------------------------
 
 -- MySQL Workbench Forward Engineering
@@ -372,31 +373,37 @@ CREATE VIEW Adress_Daten AS
 	LEFT OUTER JOIN ORT_LAND AS ol ON ol.ID = a.Orte_ID;
 
 -- SELECT * FROM Adress_Daten;
-
+    
 DROP VIEW IF EXISTS Personen_Daten; 
 CREATE VIEW Personen_Daten AS
 	SELECT
-		  P.id AS ID,
-		  P.Sex AS Geschlecht,
-		  P.Firma AS Firma,
-		  P.Vorname AS Vorname,
-		  P.Kategorien AS Kategorien,
-		  pAdr.Strasse AS Private_Strasse,
-		  pAdr.Hausnummer AS Private_Hausnummer,
-		  pOrt.PLZ AS Private_PLZ,
-		  pOrt.Ort AS Private_Ort,
-		  pOrt.Land AS Private_Land,
-		  gAdr.Strasse AS Geschaeft_Strasse,
-		  gAdr.Hausnummer AS Geschaeft_Hausnummer,
-		  gOrt.PLZ AS Geschaeft_PLZ,
-		  gOrt.Ort AS Geschaeft_Ort,
-		  gOrt.Land AS Geschaeft_Land,
-		  P.last_update AS last_update
+		  P.id                                         AS ID,
+		  P.Sex                                        AS Geschlecht,
+		  P.Firma                                      AS Firma,
+		  P.Vorname                                    AS Vorname,
+		  P.Kategorien                                 AS Kategorien,
+		  pAdr.Strasse                                 AS Private_Strasse,
+		  pAdr.Hausnummer                              AS Private_Hausnummer,
+		  pOrt.PLZ                                     AS Private_PLZ,
+          pOrt.PLZ_International                       AS Private_PLZ_International,
+		  pOrt.Ort                                     AS Private_Ort,
+		  pOrt.Land                                    AS Private_Land,
+		  gAdr.Strasse                                 AS Geschaeft_Strasse,
+		  gAdr.Hausnummer                              AS Geschaeft_Hausnummer,
+		  gOrt.PLZ                                     AS Geschaeft_PLZ,
+          gOrt.PLZ_International                       AS Geschaeft_PLZ_International,
+		  gOrt.Ort                                     AS Geschaeft_Ort,
+		  gOrt.Land                                    AS Geschaeft_Land,
+          getYounger(P.last_update, pOrt.last_update)  AS last_update,
+		  P.last_update                                AS P_last_update,
+          gOrt.last_update                             AS O_last_update
 	FROM Personen AS P
-	LEFT OUTER JOIN Adressen AS pAdr ON P.Privat_Adressen_id = pAdr.id
-	LEFT OUTER JOIN Ort_Land AS pOrt ON  pAdr.Orte_id = pOrt.id
-	LEFT OUTER JOIN Adressen AS gAdr ON P.Geschaefts_Adressen_id = gAdr.id
-	LEFT OUTER JOIN Ort_Land AS gOrt ON  gAdr.Orte_id = gOrt.id;
+    LEFT OUTER JOIN Adress_Daten AS pAdr ON  P.Privat_Adressen_id         = pAdr.id
+	LEFT OUTER JOIN Adress_Daten AS gAdr ON  P.Geschaefts_Adressen_id     = gAdr.id
+	LEFT OUTER JOIN Ort_Land     AS pOrt ON  P.Privat_Adressen_id         = pOrt.id
+	LEFT OUTER JOIN Ort_Land     AS gOrt ON  P.Geschaefts_Adressen_id     = gOrt.id;
+
+-- SELECT * FROM Personen_Daten;
 
 DROP VIEW IF EXISTS EMail_Main; 
 CREATE VIEW EMail_Main AS
