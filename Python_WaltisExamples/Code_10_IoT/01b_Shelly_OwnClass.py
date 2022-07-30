@@ -2,14 +2,6 @@ import socket
 import json
 import requests
 
-"""
-http://192.168.1.135/status
-http://192.168.1.135/settings
-http://192.168.1.135/relay/0?turn=on
-http://192.168.1.135/relay/0?turn=off
-http://192.168.1.135/relay/0?turn=on&timer=5
-"""
-
 class ShellyAPI:
     def __init__(self, ip):
         """
@@ -185,3 +177,4 @@ if __name__ == '__main__':
     print(settings)
     shellyOne.turnOn(5)
     print(shellyOne.getCurrentPowerUsage())
+
