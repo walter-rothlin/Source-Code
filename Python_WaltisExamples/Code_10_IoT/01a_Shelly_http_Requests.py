@@ -15,13 +15,14 @@
 # 30_Jul-2022   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 
-# Impotant Links about Shellys
-# ----------------------------
+# Important Links about Shellys
+# -----------------------------
 '''
 https://www.shelly.cloud                      Product infos
 https://www.shelly-support.eu                 Support Pages
 https://home.shelly.clound                    Web-App gleich wie iPhone App
 https://shelly-api-docs.shelly.cloud/         API Documentation
+https://shelly-api-docs.shelly.cloud/gen2/ComponentsAndServices/Switch    API Shelly
 '''
 
 # Shelly Requests:
@@ -33,7 +34,7 @@ http://192.168.1.131/status
 http://192.168.1.131/settings
 http://192.168.1.131/relay/0?turn=on
 http://192.168.1.131/relay/0?turn=off
-http://192.168.1.131/relay/0?turn=on&timer=3
+http://192.168.1.131/relay/0?turn=off&timer=3
 http://192.168.1.131/settings/relay/0?schedule_rules=1430-0123456-on
 http://192.168.1.131/settings/relay/0?schedule_rules=1430-0123456-on%2C1435-0123456-off
 
@@ -42,6 +43,7 @@ http://192.168.1.134
 http://192.168.1.134/status
 http://192.168.1.134/settings
 http://192.168.1.134/relay/0?turn=on
+http://192.168.1.134/relay/0?turn=toggle
 http://192.168.1.134/relay/0?turn=off
 
 # Shelly 2 Rot
@@ -53,7 +55,10 @@ http://192.168.1.135/relay/0?turn=off
 
 # Shelly 4 Vierfach
 http://192.168.1.133
-http://192.168.1.133/status
+http://192.168.1.133/relay/0?turn=on
+http://192.168.1.133/relay/0?turn=off
+http://192.168.1.133/rpc/Switch.GetStatus?id=0
+
 '''
 
 import requests
