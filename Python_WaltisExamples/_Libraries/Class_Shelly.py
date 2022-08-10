@@ -59,8 +59,6 @@ http://192.168.1.133/rpc/Switch.GetStatus?id=0
 '''
 
 import socket
-import json
-import requests
 from enum import Enum
 from time import sleep
 from waltisLibrary import *
@@ -73,7 +71,7 @@ class ShellyTyps(Enum):
 
 
 class ShellyAPI:
-    doTraceClassVar = True
+    defaultMeterSetting = 0
 
     def __init__(self, ip, shelly_name=None, shelly_type=ShellyTyps.Shelly_1_Blau):
         """
@@ -94,21 +92,59 @@ class ShellyAPI:
         self.__ip = ip
         self.__shelly_name = shelly_name
         self.__shelly_type = shelly_type
-        self.__booked_for = [None]
-        self.turnOff()
-        if self.__shelly_type in [ShellyTyps.ShellyPro_4PM_Tableau]:
-            for i in [1, 2, 3]:
-                self.turnOff(switchNo=i)
+        self.__booked_for = []
+        self.__booked_at = []
+        self.__meter_at_booking = []
+        self.__list_of_switchs = [0]
 
-            for i in [1, 2, 3]:
-                self.__booked_for.append(None)
+        self.__has_watt_meter = False
+        self.__has_energy_meter = False
+
+        if self.__shelly_type in [ShellyTyps.ShellyPro_4PM_Tableau]:
+            self.__list_of_switchs = [0, 1, 2, 3]
+            self.__has_watt_meter = True
+            self.__has_energy_meter = True
+
+        if self.__shelly_type in [ShellyTyps.Shelly_1PM_Rot]:
+            self.__has_watt_meter = True
+            self.__has_energy_meter = False
+
+        for i in self.__list_of_switchs:
+            self.turnOff(switchNo=i)
+
+        for i in self.__list_of_switchs:
+            self.__booked_for.append(None)
+            self.__meter_at_booking.append(ShellyAPI.defaultMeterSetting)
+        # print("---->", self.__meter_at_booking)
 
 
     def __str__(self):
-        retStr  = str(self.__ip + ':' + str(0) + ' {sName:25s} {sType:35s} ' + str(self.__booked_for[0])).format(sName=self.__shelly_name, sType=self.__shelly_type)
-        if self.__shelly_type in [ShellyTyps.ShellyPro_4PM_Tableau]:
-            for i in [1, 2, 3]:
-                retStr += '\n' + str(self.__ip + ':' + str(i) + ' {sName:25s} {sType:35s} ' + '  ' + str(self.__booked_for[i])).format(sName=self.__shelly_name, sType=self.__shelly_type)
+        retStr = ""
+        for sNo in self.__list_of_switchs:
+            retStr += self.toPrint(switchNo=sNo)
+        return retStr
+
+    def toPrint(self, switchNo=0, sep='\n', end='\n\n'):
+        retStr = ""
+        if isinstance(switchNo, int):
+            switchNo = [switchNo]
+
+        is_first_item = True
+        for aNum in switchNo:
+            if not is_first_item:
+                retStr += sep
+
+            is_first_item = False
+            retStr += str(self.__ip + ':' + str(aNum) + ' {sName:25s} {sType:35s} {pBookedFrom:35s}').format(sName=self.__shelly_name, sType=self.__shelly_type, pBookedFrom=str(self.__booked_for[aNum]))
+            if self.__has_watt_meter:
+                retStr += "   Power:{p:5.2f}W".format(p=self.get_current_power_usage(aNum))
+            if self.__has_energy_meter:
+                meterValue = self.get_energy_meter_value(aNum)
+                retStr += "  Current meter :{p:5.2f}Wh".format(p=meterValue)
+                retStr += "  Meter at start:{p:5.2f}Wh".format(p=self.__meter_at_booking[aNum])
+                retStr += "  Used:{p:5.2f}Wh".format(p=(meterValue - self.__meter_at_booking[aNum]))
+
+        retStr += end
         return retStr
 
     def get_ip(self):
@@ -117,6 +153,9 @@ class ShellyAPI:
     def get_shelly_name(self):
         return self.__shelly_name
 
+    def get_switch_list(self):
+        return self.__list_of_switchs
+
     def get_shelly_type(self):
         return self.__shelly_type
 
@@ -124,14 +163,27 @@ class ShellyAPI:
         return self.__booked_for[switchNo]
 
     def set_booked_for(self, switchNo=0, booker=None):
-        if self.get_booked_for(switchNo) is not None and booker is not None:
+        if self.get_booked_for(switchNo) is None and booker is not None:
             self.__booked_for[switchNo] = booker
+            self.__meter_at_booking[switchNo] = self.get_energy_meter_value(switchNo)
+            return True
+        else:
+            ### self.__booked_for[switchNo] = None
+            ### self.__meter_at_booking[switchNo] = 0
+            return False
 
     def cancel_booked_for(self, switchNo=0):
         self.__booked_for[switchNo] = None
+        self.__meter_at_booking[switchNo] = (ShellyAPI.defaultMeterSetting)
+        self.turnOff(switchNo)
 
+    def set_meter_at_booking(self, switchNo=0, meter_value=0):
+        self.__meter_at_booking[switchNo] = meter_value
 
-    def turnOn(self, switchNo=0, timer=None, doTrace=doTraceClassVar):
+    def get_meter_at_booking(self, switchNo=0):
+        return self.__meter_at_booking[switchNo]
+
+    def turnOn(self, switchNo=0, timer=None, doTrace=True):
         """
         Turns the shelly ON if the relay is already ON, nothing happens. It returns the response containing the current state of the relay.
 
@@ -157,7 +209,7 @@ class ShellyAPI:
         return json.loads(requests.request("GET", requestStr).text)
 
 
-    def turnOff(self, switchNo=0, timer=None, doTrace=doTraceClassVar):
+    def turnOff(self, switchNo=0, timer=None, doTrace=True):
         """
         Turns the shelly OFF if the relay is already OFF, nothing happens. It returns the response containing the current state of the relay.
 
@@ -183,7 +235,7 @@ class ShellyAPI:
         return json.loads(requests.request("GET", requestStr).text)
 
 
-    def toggle(self, switchNo=0, timer=None, doTrace=doTraceClassVar):
+    def toggle(self, switchNo=0, timer=None, doTrace=True):
         """
         Toggels the shelly. It returns the response containing the current state of the relay.
 
@@ -209,7 +261,7 @@ class ShellyAPI:
         return json.loads(requests.request("GET", requestStr).text)
 
 
-    def getDeviceSettings(self, doTrace=doTraceClassVar):
+    def getDeviceSettings(self, doTrace=False):
         """
         Loads all the device settings.
 
@@ -231,7 +283,7 @@ class ShellyAPI:
             return "Not settings aviable for " + str(self.__shelly_type)
 
 
-    def getCurrentPowerUsage(self, switchNo=0, doTrace=doTraceClassVar):
+    def get_current_power_usage(self, switchNo=0, doTrace=False):
         """
         Returns the current power usage in Watts. This is not supported on every shelly.
 
@@ -242,37 +294,37 @@ class ShellyAPI:
 
          Examples
          --------
-         >>> shellyOne.getCurrentPowerUsage()
+         >>> shellyOne.get_current_power_usage()
          """
-        if self.__shelly_type in [ShellyTyps.Shelly_1_Blau]:
-            powerInWatt = 0
-            if doTrace:
-                print("-->", powerInWatt)
+        if self.__has_watt_meter:
+            if self.__shelly_type in [ShellyTyps.Shelly_1PM_Rot]:
+                requestStr = 'http://' + self.__ip + '/status'
+                if doTrace:
+                    print(requestStr)
 
-        if self.__shelly_type in [ShellyTyps.Shelly_1PM_Rot]:
-            requestStr = 'http://' + self.__ip + '/status'
-            if doTrace:
-                print(requestStr)
+                jsonResponse = json.loads(requests.request("GET", requestStr).text)
+                powerInWatt = jsonResponse['meters'][switchNo]['power']
+                if doTrace:
+                    print("-->", powerInWatt)
 
-            jsonResponse = json.loads(requests.request("GET", requestStr).text)
-            powerInWatt = jsonResponse['meters'][switchNo]['power']
-            if doTrace:
-                print("-->", powerInWatt)
+            if self.__shelly_type in [ShellyTyps.ShellyPro_4PM_Tableau]:
+                requestStr = 'http://' + self.__ip + '/rpc/Switch.GetStatus?id=' + str(switchNo)
+                if doTrace:
+                    print(requestStr)
+                jsonResponse = json.loads(requests.request("GET", requestStr).text)
 
-        if self.__shelly_type in [ShellyTyps.ShellyPro_4PM_Tableau]:
-            requestStr = 'http://' + self.__ip + '/rpc/Switch.GetStatus?id=' + str(switchNo)
+                powerInWatt = powerInWatt = jsonResponse['apower']
+                if doTrace:
+                    print("==>", jsonResponse)
+                    print("-->", powerInWatt)
+        else:
+            powerInWatt = -1
             if doTrace:
-                print(requestStr)
-            jsonResponse = json.loads(requests.request("GET", requestStr).text)
-
-            powerInWatt = powerInWatt = jsonResponse['apower']
-            if doTrace:
-                print("==>", jsonResponse)
                 print("-->", powerInWatt)
 
         return powerInWatt
 
-    def getEnergyMeterValue(self, switchNo=0, doTrace=doTraceClassVar):
+    def get_energy_meter_value(self, switchNo=0, doTrace=False):
         """
         Returns the actual energy meter level in Watthours (Wh). This is not supported on every shelly.
 
@@ -283,10 +335,10 @@ class ShellyAPI:
 
          Examples
          --------
-         >>> shellyOne.getEnergyMeterValue()
+         >>> shellyOne.get_energy_meter_value()
          """
         energyMeterLevel = -1
-        if self.__shelly_type in [ShellyTyps.ShellyPro_4PM_Tableau]:
+        if self.__has_energy_meter:
             requestStr = 'http://' + self.__ip + '/rpc/Switch.GetStatus?id=' + str(switchNo)
             if doTrace:
                 print(requestStr)
@@ -300,7 +352,7 @@ class ShellyAPI:
         return energyMeterLevel
 
     @staticmethod
-    def getAllDevicesInNetwork(endIP=255, baseIp = "192.168.1.", trace=False):
+    def get_all_devices_in_network(endIP=255, baseIp ="192.168.1.", trace=False):
         """
         Finds all devices in a network.
 
@@ -314,7 +366,7 @@ class ShellyAPI:
 
          Examples
          --------
-         >>> shellyOne.getAllDevicesInNetwork()
+         >>> shellyOne.get_all_devices_in_network()
          """
         deviceList = []
         if baseIp == None:
@@ -337,7 +389,7 @@ class ShellyAPI:
         return deviceList
 
     @staticmethod
-    def findAllShellysInNetwork(endIP=255, trace=False):
+    def find_all_shellys_in_network(endIP=255, trace=False):
         """
          Finds Shellys in a Network
 
@@ -348,15 +400,15 @@ class ShellyAPI:
 
           Examples
           --------
-          >>> shellyOne.findAllShellysInNetwork()
+          >>> shellyOne.find_all_shellys_in_network()
           """
         if trace:
             print("Search shellys....")
-        return [device for device in ShellyAPI.getAllDevicesInNetwork(endIP) if device['name'].find('shelly') > -1]
+        return [device for device in ShellyAPI.get_all_devices_in_network(endIP) if device['name'].find('shelly') > -1]
 
 
 def TEST_Shelly_StaticMethods():
-    listOfShellysInNetwork = ShellyAPI.findAllShellysInNetwork(trace=True)
+    listOfShellysInNetwork = ShellyAPI.find_all_shellys_in_network(trace=True)
     print(listOfShellysInNetwork)
     shellyOne = ShellyAPI(listOfShellysInNetwork[0]['ip'])
 
@@ -443,18 +495,17 @@ class Shelly_Site:
                     {'ip': "192.168.1.133",
                      'shelly_name': "Mehrfach-Shelly_1",
                      'shelly_type': ShellyTyps.ShellyPro_4PM_Tableau,
-                     'obj': None
                     },
                 ]
          """
         self.__site_name = site_name
         self.__shellyList = shellies_on_site_json
-        print("instantiates shelly objects....")
+        ## print("instantiates shelly objects....")
         for aShellyConfig in self.__shellyList:
             aShellyConfig['obj'] = ShellyAPI(ip=aShellyConfig['ip'],
                                              shelly_name=aShellyConfig['shelly_name'],
                                              shelly_type=aShellyConfig['shelly_type'])
-            print(aShellyConfig['obj'].getDeviceSettings())
+            ## print(aShellyConfig['obj'].getDeviceSettings())
 
     def __str__(self):
         retStr = unterstreichen(self.__site_name) + '\n'
@@ -476,46 +527,169 @@ class Shelly_Site:
         else:
             return result_list[0]
 
-    def bookOutlet(self, name, switchNo=0, booker=None):
-        if booker is not None:
-            print("Book: ", name, ":", str(switchNo) + "    -->" + booker)
+    def do_book_outlet(self, name, switchNo=0, booker=None, doTrace=False):
+        retVal = False
+        if doTrace:
+            print("--> Try to book: ", name, ":", str(switchNo) + "    --> " + booker)
 
+        if booker is not None:
+            anOutlet = self.getShelly_for_name(name)
+            if doTrace:
+                print("Status before booking:\n", anOutlet, sep="")
+
+            if anOutlet.set_booked_for(switchNo=switchNo, booker=booker):
+                anOutlet.turnOn(switchNo=switchNo)
+                if doTrace:
+                    print("Status after booking:\n", anOutlet, sep="")
+                retVal = True
+            else:
+                if doTrace:
+                    print("Switch has been booked already:\n", anOutlet, sep="")
+                retVal = False
+        else:
+            if doTrace:
+                print("Unknow Booker!!!\n")
+            retVal = False
+        if doTrace:
+            print("<-- End to book: ", name, ":", str(switchNo) + "    --> " + booker)
+        return retVal
+
+    def get_booked_outlets(self, booker_name=None, cancel_booking=False):
+        result_list = []
+        for aShelly in self.__shellyList:
+            aShelly = aShelly['obj']
+            list_of_switches = aShelly.get_switch_list()
+
+            if booker_name is None:
+                for i in list_of_switches:
+                    if (aShelly.get_booked_for(switchNo=i) is not None):
+                        result_list.append((aShelly, i))
+                        if cancel_booking:
+                            aShelly.cancel_booked_for(switchNo=i)
+            else:
+                for i in list_of_switches:
+                    if (aShelly.get_booked_for(switchNo=i) == booker_name):
+                        result_list.append((aShelly, i))
+                        if cancel_booking:
+                            aShelly.cancel_booked_for(switchNo=i)
+        return result_list
+
+    def cancel_booked_outlets(self, booker_name=None):
+        return self.get_booked_outlets(booker_name=booker_name, cancel_booking=True)
 
 if __name__ == '__main__':
     # TEST_Shelly_StaticMethods()
     # TEST_Class_Shelly()
 
     shellyList = [
-        {'ip': "192.168.1.134",
-         'shelly_name': "Allgemein 1",
-         'shelly_type': ShellyTyps.Shelly_1PM_Rot,
-         'obj': None,
-         'booked': None
-         },
-        {'ip': "192.168.1.135",
-         'shelly_name': "Allgemein 2",
-         'shelly_type': ShellyTyps.Shelly_1PM_Rot,
-         'obj': None,
-         'booked': None
-         },
+        # {'ip': "192.168.1.134",
+        #  'shelly_name': "Allgemein 1",
+        #  'shelly_type': ShellyTyps.Shelly_1PM_Rot,
+        #  },
+        # {'ip': "192.168.1.135",
+        #  'shelly_name': "Allgemein 2",
+        #  'shelly_type': ShellyTyps.Shelly_1PM_Rot,
+        #  },
+        # {'ip': "192.168.1.131",
+        #  'shelly_name': "Mit Schalter",
+        #  'shelly_type': ShellyTyps.Shelly_1_Blau,
+        #  },
         {'ip': "192.168.1.133",
          'shelly_name': "Steg:1 Säule:1",
          'shelly_type': ShellyTyps.ShellyPro_4PM_Tableau,
-         'obj': None,
-         'booked': None
+         },
+        {'ip': "192.168.1.169",
+         'shelly_name': "Steg:1 Säule:2",
+         'shelly_type': ShellyTyps.ShellyPro_4PM_Tableau,
+         },
+        {'ip': "192.168.1.170",
+         'shelly_name': "Steg:1 Säule:3",
+         'shelly_type': ShellyTyps.ShellyPro_4PM_Tableau,
+         },
+        {'ip': "192.168.1.171",
+         'shelly_name': "Steg:1 Säule:4",
+         'shelly_type': ShellyTyps.ShellyPro_4PM_Tableau,
          },
     ]
     bootsAnlage_flugi = Shelly_Site(site_name="Bootsanlage Flugi", shellies_on_site_json=shellyList)
     print(bootsAnlage_flugi, '\n\n')
 
-    print(unterstreichen("Steg:1 Säule:1"))
-    print(bootsAnlage_flugi.getShelly_for_name("Steg:1 Säule:1"), '\n\n')
+    # ## print(unterstreichen("Steg:1 Säule:1"))
+    # ## print(bootsAnlage_flugi.getShelly_for_name("Steg:1 Säule:1"), '\n\n')
+    #
+    # print(unterstreichen('Steg:1 Säule:1'))
+    # print(bootsAnlage_flugi.getShelly_for_name('Steg:1 Säule:1'), '\n\n')
+    # bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:1', switchNo=0, booker="Walter.Rothlin@bzu.ch")
+    # bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:1', switchNo=1, booker="Walter@Rothlin.com")
+    # bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:1', switchNo=2, booker="Walter@Rothlin.com")
+    # bootsAnlage_flugi.do_book_outlet(name='Allgemein 1', switchNo=0, booker="landwirtschaft@genossame-wangen.ch")
+    # bootsAnlage_flugi.do_book_outlet(name='Mit Schalter', switchNo=0, booker="Remo Collet")
+    #
+    # print("\n\n", unterstreichen("Booked Outlets for Walter@Rothlin.com"), sep="")
+    # for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter@Rothlin.com"):
+    #     print(anOutlet.toPrint(switchNo=switchNo))
+    #
+    # print("\n\n", unterstreichen("Booked Outlets for Walter.Rothlin@bzu.ch"), sep="")
+    # for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter.Rothlin@bzu.ch"):
+    #     print(anOutlet.toPrint(switchNo=switchNo))
+    #
+    # print("\n\n", unterstreichen("Booked Outlets"), sep="")
+    # for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets():
+    #     print(anOutlet.toPrint(switchNo=switchNo))
+    # print('\n\n')
+    #
+    # sleep(2)
+    # print(bootsAnlage_flugi, '\n\n')
+    # print("Unbook Remo Collet")
+    # bootsAnlage_flugi.cancel_booked_outlets(booker_name="Remo Collet")
+    # print(bootsAnlage_flugi, '\n\n')
+    #
+    #
+    # print("Unbook Walter@Rothlin.com")
+    # bootsAnlage_flugi.cancel_booked_outlets(booker_name="Walter@Rothlin.com")
+    # print(bootsAnlage_flugi, '\n\n')
+    #
+    # sleep(2)
+    # print("Unbook ALL")
+    # bootsAnlage_flugi.cancel_booked_outlets()
+    # print(bootsAnlage_flugi, '\n\n')
+    #
+    #
+    # sleep(5)
+    print("\n\n")
+    print(unterstreichen('Calculating energy consumtion'))
 
-    print(unterstreichen("Allgemein 1"))
-    print(bootsAnlage_flugi.getShelly_for_name("Allgemein 1"), '\n\n')
+    bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:1', switchNo=2, booker="Walter@Rothlin.com", doTrace=False)
+    for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter@Rothlin.com"):
+        print(anOutlet.toPrint(switchNo=switchNo))
 
-    bootsAnlage_flugi.bookOutlet(name="Allgemein 1", switchNo=0, booker="Walter Rothlin")
-    print(bootsAnlage_flugi.getShelly_for_name("Allgemein 1"), '\n\n')
+    if bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:1', switchNo=2, booker="Walter.Rothlin@bzu.ch", doTrace=False):
+        for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter.Rothlin@bzu.ch"):
+            print(anOutlet.toPrint(switchNo=switchNo))
+    else:
+        print('ERROR: Steg:1 Säule:1 already booked!!!!!')
+
+    bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:2', switchNo=2, booker="Walter@Rothlin.com", doTrace=False)
+    for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter@Rothlin.com"):
+        print(anOutlet.toPrint(switchNo=switchNo))
+
+    bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:3', switchNo=3, booker="Walter@Rothlin.com", doTrace=False)
+    for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter@Rothlin.com"):
+        print(anOutlet.toPrint(switchNo=switchNo))
+
+    bootsAnlage_flugi.do_book_outlet(name='Steg:1 Säule:4', switchNo=0, booker="Walter@Rothlin.com", doTrace=False)
+    for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter@Rothlin.com"):
+        print(anOutlet.toPrint(switchNo=switchNo))
+
+    sleep(2)
+    for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter@Rothlin.com"):
+        print(anOutlet.toPrint(switchNo=switchNo))
+
+    sleep(8)
+    for (anOutlet, switchNo) in bootsAnlage_flugi.get_booked_outlets(booker_name="Walter@Rothlin.com"):
+        print(anOutlet.toPrint(switchNo=switchNo))
+    bootsAnlage_flugi.cancel_booked_outlets(booker_name="Walter@Rothlin.com")
+
 
 
 
