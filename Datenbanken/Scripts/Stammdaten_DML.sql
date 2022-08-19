@@ -21,7 +21,8 @@ INSERT INTO `orte` (`id`, `PLZ`, `Name`)
               (2, '8854', 'Siebnen'),
               (3, '8854', 'Galgenen'),
               (4, '8853', 'Lachen'),
-              (5, '8858', 'Innerthal');
+              (5, '8858', 'Innerthal'),
+              (6, '8610', 'Uster');
 
      
 DELETE FROM `adressen`;
@@ -31,19 +32,40 @@ INSERT INTO `adressen` (`id`, `Strasse`, `Hausnummer`, `Orte_id`)
               (3, 'Kapellstr.'  ,  '5' ,  2),
               (4, 'Leuholz'     , '12' ,  1),
               (5, 'Aberen'      , ''   ,  5),
-              (6, 'Wangen-Nuolen', '',  1);
+              (6, 'Wangen-Nuolen', '',  1),
+              (7, 'Krämacherstr.', '15',  6);
               
 DELETE FROM `personen`;
-INSERT INTO `personen` (`id`, `Sex`, `Firma`, `Vorname`, `Nachname`, `Privat_Adressen_id`) 
-       VALUES (1, 'Herr', '', 'Walter' , 'Rothlin-Collet' , 1),
-			  (2, 'Frau', '', 'Claudia', 'Rothlin Rothlin', 1),
-			  (3, 'Herr', '', 'Tobias' , 'Rothlin'        , 1),
-			  (4, 'Herr', '', 'Lukas'  , 'Rothlin'        , 1),
-			  (5, 'Herr', '', 'Walter' , 'Rothlin-Meier'  , 2),
-			  (6, 'Herr', '', 'Remo'   , 'Collet'         , 3),
-			  (7, ''    , 'Genossame Wangen'  , '', ''    , 4),
-			  (8, ''    , 'Flurgenossenschaft', '', ''    , 5),
-			  (9, ''    , 'Feuerwehrverein'   , '', ''    , 6);
+INSERT INTO `personen` (`id`, `Sex`, `Firma`, `Vorname`, `Nachname`, `Kategorien`,`Privat_Adressen_id`, `Geschaefts_Adressen_id`) 
+       VALUES (1, 'Herr', '', 'Walter' , 'Rothlin-Collet' , 'Buerger,Genossenrat,Waermebezueger', 1, 7),
+			  (2, 'Frau', '', 'Claudia', 'Rothlin Rothlin', NULL, 1, NULL),
+			  (3, 'Herr', '', 'Tobias' , 'Rothlin'        , NULL, 1, NULL),
+			  (4, 'Herr', '', 'Lukas'  , 'Rothlin'        , NULL, 1, NULL),
+			  (5, 'Herr', '', 'Walter' , 'Rothlin-Meier'  , 'Buerger,Landteilbesitzer,Waermebezueger', 2, NULL),
+			  (6, 'Herr', '', 'Remo'   , 'Collet'         , NULL, 3, NULL),
+			  (7, ''    , 'Genossame Wangen'  , '', ''    , NULL, 4, NULL),
+			  (8, ''    , 'Flurgenossenschaft', '', ''    , NULL, 5, NULL),
+			  (9, ''    , 'Feuerwehrverein'   , '', ''    , NULL, 6, NULL);
+              
+-- SELECT * FROM `personen` WHERE FIND_IN_SET('Buerger',`Kategorien`)>0;
+-- SELECT * FROM `personen` WHERE `Kategorien` LIKE '%Buerger%';
+
+
+DELETE FROM `email_adressen`;
+INSERT INTO `email_adressen` (`id`, `eMail`, `Type`, `isMain`) 
+       VALUES (1, 'walter@rothlin.com',                  'Private',   1),
+              (2, 'walter.rothlin@bzu.ch',               'Schule',    0),
+              (3, 'landwirtschaft@genossame-wangen.ch',  'Genossame', 0),
+              (4, 'tobias@rothlin.com',  'Private', 1),
+              (5, 'claudia@rothlin.com',  'Private', 1);
+              
+DELETE FROM `Personen_has_EMail_Adressen`;
+INSERT INTO `Personen_has_EMail_Adressen` (`id`, `Personen_id`, `EMail_Adressen_id`) 
+       VALUES (1, 1, 1),
+              (2, 1, 2),
+              (3, 1, 3),
+              (4, 3, 4),
+              (5, 2, 5);
 
 DELETE FROM `iban`;
 INSERT INTO `iban` (`id`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `Personen_id`) 
@@ -58,3 +80,11 @@ INSERT INTO `iban` (`id`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `Perso
                (9, 'CH2800777001683190072', 'Privat Remo'      , 'SZKB' , 'Siebnen'  , 6),
                (10, 'CH4100777005824911455', 'Fw Oktoberfest'  , 'SZKB' , 'Siebnen'  , 9),
                (11, 'CH9000777003292211667', 'FG Abern'        , 'SZKB' , 'Siebnen'  , 8);
+               
+-- ----------------------------------------------------------------
+-- Testen der Views
+-- ----------------------------------------------------------------
+
+SELECT * FROM Ort_Land;
+SELECT * FROM Personen_Daten;
+SELECT * FROM EMail_Main;

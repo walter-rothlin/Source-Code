@@ -22,21 +22,33 @@ def sayHelloTo(firstname=None, lastname="Unknown", hellostr="Guten Morgen"):
     if firstname is not None:
         return "1:" + hellostr + " " + firstname + " " + lastname
     else:
-        return "1:" + 'Hey you!!'
+        return "2:" + 'Hey you!!'
 
 
 # =============
 # Hauptprogramm
 # =============
-print(sayHelloTo())
-print(eval("sayHelloTo('Meier')"))   # mittels eval
+if __name__ == '__main__':
+    print("# Eval")
+    print("# ----")
+    print("sayHelloTo()                                                  --> ", eval("sayHelloTo()"))
+    print("sayHelloTo('Meier')                                           --> ", eval("sayHelloTo('Meier')"))
+    print("sayHelloTo(lastname='Meier', firstname='Max', hellostr='Hi')  --> ", eval("sayHelloTo(lastname='Meier', firstname='Max', hellostr='Hi')"), "\n\n")
 
-possibles = globals().copy()
-print("possibles:", possibles)
-possibles.update(locals())
-# print(possibles)
-method = possibles.get("sayHelloTo")
-if not method:
-    print("not found")
-else:
-    print(method("Rothlin"))
+
+    print("# Reflection")
+    print("# ----------")
+    inspection = globals().copy()
+    print("Globals :", inspection)
+    inspection.update(locals())
+    print("..Locals:", inspection, "\n\n")
+
+    method = inspection.get("sayHelloTo")
+    if not method:
+        print("Function not found")
+    else:
+        print("# Calls via Reflection")
+        print("# --------------------")
+        print("sayHelloTo()                                                  --> ", method())
+        print("sayHelloTo('Meier')                                           --> ", method('Meier'))
+        print("sayHelloTo(lastname='Meier', firstname='Max', hellostr='Hi')  --> ", method(lastname='Meier', firstname='Max', hellostr='Hi'), "\n\n")

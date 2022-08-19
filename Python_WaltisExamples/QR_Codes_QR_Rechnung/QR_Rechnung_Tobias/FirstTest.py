@@ -54,6 +54,14 @@ if __name__ == '__main__':
         "country": "",
     }
 
+    addr_Sabine_Marty = {
+        "name": "Sabine Marty Knobel",
+        "address": "Zeughausstr. 14b",
+        "zip_code": "8853",
+        "city": "Lachen",
+        "country": "",
+    }
+
     ibanNr = {
         "raiffeisen_walti": "CH9580808006989422343",
         "csuh_walti":       "CH8704835041184041000",
@@ -65,8 +73,26 @@ if __name__ == '__main__':
         "szkb_liegenschaft_remo": "CH98 0077 7001 6831 9017 0",
         "szkb_privat_remo": "CH28 0077 7001 6831 9007 2",
         "feuerwehr_wangen_oktoberfest": "CH41 0077 7005 8249 1145 5",
-        "FG_Abern": "CH90 0077 7003 2922 1166 7"
+        "FG_Abern": "CH90 0077 7003 2922 1166 7",
+        "Sabine_Marty": "CH95 0873 1001 5681 2203 4"
     }
+
+    pdfName = "GeneratedInvoices/Sabine_Marty"
+    htmlName = "GeneratedInvoices/Sabine_Marty.html"
+    createQRInvoice(
+        generateQRInvoiceData(
+            ibanNr["Sabine_Marty"],
+            addr_Sabine_Marty,
+            addr_leer,
+            amount="0.00",
+            additional_information=""),
+        invoice_text_html="",
+        pdfName=pdfName,
+        htmlName=htmlName)
+
+    print("Produced following files:")
+    print("    --> ", pdfName)
+    print("    --> ", htmlName)
 
     pdfName = "GeneratedInvoices/FG_Aberen"
     htmlName = "GeneratedInvoices/FG_Aberen.html"

@@ -18,8 +18,8 @@ import mysql.connector  # mysql-connector-python not default mässiger one
 print("Connecting to sakila....", end="", flush=True)
 mydb = mysql.connector.connect(
   host        = "localhost",
-  user        = "root",
-  password    = "admin",
+  user        = "root",     # "App_User",          #
+  password    = "admin",    # "1234ABCD12abcd",    #
   database    = "sakila",
   auth_plugin = 'mysql_native_password'
 )

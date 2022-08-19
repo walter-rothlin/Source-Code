@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     print("point1:", point1, "   point2:", point2, "   point3:", point3, "   point4:", point4)
     print("point1:", point1, "+", point2, " = ", point1 + point2)
-    print("point1:", point1, "+", point2, "=", point1 + point2,sep="")
+    print("point1:", point1, "+", point2, "=", point1 + point2, sep="")
     print("point1:", str(point1) + " + " + str(point2), " + ", point3, " = ", point1 + point2 + point3)
     print("point1 < point2:", point1 < point2)
     print("point1 > point2:", point1 > point2)
