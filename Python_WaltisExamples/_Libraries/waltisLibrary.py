@@ -37,6 +37,7 @@
 # 06-Dec-2021   Walter Rothlin      Added getFilenameWithoutExtension, getFilenameExtension, addTimestampToFileName, getPath
 # 15-Jan-2022   Walter Rothlin      Added File_remove
 # 19-May-2022   Walter Rothlin      Added howManyDigitsAreInString
+# 05-Sep-2022   Stefan Rueeger      Typo fixed
 # ------------------------------------------------------------------
 
 # toDo:
@@ -313,8 +314,8 @@ def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErr
                        max=max, maxErrorStr=maxErrorStr)
 
 
-# Pysikalische Umrechnungen
-# =========================
+# Physikalische Umrechnungen
+# ==========================
 def grad2Rad(grad):
     return math.pi * grad / 180
 
