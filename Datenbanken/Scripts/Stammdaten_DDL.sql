@@ -10,6 +10,7 @@
 -- 03-Jun-2022   Walter Rothlin      Initial Version
 -- 10-Jun-2022   Walter Rothlin      Modified ERD and added Attributs
 -- 17-Jun_2022   Walter Rothlin		 Added Waermebezueger and its relations
+-- 15-Jul-2022   Walter Rothlin      Added Functions and extended views with functions fields
 -- ---------------------------------------------------------------------------------------------
 
 -- MySQL Workbench Forward Engineering
@@ -27,6 +28,7 @@ CREATE SCHEMA IF NOT EXISTS stammdaten  DEFAULT CHARACTER SET utf8 ;
 -- Als default Schema setzen
 SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
 USE stammdaten;
+
 
 -- -----------------------------------------------------
 -- Table `Land`
@@ -253,65 +255,13 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
   ON UPDATE NO ACTION);
 
 -- -----------------------------------------------------
--- Create Views
+-- Create Funtions used in Joins
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Ort_Land; 
-CREATE VIEW Ort_Land AS
-	SELECT
-        o.ID            AS ID,
-		o.PLZ           AS PLZ,
-		l.Code          AS Code,
-		o.Name          AS Ort,
-		l.Name          AS Land,
-		l.Landesvorwahl AS Landesvorwahl,
-        -- max(max(l.last_update), max(o.last_update)) AS last_update,
-        o.last_update AS last_update,
-        l.last_update AS l_last_update
-	FROM orte AS o
-	LEFT OUTER JOIN Land AS l ON o.Land_id = l.id;
+SET GLOBAL log_bin_trust_function_creators = 1;
 
-DROP VIEW IF EXISTS Personen_Daten; 
-CREATE VIEW Personen_Daten AS
-	SELECT
-		  P.id AS ID,
-		  P.Sex AS Geschlecht,
-		  P.Firma AS Firma,
-		  P.Vorname AS Vorname,
-		  P.Kategorien AS Kategorien,
-		  pAdr.Strasse AS Private_Strasse,
-		  pAdr.Hausnummer AS Private_Hausnummer,
-		  pOrt.PLZ AS Private_PLZ,
-		  pOrt.Ort AS Private_Ort,
-		  pOrt.Land AS Private_Land,
-		  gAdr.Strasse AS Geschaeft_Strasse,
-		  gAdr.Hausnummer AS Geschaeft_Hausnummer,
-		  gOrt.PLZ AS Geschaeft_PLZ,
-		  gOrt.Ort AS Geschaeft_Ort,
-		  gOrt.Land AS Geschaeft_Land,
-		  P.last_update AS last_update
-	FROM Personen AS P
-	LEFT OUTER JOIN Adressen AS pAdr ON P.Privat_Adressen_id = pAdr.id
-	LEFT OUTER JOIN Ort_Land AS pOrt ON  pAdr.Orte_id = pOrt.id
-	LEFT OUTER JOIN Adressen AS gAdr ON P.Geschaefts_Adressen_id = gAdr.id
-	LEFT OUTER JOIN Ort_Land AS gOrt ON  gAdr.Orte_id = gOrt.id;
-
-DROP VIEW IF EXISTS EMail_Main; 
-CREATE VIEW EMail_Main AS
-	SELECT
-		pEMail.Personen_id       AS Person_id,
-		eMailAdr.eMail           AS eMail
-	FROM Personen_has_EMail_Adressen AS pEMail
-	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_id = eMailAdr.id
-	WHERE
-	   eMailAdr.isMain = 1;
-
-
--- -----------------------------------------------------
--- Create Funtions
--- -----------------------------------------------------
-DROP FUNCTION IF EXISTS getYounger;
+DROP FUNCTION IF EXISTS getOlder;
 Delimiter //
-CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
+CREATE FUNCTION  getOlder(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
 BEGIN
    IF timeStamp_1 < timeStamp_2 THEN
          RETURN  timeStamp_1;
@@ -322,8 +272,21 @@ END
 //
 DELIMITER ;
 
-SELECT getYounger(STR_TO_DATE('20050527', '%Y%m%d'), STR_TO_DATE('20050527', '%Y%m%d'));
+DROP FUNCTION IF EXISTS getYounger;
+Delimiter //
+CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
+BEGIN
+   IF timeStamp_1 > timeStamp_2 THEN
+         RETURN  timeStamp_1;
+   ELSE
+         RETURN  timeStamp_2;
+   END IF;
+END
+//
+DELIMITER ;
 
+-- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+-- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 
 
 DROP FUNCTION IF EXISTS formatPLZinternational;
@@ -336,8 +299,8 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
-SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
+-- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
+-- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
 --  -------------------------------------------------------------
 DROP FUNCTION IF EXISTS firstUpper;
@@ -350,10 +313,10 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT firstUpper("herr");  -- --> Herr
-SELECT firstUpper("HERR");  -- --> Herr
-SELECT firstUpper("Herr");  -- --> Herr
-SELECT firstUpper("hERR");  -- --> Herr
+-- SELECT firstUpper("herr");  -- --> Herr
+-- SELECT firstUpper("HERR");  -- --> Herr
+-- SELECT firstUpper("Herr");  -- --> Herr
+-- SELECT firstUpper("hERR");  -- --> Herr
 
 --  -------------------------------------------------------------
 --  Fct 4.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
@@ -369,8 +332,89 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
-SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+-- SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
+-- SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+
+-- -----------------------------------------------------
+-- Create Views
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Ort_Land; 
+CREATE VIEW Ort_Land AS
+	SELECT
+        o.ID                                     AS ID,
+		o.PLZ                                    AS PLZ,
+        formatPLZinternational(l.Code, o.PLZ)    AS PLZ_International,
+		l.Code                                   AS Code,
+		o.Name                                   AS Ort,
+		l.Name                                   AS Land,
+		l.Landesvorwahl                          AS Landesvorwahl,
+        getYounger(l.last_update, o.last_update) AS last_update,
+        o.last_update                            AS o_last_update,
+        l.last_update                            AS l_last_update
+	FROM orte AS o
+	LEFT OUTER JOIN Land AS l ON o.Land_id = l.id;
+
+-- SELECT * FROM Ort_Land;
+
+DROP VIEW IF EXISTS Adress_Daten; 
+CREATE VIEW Adress_Daten AS
+	SELECT
+		a.id                                      AS ID,
+		a.Strasse                                 AS Strasse,
+		a.Hausnummer                              AS Hausnummer,
+		ol.PLZ	                                  AS PLZ,
+        ol.PLZ_International	                  AS PLZ_International,
+		ol.Ort	                                  AS Ort,
+		ol.Land	                                  AS Land,
+		getYounger(a.last_update, ol.last_update) AS last_update,
+        a.last_update                             AS a_last_update,
+        ol.last_update                            AS o_last_update
+	FROM Adressen AS a
+	LEFT OUTER JOIN ORT_LAND AS ol ON ol.ID = a.Orte_ID;
+
+-- SELECT * FROM Adress_Daten;
+    
+DROP VIEW IF EXISTS Personen_Daten; 
+CREATE VIEW Personen_Daten AS
+	SELECT
+		  P.id                                         AS ID,
+		  P.Sex                                        AS Geschlecht,
+		  P.Firma                                      AS Firma,
+		  P.Vorname                                    AS Vorname,
+		  P.Kategorien                                 AS Kategorien,
+		  pAdr.Strasse                                 AS Private_Strasse,
+		  pAdr.Hausnummer                              AS Private_Hausnummer,
+		  pOrt.PLZ                                     AS Private_PLZ,
+          pOrt.PLZ_International                       AS Private_PLZ_International,
+		  pOrt.Ort                                     AS Private_Ort,
+		  pOrt.Land                                    AS Private_Land,
+		  gAdr.Strasse                                 AS Geschaeft_Strasse,
+		  gAdr.Hausnummer                              AS Geschaeft_Hausnummer,
+		  gOrt.PLZ                                     AS Geschaeft_PLZ,
+          gOrt.PLZ_International                       AS Geschaeft_PLZ_International,
+		  gOrt.Ort                                     AS Geschaeft_Ort,
+		  gOrt.Land                                    AS Geschaeft_Land,
+          getYounger(P.last_update, pOrt.last_update)  AS last_update,
+		  P.last_update                                AS P_last_update,
+          gOrt.last_update                             AS O_last_update
+	FROM Personen AS P
+    LEFT OUTER JOIN Adress_Daten AS pAdr ON  P.Privat_Adressen_id         = pAdr.id
+	LEFT OUTER JOIN Adress_Daten AS gAdr ON  P.Geschaefts_Adressen_id     = gAdr.id
+	LEFT OUTER JOIN Ort_Land     AS pOrt ON  P.Privat_Adressen_id         = pOrt.id
+	LEFT OUTER JOIN Ort_Land     AS gOrt ON  P.Geschaefts_Adressen_id     = gOrt.id;
+
+-- SELECT * FROM Personen_Daten;
+
+DROP VIEW IF EXISTS EMail_Main; 
+CREATE VIEW EMail_Main AS
+	SELECT
+		pEMail.Personen_id       AS Person_id,
+		eMailAdr.eMail           AS eMail
+	FROM Personen_has_EMail_Adressen AS pEMail
+	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_id = eMailAdr.id
+	WHERE
+	   eMailAdr.isMain = 1;
+
 
    
 SET SQL_MODE=@OLD_SQL_MODE;
