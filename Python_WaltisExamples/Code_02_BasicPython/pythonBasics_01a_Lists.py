@@ -28,8 +28,14 @@ print(nameListe[1], len(nameListe))
 for aName in nameListe:
     print("aName:", aName[0:3], aName[-1], aName[-3:], len(aName))
 
+
+
+
+myAdressList   = nameListe          # 2. object reference
+myAdressList_1 = nameListe.copy()   # clone
+
 nameListe.sort()
-print(nameListe)
+print("\n", nameListe, "\n", myAdressList, "\n", myAdressList_1)
 
 # Method	    Description
 # -------------------------
@@ -115,7 +121,7 @@ print("x[0]    :", x[0])      # ['a', 'b', 'c']
 print("x[0][1] :", x[0][1])   # 'b'
 print("\n")
 
-cars = [["Ford",12,1960], ["Volvo",13], ["BMW",15]]
+cars = [["Ford", 12, 1960], ["Volvo", 13], ["BMW", 15]]
 print("Whole List   :", cars)
 print("1st car      :", cars[0])
 print("1st car's Nr :", cars[0][1])
