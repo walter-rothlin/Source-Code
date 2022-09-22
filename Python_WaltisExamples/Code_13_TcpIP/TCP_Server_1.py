@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: TCP_Server_1.py
+# GIT: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_13_TcpIP/TCP_Server_1.py
 #
 # Description: Acts as an TCP/IP socket server
 #
@@ -9,7 +10,8 @@
 #
 # History:
 # 26-May-2020   Walter Rothlin      Initial Version
-# 24-Sep-2021   Walter Rothlin      Git Test
+# 24-Sep-2021   Walter Rothlin      Git
+# 20-Sep-2022   Walter Rothlin      Changes for BWI-A20
 # ------------------------------------------------------------------
 
 import socket
