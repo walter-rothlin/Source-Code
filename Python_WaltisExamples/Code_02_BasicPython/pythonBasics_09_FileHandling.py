@@ -12,7 +12,11 @@
 # 24-Dec-2022   Walter Rothlin      Initial Version
 # 26-Sep-2022   Walter Rothlin      Changes for HBU
 # ------------------------------------------------------------------
-from waltisLibrary import *
+import os
+
+def halt(prompt="Weiter?"):
+    return input(prompt)
+
 
 if __name__ == '__main__':
     testfile_1 = "./TestFile_FileHandling_UTF_8.txt"
