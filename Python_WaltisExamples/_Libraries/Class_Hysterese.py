@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: Class_Hysterese.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_Hysterese.py
 #
 # Description: Bildet eine Hysterese On/Off ab.
 #
@@ -15,7 +16,7 @@ class Hysterese:
 
    # Ctr (Konstruktor)
    # -----------------
-   def __init__(self, levelOn, levelOff, onOff=False, inverse=False, name = "Unknown", OnStr = "ERROR!!!", OffStr = "o.k."):
+   def __init__(self, levelOn, levelOff, onOff=False, inverse=False, name="Unknown", OnStr="ERROR!!!", OffStr="o.k."):
       self.levelOn  = levelOn
       self.levelOff = levelOff
       self.onOff    = onOff
