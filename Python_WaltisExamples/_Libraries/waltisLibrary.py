@@ -38,6 +38,7 @@
 # 15-Jan-2022   Walter Rothlin      Added File_remove
 # 19-May-2022   Walter Rothlin      Added howManyDigitsAreInString
 # 05-Sep-2022   Stefan Rueeger      Typo fixed
+# 26-Sep-2022   Walter Rothlin      halt() returns string
 # ------------------------------------------------------------------
 
 # toDo:
@@ -95,7 +96,7 @@ def VT52_cls_home():
     VT52_home()
 
 def halt(prompt="Weiter?"):
-    ant = input(prompt)
+    return input(prompt)
 
 # Print iterations progress
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
