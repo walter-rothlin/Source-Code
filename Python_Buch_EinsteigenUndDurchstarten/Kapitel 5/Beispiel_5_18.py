@@ -12,7 +12,7 @@ class Hund:
 
 # Die Klasse "Hund" soll erweitert werden. Hier sind unsere neuen Methoden
 def stoeckchen_holen(self):
-    print("{0} holt das Stöckchen!".format(self.name))
+    print("{0} holt das Stöckchen!".format(self.__name))
 
 
 # Zwei neue Hunde erzeugen

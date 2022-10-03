@@ -16,7 +16,7 @@ class Highscore:
 
 # Sortierfunktionen
 def sortiere_name(eintrag):
-    return eintrag.name
+    return eintrag.__name
 
 
 def sortiere_punkte(eintrag):

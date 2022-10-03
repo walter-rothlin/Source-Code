@@ -25,7 +25,7 @@ class TestInit(TestF1):
         self.assertEqual(self.f1.farbe, "Schwarz")
 
     def test_InitPreviousOwner(self):
-        self.assertEqual(self.f1.previousOwner.name, "Hamilton")
+        self.assertEqual(self.f1.previousOwner.__name, "Hamilton")
 
     def test_InitPreviousOwnerFirstName(self):
         self.assertEqual(self.f1.previousOwner.firstName, "Lewis")

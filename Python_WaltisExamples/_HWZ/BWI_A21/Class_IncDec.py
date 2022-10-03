@@ -14,11 +14,13 @@ class IncDec:
         self.__max_value = max_value
         self.__step_width = step_width
 
+
     def __str__(self):
         return """
          min_value: """ + str(self.__min_value) + """
          max_value: """ + str(self.__max_value) + """
         """
+
     def increment(self):
         if self.__counter + self.__step_width <= self.__max_value:
             self.__counter = self.__counter + self.__step_width
@@ -43,6 +45,10 @@ class IncDec:
 if __name__ == '__main__':
     print("Name des Aufrufers:", __name__)
     seaLevel = IncDec(20)
+    print(seaLevel)
+
+
+
     print(seaLevel.get_counter())
     seaLevel.increment()
     seaLevel.increment()
