@@ -24,7 +24,7 @@ class DataLogger:
      print("Total DataLogger %d" % DataLogger.loggerCount)
 
    def displayDataLogger(self):
-      print("Name: ",self.name + ", ","Tolerance: ",self.tolerance)
+      print("Name: ", self.name + ", ", "Tolerance: ", self.tolerance)
 
 if __name__ == '__main__':
    logger1 = DataLogger("Vorlauf", 2)
