@@ -13,7 +13,6 @@
 # ------------------------------------------------------------------
 
 class DataLogger:
-   'Common base class for all employees'
    loggerCount = 0
 
    def __init__(self, name, tolerance):
