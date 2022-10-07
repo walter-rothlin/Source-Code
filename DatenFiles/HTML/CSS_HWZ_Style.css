@@ -1,34 +1,93 @@
+/*
+    https://www.w3schools.com/css/default.asp
+    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/HTML/CSS_HWZ_Styles.css
+*/
 
 body {
     background-color: lightblue;
     font-family: Arial, Helvetica, sans-serif;
 }
 
+hr {
+    color: chocolate;
+}
 
 h1 {
     color: white;
     text-align: center;
     font-size: 3em;  /*36px;*/
+    border-style: dashed;
 }
 
 h1.hinterlegt {
     background-color:#FFFF00
 }
 
+/* Table Styles */
+table.wr {
+    border-style: solid;
+    border-width: thin;
+    border-spacing: 0px;
+    border-collapse:collapse;
+}
+
+tr.wr {
+    border-style: solid;
+    border-width: thin;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+thead.wr {
+    color: blue;
+    border-width: thin;
+    background-color: lightslategray;
+}
+
+th.wr, td.wr {
+    text-align:left;
+    vertical-align:center;
+    border-style: solid;
+    border-width: thin;
+    border-color: black;
+    /* margin: 0px 0px 0px 0px; */
+    padding: 2px 2px 2px 2px;
+}
 caption {
     color: burlywood;
     font-size: 2.5em;
+}
 
+table {
+    border-style: double;
 }
 
 thead, tfoot{
     color: blueviolet;
     background-color: indianred;
+    border-style: dashed;
 }
 
 tbody {
     font-size: 0.5em;
 }
+
+td.hwz {
+    text-align:left;
+    vertical-align:top;
+    font-style:italic;
+    font-family:Arial;
+    border-style: groove;
+    border-color: pink;
+    border-radius: 15px;
+    padding: 25px 50px 75px 100px;
+}
+
+td {
+    border-style: dashed;
+    border-color: red;
+}
+
 
 #blauerBereich {
     padding:14px;
@@ -48,33 +107,13 @@ div.roterBereich {
     padding:10px; margin:0px; border:4px solid #EE0000;
 }
 
-td.hwz {
-  text-align:left;
-  vertical-align:top;
-  font-style:italic;
-  font-family:Arial;
- }
-
-
-/*
 
 
  div.scrollable {
     width:120px;
-    height=60px;
+    height:60px;
     color:red;
     background-color:yellow;
     overflow-y:auto;
     overflow-x:auto;
  }
-
-
-
-
- td.hwz {
-  text-align:left;
-  vertical-align:top;
-  font-style:italic;
-  font:arial;
- }
-*/

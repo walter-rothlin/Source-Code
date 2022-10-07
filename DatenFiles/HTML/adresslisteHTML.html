@@ -1,6 +1,8 @@
-<HTML>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" >
+<!--
+    Source:    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/HTML/adresslisteHTML.html
+-->
 <head>
   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
   <META NAME="AUTHOR"             CONTENT="Walter Rothlin">
@@ -36,7 +38,7 @@
 </head>
 
 <body>
-	<H1>Adressen-Verwaltung</H1>
+	<H1>Adressen-Verwaltung (mit CSS)</H1>
 	<table>
 		<caption>Verzeichnis der Teilnehmer</caption>
 		<thead>
@@ -66,7 +68,7 @@
 				<TD>Collet Rothlin</TD>
 				<TD><A href="http://map.search.ch/8855/Etzelstrasse 7" target="_new">Etzelstrasse 7</A></TD>
 				<TD>8852</TD>
-				<td class="hwz">Tuggen</td>
+				<TD class="hwz">Tuggen</TD>
 				<TD>&nbsp;</TD>
 				<TD><IMG src="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_11.jpg" border="4" width="200"
 						 height="240"></TD>
@@ -84,14 +86,42 @@
 			</tr>
 		</tfoot>
 	</table>
+	<hr/><hr/>
+	<table class="wr">
+		<thead class="wr">
+			<th class="wr">Name</th>
+			<th class="wr">Vorname</th>
+		</thead>
+		<tr class="wr">
+			<td class="wr">Walti</td>
+			<td class="wr">Rothlin</td>
+		</tr>
+		<tr class="wr">
+			<td class="wr">Claudia</td>
+			<td class="wr">Collet</td>
+		</tr>
+	</table>
 
     <h1 class="hinterlegt">H1 knallgelb hinterlegt</h1>
 
 Begin-Div (Div is a Block and ends with a linebreak)<div id="roterBereich">Der rote Bereich</div>End-Div<br/>
 Begin-Div (Div is a Block and ends with a linebreak)<div class="roterBereich">Der rote Bereich</div>End-Div<br/>
-<hr/>
+<hr/><hr/><br/><br/>
 Begin-Span (Span is a Block and doesn't a linebreak)<span id="blauerBereich">Der blauer Bereich</span>End-Span<br/>
 Begin-Span (Span is a Block and doesn't a linebreak)<span class="blauerBereich">Der blauer Bereich</span>End-Span<br/>
 <hr/>
+
+<div class="scrollable">
+khahskahs<br/>
+
+</div><br/><br/>
+<div style="width:120px;height=60px;color:blue;background-color:silver;overflow-y:auto;overflow-x:auto">
+khahskahssssssssssssssssss<br/>
+khahskahs<br/>
+khahskahs<br/>
+khahskahs<br/>
+khahskahs<br/>
+
+</div>
 </BODY>
 </HTML>
