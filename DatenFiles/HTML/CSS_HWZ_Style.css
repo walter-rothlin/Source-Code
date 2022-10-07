@@ -23,6 +23,13 @@ h1.hinterlegt {
     background-color:#FFFF00
 }
 
+img {
+    width: auto;
+    height: auto;
+    max-width: 50px;
+    max-height: 500px;
+}
+
 /* Table Styles */
 table.wr {
     border-style: solid;
