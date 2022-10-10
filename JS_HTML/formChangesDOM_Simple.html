@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+
+    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/formChangesDOM_Simple.html
+-->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Test-Frage</title>
+
+	<script>
+	function EingabeFeld_Changed() {
+		document.getElementById('DisplayArea').innerHTML = document.getElementById("InputField_2").value.toUpperCase();
+	}
+
+	function CheckboxChanged() {
+		if (document.getElementById("showDiv").checked) {
+			document.getElementById('DisplayArea').style.visibility  = "visible"
+		} else {
+			document.getElementById('DisplayArea').style.visibility  = "hidden"
+		}
+	}
+	</script>
+
+</head>
+<body>
+	<h1>Web-Application Simple mit Fehlern</h1>
+	<h2>Beschreibung der Application:</H2>
+	Beim Eintippen eines Textes im <B>Eingabe-Feld</B> wird dieser Text in Grossbuchstaben im <B>Ausgabe-Bereich</B> angezeigt, aber nur wenn die Checkbox aktiv ist. Bei inaktiver Checkbox wird der Ausgabe-Bereich ausgeblendet.<BR/><BR/>
+		<HR/>
+		<H2>Eingabe-Bereich:</H2>
+		Eingabe-Feld: <input type="text" id="InputField_2"  value="" size="30"  >
+		<input type="checkbox" id="showDiv" name="scales" checked>
+		<HR/>
+		<H2>Ausgabe-Bereich:</H2>
+		<div id="DisplayArea">
+			<p>Hier kommt der Text vom Eingabefeld in Grossbuchstaben</p>
+		</div>
+
+		<HR/>
+</body>
+
+<script>
+	document.getElementById("InputField_2").addEventListener('keyup', EingabeFeld_Changed);
+	document.getElementById("showDiv").addEventListener('change', CheckboxChanged);
+</script>
+</html>

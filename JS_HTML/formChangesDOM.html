@@ -1,4 +1,8 @@
 <!doctype html>
+<!--
+
+    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/formChangesDOM.html
+-->
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -26,7 +30,9 @@
 		var xhr = new XMLHttpRequest();
 		console.log(xhr);
 		adrPatternEncoded = encodeURI(document.getElementById("EingabeFeld_1").value);
-		xhr.open("GET", "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText="+ adrPatternEncoded + "&lang=en&type=locations" , true);
+		
+		xhr.open("GET", "https://api3.geo.admin.ch/rest/services/api/SearchServer?sr=2056&searchText="+ adrPatternEncoded + "&lang=en&type=locations" , true);
+		// xhr.open("GET", "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText="+ adrPatternEncoded + "&lang=en&type=locations" , true);
 
 		xhr.onload = function() {
 			console.log(this.responseText);
@@ -46,6 +52,18 @@
 </head>
 <body>
 	<h1>Formular Elemente Changes DOM</h1>
+	<h2>via JS</h2>
+		<input type="text" id="EingabeFeld_2"  value="Walti" size="30"  >
+		<input type="checkbox" id="showDiv" name="scales" checked>
+		<HR/>
+		<div id="HTML_Abschnitt">
+			<p>Hallo</p>
+			<HR/>
+		</div>
+	<BR/>
+	<HR/>
+    <h2>via JS REST Call  ==> AJAX</h2>
+		<HR/>
 		<input type="text" id="EingabeFeld_1"  value="peterliwiese" size="30"  >
 		<HR/>
 
@@ -56,15 +74,7 @@
 		</table>
 
 		<HR/>
-		<input type="text" id="EingabeFeld_2"  value="Walti" size="30"  >
-		<input type="checkbox" id="showDiv" name="scales" checked>
-		<HR/>
-		<div id="HTML_Abschnitt">
-			<p>Hallo</p>
-			<HR/>
-		</div>
 
-		<HR/>
 </body>
 
 <script>
