@@ -1,3 +1,8 @@
+//
+//
+//
+//   source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/AdresseToKoordinates_04_Complete.css
+
 var recordsFound = 100;
 
 function GetCoordinatesForAdresse() {
@@ -7,7 +12,7 @@ function GetCoordinatesForAdresse() {
     var xhr = new XMLHttpRequest();
     // console.log(xhr);
     adrPatternEncoded = encodeURI(document.getElementById('AdressPattern').value);
-    xhr.open("GET", "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText="+ adrPatternEncoded + "&lang=en&type=locations" , true);
+    xhr.open("GET", "https://api3.geo.admin.ch/rest/services/api/SearchServer?sr=2056&searchText="+ adrPatternEncoded + "&lang=en&type=locations" , true);
 
     xhr.onload = function() {
         //console.log(this.responseText);

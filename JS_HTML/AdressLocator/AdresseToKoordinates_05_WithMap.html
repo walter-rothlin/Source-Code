@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+
+    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/AdresseToKoordinates_05_WithMap.html
+-->
+<html>
+<head>
+   	<meta charset="UTF-8">
+   	<title>GeoAdminLocation</title>
+   	<link href = "AdresseToKoordinates_Style.css" rel = "stylesheet" type="text/css">
+   	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	
+	<script src="AdresseToKoordinates_FindLocation.js">
+	</script>
+	<!--
+	8.888440132141113 / 47.194740295410156     Wangen SZ        WGS 84
+	8.88730239868164  / 47.194541931152344     Peterliwiese 33  WGS 84
+
+	2709775.5 / 1228079.125           Peterliwiese 33  CH1903+/LV95
+
+    REST für Koordinatenumrechnung (https://www.swisstopo.admin.ch/de/karten-daten-online/calculation-services/m2m.html#dokumente_und_publik)
+	lv95 --> wgs84
+	http://geodesy.geo.admin.ch/reframe/lv95towgs84?easting=2600000&northing=1200000&altitude=550.0&format=json
+
+	wgs84 --> lv95
+	http://geodesy.geo.admin.ch/reframe/wgs84tolv95?easting=8.88730239868164&northing=47.194541931152344&altitude=440.0&format=json
+
+
+	-->
+   
+</head>
+
+<body>
+    <h2>Address Locator</h2>
+	<div class = "SearchField">
+		<div class = "SearchBar">
+			<input type="text" id="AdressPattern"  value="peterliwiese" size="30"  >
+			<div class = "fa fa-search"></div>
+		</div>
+		<div class = "Divider"></div>
+		<table id = "ResultSetView" >
+			<tr><td>Peterliwiese 33 8855</td><td>8.88730239868164</td><td>47.194541931152344</td></tr>
+		</table>
+	</div>
+	<BR/>
+	<iframe width="100%" height="300%" src="https://map.geo.admin.ch/embed.html?lang=de&topic=ech&bgLayer=ch.swisstopo.pixelkarte-farbe&E=2628859.57&N=1154531.98&zoom=3"></iframe>
+	<iframe width="100%" height="300%" src="https://map.geo.admin.ch/embed.html?lang=de&topic=ech&bgLayer=ch.swisstopo.pixelkarte-farbe&layers=ch.swisstopo.zeitreihen,ch.bfs.gebaeude_wohnungs_register,ch.bav.haltestellen-oev,ch.swisstopo.swisstlm3d-wanderwege,ch.astra.wanderland-sperrungen_umleitungen&layers_opacity=1,1,1,0.8,0.8&layers_visibility=false,false,false,false,false&layers_timestamp=18641231,,,,&E=2709775.50&N=1228079.13&zoom=10"></iframe>
+	<iframe width="100%" height="300%" src="http://bzu.ch"></iframe>
+	
+</body>
+
+<script>
+	document.getElementById("AdressPattern").addEventListener('keyup', GetCoordinatesForAdresse);
+</script>
+</html>

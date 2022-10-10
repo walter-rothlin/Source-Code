@@ -1,3 +1,8 @@
+//
+//
+//
+//   source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/GeoAdminApi3.js
+
 async function isValidAddress(searchString)
 {
     if(await getNumberOfResults(searchString) === 1)
@@ -20,7 +25,7 @@ async function getListCoordinates(searchString)
 {
     if(searchString.length > 0)
     {
-        let baseUrl = "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText=";
+        let baseUrl = "https://api3.geo.admin.ch/rest/services/api/SearchServer?sr=2056&searchText=";
         let requestUrl = baseUrl + searchString + "&lang=en&type=locations";
         let response =  await getRequest(requestUrl);
         return response["results"];

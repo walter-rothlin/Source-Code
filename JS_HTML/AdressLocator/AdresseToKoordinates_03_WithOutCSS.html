@@ -1,0 +1,38 @@
+<!doctype html>
+<!--
+
+    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/AdresseToKoordinates_01_WithOutCSS.html
+-->
+<html>
+<head>
+   	<meta charset="UTF-8">
+   	<title>GeoAdminLocation</title>
+   
+	
+	<script src="AdresseToKoordinates_FindLocation.js">
+	</script>
+  
+   
+</head>
+
+<body>
+    <h1>Address Locator (V4.0)</h1>
+	without CSS and with JS
+	<HR/>
+	<div class = "SearchField">
+		<div class = "SearchBar">
+			<input type="text" id="AdressPattern"  value="peterliwiese" size="30"  >
+			<div class = "fa fa-search"></div>
+		</div>
+		<div class = "Divider"></div>
+		<table id = "ResultSetView" >
+			<tr><td>Peterliwiese 33 8855</td><td>8.88730239868164</td><td>47.194541931152344</td></tr>
+			<tr><td>Etzelstr. 7 8855</td>    <td>8.89638900756836</td><td>47.18674087524414</td></tr>
+		</table>
+	</div>
+</body>
+
+<script>
+	document.getElementById("AdressPattern").addEventListener('keyup', GetCoordinatesForAdresse);
+</script>
+</html>
