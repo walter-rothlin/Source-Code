@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+    Source:    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/HTML/FormTest_formHandler_2_Erweitert.html
+-->
+
+<html>
+	<head>
+		<!--
+		Ehrenwoertliche Erklaerung:
+		---------------------------
+
+		Hiermit bestaetige ich, Walter Rothlin, diesen Leistungsnachweis 
+		ohne fremde Hilfe, nur mit den erlaubten Hilfsmittel, während der offiziellen 
+		vereinbarten Zeitdauer erstellt zu haben.
+
+		-->
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="icon" sizes="128x128" href="https://fh-hwz.ch/content/themes/hwz/assets/images/favicon128.png"> <!-- Icon im Title -->
+	<link href="http://hwz.peterliwiese.ch/examples/CSS_HWZ_Style_01.css" rel="stylesheet">
+
+
+	<script src="http://www.peterliwiese.ch/JavaScriptModule/JS_Library.js" type="text/javascript"></script>
+	<script src="http://fhoch3.peterliwiese.ch/GeoAdminApi3.js"></script>
+	<script src="http://fhoch3.peterliwiese.ch/AdressToKoordinates_04a_Complete.js"> </script>
+	<script language="JavaScript">
+
+		var verifiedPic = "http://www.peterliwiese.ch/img/Verified.svg";
+		var warningPic = "http://www.peterliwiese.ch/img/Warning.svg";
+
+		// verify Name using String length and display ok / nok with a picture
+		function checkName() {
+			let inputString = document.getElementById("NameTextField").value;
+			// console.log("Original string: " + inputString);
+			// alert("checkName: " + inputString);
+			if (inputString.length >= 3) {
+				document.getElementById("NameValid").src = verifiedPic;
+				setCookie('NameTextField',inputString)
+			} else {
+				document.getElementById("NameValid").src = warningPic;
+			}
+		}
+
+		// verify Firstame using String length and display ok / nok with a picture
+		function checkFirstame() {
+			let inputString = document.getElementById("FirstameTextField").value;
+			// console.log("Original string: " + inputString);
+			// alert("checkFirstame: " + inputString);
+			if (inputString.length >= 3) {
+				document.getElementById("FirstameValid").src = verifiedPic;
+				setCookie('FirstameTextField',inputString)
+			} else {
+				document.getElementById("FirstameValid").src = warningPic;
+			}
+		}
+
+		// verify Strasse using String length and display ok / nok with a picture
+		function checkStrasse() {
+			let inputString = document.getElementById("StrasseTextField").value;
+
+			// Koppeln des Eingabefeldes mit dem Searchfeld und aktualisieren der Resultatenliste
+			updateResultatenliste();
+
+			// console.log("Original string: " + inputString);
+			// alert("checkStrasse: " + inputString);
+			if (inputString.length >= 3) {
+				document.getElementById("StrasseValid").src = verifiedPic;
+				// document.getElementById("StrasseTextField").class = "TextboxLong valid";
+				setCookie('StrasseTextField',inputString)
+			} else {
+				document.getElementById("StrasseValid").src = warningPic;
+				// document.getElementById("StrasseTextField").class = "TextboxLong error";
+			}
+		}
+
+		// selbstkorrigierend validierung
+		function checkPLZ() {
+			// Web-Services zum èberprüfen von PLZ und Ort
+			// https://www.plz-suche.org/ch/plz/8855
+			// https://www.plz-suche.org/?api_region=ch&action=plz&term=8853
+			// https://www.plz-suche.org/?api_region=ch&action=ort&term=Wangen
+			let inputString = document.getElementById("PLZTextField").value;
+			// console.log("Original string: " + inputString);
+			// alert("checkPLZ: " + inputString);
+
+			// Koppeln des Eingabefeldes mit dem Searchfeld und aktualisieren der Resultatenliste
+			updateResultatenliste();
+
+			inputString = inputString.replace(/[^(\d)]/g,"");
+			if (inputString.length > 4) {
+				inputString = inputString.substring(0,4);
+				setCookie('PLZTextField',inputString)
+			}
+			document.getElementById("PLZTextField").value = inputString;
+			console.log("Output string:" + inputString);
+		}
+
+		// verify eMail using RegEx and display ok / nok with a picture
+		function checkEmail() {
+			let eMailRegEx = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+			let inputString = document.getElementById("EmailTextField").value;
+			inputString = inputString.toLowerCase();
+			document.getElementById("EmailTextField").value = inputString;
+			// console.log("Original string: " + inputString);
+			// alert('checkEmail:' + inputString);
+			if (eMailRegEx.test(inputString) == true) {
+				// console.log("Email ok!");
+				// alert("Email ok!");
+				document.getElementById("EmailValid").src = verifiedPic; 
+				setCookie('EmailTextField',inputString)
+			} else {
+				// console.log("Email Nok!");
+				// alert("Email Nok!");
+				document.getElementById("EmailValid").src = warningPic; 
+			}
+		}
+
+		// verify Ort using RegEx and display ok / nok with a picture
+		function checkOrt() {
+			let ortRegEx = /^[A-Z][a-z]+(\s[A-Za-z]+)*(\s\([A-Z]{2}\))*$/;
+			let inputString = document.getElementById("OrtTextField").value;
+			// console.log("Original string: " + inputString);
+			// alert('checkOrt:' + inputString);
+
+			// Koppeln des Eingabefeldes mit dem Searchfeld und aktualisieren der Resultatenliste
+			updateResultatenliste();
+
+			if (ortRegEx.test(inputString) == true) {
+				// console.log("Ort ok!");
+				// alert("Ort ok!");
+				document.getElementById("OrtValid").src = verifiedPic;
+				setCookie('OrtTextField',inputString)
+			} else {
+				// console.log("Ort Nok!");
+				// alert("Ort Nok!");
+				document.getElementById("OrtValid").src = warningPic; 
+			}
+		}
+		
+		// koppelt die Eingabefelder mit dem Searchfield und aktiviert die Resultatenliste
+		function updateResultatenliste() {
+			let strVal = document.getElementById("StrasseTextField").value;
+			let plzVal = document.getElementById("PLZTextField").value;
+			let ortVal = document.getElementById("OrtTextField").value;
+			document.getElementById("AdressPattern").value = strVal + " " + plzVal + " " + ortVal;
+			textChanged();
+		}
+
+		function getValuesFromCookies() {
+			document.getElementById("NameTextField").value = getCookie('NameTextField','')
+			checkName()
+
+			document.getElementById("FirstameTextField").value = getCookie('FirstameTextField','')
+			checkFirstame()
+
+			document.getElementById("StrasseTextField").value = getCookie('StrasseTextField','')
+			checkName()
+
+			document.getElementById("PLZTextField").value = getCookie('PLZTextField','')
+			checkPLZ()
+
+			document.getElementById("OrtTextField").value = getCookie('OrtTextField','')
+			checkOrt()
+
+			document.getElementById("EmailTextField").value = getCookie('EmailTextField','')
+			checkEmail()
+			return;
+		}
+
+		function deleteCookies() {
+			deleteCookie('NameTextField')
+			deleteCookie('FirstameTextField')
+			deleteCookie('StrasseTextField')
+			deleteCookie('PLZTextField')
+			deleteCookie('OrtTextField')
+			deleteCookie('EmailTextField')
+			return;
+		}
+
+	</script>
+
+		<title>Konzert Besuch</title>
+	</head>
+
+	<body onload="getValuesFromCookies()">
+		<H2>Anmeldeformular Konzert</H2>
+		Hiermit melde ich mich für den Anlass vom 
+		<FORM METHOD="GET" NAME="adressForm" ACTION="http://www.peterliwiese.ch/cgi-bin/formHandler.pl">
+		<!-- <FORM METHOD="GET" NAME="adressForm" ACTION="http://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl">  -->
+			<table>
+				<tr><td>Name:</td><td><INPUT    CLASS="TextboxMiddle" TYPE="TEXT"             NAME="Name"    VALUE="" oninput="checkName()"      id="NameTextField"        placeholder ="Muster">                  <img id="NameValid"     class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>Vorname:</td><td><INPUT CLASS="TextboxMiddle" TYPE="TEXT"             NAME="Vorname" VALUE="" oninput="checkFirstame()"  id="FirstameTextField"    placeholder ="Felix">                   <img id="FirstameValid" class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>Strasse:</td><td><INPUT CLASS="TextboxLong"   TYPE="TEXT"   SIZE="33" NAME="Strasse" VALUE="" oninput="checkStrasse()"   id="StrasseTextField"     placeholder ="Peterliwiese 33">         <img id="StrasseValid"  class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>PLZ:</td><td><INPUT     CLASS="TextboxShort"  TYPE="TEXT"   SIZE="4"  NAME="PLZ"     VALUE="" oninput="checkPLZ()"       id="PLZTextField"         placeholder ="8855"> Ort:<INPUT     CLASS="TextboxMiddle" TYPE="TEXT"   NAME="Wohnort" VALUE="" oninput="checkOrt()" id="OrtTextField" placeholder="Wangen (SZ)"><img id="OrtValid"    class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>email:</td><td><INPUT   CLASS="TextboxLong"   TYPE="TEXT"   SIZE="33" NAME="Email"   VALUE="" oninput="checkEmail()"     id="EmailTextField"       placeholder ="claudia@peterliwiese.ch"> <img id="EmailValid"    class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+
+				<tr><td COLSPAN="3">&Ouml;V Vergünstigung:<INPUT TYPE="RADIO" NAME="SbbVaucher" VALUE="Nichts" CHECKED>Nichts&nbsp;&nbsp;<INPUT TYPE="RADIO" NAME="SbbVaucher" VALUE="1/2 Preis">1/2 Preis&nbsp;&nbsp;<INPUT TYPE="RADIO" NAME="SbbVaucher" VALUE="GA">GA</td></tr>
+				<tr><td COLSPAN="3">Mittagessen:<INPUT TYPE="CHECKBOX" NAME="Vegan" CHECKED> Vegan</td></tr>
+				<tr><td COLSPAN="3">Ich komme in Begleitung von 
+						<SELECT NAME="Begleitpersonen">
+						<OPTION VALUE="Keine" SELECTED>keiner
+						<OPTION VALUE="1">einer
+						<OPTION VALUE="2">zwei
+						<OPTION VALUE="3">drei
+						</SELECT> weiteren Person(en)
+					</td>
+				</tr>
+			</table>
+			<br/><br/>
+			
+			Kommentar<br/>
+			<TEXTAREA NAME="Kommentar" ROWS="5" COLS="50" WRAP="On"></TEXTAREA>
+
+			<!-- Hidden fields to control the formHandler script -->
+			<INPUT TYPE="HIDDEN" NAME="constrain_PLZ"   VALUE="isInteger(XXXX,1000,9999,<B>Postleitzahl</B> muss zwischen 1000 und 9999 sein)">
+
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_replyTemplateSuccess"         VALUE="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_replyTemplateNotSuccess"      VALUE="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html">
+
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailTemplate"                VALUE="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSubject"                 VALUE="Antwort (Default as HTML)">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailToAddrs"                 VALUE="anmeldung@peterliwiese.ch">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailCcAddrs"                 VALUE="">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailBccAddrs"                VALUE="">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailFromAddr"                VALUE="FormField:Email">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSentAsHTML"              VALUE="YES">
+			 
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailTemplate_1"              VALUE="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.txt">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSubject_1"               VALUE="Antwort as plain txt mail">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailToAddrs_1"               VALUE="FormField:Email">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailFromAddr_1"              VALUE="anmeldung@peterliwiese.ch">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSentAsHTML_1"            VALUE="NO">
+
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_countOfEmails"                VALUE="2">
+			<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_doDebug"                      VALUE="Yes">
+			<!-- end of hidden fields -->
+
+			<BR/><BR/>
+			<INPUT TYPE="SUBMIT" VALUE="Anmelden" NAME="submitted" >
+			<INPUT TYPE="RESET"  VALUE="Eingaben löschen">
+			<INPUT TYPE="BUTTON" VALUE="Cookies löschen" onclick="deleteCookies()">
+		</FORM>
+		<BR/>
+		<HR/>
+		<label class="LblSearchStatus" id="LblSearchStatus"></label>
+		<div class="SearchField">
+			<div class="SearchBar">
+				<input type="text" id="AdressPattern"  placeholder="Please enter a search pattern" size="30">
+				<div class="fa fa-search"></div>
+			</div>
+			<div class="Divider"></div>
+			<table id="ResultSetView" >
+			</table>
+		</div>
+	</body>
+
+	<script>
+		document.getElementById("AdressPattern").addEventListener("keyup", textChanged);
+	</script>
+</html>
+<!--
+Bewertung
+---------
+
+ 1) Richtiger Filename / Ehrenwoertliche Erklaerung                                   
+ 2) Eingabefeld fuer Strasse vorhanden und eMail Feld am Schluss                      
+ 3) Validierer fuer Strassebfeld funktioniert                                         
+ 4) Validierer fuer Ort vorhanden                                                     
+ 5) Ort Validierer funktioniert gemaess Vorgaben                                      
+ 6) Funktion zum Speicher eines Feldes in cookies funktioniert                        
+ 7) Restore von Cookies fuer ein Feld funktioniert                                    
+ 8) Alle Felder werden in Cookies geschrieben                                         
+ 9) Restore aller Felder funktioniert                                                 
+10) Cookies loeschen funktioniert                                                     
+11) HTML erweitert um die Teile des Adresslocators                                    
+12) Eventhandler eingebaut und Liste wird upgedated                                   
+13) Strasse wird an Searchfield gebunden                                              
+14) Beim eintippen einer Strasse im Strassenfeld wird Resultateliste aktualisiert     
+15) Postleitzahl und Ort wird ebenfalls als Suchkriterium uebernommen                 
+                                                                                     --------
+                                                                             Punkte:
+                                                                                     --------
+
+                                                          Note = 0.34 * Punkte + 1 = 
+                                                                                     ========
+-->

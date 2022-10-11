@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+    Source:    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/HTML/FormTest_echo.html
+-->
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Kundenformular</title>
+</head>
+<body>
+
+
+<H2>Formularwerte werden zu echo.pl gesendet</H2>
+<FORM METHOD=GET NAME="adressForm" ACTION=http://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl>
+	<table>
+		<tr><td>Name:</td><td><INPUT    TYPE=TEXT           NAME=Name    VALUE="Rothlin"></td></tr>
+		<tr><td>Vorname:</td><td><INPUT TYPE=TEXT           NAME=Vorname VALUE="Walti"></td></tr>
+		<tr><td>email:</td><td><INPUT   TYPE=TEXT   SIZE=30 NAME=Email   VALUE="Walter@Rothlin.com"></td></tr>
+		<tr><td>PLZ:</td><td><INPUT     TYPE=TEXT   SIZE=4  NAME=PLZ     VALUE=""> Ort:<INPUT     TYPE=TEXT   NAME=Wohnort VALUE=""></td></tr>
+	</table>
+	<INPUT TYPE=RESET  VALUE="Reset">
+	<INPUT TYPE=SUBMIT NAME=submitted VALUE="Submit"><BR/>
+</FORM>
+</body>
+</html>
