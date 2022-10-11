@@ -1,5 +1,24 @@
-class IncDec:
+#!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name: Class_IncDec.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HWZ/BWI_A21/Class_IncDec.py
+#
+# Description: Incrementer / Decrementer Klasse
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 27-Sep-2022   Walter Rothlin      Initial Version
+# 11-Oct-2022   Walter Rothlin      Dynamische Attribute, Properties
+# ------------------------------------------------------------------
+
+
+class IncDec:
+    """
+    Dies ist unsere 1. Klasse!!!!
+
+    """
     def __init__(self, counter=10, min_value=0, max_value=100, step_width=1):
         """
         Initalizer for Class IncDec:
@@ -13,6 +32,7 @@ class IncDec:
         self.__min_value = min_value
         self.__max_value = max_value
         self.__step_width = step_width
+        self.__aValue = "Hallo HWZ!!!"
 
 
     def __str__(self):
@@ -41,12 +61,39 @@ class IncDec:
             self.__counter = counter
 
 
+    def set_aValue(self, aValue):
+        print("set_aValue(" + aValue + ") called....")
+        self.__aValue = aValue
+
+    def get_aValue(self):
+        print("get_aValue called....")
+        return self.__aValue
+
+    aktueller_value = property(get_aValue, set_aValue)
 
 if __name__ == '__main__':
+    # help(IncDec)
+    # print(IncDec.__doc__)
+
     print("Name des Aufrufers:", __name__)
     seaLevel = IncDec(20)
     print(seaLevel)
 
+    # Dynamisches Attribute
+    # seaLevel.__aValue = "Guten Abend!!!"
+    # print("seaLevel.__aValue:", seaLevel.__aValue)
+
+    print("seaLevel.get_aValue():", seaLevel.get_aValue())
+    seaLevel.set_aValue("Hallo Zuerich")
+    print("seaLevel.get_aValue():", seaLevel.get_aValue())
+    # print("seaLevel.__aValue:", seaLevel.__aValue)
+
+    print("seaLevel.get_aValue():", seaLevel.get_aValue())
+    print("\n\nSetzen und lesen einer Property")
+    seaLevel.aktueller_value = "Setze die Property"
+    print(seaLevel.aktueller_value)
+    print("\n\n")
+    print("seaLevel.get_aValue():", seaLevel.get_aValue())
 
 
     print(seaLevel.get_counter())
