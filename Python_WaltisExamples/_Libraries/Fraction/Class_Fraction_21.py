@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: Class_Fraction.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Fraction/Class_Fraction_20.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Fraction/Class_Fraction_21.py
 #
 # Description: Implementiert einen Bruch (Farction) and the basics oparators
 #
@@ -14,6 +14,7 @@
 # 12-Oct-2022	Walter Rothlin  Kehrwert und automated testing
 # 12-Oct-2022	Walter Rothlin  Add to_decimal(), mul(), div(), add(), sub() und automated testing
 #                               Mod __str__
+# 12-Oct-2022	Walter Rothlin  Implementing business methods
 #
 # ------------------------------------------------------------------
 
