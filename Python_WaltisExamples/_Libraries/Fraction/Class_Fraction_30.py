@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: Class_Fraction.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Fraction/Class_Fraction_21.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Fraction/Class_Fraction_30.py
 #
 # Description: Implementiert einen Bruch (Farction) and the basics oparators
 #
@@ -15,6 +15,7 @@
 # 12-Oct-2022	Walter Rothlin  Add to_decimal(), mul(), div(), add(), sub() und automated testing
 #                               Mod __str__
 # 12-Oct-2022	Walter Rothlin  Implementing business methods
+# 12-Oct-2022   Walter Rothlin  Implemented operators * / + and -
 #
 # ------------------------------------------------------------------
 
@@ -86,19 +87,40 @@ class Fraction:
         self.__nenner = self.__nenner * factor.__nenner
         return self
 
+    # overload * operator
+    def __mul__(self, factor):
+        return self
+
+
     def div(self, divisor):
         self.__zaehler = self.__zaehler * divisor.__nenner
         self.__nenner = self.__nenner * divisor.__zaehler
         return self
+
+    # overload / operator
+    def __truediv__(self, divisor):
+        return self
+
+
 
     def add(self, summand):
         self.__zaehler = self.__zaehler * summand.__nenner + summand.__zaehler * self.__nenner
         self.__nenner = self.__nenner * summand.__nenner
         return self
 
+    # overload + operator
+    def __add__(self, summand):
+        return self
+
+
+
     def sub(self, subtrahend):
         self.__zaehler = self.__zaehler * subtrahend.__nenner - subtrahend.__zaehler * self.__nenner
         self.__nenner = self.__nenner * subtrahend.__nenner
+        return self
+
+    # overload - operator
+    def __sub__(self, subtrahend):
         return self
 
 
@@ -299,9 +321,66 @@ def TEST_mul_div_add_sub(verbal=False):
         print("     Test failed   : ", error_count)
         print("\n")
 
+def TEST_mul_div_add_sub_operators(verbal=False):
+    error_count = 0
+    test_count = 0
+
+    bruch = Fraction(7, 8)
+    bruch_1 = Fraction(7, 8)
+    bruch_resultat = bruch * bruch_1
+    expected = "[49/64]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("5." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch_resultat)
+        error_count += 1
+
+    bruch = Fraction(7, 8)
+    bruch_1 = Fraction(1, 2)
+    bruch_resultat = bruch * bruch_1
+    expected = "[7/16]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("5." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch_resultat)
+        error_count += 1
+
+    bruch = Fraction(1, 2)
+    bruch_1 = Fraction(3, 4)
+    bruch_resultat = bruch / bruch_1
+    expected = "[4/6]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("5." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch_resultat)
+        error_count += 1
+
+    bruch = Fraction(1, 2)
+    bruch_1 = Fraction(3, 4)
+    bruch_resultat = bruch + bruch_1
+    expected = "[10/8]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("5." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch_resultat)
+        error_count += 1
+
+    bruch = Fraction(1, 2)
+    bruch_1 = Fraction(3, 8)
+    bruch_resultat = bruch - bruch_1
+    expected = "[2/16]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("5." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch_resultat)
+        error_count += 1
+
+
+    if verbal:
+        print("5) Test method: mul, div, add, sub Operators")
+        print("--------------------------")
+        print("     Test performed: ", test_count)
+        print("     Test failed   : ", error_count)
+        print("\n")
 
 if __name__ == '__main__':
     TEST_init_str(verbal=True)
     TEST_setter_getter_properties(verbal=True)
     TEST_reciprocal_to_decimal_shorten_expand(verbal=True)
     TEST_mul_div_add_sub(verbal=True)
+    TEST_mul_div_add_sub_operators(verbal=True)

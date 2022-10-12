@@ -242,6 +242,41 @@ def TEST_mul_div_add_sub(verbal=False):
         print("4." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch)
         error_count += 1
 
+    bruch = Fraction(7, 8)
+    bruch_1 = Fraction(1, 2)
+    bruch.mul(bruch_1)
+    expected = "[7/16]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("4." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch)
+        error_count += 1
+
+    bruch = Fraction(1, 2)
+    bruch_1 = Fraction(3, 4)
+    bruch.div(bruch_1)
+    expected = "[4/6]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("4." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch)
+        error_count += 1
+
+    bruch = Fraction(1, 2)
+    bruch_1 = Fraction(3, 4)
+    bruch.add(bruch_1)
+    expected = "[10/8]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("4." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch)
+        error_count += 1
+
+    bruch = Fraction(1, 2)
+    bruch_1 = Fraction(3, 8)
+    bruch.sub(bruch_1)
+    expected = "[2/16]"
+    test_count += 1
+    if str(bruch) != expected:
+        print("4." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch)
+        error_count += 1
 
     if verbal:
         print("4) Test method: mul, div, add, sub")
@@ -249,6 +284,7 @@ def TEST_mul_div_add_sub(verbal=False):
         print("     Test performed: ", test_count)
         print("     Test failed   : ", error_count)
         print("\n")
+
 
 if __name__ == '__main__':
     TEST_init_str(verbal=True)
