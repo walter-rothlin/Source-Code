@@ -11,6 +11,7 @@
 #
 # History:
 # 11-Oct-2022	Walter Rothlin Initial Version __int__ __str__ and main
+# 12-Oct-2022	Walter Rothlin Kehrwert und automated Testing
 #
 # ------------------------------------------------------------------
 

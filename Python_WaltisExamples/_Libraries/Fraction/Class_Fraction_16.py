@@ -11,6 +11,7 @@
 #
 # History:
 # 11-Oct-2022	Walter Rothlin Initial Version __int__ __str__ and main
+# 12-Oct-2022	Walter Rothlin Kehrwert und automated Testing
 #
 # ------------------------------------------------------------------
 
@@ -52,6 +53,12 @@ class Fraction:
 
     nenner = property(get_nenner, set_nenner)
 
+    # Business Methods
+    def reciprocal(self):   # only Prototype
+        tmp = self.__zaehler
+        self.__zaehler = self.__nenner
+        self.__nenner = self.__zaehler
+        return self
 
 if __name__ == '__main__':
 
@@ -83,3 +90,9 @@ if __name__ == '__main__':
     bruch_1.zaehler = 7
     bruch_1.nenner = 8
     print("2.2) bruch_1: [7/8]::", bruch_1)
+
+
+    print("3) Test reciprocal methode")
+    print("--------------------------")
+    print("3.1) bruch_1: [8/7]::", bruch_1.reciprocal())
+    print("\n")
