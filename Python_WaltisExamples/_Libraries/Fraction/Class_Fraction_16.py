@@ -55,9 +55,12 @@ class Fraction:
 
     # Business Methods
     def reciprocal(self):   # only Prototype
+        """
+        - setzt self moit dem Kehrwert [1/2] ==> [2/1]
+        """
         tmp = self.__zaehler
         self.__zaehler = self.__nenner
-        self.__nenner = self.__zaehler
+        self.__nenner = tmp
         return self
 
 if __name__ == '__main__':
