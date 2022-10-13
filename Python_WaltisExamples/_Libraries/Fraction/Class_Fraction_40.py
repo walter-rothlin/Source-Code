@@ -32,13 +32,16 @@ class Fraction:
         - only one sign
         - only Integers no floats nor string,....
         """
-        self.__zaehler = zaehler
-        self.__nenner = nenner
+        self.set_zaehler(zaehler)
+        self.set_nenner(nenner)
 
-    def __str__(self, sep="/", startChr="[", endChar="]"):
+    def __str__(self):
         """
         - Erzeugt eine String-Representation eines Bruches in der Form [3/4]
         """
+        return self.to_string()
+
+    def to_string(self, sep="/", startChr="[", endChar="]"):
         return startChr + str(self.__zaehler) + sep + str(self.__nenner) + endChar
 
     # setter / getters and properties
@@ -141,6 +144,8 @@ def TEST_SIMPLE_init_str(verbal=False):
     Ctr |1       |4      |[1/4]
     Ctr |2       |7      |[2/7]
     Ctr |55      |72     |[55/72]
+    Ctr |-5      |40     |[-5/40]
+    Ctr |5       |-40    |[5/-40]
     """
 
     listOfTestCases = testCases.split("\n")

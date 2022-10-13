@@ -32,10 +32,13 @@ class Fraction:
         self.__zaehler = zaehler
         self.__nenner = nenner
 
-    def __str__(self, sep="/", startChr="[", endChar="]"):
+    def __str__(self):
         """
         - Erzeugt eine String-Representation eines Bruches in der Form [3/4]
         """
+        return self.to_string()
+
+    def to_string(self, sep="/", startChr="[", endChar="]"):
         return startChr + str(self.__zaehler) + sep + str(self.__nenner) + endChar
 
     # setter / getters and properties
