@@ -1,7 +1,8 @@
 # ------------------------------------------------------------------
-# Name: WeatherLogger.py
+# Name  : WeatherLogger_05.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_05_DataLogger/WeatherLogger_05.py
 #
-# Description: Logges weather data received from a REST-Service (JSON)
+# Description: Logs weather data received from a REST-Service (JSON)
 #
 # Autor: Walter Rothlin
 #
