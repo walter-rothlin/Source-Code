@@ -27,59 +27,84 @@
 		// verify Name using String length and display ok / nok with a picture
 		function checkName() {
 			let inputString = document.getElementById("NameTextField").value;
-			console.log("Original string: " + inputString);
+			console.log("Original lastName: " + inputString);
 			// alert("checkName: " + inputString);
 			if (inputString.length >= 3)
 			{
 				document.getElementById("NameValid").src = verifiedPic;
+				return true;
 			} else {
 				document.getElementById("NameValid").src = warningPic;
+				return false;
 			}
 		}
 
 		// verify Firstame using String length and display ok / nok with a picture
 		function checkFirstame() {
 			let inputString = document.getElementById("FirstameTextField").value;
-			console.log("Original string: " + inputString);
+			console.log("Original firstName: " + inputString);
 			// alert("checkFirstame: " + inputString);
 			if (inputString.length >= 5)
 			{
 				document.getElementById("FirstameValid").src = verifiedPic;
+				return true;
 			} else {
 				document.getElementById("FirstameValid").src = warningPic;
+				return false;
 			}
-		}
-
-		// selbstkorrigierend validierung
-		function checkPLZ() {
-			let inputString = document.getElementById("PLZTextField").value;
-			console.log("Original string: " + inputString);
-			// alert("checkPLZ: " + inputString);
-			inputString = inputString.replace(/[^(\d)]/g,"");
-			if (inputString.length > 4)
-			{
-				inputString = inputString.substring(0,4);
-			}
-			document.getElementById("PLZTextField").value = inputString;
-			console.log("Output string:" + inputString);
 		}
 
 		// verify eMail using RegEx and display ok / nok with a picture
 		function checkEmail() {
 			let eMailRegEx = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 			let inputString = document.getElementById("EmailTextField").value;
+			console.log("Original eMail: " + inputString);
 			inputString = inputString.toLowerCase();
 			document.getElementById("EmailTextField").value = inputString;
-			//console.log("Original string: " + inputString);
+
 			// alert('checkEmail:' + inputString);
 			if (eMailRegEx.test(inputString) == true) {
-				// console.log("Email ok!");
-				// alert("Email ok!");
-				document.getElementById("EmailValid").src = verifiedPic; 
+				console.log("Email ok!");
+				document.getElementById("EmailValid").src = verifiedPic;
+				return true;
 			} else {
-				// console.log("Email Nok!");
-				// alert("Email Nok!");
-				document.getElementById("EmailValid").src = warningPic; 
+				console.log("Email Nok!");
+				document.getElementById("EmailValid").src = warningPic;
+				return false;
+			}
+		}
+
+		// selbstkorrigierende Validierung
+		function checkPLZ() {
+			let inputString = document.getElementById("PLZTextField").value;
+			console.log("Original PLZ                : " + inputString);
+
+			inputString = inputString.replace(/[^(\d)]/g,"");
+			console.log("Output string korrigiert (1):" + inputString);
+			if (inputString.length > 4)
+			{
+				inputString = inputString.substring(0,4);
+				console.log("Output string korrigiert (2):" + inputString);
+			}
+
+			console.log("Output string korrigiert (3):" + inputString);
+			document.getElementById("PLZTextField").value = inputString;
+
+			if (inputString.length == 4)
+			{
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+
+		function checkAllFields() {
+			console.log("Check all fields!");
+			if (checkName() & checkFirstame() & checkPLZ() & checkEmail()) {
+					document.getElementById("submit").disabled = false;
+			} else {
+					document.getElementById("submit").disabled = true;
 			}
 		}
 
@@ -89,15 +114,15 @@
 	</head>
 
 	<body>
-		<H2>Anmeldeformular für Geschäftsanlass</H2>
+		<H2>Anmeldeformular für Geschäftsanlass (v3.0)</H2>
 		Hiermit melde ich mich für den Anlass vom 
 		<FORM METHOD="GET" NAME="adressForm" ACTION="http://www.peterliwiese.ch/cgi-bin/formHandler.pl">
 		<!-- <FORM METHOD="GET" NAME="adressForm" ACTION="http://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl">  -->
 			<table>
-				<tr><td>Name:</td><td><INPUT    CLASS="TextboxMiddle" TYPE="TEXT"             NAME="Name"    VALUE="" oninput="checkName()"      id="NameTextField"        placeholder ="Muster">                  <img id="NameValid"     class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
-				<tr><td>Vorname:</td><td><INPUT CLASS="TextboxMiddle" TYPE="TEXT"             NAME="Vorname" VALUE="" oninput="checkFirstame()"  id="FirstameTextField"    placeholder ="Felix">                   <img id="FirstameValid" class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
-				<tr><td>email:</td><td><INPUT   CLASS="TextboxLong"   TYPE="TEXT"   SIZE="33" NAME="Email"   VALUE="" oninput="checkEmail()"     id="EmailTextField"       placeholder ="claudia@peterliwiese.ch"> <img id="EmailValid"    class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
-				<tr><td>PLZ:</td><td><INPUT     CLASS="TextboxShort"  TYPE="TEXT"   SIZE="4"  NAME="PLZ"     VALUE="" oninput="checkPLZ()"       id="PLZTextField"         placeholder ="8855"> Ort:<INPUT     CLASS="TextboxMiddle" TYPE="TEXT"   NAME="Wohnort" VALUE="" placeholder ="Wangen (SZ)"></td></tr>
+				<tr><td>Name:</td><td><INPUT    CLASS="TextboxMiddle" TYPE="TEXT"             NAME="Name"    VALUE="" oninput="checkAllFields()"      id="NameTextField"        placeholder ="Muster">                  <img id="NameValid"     class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>Vorname:</td><td><INPUT CLASS="TextboxMiddle" TYPE="TEXT"             NAME="Vorname" VALUE="" oninput="checkAllFields()"  id="FirstameTextField"    placeholder ="Felix">                   <img id="FirstameValid" class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>email:</td><td><INPUT   CLASS="TextboxLong"   TYPE="TEXT"   SIZE="33" NAME="Email"   VALUE="" oninput="checkAllFields()"     id="EmailTextField"       placeholder ="claudia@peterliwiese.ch"> <img id="EmailValid"    class="statusSymbol" src="http://www.peterliwiese.ch/img/Warning.svg"></td></tr>
+				<tr><td>PLZ:</td><td><INPUT     CLASS="TextboxShort"  TYPE="TEXT"   SIZE="4"  NAME="PLZ"     VALUE="" oninput="checkAllFields()"       id="PLZTextField"         placeholder ="8855"> Ort:<INPUT     CLASS="TextboxMiddle" TYPE="TEXT"   NAME="Wohnort" VALUE="" placeholder ="Wangen (SZ)"></td></tr>
 				<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 
 				<tr><td COLSPAN="3">&Ouml;V Vergünstigung:<INPUT TYPE="RADIO" NAME="SbbVaucher" VALUE="Nichts" CHECKED>Nichts&nbsp;&nbsp;<INPUT TYPE="RADIO" NAME="SbbVaucher" VALUE="1/2 Preis">1/2 Preis&nbsp;&nbsp;<INPUT TYPE="RADIO" NAME="SbbVaucher" VALUE="GA">GA</td></tr>
@@ -142,7 +167,7 @@
 			<!-- end of hidden fields -->
 
 			<BR/><BR/>
-			<INPUT TYPE="SUBMIT" NAME="submitted" VALUE="Anmelden">
+			<INPUT TYPE="SUBMIT" ID="submit" NAME="submitted" VALUE="Anmelden" disabled>
 			<INPUT TYPE="RESET"  VALUE="Eingaben löschen">
 		</FORM>
 		<BR/>
