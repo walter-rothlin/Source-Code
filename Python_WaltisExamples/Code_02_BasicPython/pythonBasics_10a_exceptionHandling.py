@@ -11,7 +11,7 @@
 #
 # History:
 # 26-May-2021   Walter Rothlin      Initial Version
-#
+# 25-Oct-2022   Walter Rothlin      Implemented lineare function
 # ------------------------------------------------------------------
 
 import math
@@ -28,13 +28,19 @@ Berechnung der Nullstellen einer quadratischen Funktion der Form:
 '''
 
 print(help)
+
 a = float(input("a="))
+
 if a == 0:
     print("Es ist keine quadratische Funktion!!!")
-else:
-    b = float(input("b="))
-    c = float(input("c="))
 
+b = float(input("b="))
+c = float(input("c="))
+
+if a == 0:
+    x1 = -c/b
+    print("Lösung lineare Gleichung: x1 =", x1)
+else:
     diskriminante = b ** 2 - 4 * a * c
     print("Diskriminante:", diskriminante)
     if diskriminante < 0:
