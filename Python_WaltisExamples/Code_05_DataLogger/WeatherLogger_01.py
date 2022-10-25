@@ -26,11 +26,16 @@ ort = input("Ort  [*Uster]   :")
 if ort == "":
     ort = 'Uster'
 
+max_counter = int(input("Anzahl requests :"))
+
 appId = "144747fd356c86e7926ca91ce78ce170"
 
 
 firstTime = True
-while True:
+counter = 0
+doLoop = True
+while doLoop:
+    counter += 1
     requestStr = serviceURL + "?q=" + ort + "&units=metric&lang=de&appid=" + appId
     print("Request:\n", requestStr, "\n\n") if firstTime else False
     responseStr = requests.get(requestStr)
@@ -52,3 +57,5 @@ while True:
     print(getTimestamp(), ": ", ortsname, "[", land, "]", "(", lon, "/", lat, ")      ", temp, "°C ", pressure, "mBar ", humidity, "% ", cloud, "  Wind:", windSpeed, "m/s ", windDirection, "° ", sep='')
     time.sleep(pollingTime)
     firstTime = False
+    if counter >= max_counter:
+        doLoop = False
