@@ -20,10 +20,10 @@ class IncDec:
 
     # Ctr (Konstruktor)
     # -----------------
-    def __init__(self, currentValue=0, stepUp=1, stepDown=-1, max=1000, min=0):
-        self.__currentValue = currentValue
-        self.__stepUp = stepUp
-        self.__stepDown = stepDown
+    def __init__(self, current_value=0, step_up=1, step_down=-1, max=1000, min=0):
+        self.__current_value = current_value
+        self.__step_up = step_up
+        self.__step_down = step_down
         self.__max = max
         self.__min = min
 
@@ -31,39 +31,39 @@ class IncDec:
     # --------------------
     # toString()
     def __str__(self):
-        return "Inc:" + str(self.__stepUp) + "  Dec:" + str(self.__stepDown) + " im Intervall:[" + str(
-            self.__min) + " .. " + str(self.__max) + "] = " + str(self.__currentValue)
+        return "Inc:" + str(self.__step_up) + "  Dec:" + str(self.__step_down) + " im Intervall:[" + str(
+            self.__min) + " .. " + str(self.__max) + "] = " + str(self.__current_value)
 
     # Bussiness-Methods
     # -----------------
     def inc(self):
-        self.__currentValue = self.__currentValue + self.__stepUp
-        if self.__currentValue > self.__max:
-            self.__currentValue = self.__max
-        return self.__currentValue
+        self.__current_value = self.__current_value + self.__step_up
+        if self.__current_value > self.__max:
+            self.__current_value = self.__max
+        return self.__current_value
 
     def dec(self):
-        self.__currentValue = self.__currentValue - self.__stepDown
-        if self.__currentValue < self.__min:
-            self.__currentValue = self.__min
-        return self.__currentValue
+        self.__current_value = self.__current_value - self.__step_down
+        if self.__current_value < self.__min:
+            self.__current_value = self.__min
+        return self.__current_value
 
     # Methoden (setter / getter)
     # --------------------------
-    def getValue(self):
-        return self.__currentValue
+    def get_value(self):
+        return self.__current_value
 
-    def setValue(self, newValue):
-        self.__currentValue = newValue
-        return self.__currentValue
+    def set_value(self, value):
+        self.__current_value = value
+        return self.__current_value
 
-    def setInc(self, newValue):
-        self.__stepUp = newValue
-        return self.__stepUp
+    def set_inc(self, value):
+        self.__step_up = value
+        return self.__step_up
 
-    def setDec(self, newValue):
-        self.__stepDown = newValue
-        return self.__stepDown
+    def set_dec(self, value):
+        self.__step_down = value
+        return self.__step_down
 
 
 if __name__ == '__main__':
@@ -71,15 +71,15 @@ if __name__ == '__main__':
     testFailed = 0
 
     testCount += 1
-    inc_1 = IncDec(currentValue=990)
-    if inc_1.getValue() != 990:
+    inc_1 = IncDec(current_value=990)
+    if inc_1.get_value() != 990:
         testFailed += 1
         print("Test-Case 1 NOT OK")
 
     testCount += 1
     inc_1.inc()
     inc_1.inc()
-    if inc_1.getValue() != 992:
+    if inc_1.get_value() != 992:
         testFailed += 1
         print("Test-Case 2 NOT OK")
 
@@ -90,7 +90,7 @@ if __name__ == '__main__':
         print("Result:", str(inc_1))
 
     testCount += 1
-    inc_1.setInc(5)
+    inc_1.set_inc(5)
     inc_1.inc()
     if str(inc_1) != "Inc:5  Dec:-1 im Intervall:[0 .. 1000] = 997":
         testFailed += 1
@@ -105,7 +105,7 @@ if __name__ == '__main__':
         print("Result:", str(inc_1))
 
     testCount += 1
-    inc_2 = IncDec(currentValue=20, stepUp=2, stepDown=-3, max=10, min=-10)
+    inc_2 = IncDec(current_value=20, step_up=2, step_down=-3, max=10, min=-10)
     if str(inc_2) != "Inc:2  Dec:-3 im Intervall:[-10 .. 10] = 20":
         testFailed += 1
         print("Test-Case 6 NOT OK")

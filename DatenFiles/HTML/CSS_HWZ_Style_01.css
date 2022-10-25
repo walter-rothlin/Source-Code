@@ -1,0 +1,58 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+body { 
+	background-color:#EEEEEE;
+	margin-left:150px;
+	font-family: 'Open Sans', sans-serif;
+	--refScale:50px;
+	--hoverY:1px;
+}
+
+h2 {
+	font-family: 'Open Sans', sans-serif;
+	font-size:300%;
+	color:#FF0000;
+	font-style:italic;
+	border-bottom:solid thin red;
+}
+
+INPUT {
+	transition: all 0.3s ease 0s;
+}
+
+INPUT:hover {
+	transform: translateY(var(--hoverY)) translateX(var(--hoverY));
+}
+
+INPUT:focus {
+	color:#242424;
+	background-color:#FF0000;
+	transform: translateY(var(--hoverY)) translateX(var(--hoverY));
+}
+
+.valid {
+	border-color:green;
+}
+
+.error {
+	border-color:red;
+}
+
+.TextboxShort {
+	width:calc(var(--refScale)* 1);
+}
+
+.TextboxMiddle {
+	width:calc(var(--refScale)* 3);
+}
+
+.TextboxLong {
+	width:calc(var(--refScale)* 5);
+}
+
+.statusSymbol {
+	transform: translateY(2px);
+	height: 15px;
+	margin-left: 2px;
+}

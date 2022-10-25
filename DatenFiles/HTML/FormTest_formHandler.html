@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+<!--    
+    Source:    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/HTML/FormTest_formHandler.html
+    Published: http://hwz.peterliwiese.ch/examples/FormTest_formHandler.html
+-->
+	
+<!--
+		Ehrenwoertliche Erklaerung:
+		---------------------------
+   
+		Hiermit bestaetige ich, Walter Rothlin, diesen Leistungsnachweis 
+		ohne fremde Hilfe nur mit den erlaubten Hilfsmittel waehrend der offiziellen 
+		vereinbarten Zeitdauer erstellt zu haben.
+-->
+		<meta charset="UTF-8">
+
+<title>Kundenformular (V2.0)</title>
+</HEAD>
+
+<Body>
+<H2>Formhaendlertest-Formular</H2>
+Formularwerte werden zu formHandler.pl auf einem anderen Server gesendet
+<!--<FORM METHOD="GET" NAME="adressForm" ACTION="http://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl"> -->
+<FORM METHOD="GET" NAME="adressForm" ACTION=http://www.peterliwiese.ch/cgi-bin/formHandler.pl>
+	<table>
+	<tr>
+	<td>Name:</td>
+	<td>	<INPUT    TYPE=TEXT           NAME=Name    VALUE="Muster"></td>
+	</tr>
+	<tr>
+	<td>Vorname:</td>
+	<td><INPUT TYPE=TEXT           NAME=Vorname VALUE="Claudia"></td>
+	</tr>		
+	<tr>
+	<td>email:</td>
+	<td><INPUT   TYPE=TEXT   SIZE=30 NAME=Email   VALUE="Claudia@peterliwiese.ch"></td>
+	</tr>
+	<tr>
+	<td>PLZ:</td>
+	<td><INPUT     TYPE=TEXT   SIZE=4  NAME=PLZ     VALUE="8855"> Ort:<INPUT     TYPE=TEXT   NAME=Wohnort VALUE="Wangen (SZ)"></td>
+	</tr>
+	</table>
+	
+	<!-- Hidden fields to control the formHandler script -->
+	<INPUT TYPE="HIDDEN" NAME=constrain_PLZ   VALUE="isInteger(XXXX,1000,9999,<B>Postleitzahl</B> muss zwischen 1000 und 9999 sein)">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_replyTemplateSuccess"	      VALUE="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate.html">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_replyTemplateNotSuccess"      VALUE="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailTemplate"                VALUE="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSubject"                 VALUE="Antwort (Default as HTML)">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailToAddrs"                 VALUE="anmeldung@peterliwiese.ch">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailCcAddrs"                 VALUE="">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailBccAddrs"                VALUE="">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailFromAddr"                VALUE="FormField:Email">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSentAsHTML"              VALUE="YES">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailTemplate_1"              VALUE="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.txt">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSubject_1"               VALUE="Antwort as plain txt mail">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailToAddrs_1"               VALUE="FormField:Email">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailFromAddr_1"              VALUE="anmeldung@peterliwiese.ch">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_emailSentAsHTML_1"            VALUE="NO">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_countOfEmails"                VALUE="2">
+	<INPUT TYPE="HIDDEN" NAME="cgiCmdHidden_doDebug"                      VALUE="Yes">
+	<!-- end of hidden fields -->
+	
+	<INPUT TYPE=RESET  VALUE="Reset">	<INPUT TYPE=SUBMIT NAME=submitted VALUE="Submit"><BR/>
+	</FORM>
+	<BR>
+	<HR/>Nach dem Submit werden zwei emails (mit unterschiedlichem Inhalt und Layout) gesendet:
+	<OL>
+	<LI>Ein HTML-email an <B>anmeldung@peterliwiese.ch</B> mit Absender der email Adresse vom Formular (Anmeldung)</LI>
+	<LI>Ein Text-email an die email Adresse vom Formular mit Absender <B>anmeldung@peterliwiese.ch</B> (Bestaetigung)</LI>
+	</OL>Diese emails koennen unter <A href="http://www.novatrend.ch/" target="_new">http://www.novatrend.ch/</a> angeschaut werden.
+	<BR/>
+	UserId: <B>anmeldung@peterliwiese.ch</B> Password: <B>Ask your teacher</B> <!-- 800_hsk* -->
+	<BR/>
+	Die emails an <B>claudia@peterliwiese.ch</B> werden auf <B>anmeldung@peterliwiese.ch</B> umgeleitet.
+	</body>
+</html>
+	
+	<!--
+	Bewertung
+	---------
+	1) Richtiger Filename / Ehrenwoertliche Erklaerung
+	2) Korrekte Formatierung
+	3) Korrektes XHTML
+	4) Korrekte zusaetzliche Felder (inkl. title und body)
+	5) CSS eingebunden
+	6) Erweitertes Antwort-Template eingebunden
+	7) Feldernamen entsprechend neuem Antwort-Template angepasst
+	8) Postleitzahl wird Client-Seitig ueberprueft (korrigiert)
+	9) Warnungs-Symbol mit CSS-Style zugefuegt
+	10) Eventhadler eingebaut und Symbole aendern
+	                                                                 --------
+	                                                         Punkte:
+	                                                                 --------
+	                                       Note = 0.5 * Punkte + 1 =
+	                                                                 ========
+	-->

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" >
+<!--
+    Source:    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/HTML/adresslisteHTML_ohneCSS.html
+-->
+
+<head>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+  <META NAME="AUTHOR"             CONTENT="Walter Rothlin">
+  <META NAME="KEYWORDS"           CONTENT="HWZ Walter Rothlin BWI">
+  <META NAME="DESCRIPTION"        CONTENT="Testseite der BWI an der HWZ">
+  <META NAME="ABSTRACT"           CONTENT="Testseite der BWI an der HWZ">
+  <META NAME="REVISIT-AFTER"      CONTENT="5 days">
+  <META NAME="ROBOTS"             CONTENT="ALL">
+  <META NAME="Content-Language"   CONTENT="DE">
+  <META NAME="DISTRIBUTION"       CONTENT="global">
+  <META NAME="LANGUAGE"           CONTENT="DE">
+  <META NAME="SUBJECT"            CONTENT="HWZ">
+
+  <TITLE>Adressen-Verwaltung</TITLE>
+
+	<SCRIPT LANGUAGE="JavaScript1.2" TYPE="text/javascript">
+		 function displayForeignURL_fct(nameURL) {
+			   aNewWindow=window.open(nameURL,"foreignWindow","toolbar=no,status=yes,scrollbars=yes,resizable=yes,width=600,height=400");
+			   aNewWindow.focus();
+		 }
+
+		function displayAddress_fct(nameURL) {
+		   aNewWindow=window.open(nameURL,"addrWindow","toolbar=no,status=no,scrollbars=no,resizable=yes,width=250,height=200");
+		   aNewWindow.focus();
+		}
+
+		function displayPicture(nameURL) {
+		   aNewWindow=window.open(nameURL,"addrWindow","toolbar=no,status=no,scrollbars=no,resizable=no,width=320,height=400");
+		   aNewWindow.focus();
+		}
+	</SCRIPT>
+
+</head>
+
+<body bgcolor="lightblue">
+<H1>Adressen-Verwaltung (ohne CSS)</H1>
+<BR/><BR/><BR/><BR/>
+<TABLE border="1" cellpadding="3" cellspacing="0" BGCOLOR="ffffff">
+ <caption>Verzeichnis der Teilnehmer</caption>
+ <thead>
+	<tr bgcolor="silver">
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#000000">Vorname</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#000000">Name</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#000000">Strasse</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#000000">PLZ</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#000000">Wohnort</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#000000">email</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#000000">Portr&auml;t</th>
+	</tr>
+ </thead>
+ <tfoot>
+	<tr bgcolor="blue">
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFF00">Vorname</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFF00">Name</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFF00">Strasse</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFF00">PLZ</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFF00">Wohnort</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFF00">email</th>
+		<th><font size="-1" face="Arial, Helvetica, sans-serif" color="#FFFF00">Portr&auml;t</th>
+	</tr>
+ </tfoot>
+ <tbody>
+	 <TR>
+		<TD>Walter</TD>
+		<TD>Rothlin</TD>
+		<TD><A href="javascript:displayPicture('http://map.search.ch/8855/Peterliwiese 33')">Peterliwiese 33</A></TD>
+		<TD>8855</TD>
+		<TD>Wangen</TD>
+		<TD><A href="mailto:info@hwz.ch?Subject=Hello%20again">info@hwz.ch</A></TD>
+		<TD><A href="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_12.jpg" target="_new">
+			<IMG src="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_12.jpg"></A>
+		</TD>
+	</TR>
+	 <TR>
+		<TD>Claudia</TD>
+		<TD>Collet Rothlin</TD>
+		<TD><A href="http://map.search.ch/8855/Etzelstrasse 7" target="_new">Etzelstrasse 7</A></TD>
+		<TD>8852</TD>
+		<td>Tuggen</td>
+		<TD>&nbsp;</TD>
+		<TD><IMG src="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_11.jpg" border="4" width="200" height="240"></TD>
+	</TR>
+ </tbody>
+</TABLE>
+
+</BODY>
+</HTML>

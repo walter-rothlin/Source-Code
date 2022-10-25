@@ -17,7 +17,7 @@ class Hund:
 def name_aendern(hund):
     # Dem Hund einen neuen Namen geben und diesen anzeigen
     print("Name wird innerhalb einer Funktion geändert")
-    hund.name = "Hasso"
+    hund.__name = "Hasso"
     hund.belle_namen()
 
     # Einen neuen Hund erzeugen

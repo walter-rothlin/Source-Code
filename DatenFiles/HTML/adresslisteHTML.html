@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->language; ?>" lang="<?php echo $this->language; ?>" >
+<!--
+    Source:    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/HTML/adresslisteHTML.html
+-->
+<head>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+  <META NAME="AUTHOR"             CONTENT="Walter Rothlin">
+  <META NAME="KEYWORDS"           CONTENT="HWZ Walter Rothlin BWI">
+  <META NAME="DESCRIPTION"        CONTENT="Testseite der BWI an der HWZ">
+  <META NAME="ABSTRACT"           CONTENT="Testseite der BWI an der HWZ">
+  <META NAME="REVISIT-AFTER"      CONTENT="5 days">
+  <META NAME="ROBOTS"             CONTENT="ALL">
+  <META NAME="Content-Language"   CONTENT="DE">
+  <META NAME="DISTRIBUTION"       CONTENT="global">
+  <META NAME="LANGUAGE"           CONTENT="DE">
+  <META NAME="SUBJECT"            CONTENT="HWZ">
+
+	<!-- CSS verlinken -->
+	<link rel="stylesheet" href="CSS_HWZ_Style.css">
+
+	<SCRIPT LANGUAGE="JavaScript1.2" TYPE="text/javascript">
+		 function displayForeignURL_fct(nameURL) {
+			   aNewWindow=window.open(nameURL,"foreignWindow","toolbar=no,status=yes,scrollbars=yes,resizable=yes,width=600,height=400");
+			   aNewWindow.focus();
+		 }
+
+		function displayAddress_fct(nameURL) {
+		   aNewWindow=window.open(nameURL,"addrWindow","toolbar=no,status=no,scrollbars=no,resizable=yes,width=250,height=200");
+		   aNewWindow.focus();
+		}
+
+		function displayPicture(nameURL) {
+		   aNewWindow=window.open(nameURL,"addrWindow","toolbar=no,status=no,scrollbars=no,resizable=no,width=320,height=400");
+		   aNewWindow.focus();
+		}
+	</SCRIPT>
+
+  <TITLE>Adressen-Verwaltung</TITLE>
+</head>
+
+<body>
+	<H1>Adressen-Verwaltung (mit CSS)</H1>
+	<table>
+		<caption>Verzeichnis der Teilnehmer</caption>
+		<thead>
+			<tr>
+				<th>Vorname</th>
+				<th>Name</th>
+				<th>Strasse</th>
+				<th>PLZ</th>
+				<th>Wohnort</th>
+				<th>email</th>
+				<th>Portr&auml;t</th>
+			</tr>
+		</thead>
+		<tbody>
+			<TR>
+				<TD>Walter</TD>
+				<TD>Rothlin</TD>
+				<TD><A href="javascript:displayPicture('http://map.search.ch/8855/Peterliwiese 33')">Peterliwiese 33</A></TD>
+				<TD>8855</TD>
+				<TD>Wangen</TD>
+				<TD><A href="mailto:walti@nowhere.com?Subject=Hello%20again">walti@nowhere.com</A></TD>
+				<TD><A href="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_12.jpg" target="_new">
+					<IMG src="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_12.jpg"></A></TD>
+			</TR>
+			<TR>
+				<TD>Claudia</TD>
+				<TD>Collet Rothlin</TD>
+				<TD><A href="http://map.search.ch/8855/Etzelstrasse 7" target="_new">Etzelstrasse 7</A></TD>
+				<TD>8852</TD>
+				<TD class="hwz">Tuggen</TD>
+				<TD><A href="mailto:claudia@nowhere.com?Subject=Hello%20again">claudia@nowhere.com</A></TD>
+				<TD><A href="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_11.jpg" target="_new">
+					<IMG src="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_11.jpg"></A></TD>
+			</TR>
+		</tbody>
+		<tfoot>
+			<tr>
+				<th>Vorname</th>
+				<th>Name</th>
+				<th>Strasse</th>
+				<th>PLZ</th>
+				<th>Wohnort</th>
+				<th>email</th>
+				<th>Portr&auml;t</th>
+			</tr>
+		</tfoot>
+	</table>
+	<hr/><hr/>
+	<table class="wr">
+		<thead class="wr">
+			<th class="wr">Name</th>
+			<th class="wr">Vorname</th>
+			<th class="wr">Strasse</th>
+			<th class="wr">PLZ</th>
+			<th class="wr">Wohnort</th>
+			<th class="wr">email</th>
+			<th class="wr">Portr&auml;t</th>
+		</thead>
+		<tr class="wr">
+			<td class="wr">Walti</td>
+			<td class="wr">Rothlin</td>
+			<td class="wr"><A href="javascript:displayPicture('http://map.search.ch/8855/Peterliwiese 33')">Peterliwiese 33</A></td>
+			<td class="wr">8855</td>
+			<td class="wr">Wangen</td>
+			<td class="wr"><A href="mailto:walti@nowhere.com?Subject=Hello%20again">walti@nowhere.com</A></td>
+			<td class="wr"><A href="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_12.jpg" target="_new">
+					<IMG src="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_12.jpg"></A></td>
+		</tr>
+		<tr class="wr">
+			<td class="wr">Claudia</td>
+			<td class="wr">Collet Rothlin</td>
+			<td class="wr"><A href="http://map.search.ch/8855/Etzelstrasse 7" target="_new">Etzelstrasse 7</A></td>
+			<td class="wr">8852</td>
+			<td class="wr">Tuggen</td>
+			<td class="wr"><A href="mailto:claudia@nowhere.com?Subject=Hello%20again">claudia@nowhere.com</A></td>
+			<td class="wr"><A href="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_11.jpg" target="_new">
+					<IMG src="http://hwz.peterliwiese.ch/DatenFiles/GeneratedPortraets/Bild_11.jpg"></A></td>
+		</tr>
+	</table>
+
+    <h1 class="hinterlegt">H1 knallgelb hinterlegt</h1>
+
+Begin-Div (Div is a Block and ends with a linebreak)<div id="roterBereich">Der rote Bereich</div>End-Div<br/>
+Begin-Div (Div is a Block and ends with a linebreak)<div class="roterBereich">Der rote Bereich</div>End-Div<br/>
+<hr/><hr/><br/><br/>
+Begin-Span (Span is a Block and doesn't a linebreak)<span id="blauerBereich">Der blauer Bereich</span>End-Span<br/>
+Begin-Span (Span is a Block and doesn't a linebreak)<span class="blauerBereich">Der blauer Bereich</span>End-Span<br/>
+<hr/>
+
+<div class="scrollable">
+khahskahs<br/>
+
+</div><br/><br/>
+<div style="width:120px;height=60px;color:blue;background-color:silver;overflow-y:auto;overflow-x:auto">
+khahskahssssssssssssssssss<br/>
+khahskahs<br/>
+khahskahs<br/>
+khahskahs<br/>
+khahskahs<br/>
+
+</div>
+</BODY>
+</HTML>
