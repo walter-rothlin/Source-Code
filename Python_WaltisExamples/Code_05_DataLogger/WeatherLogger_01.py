@@ -11,6 +11,7 @@
 # 03-Dec-2020   Walter Rothlin      Initial Version ()
 # 10-Oct-2021   Walter Rothlin      Adapted for BWI-A20
 # 28-Nov-2021   Walter Rothlin      Changed URL-encoding und request URL Parameter Uebergabe
+# 25-Oct-2022   Walter Rothlin      Abbruch der Polling-Schleife
 # ------------------------------------------------------------------
 import datetime
 import requests
