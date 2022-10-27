@@ -9,7 +9,7 @@
 # Modullernzielkontrolle (MLZ)
 # History:
 # 24-Okt-2022   Wilmar Rodriguez		Initial Version
-# 27-Okt-2022	Walter Rothlin			Korrektur
+# 27-Okt-2022	Walter Rothlin			Korrektur (2.Korrektur)
 # ------------------------------------------------------------------
 
 import json
