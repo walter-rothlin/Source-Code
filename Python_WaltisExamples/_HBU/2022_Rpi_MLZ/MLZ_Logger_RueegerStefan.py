@@ -89,7 +89,7 @@ class log2disk:
         self.__log_delimiter = '|'
         self.__logdate_format = '%Y-%m-%d'
         self.__log_entry_old = '' # zur Prüfung, ob Differenz zu aktuellen Werten
-        self.__log_diff_only = False
+        self.__log_diff_only = True
         self.__log_filename = path.join(fpath, fname)
         self.log_severity_list = ('DEBUG', 'INFO', 'WARNINGS', 'ERROR', 'CRITICAL', 'N/A')
 
@@ -359,7 +359,7 @@ def main():
     log2disk.py -s | more           seitenweise Anzeige
     log2disk.py -s > log2disk.doc   schreibt Dokumentation in Datei
     ''')
-    
+    logWeather()
     if len(argv) > 1:
         if argv[1] == '-h':
             print(help2)

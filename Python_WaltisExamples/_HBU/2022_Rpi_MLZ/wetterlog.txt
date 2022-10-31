@@ -1,0 +1,15 @@
+
+WETTERDATEN-AUFZEICHNUNG
+-------------------------------------------------------------------------------
+
+Aufzeichnungs-Start: 2022-10-30  14:44:29
+Dateipfad und Name:  .\wetterlog.txt
+
+      date |     time | temp | hum | press | w_spd | w_dir | condition
+  %d.%M.%Y | HH:MM:SS | [°C] | [%] | [hPa] | [m/s] | [str] | [str]
+------------------------------------------------------------------------------
+30.44.2022 | 14:44:29 | 18.4 |  73 |  1022 |   1.0 |     N | Ein paar Wolken          | INFO
+30.44.2022 | 14:44:35 | 18.4 |  73 |  1022 |   1.0 |     N | Ein paar Wolken          | INFO
+30.44.2022 | 14:44:40 | 18.4 |  73 |  1022 |   1.0 |     N | Ein paar Wolken          | INFO
+30.44.2022 | 14:44:45 | 18.4 |  73 |  1022 |   1.0 |     N | Ein paar Wolken          | INFO
+30.44.2022 | 14:44:50 | 18.4 |  73 |  1022 |   1.0 |     N | Ein paar Wolken          | INFO
