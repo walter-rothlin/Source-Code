@@ -35,7 +35,7 @@ for einBuchstabe in klartext:
 print(klartext, "==>", chiffrat)
 
 '''
-0   00000000   0o00000     0x00
+0   00000000   0o00000     0x00 
 
 
 '''

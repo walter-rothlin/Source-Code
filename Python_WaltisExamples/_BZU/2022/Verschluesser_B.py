@@ -2,6 +2,7 @@
 # Walter Rothlin
 # ---------------------------------------
 
+
 def ascii_shifter(buchstabeP, shifterP):
     return chr(ord(buchstabeP) + shifterP)
 
