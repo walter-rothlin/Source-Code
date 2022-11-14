@@ -11,12 +11,12 @@
 # 11-Nov-2021   Walter Rothlin      Implemented Ringbuffer Shifter, encrypter, decrypter
 # ------------------------------------------------------------------
 
-def shifter(sChr, sh):
-    retVal = chr(ord(sChr) + sh)
+def shifter(sChr, shift):
+    retVal = chr(ord(sChr) + shift)
     return retVal
 
 
-# shifter using a ringbuffer (source
+# shifter using a ringbuffer
 def shiftChr(aChar, shift):
     if (aChar >= " ") and (aChar <= "~"):
         return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
