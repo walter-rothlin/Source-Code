@@ -1,6 +1,17 @@
-# ------------------------------
-# Walter Rothlin
-# ------------------------------
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Name  : Verschluessler_A.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_BZU/2022/Verschluessler_A.py
+#
+# Description: Encrption / decryption
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 10-Nov-2022	Walter Rothlin  Initial Version
+#
+# ------------------------------------------------------------------
 
 
 print("Verschluessler")

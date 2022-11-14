@@ -1,7 +1,17 @@
-# ---------------------------------------
-# Walter Rothlin
-# ---------------------------------------
+#!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : Verschluessler_B.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_BZU/2022/Verschluessler_B.py
+#
+# Description: Encrption / decryption
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 10-Nov-2022	Walter Rothlin  Initial Version
+#
+# ------------------------------------------------------------------
 
 def ascii_shifter(buchstabeP, shifterP):
     return chr(ord(buchstabeP) + shifterP)
