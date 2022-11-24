@@ -1,0 +1,7 @@
+# <Filename>Fabian_log.txt</Filename><Date>2022-11-24 15:33:09</Date> 
+timestamp|Log Level|placeName|land|temp|pressure|humidity|lon|lat|cloud|windSpeed|windDirection|
+2022-11-24 15:35:10|info|Lachen SZ|CH|9.8|1017|81|8.8562|47.1915|Ein paar Wolken|0.89|171|
+2022-11-24 15:35:13|info|Lachen SZ|CH|9.8|1017|81|8.8562|47.1915|Ein paar Wolken|0.89|171|
+2022-11-24 15:35:15|info|Lachen SZ|CH|9.8|1017|81|8.8562|47.1915|Ein paar Wolken|0.89|171|
+2022-11-24 15:35:16|info|Lachen SZ|CH|9.8|1017|81|8.8562|47.1915|Ein paar Wolken|0.89|171|
+2022-11-24 15:35:18|info|Lachen SZ|CH|9.8|1017|81|8.8562|47.1915|Ein paar Wolken|0.89|171|
