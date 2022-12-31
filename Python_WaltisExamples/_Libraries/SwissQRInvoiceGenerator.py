@@ -4,6 +4,7 @@ import qrcode.image.svg
 import pdfkit
 import platform
 
+html_to_pdf_path = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
 def generateRF_ISO_11649(refStr):
     """
     Generates a valid RF reference number according to the ISO 11649 standard.
@@ -97,7 +98,7 @@ def create_qr_code(json):
     return xml_str
 
 
-def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
+def createQRInvoice(json, invoice_text_html="", returnHTML=False, pdfName="Invoice", htmlName=None):
     """
         Creates a swiss QR invoice with the provided data.
         If returnHTML = True the function will not convert the html file to a pdf but instead return it as a string
@@ -303,7 +304,7 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
         clear: both;
     }
 </style>
-<body>
+<body>""" + f"{invoice_text_html}" + """
 <div style="page-break-before: always;"></div>
 <div id="slip">
     <div id="cutHorizontal">
@@ -690,12 +691,16 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
 </body>
 </html>
     """
+    if htmlName is not None:
+        f = open(htmlName, "w", encoding='utf-8')
+        f.write(template)
+        f.close()
     if returnHTML:
         return template
     else:
         config = None
         if platform.system() == "Windows":
-            config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+            config = pdfkit.configuration(wkhtmltopdf=html_to_pdf_path)
         pdfkit.from_string(template, pdfName + ".pdf", options=options,
                            configuration=config)
 

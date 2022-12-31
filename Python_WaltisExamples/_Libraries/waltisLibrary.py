@@ -39,7 +39,9 @@
 # 19-May-2022   Walter Rothlin      Added howManyDigitsAreInString
 # 05-Sep-2022   Stefan Rueeger      Typo fixed
 # 26-Sep-2022   Walter Rothlin      halt() returns string
+# 31-Dec-2022   Walter Rothlin      Added generateQRInvoiceData
 # ------------------------------------------------------------------
+
 
 # toDo:
 #  def File_readWithInludes returns noting
@@ -1712,6 +1714,37 @@ def AUTO_TEST_xPath_Get(verbal=False):
         print("--> Test Cases Executed: {a:4d}".format(a=testCasesExecuted))
         print("--> Test Cases Failed  : {a:4d}".format(a=testCasesFailed))
     return {"TestName": getMyFctName(), "testCasesExecuted": testCasesExecuted, "testCasesFailed": testCasesFailed}
+
+
+def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, currecny='CHF', reference=None, additional_information=""):
+    invoice_data = {
+        "creditor_iban": creditor_iban,
+        "creditor_name": creditor_addr["name"],
+        "creditor_address": creditor_addr["address"],
+        "creditor_zip_code": creditor_addr["zip_code"],
+        "creditor_city": creditor_addr["city"],
+        "creditor_country": creditor_addr["country"],
+
+        "debtor_name": debitor_addr["name"],
+        "debtor_address": debitor_addr["address"],
+        "debtor_zip_code": debitor_addr["zip_code"],
+        "debtor_city": debitor_addr["city"],
+        "debtor_country": debitor_addr["country"],
+
+        "amount": amount,
+        "currency": currecny,
+
+        "reference_type": "NON",
+        "reference_number": "",
+
+        "additional_information": additional_information,
+    }
+
+    if reference is not None:
+        invoice_data["reference_type"] = reference["reference_type"]
+        invoice_data["reference_number"] = reference["reference_number"]
+
+    return invoice_data
 
 
 # URL operations

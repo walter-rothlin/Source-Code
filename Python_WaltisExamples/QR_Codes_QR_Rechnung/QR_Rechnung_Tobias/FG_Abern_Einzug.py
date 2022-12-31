@@ -11,13 +11,13 @@
 # History:
 # 17-Jun_2022   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
-from SwissQRInvoiceGenerator_Old import *
+from SwissQRInvoiceGenerator import *
 from openpyxl import load_workbook
 from waltisLibrary import *
 
 
 if __name__ == '__main__':
-    jahr = "2022"
+    jahr = "2023"
     baseDestDir = 'N:\\06_FG_Abern\\' + jahr + '\\PerimeterRechnungen\\'
     baseSourceDir = 'N:\\06_FG_Abern\\'
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     }
 
     ibanNr = {
-        "FG_Abern": "CH90 0077 7003 2922 1166 7"
+        "FG_Abern": "CH9000777003292211667"
     }
 
     # Load in the workbook (data_only=True returns values not formulas)
