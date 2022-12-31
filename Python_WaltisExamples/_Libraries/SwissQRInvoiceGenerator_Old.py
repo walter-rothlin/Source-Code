@@ -1,8 +1,6 @@
 import io
 import qrcode
 import qrcode.image.svg
-import pdfkit
-import platform
 
 def generateRF_ISO_11649(refStr):
     """
@@ -51,7 +49,7 @@ def create_qr_code(json):
     qr_data = "SPC\n" \
               "0200\n" \
               "1\n" \
-              + json["creditor_iban"] \
+              + json["creditor_iban"].replace(" ","") \
               + "\nK\n" \
               + json["creditor_name"] + "\n" \
               + json["creditor_address"] + "\n" \
@@ -72,7 +70,7 @@ def create_qr_code(json):
               + json["additional_information"] + "\n" \
               + "EPD"
 
-    img = qrcode.make(qr_data, image_factory=qrcode.image.svg.SvgPathImage)
+    img = qrcode.make(qr_data, image_factory=qrcode.image.svg.SvgImage)
     buffered = io.BytesIO()
     img.save(buffered, "SVG")
     xml_str = buffered.getvalue().decode("utf-8")
@@ -80,24 +78,20 @@ def create_qr_code(json):
 
     if closing_tag_pos >= 0:
         swiss_cross = """
-        <svg x="45%" y="45%" width="10%" height="10%" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" class="st0" width="100%" height="100%"/>
-            <rect x="5%" y="5%" width="90%" height="90%"/>
-            <rect x="15%" y="42.5%" class="st0" width="70%" height="15%"/>
-            <rect x="42.5%" y="15%" class="st0" width="15%" height="70%"/>
-            <style type="text/css">
-                .st0{fill:#FFFFFF;}
-            </style>
-        </svg>
+        <rect x="23.9mm" y="23.9mm" class="st0" width="9.2mm" height="9.2mm"/>
+        <rect x="25.5mm" y="25.5mm" width="6mm" height="6mm"/>
+        <rect x="26.5mm" y="28mm" class="st0" width="4mm" height="1mm"/>
+        <rect x="28mm" y="26.5mm" class="st0" width="1mm" height="4mm"/>
+        <style type="text/css">.st0{fill:#FFFFFF;}</style>
         """
 
         xml_str = xml_str[:closing_tag_pos] + swiss_cross + xml_str[
                                                             closing_tag_pos:]
-    print(xml_str)
+
     return xml_str
 
 
-def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
+def createQRInvoice(json, invoice_text_html="", returnHTML=False, pdfName="Invoice", htmlName=None, wkthmlPath="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"):
     """
         Creates a swiss QR invoice with the provided data.
         If returnHTML = True the function will not convert the html file to a pdf but instead return it as a string
@@ -294,8 +288,8 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
         font-size: 12.9pt;
     }
     #paymentQrCode svg {
-        width: 72.24mm;
-        height: 72.24mm;
+        width: 57mm;
+        height: 57mm;
         margin-left: -3.225mm;
         z-index: -1;
     }
@@ -303,7 +297,7 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
         clear: both;
     }
 </style>
-<body>
+<body>""" + f"{invoice_text_html}" + """
 <div style="page-break-before: always;"></div>
 <div id="slip">
     <div id="cutHorizontal">
@@ -690,14 +684,50 @@ def createQRInvoice(json, returnHTML=False, pdfName="Invoice"):
 </body>
 </html>
     """
+    if htmlName is not None:
+        f = open(htmlName, "w", encoding='utf-8')
+        f.write(template)
+        f.close()
     if returnHTML:
         return template
     else:
+        import pdfkit
+        import platform
         config = None
         if platform.system() == "Windows":
-            config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+            config = pdfkit.configuration(wkhtmltopdf=wkthmlPath)
         pdfkit.from_string(template, pdfName + ".pdf", options=options,
                            configuration=config)
+
+def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, currecny='CHF', reference=None, additional_information=""):
+    invoice_data = {
+        "creditor_iban": creditor_iban,
+        "creditor_name": creditor_addr["name"],
+        "creditor_address": creditor_addr["address"],
+        "creditor_zip_code": creditor_addr["zip_code"],
+        "creditor_city": creditor_addr["city"],
+        "creditor_country": creditor_addr["country"],
+
+        "debtor_name": debitor_addr["name"],
+        "debtor_address": debitor_addr["address"],
+        "debtor_zip_code": debitor_addr["zip_code"],
+        "debtor_city": debitor_addr["city"],
+        "debtor_country": debitor_addr["country"],
+
+        "amount": amount,
+        "currency": currecny,
+
+        "reference_type": "NON",
+        "reference_number": "",
+
+        "additional_information": additional_information,
+    }
+
+    if reference is not None:
+        invoice_data["reference_type"] = reference["reference_type"]
+        invoice_data["reference_number"] = reference["reference_number"]
+
+    return invoice_data
 
 
 if __name__ == '__main__':

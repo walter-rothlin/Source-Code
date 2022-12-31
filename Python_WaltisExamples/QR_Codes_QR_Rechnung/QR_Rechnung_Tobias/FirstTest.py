@@ -2,7 +2,7 @@
 
 # https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
 
-from SwissQRInvoiceGenerator import *
+from SwissQRInvoiceGenerator_Old import *
 
 
 if __name__ == '__main__':

@@ -122,7 +122,7 @@ class ShellyAPI:
         return self.toPrint(switchNo=self.__list_of_switchs)
 
 
-    def toPrint(self, switchNo=0, sep='\n', end='\n\n', check_status=True, doTrace=False):
+    def to_print(self, switchNo=0, sep='\n', end='\n\n', check_status=True, doTrace=False):
         if doTrace:
             print("INFO: toPrint(" + str(switchNo) + ", len(sep)" + str(len(sep)) + ", len(end)" + str(len(end)) + ")")
 
@@ -195,6 +195,8 @@ class ShellyAPI:
         return self.__meter_at_booking[switchNo]
 
     def turnOn(self, switchNo=0, timer=None, doTrace=True):
+        return self.turn_on(switchNo=switchNo, timer=timer, doTrace=doTrace)
+    def turn_on(self, switchNo=0, timer=None, doTrace=True):
         """
         Turns the shelly ON if the relay is already ON, nothing happens. It returns the response containing the current state of the relay.
 
@@ -241,8 +243,10 @@ class ShellyAPI:
                 print(requestStr)
             return json.loads(requests.request("GET", requestStr).text)['output']
 
-
     def turnOff(self, switchNo=0, timer=None, doTrace=True):
+        return self.turn_off(switchNo=switchNo, timer=timer, doTrace=doTrace)
+
+    def turn_off(self, switchNo=0, timer=None, doTrace=True):
         """
         Turns the shelly OFF if the relay is already OFF, nothing happens. It returns the response containing the current state of the relay.
 
@@ -294,7 +298,7 @@ class ShellyAPI:
         return json.loads(requests.request("GET", requestStr).text)
 
 
-    def getDeviceSettings(self, doTrace=False):
+    def get_device_settings(self, doTrace=False):
         """
         Loads all the device settings.
 
@@ -313,7 +317,7 @@ class ShellyAPI:
                 print(requestStr)
             return json.loads(requests.request("GET", requestStr).text)
         else:
-            return "Not settings aviable for " + str(self.__shelly_type)
+            return "No settings avaiable for " + str(self.__shelly_type)
 
 
     def get_current_power_usage(self, switchNo=0, doTrace=False):
@@ -475,44 +479,44 @@ def TEST_Class_Shelly():
         aShellyConfig['obj'] = ShellyAPI(ip=aShellyConfig['ip'],
                                          shelly_name=aShellyConfig['shelly_name'],
                                          shelly_type=aShellyConfig['shelly_type'])
-        print(aShellyConfig['obj'].getDeviceSettings())
+        print(aShellyConfig['obj'].get_device_settings())
 
     print('start manipulating shelly obejects')
-    shellyList[2]['obj'].turnOn()
-    shellyList[0]['obj'].turnOn(timer=5)
-    shellyList[1]['obj'].turnOn(timer=2)
+    shellyList[2]['obj'].turn_on()
+    shellyList[0]['obj'].turn_on(timer=5)
+    shellyList[1]['obj'].turn_on(timer=2)
 
     sleep(5)
-    print(shellyList[0]['obj'].getCurrentPowerUsage())
-    print(shellyList[1]['obj'].getCurrentPowerUsage())
-    print(shellyList[2]['obj'].getCurrentPowerUsage())
+    print(shellyList[0]['obj'].get_current_power_usage())
+    print(shellyList[1]['obj'].get_current_power_usage())
+    print(shellyList[2]['obj'].get_current_power_usage())
 
     sleep(5)
-    shellyList[2]['obj'].turnOff()
+    shellyList[2]['obj'].turn_off()
 
     print("Test Mehrfach Shelly")
-    shellyList[3]['obj'].turnOn(switchNo=2)
-    shellyList[3]['obj'].turnOn(switchNo=3, timer=5)
+    shellyList[3]['obj'].turn_on(switchNo=2)
+    shellyList[3]['obj'].turn_on(switchNo=3, timer=5)
     sleep(2)
-    print("==>", shellyList[3]['obj'].getCurrentPowerUsage(switchNo=2))
+    print("==>", shellyList[3]['obj'].get_current_power_usage(switchNo=2))
     sleep(5)
-    shellyList[3]['obj'].turnOff(switchNo=2, timer=1)
+    shellyList[3]['obj'].turn_off(switchNo=2, timer=1)
     sleep(5)
-    print("==>", shellyList[3]['obj'].getCurrentPowerUsage(switchNo=2))
+    print("==>", shellyList[3]['obj'].get_current_power_usage(switchNo=2))
     sleep(5)
-    shellyList[3]['obj'].turnOff(switchNo=2)
+    shellyList[3]['obj'].turn_off(switchNo=2)
     sleep(5)
 
     ShellyAPI.doTrace = False
     print("Beginn Energy Measure!!!")
-    print("==>", shellyList[3]['obj'].getCurrentPowerUsage(switchNo=2, doTrace=False), "W")
-    print("==>", shellyList[3]['obj'].getEnergyMeterValue(switchNo=2, doTrace=False), "Wh")
+    print("==>", shellyList[3]['obj'].get_current_power_usage(switchNo=2, doTrace=False), "W")
+    print("==>", shellyList[3]['obj'].get_energy_meter_value(switchNo=2, doTrace=False), "Wh")
 
-    shellyList[3]['obj'].turnOn(switchNo=2)
+    shellyList[3]['obj'].turn_on(switchNo=2)
     sleep(5)
-    print("==>", shellyList[3]['obj'].getCurrentPowerUsage(switchNo=2, doTrace=False), "W")
-    print("==>", shellyList[3]['obj'].getEnergyMeterValue(switchNo=2, doTrace=False), "Wh")
-    shellyList[3]['obj'].turnOff(switchNo=2)
+    print("==>", shellyList[3]['obj'].get_current_power_usage(switchNo=2, doTrace=False), "W")
+    print("==>", shellyList[3]['obj'].get_energy_meter_value(switchNo=2, doTrace=False), "Wh")
+    shellyList[3]['obj'].turn_off(switchNo=2)
     print("Done with Energy Measure!!!")
 
 
@@ -542,7 +546,7 @@ class Shelly_Site:
                                              shelly_type=aShellyConfig['shelly_type'],
                                              doTrace=doTrace)
             if doTrace:
-                print("    ", aShellyConfig['obj'].getDeviceSettings())
+                print("    ", aShellyConfig['obj'].get_device_settings())
 
         if doTrace:
             print("TRACE: Initializing " + site_name + "completed!!")
@@ -572,7 +576,7 @@ class Shelly_Site:
                 if booked_for is None and is_on:
                     retStr += "   Found a hacked one: " + str(ip) + ":" + str(switch_no) + "  {s1:30s}".format(s1=str(booked_for)) + "{s1:20s}".format(s1=str(is_on)) + sep
                     if do_switch_off:
-                        aShelly['obj'].turnOff(switchNo=switch_no, doTrace=doTrace)
+                        aShelly['obj'].turn_off(switchNo=switch_no, doTrace=doTrace)
         return retStr + end
 
 

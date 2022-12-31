@@ -18,7 +18,7 @@ rootWindow = tk.Tk()
 rootWindow.title("Hallo Schweiz")
 rootWindow.resizable(width=True, height=True)
 
-label_hallo = tk.Label(rootWindow, text='Hello World!\nBZU\nHWZ', foreground="red", background="black", width="20", height="10")
-label_hallo.pack(padx=10, pady=10)
+label_hallo = tk.Label(rootWindow, text='Hello World!\nBZU\nHWZ', foreground="blue", background="black", width="20", height="10")
+label_hallo.pack(padx=100, pady=10)
 
 rootWindow.mainloop()

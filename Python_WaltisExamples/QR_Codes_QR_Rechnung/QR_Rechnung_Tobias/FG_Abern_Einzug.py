@@ -11,7 +11,7 @@
 # History:
 # 17-Jun_2022   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
-from SwissQRInvoiceGenerator import *
+from SwissQRInvoiceGenerator_Old import *
 from openpyxl import load_workbook
 from waltisLibrary import *
 
