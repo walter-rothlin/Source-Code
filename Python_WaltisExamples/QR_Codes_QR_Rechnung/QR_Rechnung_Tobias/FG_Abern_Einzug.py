@@ -10,6 +10,7 @@
 #
 # History:
 # 17-Jun_2022   Walter Rothlin      Initial Version
+# 31-Dec-2022   Walter Rothlin      Neuste Library: https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
 # ------------------------------------------------------------------
 from SwissQRInvoiceGenerator import *
 from openpyxl import load_workbook

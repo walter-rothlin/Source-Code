@@ -266,5 +266,5 @@ while doLoop:
 # 14. Strategie via __init__ setzbar (mit Default-Wert)                     1
 # 15. Scrolling area via __init__ setzbar (mit Default-Wert)                1
 #                                                                       ---------
-#                                                                          20
+#                                                                          16
 #                                                                       =========

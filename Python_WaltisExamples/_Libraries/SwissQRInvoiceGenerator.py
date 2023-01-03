@@ -1,3 +1,6 @@
+
+# Original: https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
+
 import io
 import qrcode
 import qrcode.image.svg

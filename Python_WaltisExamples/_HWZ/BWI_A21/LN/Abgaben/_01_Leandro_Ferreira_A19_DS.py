@@ -255,3 +255,29 @@ while doLoop:
     if counter >= max_counter:
         doLoop = False
         print('Gewünschte Zeilen wurden geschrieben.')
+
+# ---------------------------------------------------------
+# Review / Beurteilung
+# ---------------------------------------------------------
+# 1. Lauffähiger Code abgegeben (2 Punkte)                                  2
+#    Alles in einem File (ausnahmsweise für diese Aufgabenstellung)
+#    Filename: Vorname_Nachname_A19_DS.py (z.B. Rea_Vogel_A19_DS.py)
+# 2. CLI Applikation schreibt ein Log-File (2 Punkte)                       2
+# 3. Für den Weather REST Service wurde ein eigener Token verwendet         2
+# 4. Eine eigene, reusable Klasse mit
+#    einfachem Interface implementiert (4 Punkte)                           4
+# 5. Nur absolut Notwendiges ist public (2 Punkte)                          2
+# 6. Kommentare in Form von doc_strings sind enthalten                      1
+# 7. Log-File enthält eine Kommentar-Zeile mit XML-Syntax                   1
+# 8. Log-File enthält eine Headerzeile (Spalten-Bezeichnungen)              1
+#    Log-Entries enthalten formatierten Time-Stamp und Level                1
+# 9. Scrolling Strategie implementiert                                      1
+# 10. Anzahl Zeilen für Scrollbereich definierbar                           1
+# 11. ChangesOnly implementiert                                             1
+# 12. Append / New implementiert                                            1
+# 13. Delimiter via __init__ setzbar (mit Default-Wert)                     1
+# 14. Strategie via __init__ setzbar (mit Default-Wert)                     1
+# 15. Scrolling area via __init__ setzbar (mit Default-Wert)                1
+#                                                                       ---------
+#                                                                          23
+#                                                                       =========

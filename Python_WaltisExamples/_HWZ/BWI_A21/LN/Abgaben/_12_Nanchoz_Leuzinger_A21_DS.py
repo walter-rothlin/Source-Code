@@ -10,7 +10,7 @@ import logging
 class MyLoggerClass:
     '''Erstellung der Klasse '''
     '''Filename, Speicherort und der delimiter wird festgelegt'''
-    def __init__(self, delimiter="|", filename="WeatherLogger.csv", filepath=r"C:\Users\Nanchoz Leuzinger\PycharmProjects\WeatherProjekt\WeatherLogger.csv"):
+    def __init__(self, delimiter="|", filename="WeatherLogger.csv", filepath=r"WeatherLogger.csv"):   # C:\Users\Nanchoz Leuzinger\PycharmProjects\WeatherProjekt\WeatherLogger.csv
         self.__filename = filename
         self.__filepath = filepath
         self.__delimiter = delimiter
@@ -109,6 +109,32 @@ https://www.youtube.com/watch?v=rcfmITJ2E7c&t=3100s
 https://www.youtube.com/watch?v=aCk-qE_WQJ4&t=85s
 '''
 
+
+# ---------------------------------------------------------
+# Review / Beurteilung
+# ---------------------------------------------------------
+# 1. Lauffähiger Code abgegeben (2 Punkte)                                  2
+#    Alles in einem File (ausnahmsweise für diese Aufgabenstellung)
+#    Filename: Vorname_Nachname_A19_DS.py (z.B. Rea_Vogel_A19_DS.py)
+# 2. CLI Applikation schreibt ein Log-File (2 Punkte)                       2
+# 3. Für den Weather REST Service wurde ein eigener Token verwendet         2
+# 4. Eine eigene, reusable Klasse mit
+#    einfachem Interface implementiert (4 Punkte)                           2 (Essenz nicht in Klasse gelöst)
+# 5. Nur absolut Notwendiges ist public (2 Punkte)                          2
+# 6. Kommentare in Form von doc_strings sind enthalten                      1
+# 7. Log-File enthält eine Kommentar-Zeile mit XML-Syntax                   0 (Keine korrektes XML)
+# 8. Log-File enthält eine Headerzeile (Spalten-Bezeichnungen)              1
+#    Log-Entries enthalten formatierten Time-Stamp und Level                1
+# 9. Scrolling Strategie implementiert                                      0
+# 10. Anzahl Zeilen für Scrollbereich definierbar                           0
+# 11. ChangesOnly implementiert                                             0
+# 12. Append / New implementiert                                            0
+# 13. Delimiter via __init__ setzbar (mit Default-Wert)                     0
+# 14. Strategie via __init__ setzbar (mit Default-Wert)                     0
+# 15. Scrolling area via __init__ setzbar (mit Default-Wert)                0
+#                                                                       ---------
+#                                                                          13
+#                                                                       =========
 
 
 

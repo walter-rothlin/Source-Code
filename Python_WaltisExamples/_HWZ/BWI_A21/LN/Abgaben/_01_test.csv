@@ -1,0 +1,7 @@
+# <Name>test.csv</Name> <Date>2023-01-02 12:15:02</Date>
+Timestamp;Level;Ortsname;Land;Temperatur;Druck;Feuchtigkeit;Längengrad;Breitengrad;Wolken;Windgeschwindigkeit;Windrichtung
+2023-01-02 12:15:22;INFO;Uster;CH;11.58;1021;68;8.7209;47.3471;Ein paar Wolken;3.58;234
+2023-01-02 12:15:23;INFO;Uster;CH;11.58;1021;68;8.7209;47.3471;Ein paar Wolken;3.58;234
+2023-01-02 12:15:24;INFO;Uster;CH;11.58;1021;68;8.7209;47.3471;Ein paar Wolken;3.58;234
+2023-01-02 12:15:25;INFO;Uster;CH;11.58;1021;68;8.7209;47.3471;Ein paar Wolken;3.58;234
+2023-01-02 12:15:27;INFO;Uster;CH;11.58;1021;68;8.7209;47.3471;Ein paar Wolken;3.58;234
