@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : 01a_QR_Code_Produce.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/QR_Code/01a_QR_Code_Produce.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/QR_Codes_QR_Rechnung/QR_Codes_Produce_Read/01a_QR_Code_Produce.py
 #
 # Description: Generates a QR-Code using qrcode module
 # https://towardsdatascience.com/create-and-read-qr-code-using-python-9fc73376a8f9
@@ -14,14 +14,10 @@
 # 03-Jan-2022   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-#  VORSICHT: PyCharm installiert falsches Module! Manuel installieren über Terminal:
-# ev muss vorher pip updated werden (via Terminal):
-#  python -m pip install --upgrade pip
-#  pip install qrcode[pil]
 #
 import qrcode
 
 # Simple-Text
-img = qrcode.make('ABCDEFG 007')
+img = qrcode.make('ABCDEFGZZZ 007')
 img.save('../QR-Codes_Images/01a_01_helloWorld.png')
 print('../QR-Codes_Images/01a_01_helloWorld.png')

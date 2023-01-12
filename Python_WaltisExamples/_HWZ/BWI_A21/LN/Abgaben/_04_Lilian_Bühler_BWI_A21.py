@@ -172,7 +172,7 @@ if __name__ == '__main__':
 # 4. Eine eigene, reusable Klasse mit
 #    einfachem Interface implementiert (4 Punkte)                           2 (Essenz nicht in Klasse gelöst)
 # 5. Nur absolut Notwendiges ist public (2 Punkte)                          1 (alle Setter sind public; getTimestamp ist static)
-# 6. Kommentare in Form von doc_strings sind enthalten                      0
+# 6. Kommentare in Form von doc_strings sind enthalten                      1
 # 7. Log-File enthält eine Kommentar-Zeile mit XML-Syntax                   1
 # 8. Log-File enthält eine Headerzeile (Spalten-Bezeichnungen)              1
 #    Log-Entries enthalten formatierten Time-Stamp und Level                1
@@ -184,7 +184,7 @@ if __name__ == '__main__':
 # 14. Strategie via __init__ setzbar (mit Default-Wert)                     1
 # 15. Scrolling area via __init__ setzbar (mit Default-Wert)                1
 #                                                                       ---------
-#                                                                          16
+#                                                                          17
 #                                                                       =========
 
 # Zeile 120: headers und filenames Listen?

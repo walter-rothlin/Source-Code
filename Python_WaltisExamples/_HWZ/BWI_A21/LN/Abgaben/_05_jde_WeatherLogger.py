@@ -259,12 +259,12 @@ while doLoop:
 # 8. Log-File enthält eine Headerzeile (Spalten-Bezeichnungen)              0 nur timestamp und loglevel
 #    Log-Entries enthalten formatierten Time-Stamp und Level                1
 # 9. Scrolling Strategie implementiert                                      1
-# 10. Anzahl Zeilen für Scrollbereich definierbar                           0 nicht testbar
+# 10. Anzahl Zeilen für Scrollbereich definierbar                           1
 # 11. ChangesOnly implementiert                                             0 nicht testbar
-# 12. Append / New implementiert                                            0 nicht testbar
+# 12. Append / New implementiert                                            1
 # 13. Delimiter via __init__ setzbar (mit Default-Wert)                     1
 # 14. Strategie via __init__ setzbar (mit Default-Wert)                     1
 # 15. Scrolling area via __init__ setzbar (mit Default-Wert)                1
 #                                                                       ---------
-#                                                                          16
+#                                                                          18
 #                                                                       =========
