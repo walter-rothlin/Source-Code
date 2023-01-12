@@ -1,6 +1,7 @@
 
 # QR-Rechnungen Validator: https://www.swiss-qr-invoice.org/validator/?lang=de
 
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/QR_Codes_QR_Rechnung/QR_Rechnung_QR_Only/
 import qrcode
 from PIL import Image
 

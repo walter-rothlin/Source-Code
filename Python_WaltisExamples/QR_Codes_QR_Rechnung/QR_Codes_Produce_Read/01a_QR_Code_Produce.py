@@ -18,6 +18,6 @@
 import qrcode
 
 # Simple-Text
-img = qrcode.make('ABCDEFGZZZ 007')
+img = qrcode.make('ABCDEFG 007')
 img.save('../QR-Codes_Images/01a_01_helloWorld.png')
 print('../QR-Codes_Images/01a_01_helloWorld.png')
