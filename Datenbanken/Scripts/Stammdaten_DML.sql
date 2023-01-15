@@ -22,7 +22,13 @@ INSERT INTO `orte` (`id`, `PLZ`, `Name`)
               (3, '8854', 'Galgenen'),
               (4, '8853', 'Lachen'),
               (5, '8858', 'Innerthal'),
-              (6, '8610', 'Uster');
+              (6, '8610', 'Uster'),
+              (7, '8855', 'Nuolen'),
+              (8, '8862', 'Schübelbach'),
+              (9, '8857', 'Vorderthal'),
+              (10, '8852', 'Altendorf'),
+              (11, '8856', 'Tuggen'),
+              (12, '8858', 'Innerthal');
 
      
 DELETE FROM `adressen`;
@@ -32,30 +38,35 @@ INSERT INTO `adressen` (`id`, `Strasse`, `Hausnummer`, `Orte_id`)
               (3, 'Kapellstr.'  ,  '5' ,  2),
               (4, 'Leuholz'     , '12' ,  1),
               (5, 'Aberen'      , ''   ,  5),
-              (6, 'Wangen-Nuolen', '',  1),
-              (7, 'Krämacherstr.', '15',  6);
+              (6, 'Linthgasse'  , '30',  7),
+              (7, 'Krämacherstr.', '15',  6),
+              (8, 'Seestr.', 'xx',  1),
+              (9, 'Galtbrunnen',  '8' ,  1);
               
 DELETE FROM `personen`;
-INSERT INTO `personen` (`id`, `Sex`, `Firma`, `Vorname`, `Nachname`, `Kategorien`,`Privat_Adressen_id`, `Geschaefts_Adressen_id`) 
-       VALUES (1, 'Herr', '', 'Walter' , 'Rothlin-Collet' , 'Buerger,Genossenrat,Waermebezueger', 1, 7),
-			  (2, 'Frau', '', 'Claudia', 'Rothlin Rothlin', NULL, 1, NULL),
-			  (3, 'Herr', '', 'Tobias' , 'Rothlin'        , NULL, 1, NULL),
-			  (4, 'Herr', '', 'Lukas'  , 'Rothlin'        , NULL, 1, NULL),
-			  (5, 'Herr', '', 'Walter' , 'Rothlin-Meier'  , 'Buerger,Landteilbesitzer,Waermebezueger', 2, NULL),
-			  (6, 'Herr', '', 'Remo'   , 'Collet'         , NULL, 3, NULL),
-			  (7, ''    , 'Genossame Wangen'  , '', ''    , NULL, 4, NULL),
-			  (8, ''    , 'Flurgenossenschaft', '', ''    , NULL, 5, NULL),
-			  (9, ''    , 'Feuerwehrverein'   , '', ''    , NULL, 6, NULL);
+INSERT INTO `personen` (`id`, `Sex`,`Privat_Adressen_id`, `Geschaefts_Adressen_id`, `Firma`,`Vorname`,`Vorname_2`,`Ledig_Name`,`Partner_Name`,`Partner_Name_Angenommen`,`Zivilstand`,`AHV_Nr`,`Betriebs_Nr`,`Geburtstag`,`Kategorien`) 
+       VALUES (1,'Herr',1,7,   NULL,'Walter','Max','Rothlin' ,'Collet' , True,  'Verheiratet', '756.2534.0047.47', NULL, '1960-8-5', 'Buerger,Genossenrat,Waermebezueger'),
+              (2,'Frau',1,NULL,NULL,'Claudia',NULL,'Collet'  ,'Rothlin', False, 'Verheiratet', '756.1251.5642.06', NULL, '1965-11-14', NULL),
+              (5,'Herr',2,NULL,NULL,'Walter',NULL,'Rothlin'  ,'Meier'  , True,  'Verheiratet', NULL, NULL, '1936-10-12', 'Buerger,Landteilbesitzer,Waermebezueger'),
+              (3,'Herr',1,NULL,NULL,'Tobias',NULL,'Rothlin'  ,NULL     , NULL,  'Ledig'      , '756.8382.6137.80', '1996-7-31', NULL,'Buerger'),
+              (4,'Herr',1,NULL,NULL,'Lukas' ,NULL,'Rothlin'  ,NULL     , NULL,  'Ledig'      , '756.9954.2911.39', '1999-11-29', NULL,'Buerger'),
+              (6,'Herr',3,NULL,NULL,'Remo ' ,NULL,'Collet'   ,'Troxler', True,  'Verwitwed'  , NULL,NULL,NULL, NULL),
+              (7,NULL,4,NULL,'Genossame Wangen'    ,NULL ,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NULL, NULL),
+              (8,NULL,5,NULL,'Flurgenossenschaft'  ,NULL ,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NULL, NULL),
+              (9,NULL,8,NULL,'Feuerwehrverein'     ,NULL ,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NULL, NULL),
+              (10,'Frau',6,NULL,NULL,'Verena ',NULL,'Bruhin','Mächler',True,'Verwitwed',NULL,'139.1.46', NULL,'Bewirtschafter,Landwirt'),
+              (11,'Herr',9,NULL,NULL,'Urs',NULL,'Bruhin'  ,'Deuber'  , True,  'Verheiratet', NULL, NULL,NULL, 'Buerger,Landteilbesitzer');
+
               
 -- SELECT * FROM `personen` WHERE FIND_IN_SET('Buerger',`Kategorien`)>0;
 -- SELECT * FROM `personen` WHERE `Kategorien` LIKE '%Buerger%';
 
 
 DELETE FROM `email_adressen`;
-INSERT INTO `email_adressen` (`id`, `eMail`, `Type`, `isMain`) 
+INSERT INTO `email_adressen` (`id`, `eMail`, `Type`, `prio`) 
        VALUES (1, 'walter@rothlin.com',                  'Private',   1),
-              (2, 'walter.rothlin@bzu.ch',               'Schule',    0),
-              (3, 'landwirtschaft@genossame-wangen.ch',  'Genossame', 0),
+              (2, 'walter.rothlin@bzu.ch',               'Schule',    2),
+              (3, 'landwirtschaft@genossame-wangen.ch',  'Genossame', 3),
               (4, 'tobias@rothlin.com',  'Private', 1),
               (5, 'claudia@rothlin.com',  'Private', 1);
               
@@ -80,6 +91,13 @@ INSERT INTO `iban` (`id`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `Perso
                (9, 'CH2800777001683190072', 'Privat Remo'      , 'SZKB' , 'Siebnen'  , 6),
                (10, 'CH4100777005824911455', 'Fw Oktoberfest'  , 'SZKB' , 'Siebnen'  , 9),
                (11, 'CH9000777003292211667', 'FG Abern'        , 'SZKB' , 'Siebnen'  , 8);
+
+
+               
+DELETE FROM `landteil`;
+INSERT INTO `landteil` (`id`,`AV_Parzellen_Nr`,`GENO_Parzellen_Nr`,`Flur_Bezeichnung`,`Flaeche_In_Aren`,`Buergerlandteil`,`Polygone_Flaeche`,`Vertragsende`,`Rueckgabe_Am`,`Paechter_Adresse`,`Verpaechter_Adresse`) 
+        VALUES (1,'233.100','233.100.1','Winkelhöfli',36,NULL,NULL,Null,'2018-12-31',10,7),
+               (2,'233.100','233.100.2','Winkelhöfli',16,'16a',NULL,Null,Null,       10,11);
                
 -- ----------------------------------------------------------------
 -- Testen der Views
