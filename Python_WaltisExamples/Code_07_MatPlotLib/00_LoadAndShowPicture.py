@@ -14,7 +14,8 @@
 # !!!!    pip install numpy==1.19.3
 #
 # History:
-# 22.4.21   Walter Rothlin      Initial Version
+# 22-Apr-2021   Walter Rothlin      Initial Version
+# 15-Jan-2023   Walter Rothlin      Fixed problem with deprecated methods
 # ------------------------------------------------------------------
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg

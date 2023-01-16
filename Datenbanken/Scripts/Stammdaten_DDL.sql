@@ -313,6 +313,7 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
   `GENO_Parzellen_Nr`    VARCHAR(20) NOT NULL,
   `Flur_Bezeichnung`     VARCHAR(20) NULL,
   `Flaeche_In_Aren`      FLOAT UNSIGNED NULL,
+  `Pachtzins_Pro_Are`    FLOAT UNSIGNED NULL,
   `Buergerlandteil`      ENUM('16a','35a') DEFAULT NULL,
   `Polygone_Flaeche`     VARCHAR(20) NULL,
   `Vertragsende`         DATE NULL,
@@ -470,6 +471,17 @@ DELIMITER ;
 
 -- Testen
 -- SELECT getName("M", FALSE, "Rothlin", "") AS Name;
+
+
+
+DROP FUNCTION IF EXISTS calc_yearly_pachtfee;
+Delimiter //
+CREATE FUNCTION calc_yearly_pachtfee(flaeche_in_aren FLOAT, preis_pro_are FLOAT) RETURNS FLOAT
+BEGIN
+   RETURN  flaeche_in_aren * preis_pro_are;
+END
+//
+DELIMITER ;
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Create Views
@@ -624,6 +636,9 @@ CREATE VIEW Pachtlandzuteilung AS
           L.GENO_Parzellen_Nr                        AS GENO_Parzelle,
           L.Flur_Bezeichnung                         AS FLur_Bezeichnung,
           L.Flaeche_In_Aren                          AS Flaeche,
+          L.Pachtzins_Pro_Are                        AS Pachtzins_pro_Are,
+          calc_yearly_pachtfee(L.Flaeche_In_Aren,
+                               L.Pachtzins_Pro_Are)  AS Pachtzins_pro_Jahr,
           L.Buergerlandteil                          AS Buergerteil,
           L.Polygone_Flaeche                         AS Polygone,
           L.Vertragsende                             AS Vertragsende,
