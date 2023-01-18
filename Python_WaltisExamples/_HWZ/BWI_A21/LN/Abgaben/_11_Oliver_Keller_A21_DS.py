@@ -249,7 +249,7 @@ while doLoop:
 # 3. Für den Weather REST Service wurde ein eigener Token verwendet         2
 # 4. Eine eigene, reusable Klasse mit
 #    einfachem Interface implementiert (4 Punkte)                           4
-# 5. Nur absolut Notwendiges ist public (2 Punkte)                          1 (es gibt keine private methoden)
+# 5. Nur absolut Notwendiges ist public (2 Punkte)                          2 (es gibt keine private methoden)
 # 6. Kommentare in Form von doc_strings sind enthalten                      1 (Keine inhaltlich hilfreiche Beschreibungen)
 # 7. Log-File enthält eine Kommentar-Zeile mit XML-Syntax                   0 (Delimiter am Schluss der Kommentarzeile
 # 8. Log-File enthält eine Headerzeile (Spalten-Bezeichnungen)              1
@@ -257,10 +257,10 @@ while doLoop:
 # 9. Scrolling Strategie implementiert                                      0
 # 10. Anzahl Zeilen für Scrollbereich definierbar                           0
 # 11. ChangesOnly implementiert                                             0
-# 12. Append / New implementiert                                            0
+# 12. Append / New implementiert                                            1
 # 13. Delimiter via __init__ setzbar (mit Default-Wert)                     1
 # 14. Strategie via __init__ setzbar (mit Default-Wert)                     1
-# 15. Scrolling area via __init__ setzbar (mit Default-Wert)                0
+# 15. Scrolling area via __init__ setzbar (mit Default-Wert)                1
 #                                                                       ---------
-#                                                                          14
+#                                                                          17
 #                                                                       =========

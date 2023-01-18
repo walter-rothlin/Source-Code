@@ -128,12 +128,12 @@ https://www.youtube.com/watch?v=aCk-qE_WQJ4&t=85s
 # 9. Scrolling Strategie implementiert                                      0
 # 10. Anzahl Zeilen für Scrollbereich definierbar                           0
 # 11. ChangesOnly implementiert                                             0
-# 12. Append / New implementiert                                            0
-# 13. Delimiter via __init__ setzbar (mit Default-Wert)                     0
+# 12. Append / New implementiert                                            1
+# 13. Delimiter via __init__ setzbar (mit Default-Wert)                     1
 # 14. Strategie via __init__ setzbar (mit Default-Wert)                     0
 # 15. Scrolling area via __init__ setzbar (mit Default-Wert)                0
 #                                                                       ---------
-#                                                                          13
+#                                                                          15
 #                                                                       =========
 
 

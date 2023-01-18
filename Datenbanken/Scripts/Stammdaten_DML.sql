@@ -50,11 +50,11 @@ INSERT INTO `personen` (`id`, `Sex`,`Privat_Adressen_id`, `Geschaefts_Adressen_i
               (5,'Herr',2,NULL,NULL,'Walter',NULL,'Rothlin'  ,'Meier'  , True,  'Verheiratet', NULL, NULL, '1936-10-12', 'Buerger,Landteilbesitzer,Waermebezueger'),
               (3,'Herr',1,NULL,NULL,'Tobias',NULL,'Rothlin'  ,NULL     , NULL,  'Ledig'      , '756.8382.6137.80', '1996-7-31', NULL,'Buerger'),
               (4,'Herr',1,NULL,NULL,'Lukas' ,NULL,'Rothlin'  ,NULL     , NULL,  'Ledig'      , '756.9954.2911.39', '1999-11-29', NULL,'Buerger'),
-              (6,'Herr',3,NULL,NULL,'Remo ' ,NULL,'Collet'   ,'Troxler', True,  'Verwitwed'  , NULL,NULL,NULL, NULL),
+              (6,'Herr',3,NULL,NULL,'Remo'  ,NULL,'Collet'   ,'Troxler', True,  'Verwitwed'  , NULL,NULL,NULL, NULL),
               (7,NULL,4,NULL,'Genossame Wangen'    ,NULL ,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NULL, NULL),
               (8,NULL,5,NULL,'Flurgenossenschaft'  ,NULL ,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NULL, NULL),
               (9,NULL,8,NULL,'Feuerwehrverein'     ,NULL ,NULL,NULL,NULL, NULL,NULL,NULL,NULL,NULL, NULL),
-              (10,'Frau',6,NULL,NULL,'Verena ',NULL,'Bruhin','Mächler',True,'Verwitwed',NULL,'139.1.46', NULL,'Bewirtschafter,Landwirt'),
+              (10,'Frau',6,NULL,NULL,'Verena',NULL,'Bruhin','Mächler',True,'Verwitwed',NULL,'139.1.46', NULL,'Bewirtschafter,Landwirt'),
               (11,'Herr',9,NULL,NULL,'Urs',NULL,'Bruhin'  ,'Deuber'  , True,  'Verheiratet', NULL, NULL,NULL, 'Buerger,Landteilbesitzer');
 
               
