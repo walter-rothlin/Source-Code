@@ -678,6 +678,255 @@ CREATE VIEW EMail_Main AS
 	   eMailAdr.Prio = 0;    -- MIN(eMailAdr.Prio); 
 
 
+-- ===============================================================================================
+-- Create stored procedures for business (external) write access
+-- ===============================================================================================
+
+-- ------------------------------------------------------
+-- Ort
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getOrtId;
+DELIMITER $$
+CREATE PROCEDURE getOrtId(IN plz SMALLINT(4), IN ortsname VARCHAR(45), OUT id SMALLINT(5))
+BEGIN
+    IF ((SELECT count(*) FROM orte WHERE orte.plz = plz AND orte.name = ortsname) = 0) THEN
+        INSERT INTO orte (`plz`, `name`) VALUES (plz, ortsname);
+    END IF;
+    SELECT orte.id FROM orte WHERE orte.plz = plz and orte.name = ortsname INTO id;
+END$$
+DELIMITER ;
+
+-- Tests von getOrtId
+-- bestehendes Ort
+set @id = 0;
+call getOrtId(8855, 'Wangen', @id);
+-- select @id;
+
+call getOrtId(8854, 'Siebnen', @id);
+-- select @id;
+
+call getOrtId(8854, 'Galgenen', @id);
+-- select @id;
+
+call getOrtId(8853, 'Lachen', @id);
+-- select @id;
+
+
+-- try to reenter duplicate plz, Ort
+call getOrtId(8854, 'Galgenen', @id);
+-- select @id;
+call getOrtId(8853, 'Lachen', @id);
+-- select @id;
+
+-- ------------------------------------------------------
+-- Adresse
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getAdressId;
+DELIMITER $$
+CREATE PROCEDURE getAdressId(IN strasse VARCHAR(45), 
+							 IN hausnummer VARCHAR(10), 
+                             IN plz SMALLINT(4), 
+                             IN ortsname VARCHAR(45), 
+                             OUT adress_id SMALLINT(5))
+BEGIN
+    CALL getOrtId(plz, ortsname, @ort_id);
+    IF ((SELECT count(*) FROM adressen WHERE adressen.strasse    = strasse AND 
+											 adressen.hausnummer = hausnummer AND 
+                                             adressen.Orte_id    = @ort_id) = 0) THEN
+        INSERT adressen (`strasse`, `hausnummer`, `orte_id`) VALUES (strasse, hausnummer, @ort_id);
+    END IF;
+    SELECT id FROM adressen WHERE adressen.strasse = strasse and 
+                                  adressen.hausnummer = hausnummer and 
+                                  adressen.orte_id = @ort_id INTO adress_id;
+END$$
+DELIMITER ;
+
+-- Tests von AdressenId
+-- bestehende Adresse
+-- set @id = 0;
+call getAdressId('Peterliwiese', '33', '8855', 'Wangen', @id);
+-- select @id;
+
+-- ------------------------------------------------------
+-- Personen
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getPersonenId;
+DELIMITER $$
+CREATE PROCEDURE getPersonenId(IN vorname VARCHAR(45),
+                               IN ledig_name VARCHAR(45),
+                               IN partner_name VARCHAR(45),
+                               IN firma VARCHAR(45),
+							   IN strasse VARCHAR(45), 
+							   IN hausnummer VARCHAR(10), 
+							   IN plz SMALLINT(4), 
+							   IN ortsname VARCHAR(45), 
+                               OUT personen_id SMALLINT(5))
+BEGIN
+    CALL getAdressId(strasse, hausnummer, plz, ortsname, @adressen_id);
+    IF ((SELECT count(*) 
+         FROM personen 
+         WHERE personen.vorname = vorname AND 
+               personen.ledig_name = ledig_name AND 
+               personen.partner_name = partner_name AND 
+               personen.firma = firma AND 
+               personen.privat_adressen_id = @adressen_id) = 0) THEN
+        INSERT personen (`vorname`, `ledig_name`, `partner_name`, `firma`,  `privat_adressen_id`) VALUES (vorname, ledig_name, partner_name, firma, @adressen_id);
+    END IF;
+    SELECT id FROM personen WHERE personen.vorname = vorname AND 
+                                  personen.ledig_name = ledig_name AND
+                                  personen.partner_name = partner_name AND 
+                                  personen.firma = firma AND 
+                                  personen.privat_adressen_id = @adressen_id INTO personen_id;
+END$$
+DELIMITER ;
+
+-- Tests von getPersonenId
+set @id = 0;
+call getPersonenId('Walter','Rothlin','Collet','BZU','Peterliwiese', '33', '8855', 'Wangen', @id);
+select @id;
+
+call getPersonenId('Walter','Rothlin',NULL,NULL,'Peterliwiese', '33', '8855', 'Wangen', @id);
+select @id;
+
+DROP PROCEDURE IF EXISTS createPerson;
+DELIMITER $$
+CREATE PROCEDURE createPerson(IN vorname VARCHAR(45),
+							  IN ledig_name VARCHAR(45),
+							  IN partner_name VARCHAR(45),
+							  IN firma VARCHAR(45),
+							  IN strasse VARCHAR(45), 
+							  IN hausnummer VARCHAR(10), 
+							  IN plz SMALLINT(4), 
+							  IN ortsname VARCHAR(45), 
+							  OUT generatedId SMALLINT(5))
+BEGIN
+    CALL getOrtId(plz, ortsname, @ort_id);
+    INSERT INTO adressen (strasse, hausnummer, orte_id) VALUES (strasse, hausnummer, @ort_id);
+    SELECT LAST_INSERT_ID() INTO generatedId;
+END$$
+DELIMITER ;
+
+-- Tests von createAdresse_Name
+set @id = 0;
+call createAdresse_Name('Walter','Rothlin','BZU','Im Gräbler', '12', 8310, 'Grafstal', @id);
+select @id;
+-- createAdresse
+DROP PROCEDURE IF EXISTS createAdresse;
+DELIMITER $$
+CREATE PROCEDURE createAdresse(IN strasse VARCHAR(45), 
+                               IN hausnummer VARCHAR(10), 
+                               IN plz SMALLINT(4), 
+                               IN ortsname VARCHAR(45), 
+                               OUT generatedId SMALLINT(5))
+BEGIN
+    CALL getOrtId(plz, ortsname, @ort_id);
+    INSERT INTO adressen (strasse, hausnummer, orte_id) VALUES (strasse, hausnummer, @ort_id);
+    SELECT LAST_INSERT_ID() INTO generatedId;
+END$$
+DELIMITER ;
+
+-- set @id = 0;
+-- call createAdresse('Im Gräbler', '12', 8310, 'Grafstal', @id);
+-- select @id;
+
+-- updateAdresse
+DROP PROCEDURE IF EXISTS updateAdresse;
+DELIMITER $$
+CREATE PROCEDURE updateAdresse(IN id SMALLINT(5), IN strasse VARCHAR(45), IN hausnummer VARCHAR(10), IN plz SMALLINT(4), IN ortsBezeichnung VARCHAR(45))
+BEGIN
+    CALL getOrtId(plz, ortsBezeichnung, @ort_id);
+    UPDATE adressen SET strasse=strasse, hausnummer=hausnummer, orte_id=@ort_id WHERE id=id;
+END$$
+DELIMITER ;
+
+-- Tests von updateAdresse
+-- set @id = 6;
+-- call updateAdresse(@id, 'Schulhausstrasse', '1a', 8400, 'Winterthur');
+-- select @id;
+
+-- deleteAdresse
+DROP PROCEDURE IF EXISTS deleteAdresse;
+DELIMITER $$
+CREATE PROCEDURE deleteAdresse(IN id SMALLINT(5))
+BEGIN
+    DELETE FROM adressen WHERE id=id;
+END$$
+DELIMITER ;
+
+-- Tests von deleteAdresse
+set @id = 6;
+call deleteAdresse(@id);
+select @id;
+
+-- deleteOrtIfUnused
+DROP PROCEDURE IF EXISTS deleteOrtIfUnused;
+DELIMITER $$
+CREATE PROCEDURE deleteOrtIfUnused(IN id SMALLINT(5))
+BEGIN
+    IF ((SELECT COUNT(orte_id) FROM adressen WHERE id=id) = 0) THEN
+        DELETE FROM orte WHERE id=id;
+    END IF;
+END$$
+DELIMITER ;
+
+-- Tests von deleteOrtIfUnused
+set @id = 1;
+call deleteOrtIfUnused(@id);
+
+DROP PROCEDURE IF EXISTS deleteAdresseCascade;
+-- Diese storeded procedure löscht auch Orte die nicht mehr von Adressen Referenziert werden
+-- Kann auch über einen Konstraint ON DELETE CASCADE
+DELIMITER $$
+CREATE PROCEDURE deleteAdresseCascade(IN id SMALLINT(5))
+BEGIN
+    SET @ortID = (SELECT orte_fk FROM adressen WHERE id = id);
+    DELETE FROM adressen WHERE id=id;
+    CALL deleteOrtIfUnused(@ortID);
+END$$
+DELIMITER ;
+
+
+
+
+
+-- createAdresse
+DROP PROCEDURE IF EXISTS createAdresse_Name;
+DELIMITER $$
+CREATE PROCEDURE createAdresse_Name(IN vorname VARCHAR(45),
+								    IN Name VARCHAR(45), 
+                                    IN Firma VARCHAR(45), 
+									IN strasse VARCHAR(45), 
+                                    IN hausnummer VARCHAR(10), 
+                                    IN plz SMALLINT(4), 
+                                    IN ortsname VARCHAR(45), 
+                                    OUT generatedId SMALLINT(5))
+BEGIN
+    CALL getOrtId(plz, ortsname, @ort_id);
+    INSERT INTO adressen (strasse, hausnummer, orte_id) VALUES (strasse, hausnummer, @ort_id);
+    SELECT LAST_INSERT_ID() INTO generatedId;
+END$$
+DELIMITER ;
+
+-- Tests von createAdresse_Name
+set @id = 0;
+call createAdresse_Name('Walter','Rothlin','BZU','Im Gräbler', '12', 8310, 'Grafstal', @id);
+select @id;
+
+-- updateAdresse
+DROP PROCEDURE IF EXISTS updateAdresse;
+DELIMITER $$
+CREATE PROCEDURE updateAdresse(IN id SMALLINT(5), IN strasse VARCHAR(45), IN hausnummer VARCHAR(10), IN plz SMALLINT(4), IN ortsBezeichnung VARCHAR(45))
+BEGIN
+    CALL getOrtId(plz, ortsBezeichnung, @ort_id);
+    UPDATE adressen SET strasse=strasse, hausnummer=hausnummer, orte_id=@ort_id WHERE id=id;
+END$$
+DELIMITER ;
+
+-- Tests von updateAdresse
+set @id = 6;
+call updateAdresse(@id, 'Schulhausstrasse', '1a', 8400, 'Winterthur');
+select @id;
+
    
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
