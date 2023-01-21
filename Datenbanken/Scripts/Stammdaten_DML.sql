@@ -27,8 +27,7 @@ INSERT INTO `orte` (`id`, `PLZ`, `Name`)
               (8, '8862', 'Schübelbach'),
               (9, '8857', 'Vorderthal'),
               (10, '8852', 'Altendorf'),
-              (11, '8856', 'Tuggen'),
-              (12, '8858', 'Innerthal');
+              (11, '8856', 'Tuggen');
 
      
 DELETE FROM `adressen`;

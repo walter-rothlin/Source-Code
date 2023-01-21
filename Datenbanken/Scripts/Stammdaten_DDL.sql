@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS Orte (
   `PLZ`         VARCHAR(10) NOT NULL,
   `Name`        VARCHAR(45) NULL,
   `Land_id`     INT UNSIGNED NULL DEFAULT 1,
+  `Kanton`      VARCHAR(10) NULL,
+  `Tel_Vorwahl` VARCHAR(3) NULL,
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
   -- PK-Constraints
@@ -216,9 +218,9 @@ CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
 DROP TABLE IF EXISTS `Telefonnummern` ;
 CREATE TABLE IF NOT EXISTS `Telefonnummern` (
   `id`           INT UNSIGNED                      NOT NULL AUTO_INCREMENT,
-  `Laendercode`  INT                               NULL,
-  `Vorwahl`      INT                               NULL,
-  `Nummer`       INT                               NULL,
+  `Laendercode`  VARCHAR(4)                        NOT NULL DEFAULT '0041',
+  `Vorwahl`      VARCHAR(3)                        NULL,
+  `Nummer`       VARCHAR(11)                       NULL,
   `Type`         ENUM('Privat', 'Geschaeft')       NULL,
   `Endgeraet`    ENUM('Festnetz', 'Mobile', 'FAX') NULL,
   `Prio`         TINYINT                           NOT NULL DEFAULT 0, 
@@ -487,6 +489,25 @@ DELIMITER ;
 -- Create Views
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste; 
+CREATE VIEW Telnr_Liste AS
+	SELECT
+        pt.ID                                       AS ID,
+		pt.Personen_id                              AS Person_Id,
+        pers.Vorname                                AS Vorname,
+        pers.Ledig_Name                             AS Ledig_Name,
+        tel.laendercode                             AS Laendercode,
+        tel.vorwahl									AS Vorwahl,
+        tel.Nummer                                  AS Nummer,
+        tel.Type                                    AS Type,
+        tel.endgeraet                               AS Endgeraet,
+        tel.prio                                    AS Prio,
+        getYounger(pt.last_update, tel.last_update) AS last_update
+	FROM personen_has_telefonnummern AS pt
+	LEFT OUTER JOIN Telefonnummern AS tel ON pt.telefonnummern_id = tel.id
+    LEFT OUTER JOIN Personen AS pers ON pt.personen_id = pers.id
+    ORDER BY pt.ID, tel.prio;
+
 DROP VIEW IF EXISTS Ort_Land; 
 CREATE VIEW Ort_Land AS
 	SELECT
@@ -511,6 +532,7 @@ CREATE VIEW Adress_Daten AS
 		a.id                                      AS ID,
 		a.Strasse                                 AS Strasse,
 		a.Hausnummer                              AS Hausnummer,
+        a.postfachnummer                          AS Postfachnummer,
 		ol.PLZ	                                  AS PLZ,
         ol.PLZ_International	                  AS PLZ_International,
 		ol.Ort	                                  AS Ort,
@@ -563,12 +585,14 @@ CREATE VIEW Personen_Daten AS
           P.Chronik_Bezogen_Am                         AS Chronik_Bezogen_Am,
 		  pAdr.Strasse                                 AS Private_Strasse,
 		  pAdr.Hausnummer                              AS Private_Hausnummer,
+          pAdr.Postfachnummer                          AS Private_Postfachnummer,
 		  pAdr.PLZ                                     AS Private_PLZ,
           pAdr.PLZ_International                       AS Private_PLZ_International,
 		  pAdr.Ort                                     AS Private_Ort,
 		  pAdr.Land                                    AS Private_Land,
 		  gAdr.Strasse                                 AS Geschaeft_Strasse,
 		  gAdr.Hausnummer                              AS Geschaeft_Hausnummer,
+          gAdr.Postfachnummer                          AS Geschaeft_Postfachnummer,
 		  gAdr.PLZ                                     AS Geschaeft_PLZ,
           gAdr.PLZ_International                       AS Geschaeft_PLZ_International,    -- CH-8855
 		  gAdr.Ort                                     AS Geschaeft_Ort,
@@ -678,45 +702,112 @@ CREATE VIEW EMail_Main AS
 	   eMailAdr.Prio = 0;    -- MIN(eMailAdr.Prio); 
 
 
+
+
+
+
 -- ===============================================================================================
 -- Create stored procedures for business (external) write access
 -- ===============================================================================================
+-- ------------------------------------------------------
+-- Telefonnummer
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getTelefonnummerId;
+DELIMITER $$
+CREATE PROCEDURE getTelefonnummerId(IN Laendercode VARCHAR(4), IN Vorwahl VARCHAR(3), IN Nummer VARCHAR(11), IN TEL_Type ENUM('Privat', 'Geschaeft'), IN Endgeraet ENUM('Festnetz', 'Mobile', 'FAX'), IN Prio TINYINT, OUT tel_id SMALLINT(5))
+BEGIN
+    IF ((SELECT count(*) FROM Telefonnummern WHERE Telefonnummern.Laendercode=Laendercode AND Telefonnummern.Vorwahl=Vorwahl AND Telefonnummern.Nummer=Nummer) = 0) THEN
+        INSERT INTO Telefonnummern (`Laendercode`,`Vorwahl`,`Nummer`,`Type`,`Endgeraet`,`Prio`) VALUES (Laendercode, Vorwahl, Nummer, TEL_Type, Endgeraet, Prio);
+        COMMIT;
+    END IF;
+    SELECT id FROM Telefonnummern WHERE Telefonnummern.Laendercode=Laendercode AND Telefonnummern.Vorwahl=Vorwahl AND Telefonnummern.Nummer=Nummer INTO tel_id;
+END$$
+DELIMITER ;
+
+-- Tests
+-- set @id = 0;
+-- call getTelefonnummerId('0041', '', '0554601440', 'Privat','Festnetz',0, @id);
+-- select @id;
+
+-- set @id = 0;
+-- call getTelefonnummerId('0041', '', '0793689492', 'Privat','Mobile',1, @id);
+-- select @id;
+
+
+-- ------------------------------------------------------
+-- Land
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getLandId;
+DELIMITER $$
+CREATE PROCEDURE getLandId(IN landname VARCHAR(45), IN land_code VARCHAR(5), IN landesvorwahl VARCHAR(4), OUT id SMALLINT(5))
+BEGIN
+    IF ((SELECT count(*) FROM land WHERE land.name = landname) = 0) THEN
+        INSERT INTO land (`name`, `code`, `landesvorwahl`) VALUES (landname, land_code, landesvorwahl);
+        COMMIT;
+    END IF;
+    SELECT land.id FROM land WHERE land.name = landname or land.code = land_code or land.landesvorwahl = landesvorwahl INTO id;
+END$$
+DELIMITER ;
+
+-- Tests
+-- set @id = 0;
+-- call getLandId('Schweiz', 'CH', '0041', @id);
+-- select @id;
+
 
 -- ------------------------------------------------------
 -- Ort
 -- ------------------------------------------------------
 DROP PROCEDURE IF EXISTS getOrtId;
 DELIMITER $$
-CREATE PROCEDURE getOrtId(IN plz SMALLINT(4), IN ortsname VARCHAR(45), OUT id SMALLINT(5))
+CREATE PROCEDURE getOrtId(IN plz SMALLINT(4), IN ortsname VARCHAR(45), IN kanton VARCHAR(10), IN tel_vorwahl VARCHAR(3), OUT id SMALLINT(5))
 BEGIN
     IF ((SELECT count(*) FROM orte WHERE orte.plz = plz AND orte.name = ortsname) = 0) THEN
-        INSERT INTO orte (`plz`, `name`) VALUES (plz, ortsname);
+        INSERT INTO orte (`plz`, `name`, `kanton`, `tel_vorwahl`) VALUES (plz, ortsname, kanton, tel_vorwahl);
+        COMMIT;
     END IF;
     SELECT orte.id FROM orte WHERE orte.plz = plz and orte.name = ortsname INTO id;
 END$$
 DELIMITER ;
 
--- Tests von getOrtId
+-- Tests
 -- bestehendes Ort
-set @id = 0;
-call getOrtId(8855, 'Wangen', @id);
+-- set @id = 0;
+-- call getOrtId(8855, 'Wangen', NULL, NULL, @id);
 -- select @id;
 
-call getOrtId(8854, 'Siebnen', @id);
+-- call getOrtId(8854, 'Siebnen', NULL, NULL, @id);
 -- select @id;
 
-call getOrtId(8854, 'Galgenen', @id);
+-- call getOrtId(8854, 'Galgenen', NULL, NULL, @id);
 -- select @id;
 
-call getOrtId(8853, 'Lachen', @id);
+-- call getOrtId(8853, 'Lachen', NULL, NULL, @id);
 -- select @id;
 
 
 -- try to reenter duplicate plz, Ort
-call getOrtId(8854, 'Galgenen', @id);
+-- call getOrtId(8854, 'Galgenen', NULL, NULL, @id);
 -- select @id;
-call getOrtId(8853, 'Lachen', @id);
+-- call getOrtId(8853, 'Lachen', NULL, NULL, @id);
 -- select @id;
+
+-- deleteOrtIfUnused
+DROP PROCEDURE IF EXISTS deleteOrtIfUnused;
+DELIMITER $$
+CREATE PROCEDURE deleteOrtIfUnused(IN id SMALLINT(5))
+BEGIN
+    IF ((SELECT COUNT(orte_id) FROM adressen WHERE id=id) = 0) THEN
+        DELETE FROM orte WHERE id=id;
+        COMMIT;
+    END IF;
+END$$
+DELIMITER ;
+
+-- Tests
+-- set @id = 1;
+-- call deleteOrtIfUnused(@id);
+
 
 -- ------------------------------------------------------
 -- Adresse
@@ -729,11 +820,12 @@ CREATE PROCEDURE getAdressId(IN strasse VARCHAR(45),
                              IN ortsname VARCHAR(45), 
                              OUT adress_id SMALLINT(5))
 BEGIN
-    CALL getOrtId(plz, ortsname, @ort_id);
+    CALL getOrtId(plz, ortsname, NULL, NULL, @ort_id);
     IF ((SELECT count(*) FROM adressen WHERE adressen.strasse    = strasse AND 
 											 adressen.hausnummer = hausnummer AND 
                                              adressen.Orte_id    = @ort_id) = 0) THEN
         INSERT adressen (`strasse`, `hausnummer`, `orte_id`) VALUES (strasse, hausnummer, @ort_id);
+        COMMIT;
     END IF;
     SELECT id FROM adressen WHERE adressen.strasse = strasse and 
                                   adressen.hausnummer = hausnummer and 
@@ -744,72 +836,9 @@ DELIMITER ;
 -- Tests von AdressenId
 -- bestehende Adresse
 -- set @id = 0;
-call getAdressId('Peterliwiese', '33', '8855', 'Wangen', @id);
+-- call getAdressId('Peterliwiese', '33', '8855', 'Wangen', @id);
 -- select @id;
 
--- ------------------------------------------------------
--- Personen
--- ------------------------------------------------------
-DROP PROCEDURE IF EXISTS getPersonenId;
-DELIMITER $$
-CREATE PROCEDURE getPersonenId(IN vorname VARCHAR(45),
-                               IN ledig_name VARCHAR(45),
-                               IN partner_name VARCHAR(45),
-                               IN firma VARCHAR(45),
-							   IN strasse VARCHAR(45), 
-							   IN hausnummer VARCHAR(10), 
-							   IN plz SMALLINT(4), 
-							   IN ortsname VARCHAR(45), 
-                               OUT personen_id SMALLINT(5))
-BEGIN
-    CALL getAdressId(strasse, hausnummer, plz, ortsname, @adressen_id);
-    IF ((SELECT count(*) 
-         FROM personen 
-         WHERE personen.vorname = vorname AND 
-               personen.ledig_name = ledig_name AND 
-               personen.partner_name = partner_name AND 
-               personen.firma = firma AND 
-               personen.privat_adressen_id = @adressen_id) = 0) THEN
-        INSERT personen (`vorname`, `ledig_name`, `partner_name`, `firma`,  `privat_adressen_id`) VALUES (vorname, ledig_name, partner_name, firma, @adressen_id);
-    END IF;
-    SELECT id FROM personen WHERE personen.vorname = vorname AND 
-                                  personen.ledig_name = ledig_name AND
-                                  personen.partner_name = partner_name AND 
-                                  personen.firma = firma AND 
-                                  personen.privat_adressen_id = @adressen_id INTO personen_id;
-END$$
-DELIMITER ;
-
--- Tests von getPersonenId
-set @id = 0;
-call getPersonenId('Walter','Rothlin','Collet','BZU','Peterliwiese', '33', '8855', 'Wangen', @id);
-select @id;
-
-call getPersonenId('Walter','Rothlin',NULL,NULL,'Peterliwiese', '33', '8855', 'Wangen', @id);
-select @id;
-
-DROP PROCEDURE IF EXISTS createPerson;
-DELIMITER $$
-CREATE PROCEDURE createPerson(IN vorname VARCHAR(45),
-							  IN ledig_name VARCHAR(45),
-							  IN partner_name VARCHAR(45),
-							  IN firma VARCHAR(45),
-							  IN strasse VARCHAR(45), 
-							  IN hausnummer VARCHAR(10), 
-							  IN plz SMALLINT(4), 
-							  IN ortsname VARCHAR(45), 
-							  OUT generatedId SMALLINT(5))
-BEGIN
-    CALL getOrtId(plz, ortsname, @ort_id);
-    INSERT INTO adressen (strasse, hausnummer, orte_id) VALUES (strasse, hausnummer, @ort_id);
-    SELECT LAST_INSERT_ID() INTO generatedId;
-END$$
-DELIMITER ;
-
--- Tests von createAdresse_Name
-set @id = 0;
-call createAdresse_Name('Walter','Rothlin','BZU','Im Gräbler', '12', 8310, 'Grafstal', @id);
-select @id;
 -- createAdresse
 DROP PROCEDURE IF EXISTS createAdresse;
 DELIMITER $$
@@ -821,6 +850,7 @@ CREATE PROCEDURE createAdresse(IN strasse VARCHAR(45),
 BEGIN
     CALL getOrtId(plz, ortsname, @ort_id);
     INSERT INTO adressen (strasse, hausnummer, orte_id) VALUES (strasse, hausnummer, @ort_id);
+    COMMIT;
     SELECT LAST_INSERT_ID() INTO generatedId;
 END$$
 DELIMITER ;
@@ -836,10 +866,11 @@ CREATE PROCEDURE updateAdresse(IN id SMALLINT(5), IN strasse VARCHAR(45), IN hau
 BEGIN
     CALL getOrtId(plz, ortsBezeichnung, @ort_id);
     UPDATE adressen SET strasse=strasse, hausnummer=hausnummer, orte_id=@ort_id WHERE id=id;
+    COMMIT;
 END$$
 DELIMITER ;
 
--- Tests von updateAdresse
+-- Tests
 -- set @id = 6;
 -- call updateAdresse(@id, 'Schulhausstrasse', '1a', 8400, 'Winterthur');
 -- select @id;
@@ -853,25 +884,10 @@ BEGIN
 END$$
 DELIMITER ;
 
--- Tests von deleteAdresse
-set @id = 6;
-call deleteAdresse(@id);
-select @id;
-
--- deleteOrtIfUnused
-DROP PROCEDURE IF EXISTS deleteOrtIfUnused;
-DELIMITER $$
-CREATE PROCEDURE deleteOrtIfUnused(IN id SMALLINT(5))
-BEGIN
-    IF ((SELECT COUNT(orte_id) FROM adressen WHERE id=id) = 0) THEN
-        DELETE FROM orte WHERE id=id;
-    END IF;
-END$$
-DELIMITER ;
-
--- Tests von deleteOrtIfUnused
-set @id = 1;
-call deleteOrtIfUnused(@id);
+-- Tests
+-- set @id = 6;
+-- call deleteAdresse(@id);
+-- select @id;
 
 DROP PROCEDURE IF EXISTS deleteAdresseCascade;
 -- Diese storeded procedure löscht auch Orte die nicht mehr von Adressen Referenziert werden
@@ -881,51 +897,85 @@ CREATE PROCEDURE deleteAdresseCascade(IN id SMALLINT(5))
 BEGIN
     SET @ortID = (SELECT orte_fk FROM adressen WHERE id = id);
     DELETE FROM adressen WHERE id=id;
+    COMMIT;
     CALL deleteOrtIfUnused(@ortID);
 END$$
 DELIMITER ;
 
 
-
-
-
--- createAdresse
-DROP PROCEDURE IF EXISTS createAdresse_Name;
+-- ------------------------------------------------------
+-- Personen
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getPersonenId;
 DELIMITER $$
-CREATE PROCEDURE createAdresse_Name(IN vorname VARCHAR(45),
-								    IN Name VARCHAR(45), 
-                                    IN Firma VARCHAR(45), 
-									IN strasse VARCHAR(45), 
-                                    IN hausnummer VARCHAR(10), 
-                                    IN plz SMALLINT(4), 
-                                    IN ortsname VARCHAR(45), 
-                                    OUT generatedId SMALLINT(5))
+CREATE PROCEDURE getPersonenId(IN source ENUM('Initial_1', 'Loader_1', 'BuergerDB', 'ImmoTop'),
+							   IN sex VARCHAR(45),
+                               IN firma VARCHAR(45),
+							   IN vorname VARCHAR(45),
+                               IN ledig_name VARCHAR(45),
+                               IN partner_name VARCHAR(45),
+                               IN partner_name_angenommen BOOLEAN,
+							   IN strasse VARCHAR(45), 
+							   IN hausnummer VARCHAR(10), 
+							   IN plz SMALLINT(4), 
+							   IN ortsname VARCHAR(45), 
+                               OUT personen_id SMALLINT(5))
 BEGIN
-    CALL getOrtId(plz, ortsname, @ort_id);
-    INSERT INTO adressen (strasse, hausnummer, orte_id) VALUES (strasse, hausnummer, @ort_id);
+    CALL getAdressId(strasse, hausnummer, plz, ortsname, @adressen_id);
+    IF ((SELECT count(*) 
+         FROM personen 
+         WHERE personen.sex = sex AND
+               personen.firma = firma AND 
+               personen.vorname = vorname AND 
+               personen.ledig_name = ledig_name AND 
+               personen.partner_name = partner_name AND 
+               personen.partner_name_angenommen = partner_name_angenommen AND 
+               personen.privat_adressen_id = @adressen_id) = 0) THEN
+        INSERT personen (`source`, `sex`, `firma`, `vorname`, `ledig_name`, `partner_name`,`partner_name_angenommen`, `privat_adressen_id`) VALUES (source, sex, firma, vorname, ledig_name, partner_name, partner_name_angenommen, @adressen_id);
+        COMMIT;
+    END IF;
+    SELECT id FROM personen WHERE personen.sex = sex AND
+                                  personen.firma = firma AND 
+								  personen.vorname = vorname AND 
+                                  personen.ledig_name = ledig_name AND
+                                  personen.partner_name = partner_name AND
+                                  personen.partner_name_angenommen = partner_name_angenommen AND 
+                                  personen.privat_adressen_id = @adressen_id INTO personen_id;
+END$$
+DELIMITER ;
+
+-- Tests
+-- set @id = 0;
+-- call getPersonenId('BuergerDB', 'Herr', 'M_Firma', 'M_Vorname','M_LedigName', 'M_PartnerName', True, 'M_Strasse', '33_M', '8855', 'M_Wangen', @id);
+-- select @id;
+-- call getPersonenId('Walter','Rothlin',NULL,NULL,'Peterliwiese', '33', '8855', 'Wangen', @id);
+-- select @id;
+
+DROP PROCEDURE IF EXISTS createPerson;
+DELIMITER $$
+CREATE PROCEDURE createPerson(IN vorname VARCHAR(45),
+                               IN ledig_name VARCHAR(45),
+                               IN partner_name VARCHAR(45),
+                               IN firma VARCHAR(45),
+							   IN strasse VARCHAR(45), 
+							   IN hausnummer VARCHAR(10), 
+							   IN plz SMALLINT(4), 
+							   IN ortsname VARCHAR(45),
+							  OUT generatedId SMALLINT(5))
+BEGIN
+    CALL getAdressId(strasse, hausnummer, plz, ortsname, @adressen_id);
+    INSERT personen (`vorname`, `ledig_name`, `partner_name`, `firma`,  `privat_adressen_id`) VALUES (vorname, ledig_name, partner_name, firma, @adressen_id);
+    COMMIT;
     SELECT LAST_INSERT_ID() INTO generatedId;
 END$$
 DELIMITER ;
 
--- Tests von createAdresse_Name
-set @id = 0;
-call createAdresse_Name('Walter','Rothlin','BZU','Im Gräbler', '12', 8310, 'Grafstal', @id);
-select @id;
+-- Tests
+-- set @id = 0;
+-- call createPerson('Walter','Rothlin','BZU','Im Gräbler', '12', 8310, 'Grafstal', @id);
+-- select @id;
 
--- updateAdresse
-DROP PROCEDURE IF EXISTS updateAdresse;
-DELIMITER $$
-CREATE PROCEDURE updateAdresse(IN id SMALLINT(5), IN strasse VARCHAR(45), IN hausnummer VARCHAR(10), IN plz SMALLINT(4), IN ortsBezeichnung VARCHAR(45))
-BEGIN
-    CALL getOrtId(plz, ortsBezeichnung, @ort_id);
-    UPDATE adressen SET strasse=strasse, hausnummer=hausnummer, orte_id=@ort_id WHERE id=id;
-END$$
-DELIMITER ;
 
--- Tests von updateAdresse
-set @id = 6;
-call updateAdresse(@id, 'Schulhausstrasse', '1a', 8400, 'Winterthur');
-select @id;
 
    
 SET SQL_MODE=@OLD_SQL_MODE;
