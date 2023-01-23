@@ -378,6 +378,7 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
 -- -----------------------------------------------------
 SET GLOBAL log_bin_trust_function_creators = 1;
 
+-- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getOlder;
 Delimiter //
 CREATE FUNCTION  getOlder(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
@@ -391,6 +392,7 @@ END
 //
 DELIMITER ;
 
+-- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getYounger;
 Delimiter //
 CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
@@ -407,7 +409,7 @@ DELIMITER ;
 -- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 -- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 
-
+-- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS formatPLZinternational;
 Delimiter //
 CREATE FUNCTION formatPLZinternational(p_countryCode CHAR(50), p_input_plz SMALLINT) RETURNS CHAR(50)
@@ -437,45 +439,179 @@ DELIMITER ;
 -- SELECT firstUpper("Herr");  -- --> Herr
 -- SELECT firstUpper("hERR");  -- --> Herr
 
---  -------------------------------------------------------------
---  Fct 4.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
---           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
---           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getInitial;
+Delimiter //
+CREATE FUNCTION getInitial(p_name CHAR(100), p_tail CHAR(5)) RETURNS CHAR(10)
+BEGIN
+   RETURN  CONCAT(UPPER(LEFT(p_name, 1)), p_tail);
+END
+//
+DELIMITER ;
+
+-- Testen
+
+-- SELECT getInitial("Walter",".");  -- --> W.
+-- SELECT getInitial("walti", ".");  -- --> W.
+-- SELECT getInitial("Max", ",");    -- --> M,
+-- SELECT getInitial("max", ",");    -- --> M,
+
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getName_With_Initial;
+Delimiter //
+CREATE FUNCTION getName_With_Initial(p_firstname CHAR(100), p_firstname2 CHAR(100)) RETURNS CHAR(45)
+BEGIN
+   IF (p_firstname2 = '' OR p_firstname2 is NULL) THEN
+	   RETURN  p_firstname;
+   ELSE
+       RETURN  CONCAT(p_firstname, ' ', getInitial(p_firstname2, '.'));
+   END IF;
+END
+//
+DELIMITER ;
+
+-- Testen
+-- SELECT getName_With_Initial('Walter', 'Max');  -- --> Walter M.
+-- SELECT getName_With_Initial('Walti', '');      -- --> Walti
+-- SELECT getName_With_Initial('Walti', NULL);    -- --> Walti
+
+-- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getAnrede;
 Delimiter //
-CREATE FUNCTION getAnrede(p_sex CHAR(20), p_firstname CHAR(20), p_lastname CHAR(20) ) RETURNS CHAR(50)
+CREATE FUNCTION getAnrede(p_sex CHAR(20), p_firstname CHAR(45), p_vorname_short BOOLEAN, p_lastname CHAR(100) ) RETURNS CHAR(150)
 BEGIN
-   RETURN  CONCAT(firstUpper(p_sex), ' ', UPPER(LEFT(p_firstname, 1)), '.', firstUpper(p_lastname));
+   IF (p_sex = 'Firma') THEN 
+		RETURN  '';
+   ELSE
+		IF (p_vorname_short) THEN
+			RETURN  CONCAT(firstUpper(p_sex), ' ', LEFT(p_firstname, 1), '.', p_lastname);
+		ELSE
+            RETURN  CONCAT(firstUpper(p_sex), ' ', p_firstname, ' ', p_lastname);
+		END IF;
+   END IF;
 END
 //
 DELIMITER ;
 
 -- Testen
--- SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
--- SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+-- SELECT getAnrede("Herr", "Walter", TRUE, "Rothlin"); -- --> Herr W.Rothlin
+-- SELECT getAnrede("Frau", "Claudia", TRUE, "Collet Rothlin"); -- --> Frau C.Collet Rothlin
 
---  -------------------------------------------------------------
---  Fct 4.1) 
---           SELECT getName("M", FALSE, "Rothlin", "");       -- --> Rothlin
---           SELECT getName("W", FALSE, "Rothlin", "");       -- --> Rothlin
---           SELECT getName("M", FALSE, "Rothlin", "Collet"); -- --> Rothlin-Collet
---           SELECT getName("W", FALSE, "Rothlin", "Collet"); -- --> Collet Rothlin
---           SELECT getName("M", TRUE, "Rothlin", "Collet");  -- --> Collet Rothlin
---           SELECT getName("W", TRUE, "Rothlin", "Collet");  -- --> Rothlin-Collet
-DROP FUNCTION IF EXISTS getName;
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getBrief_Anrede;
 Delimiter //
-CREATE FUNCTION getName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(50)
+CREATE FUNCTION getBrief_Anrede(p_sex CHAR(20), p_lastname CHAR(100) ) RETURNS CHAR(100)
 BEGIN
-   RETURN  firstUpper(p_ledig_name);
+   IF (p_sex = 'Firma') THEN 
+		RETURN  'Sehr geehrte Damen, Sehr geehrte Herren,';
+   ELSE
+		IF (p_sex = 'Herr') THEN 
+			RETURN  CONCAT('Sehr geehrter ',firstUpper(p_sex), ' ', p_lastname);
+		ELSE
+            RETURN  CONCAT('Sehr geehrte ',firstUpper(p_sex), ' ', p_lastname);
+		END IF;
+   END IF;
 END
 //
 DELIMITER ;
 
 -- Testen
--- SELECT getName("M", FALSE, "Rothlin", "") AS Name;
+-- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
+-- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
 
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getBrief_Anrede_PerDu;
+Delimiter //
+CREATE FUNCTION getBrief_Anrede_PerDu(p_sex CHAR(20), p_firstname CHAR(100) ) RETURNS CHAR(100)
+BEGIN
+   IF (p_sex = 'Firma') THEN 
+		RETURN  '';
+   ELSE
+		IF (p_sex = 'Herr') THEN 
+			RETURN  CONCAT('Lieber ', p_firstname);
+		ELSE
+            RETURN  CONCAT('Liebe ', p_firstname);
+		END IF;
+   END IF;
+END
+//
+DELIMITER ;
 
+-- Testen
+-- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
+-- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
+ 
+--  ------------------------------------------------------------- 
+DROP FUNCTION IF EXISTS getFamilieName;
+Delimiter //
+CREATE FUNCTION getFamilieName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(100)
+BEGIN
+	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
+		IF (p_partner_name = '') THEN
+			RETURN  firstUpper(p_ledig_name);
+		ELSE
+            IF (p_sex = 'Herr') THEN
+				IF (p_name_angenommen = True) THEN
+					RETURN CONCAT(p_partner_name,' ', p_ledig_name);
+				ELSE
+					RETURN CONCAT(p_ledig_name,'-', p_partner_name);
+                END IF;
+			ELSE
+                IF (p_name_angenommen = True) THEN
+					RETURN CONCAT(p_partner_name,'-', p_ledig_name);
+				ELSE
+					RETURN CONCAT(p_ledig_name,' ', p_partner_name);
+                END IF;
+            END IF;
+        END IF;
+	ELSE 
+		RETURN  "";
+    END IF;
+END
+//
+DELIMITER ;
 
+-- Testen
+-- SELECT getFamilieName('Herr', FALSE, 'Rothlin', '');        -- --> Rothlin
+-- SELECT getFamilieName('Frau', FALSE, 'Collet', '');         -- --> Collet
+-- SELECT getFamilieName('Herr', TRUE,  'Rothlin', '');        -- --> Rothlin
+-- SELECT getFamilieName('Frau', TRUE,  'Collet', '');         -- --> Collet
+
+-- SELECT getFamilieName('Herr', FALSE, 'Rothlin', 'Collet');  -- --> Rothlin-Collet
+-- SELECT getFamilieName('Frau', FALSE, 'Collet', 'Rothlin');  -- --> Collet Rothlin
+-- SELECT getFamilieName('Herr', TRUE,  'Rothlin', 'Collet');  -- --> Collet Rothlin
+-- SELECT getFamilieName('Frau', TRUE,  'Collet', 'Rothlin');  -- --> Rothlin-Collet
+
+--  ------------------------------------------------------------- 
+DROP FUNCTION IF EXISTS getLastName;
+Delimiter //
+CREATE FUNCTION getLastName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(50)
+BEGIN
+	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
+		IF (p_partner_name = '' OR p_partner_name is NULL) THEN
+			RETURN  firstUpper(p_ledig_name);
+		ELSE
+            IF (p_sex = 'Herr') THEN
+				IF (p_name_angenommen = True) THEN
+					RETURN p_partner_name;
+				ELSE
+					RETURN p_ledig_name;
+                END IF;
+			ELSE
+                IF (p_name_angenommen = True) THEN
+					RETURN p_partner_name;
+				ELSE
+					RETURN p_ledig_name;
+                END IF;
+            END IF;
+        END IF;
+	ELSE 
+		RETURN  '';
+    END IF;
+END
+//
+DELIMITER ;
+-- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS calc_yearly_pachtfee;
 Delimiter //
 CREATE FUNCTION calc_yearly_pachtfee(flaeche_in_aren FLOAT, preis_pro_are FLOAT) RETURNS FLOAT
@@ -484,30 +620,58 @@ BEGIN
 END
 //
 DELIMITER ;
+
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getPrio_0_TelNr;
+Delimiter //
+CREATE FUNCTION getPrio_0_TelNr(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT nummer FROM Telnr_Liste_Prio_0 WHERE Pers_ID = p_id AND prio=0 LIMIT 1);
+END
+//
+DELIMITER ;
+
+-- Testen
+-- SELECT getPrio_0_TelNr(4);  -- --> 0793315587
+
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getStrassenAdresse;
+Delimiter //
+CREATE FUNCTION getStrassenAdresse(p_strasse VARCHAR(45), p_hausnummer VARCHAR(5), p_postfach VARCHAR(5)) RETURNS CHAR(100)
+BEGIN
+    RETURN CONCAT('STRASSE TBD:');
+    IF (strasse = NULL OR strasse = '') THEN
+         IF (postfach = '' OR postfach = NULL) THEN
+			RETURN '';
+		 ELSE
+            RETURN CONCAT('Postfach ', postfach);
+         END IF;
+    ELSE
+       IF (hausnummer = NULL OR hausnummer = '') THEN
+          IF (postfach = NULL OR postfach = '') THEN
+               RETURN CONCAT('', strasse);
+		  ELSE
+               RETURN CONCAT(strasse, ' / Postfach:', postfach);
+		  END IF;
+	   ELSE
+		  IF (postfach = NULL OR postfach = '') THEN
+		       RETURN CONCAT(strasse, ' ', hausnummer);
+		  ELSE
+               RETURN CONCAT(strasse, ' ', hausnummer, ' / Postfach:', postfach);
+		  END IF;
+       END IF;
+    END IF;
+END
+//
+DELIMITER ;
+
+-- Testen
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Create Views
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Telnr_Liste; 
-CREATE VIEW Telnr_Liste AS
-	SELECT
-        pt.ID                                       AS ID,
-		pt.Personen_id                              AS Person_Id,
-        pers.Vorname                                AS Vorname,
-        pers.Ledig_Name                             AS Ledig_Name,
-        tel.laendercode                             AS Laendercode,
-        tel.vorwahl									AS Vorwahl,
-        tel.Nummer                                  AS Nummer,
-        tel.Type                                    AS Type,
-        tel.endgeraet                               AS Endgeraet,
-        tel.prio                                    AS Prio,
-        getYounger(pt.last_update, tel.last_update) AS last_update
-	FROM personen_has_telefonnummern AS pt
-	LEFT OUTER JOIN Telefonnummern AS tel ON pt.telefonnummern_id = tel.id
-    LEFT OUTER JOIN Personen AS pers ON pt.personen_id = pers.id
-    ORDER BY pt.ID, tel.prio;
-
 DROP VIEW IF EXISTS Ort_Land; 
 CREATE VIEW Ort_Land AS
 	SELECT
@@ -525,7 +689,7 @@ CREATE VIEW Ort_Land AS
 	LEFT OUTER JOIN Land AS l ON o.Land_id = l.id;
 
 -- SELECT * FROM Ort_Land;
-
+-- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS Adress_Daten; 
 CREATE VIEW Adress_Daten AS
 	SELECT
@@ -544,34 +708,109 @@ CREATE VIEW Adress_Daten AS
 	LEFT OUTER JOIN ORT_LAND AS ol ON ol.ID = a.Orte_ID;
 
 -- SELECT * FROM Adress_Daten;
+
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste; 
+CREATE VIEW Telnr_Liste AS
+	SELECT
+        pers.ID                                     AS Pers_ID,
+        pers.Sex                                    AS Sex,
+		getFamilieName(pers.Sex, 
+                  pers.Partner_Name_Angenommen, 
+                  pers.Ledig_Name, 
+                  pers.Partner_Name)                AS Familie_Name,          -- Rothlin-Collet
+		getName_With_Initial(pers.Vorname, 
+                             pers.Vorname_2)        AS Vorname_Initial,
+		tel.ID                                      AS Tel_ID,
+        tel.laendercode                             AS Laendercode,
+        tel.vorwahl									AS Vorwahl,
+        tel.Nummer                                  AS Nummer,
+        tel.Type                                    AS Type,
+        tel.endgeraet                               AS Endgeraet,
+        tel.prio                                    AS Prio,
+        getYounger(pt.last_update, tel.last_update) AS last_update
+	FROM personen_has_telefonnummern AS pt
+	LEFT OUTER JOIN Telefonnummern AS tel  ON pt.telefonnummern_id = tel.id
+    LEFT OUTER JOIN Personen       AS pers ON pt.personen_id       = pers.id;
     
+-- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Personen_Daten; 
 CREATE VIEW Personen_Daten AS
 	SELECT
 		  P.id                                         AS ID,
-		  P.Sex                                        AS Geschlecht,
-          ""                                           AS Anrede,			-- Herr | Frau
-          ""                                           AS Brief_Anrede,     -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen,Sehr geehrte Herren    
+		  P.Sex                                        AS Geschlecht,       -- Herr | Frau
 		  P.Firma                                      AS Firma,
 		  P.Vorname                                    AS Vorname,
           P.Vorname_2                                  AS Vorname_2,
-          ""                                           AS Vorname_Initial,   -- Walter M.
+          getName_With_Initial(P.Vorname, 
+                               P.Vorname_2)            AS Vorname_Initial,  -- Walter M.
+
 		  P.Ledig_Name                                 AS Ledig_Name,
           P.Partner_Name                               AS Partner_Name,
-		  P.Partner_Name_Angenommen                    AS Partner_Name_Angenommen,  
-          getName(P.Sex, 
-                  P.Partner_Name_Angenommen, 
-                  P.Ledig_Name, 
-                  P.Partner_Name)                      AS Name,             -- Rothlin-Collet
+		  P.Partner_Name_Angenommen                    AS Partner_Name_Angenommen,
+		  getLastName(P.Sex, 
+                      P.Partner_Name_Angenommen, 
+                      P.Ledig_Name, 
+                      P.Partner_Name)                  AS LastName,         -- Rothlin
+          getFamilieName(P.Sex, 
+                      P.Partner_Name_Angenommen, 
+                      P.Ledig_Name, 
+                      P.Partner_Name)                 AS Familie_Name,     -- Rothlin-Collet
+		  
+          
+          getAnrede(P.Sex, 
+					P.Vorname,
+                    TRUE,
+                    getLastName(P.Sex, 
+                                P.Partner_Name_Angenommen, 
+                                P.Ledig_Name, 
+                                P.Partner_Name))       AS Anrede_Short_Short,		 -- Herr W.Rothlin
+		  getAnrede(P.Sex, 
+					P.Vorname,
+                    FALSE,
+				    getLastName(P.Sex, 
+                                P.Partner_Name_Angenommen, 
+                                P.Ledig_Name, 
+                                P.Partner_Name))       AS Anrede_Long_Short,		 -- Herr Walter Rothlin
+		  getAnrede(P.Sex, 
+                    P.Vorname,
+                    TRUE,
+                    getFamilieName(P.Sex, 
+                                   P.Partner_Name_Angenommen, 
+                                   P.Ledig_Name, 
+                                   P.Partner_Name))    AS Anrede_Short_Long,		-- Herr W.Rothlin-Collet
+		  getAnrede(P.Sex, 
+                    P.Vorname,
+                    FALSE,
+                    getFamilieName(P.Sex, 
+                                   P.Partner_Name_Angenommen, 
+                                   P.Ledig_Name, 
+                                   P.Partner_Name))    AS Anrede_Long_Long,		  -- Herr Walter Rothlin-Collet
+          
+          
+          getBrief_Anrede(P.Sex,
+						  getLastName(P.Sex, 
+									  P.Partner_Name_Angenommen, 
+                                      P.Ledig_Name, 
+                                      P.Partner_Name))       AS Brief_Anrede,           -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen, Sehr geehrte Herren
+		  getBrief_Anrede(P.Sex,
+		                  getFamilieName(P.Sex, 
+                                         P.Partner_Name_Angenommen, 
+                                         P.Ledig_Name, 
+                                         P.Partner_Name))    AS Brief_Anrede_Long,     -- Sehr geehrter Herr Rothlin-Collet | Sehr geehrte Frau Collet Rothlin | Sehr geehrte Damen, Sehr geehrte Herren    
+          
+          getBrief_Anrede_PerDu(P.Sex,
+		                        P.Vorname)                   AS Brief_Anrede_PerDu,     -- Lieber Walter | Liebe Claudia 
+                                         
+                                         
           P.AHV_Nr                                     AS AHV_Nr,
 		  P.Betriebs_Nr                                AS Betriebs_Nr,
           P.Zivilstand                                 AS Zivilstand,
 		  P.Kategorien                                 AS Kategorien,
           
           ""                                           AS IBAN,
-          ""                                           AS Tel_Nr,
           ""                                           AS eMail,
-          
+          getPrio_0_TelNr(P.id)                        AS Tel_Nr,
           P.Geburtstag                                 AS Geburtstag,
           P.Todestag                                   AS Todestag,
           P.Nach_Wangen_Gezogen                        AS Nach_Wangen_Gezogen,
@@ -586,6 +825,9 @@ CREATE VIEW Personen_Daten AS
 		  pAdr.Strasse                                 AS Private_Strasse,
 		  pAdr.Hausnummer                              AS Private_Hausnummer,
           pAdr.Postfachnummer                          AS Private_Postfachnummer,
+          getStrassenAdresse(pAdr.Strasse, 
+                             pAdr.Hausnummer, 
+							 pAdr.Postfachnummer)      AS Private_Strassen_Adresse,
 		  pAdr.PLZ                                     AS Private_PLZ,
           pAdr.PLZ_International                       AS Private_PLZ_International,
 		  pAdr.Ort                                     AS Private_Ort,
@@ -593,6 +835,9 @@ CREATE VIEW Personen_Daten AS
 		  gAdr.Strasse                                 AS Geschaeft_Strasse,
 		  gAdr.Hausnummer                              AS Geschaeft_Hausnummer,
           gAdr.Postfachnummer                          AS Geschaeft_Postfachnummer,
+          getStrassenAdresse(gAdr.Strasse, 
+                             gAdr.Hausnummer, 
+                             gAdr.Postfachnummer)      AS Geschaeft_Strassen_Adresse,
 		  gAdr.PLZ                                     AS Geschaeft_PLZ,
           gAdr.PLZ_International                       AS Geschaeft_PLZ_International,    -- CH-8855
 		  gAdr.Ort                                     AS Geschaeft_Ort,
@@ -601,57 +846,39 @@ CREATE VIEW Personen_Daten AS
 	FROM Personen AS P
     LEFT OUTER JOIN Adress_Daten AS pAdr ON  P.Privat_Adressen_id         = pAdr.id
 	LEFT OUTER JOIN Adress_Daten AS gAdr ON  P.Geschaefts_Adressen_id     = gAdr.id;
+    -- ORDER BY LastName, Vorname;
 
 -- SELECT * FROM Personen_Daten;
 
-DROP VIEW IF EXISTS Personen_Daten_Postadressen; 
-CREATE VIEW Personen_Daten_Postadressen AS
-	SELECT 
-			 ID,
-			 -- Geschlecht,
-			 -- Anrede,			-- Herr | Frau
-			 -- Brief_Anrede,     -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen,Sehr geehrte Herren    
-			 -- Firma,
-			 Vorname,
-			 -- Vorname_2,
-			 -- Vorname_Initial,   -- Walter M.
-			 Ledig_Name,
-			 Partner_Name,
-			 Partner_Name_Angenommen,  
-			 -- Name,             -- Rothlin-Collet
-			 AHV_Nr,
-			 Betriebs_Nr,
-			 -- Zivilstand,
-			 -- Kategorien,
-			 IBAN,
-			 Tel_Nr,
-			 eMail,
-			 Geburtstag,
-			 -- Todestag,
-			 -- Nach_Wangen_Gezogen,
-			 -- Von_Wangen_Weggezogen,
-			 -- Baulandgesuch_Eingereicht_Am,
-			 -- Bauland_Gekauft_Am,
-			 -- Angemeldet_Am,
-			 -- Aufgenommen_Am,
-			 -- Funktion_Uebernommen_Am,
-			 -- Funktion_Abgegeben_Am,
-			 -- Chronik_Bezogen_Am,
-			 Private_Strasse,
-			 Private_Hausnummer,
-			 Private_PLZ,
-			 Private_PLZ_International,
-			 Private_Ort,
-			 Private_Land,
-			 -- Geschaeft_Strasse,
-			 -- Geschaeft_Hausnummer,
-			 -- Geschaeft_PLZ,
-			 -- Geschaeft_PLZ_International,    -- CH-8855
-			 -- Geschaeft_Ort,
-			 -- Geschaeft_Land,
-			 last_update
-	 FROM Personen_Daten;
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste_Sorted; 
+CREATE VIEW Telnr_Liste_Sorted AS
+	SELECT         
+         T.Pers_ID           AS Pers_ID,
+         T.Sex               AS Sex,
+		 T.Familie_Name      AS Familie_Name,          -- Rothlin-Collet
+		 T.Vorname_Initial   AS Vorname_Initial,
+         P.Private_Strassen_Adresse   AS Strasse,
+         P.Private_PLZ_International  AS PLZ,
+         P.Private_Ort                AS Ort,
+		 T.Tel_ID            AS Tel_ID,
+         T.Laendercode       AS Laendercode,
+         T.Vorwahl           AS Vorwahl,
+         T.Nummer            AS Nummer,
+         T.Type              AS Type,
+         T.Endgeraet         AS Endgeraet,
+         T.Prio              AS Prio,
+         T.last_update       AS last_update
+	FROM Telnr_Liste AS T
+    LEFT OUTER JOIN Personen_Daten AS P ON  P.ID  = T.Pers_ID
+    ORDER BY Familie_Name;
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste_Prio_0; 
+CREATE VIEW Telnr_Liste_Prio_0 AS
+	SELECT * FROM Telnr_Liste_Sorted WHERE PRIO=0;
+    
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
 CREATE VIEW Pachtlandzuteilung AS
 	SELECT
@@ -671,7 +898,7 @@ CREATE VIEW Pachtlandzuteilung AS
           L.Paechter_Adresse                         AS Paechter_ID,
           Paechter_Adr.Betriebs_Nr                   AS Pachter_Betriebs_Nr,
           Paechter_Adr.Firma                         AS Pachter_Firma,
-          Paechter_Adr.Name                          AS Paechter_Name,
+          -- Paechter_Adr.Familie_Name                  AS Paechter_Name,
           Paechter_Adr.Vorname                       AS Paechter_Vorname,
           Paechter_Adr.Private_Strasse               AS Paechter_Strasse,
           Paechter_Adr.Private_Hausnummer            AS Paechter_Hausnummer,
@@ -680,7 +907,7 @@ CREATE VIEW Pachtlandzuteilung AS
 
           L.Verpaechter_Adresse                      AS Verpaechter_ID,
 		  Verpaechter_Adr.Firma                      AS Verpaechter_Firma,
-          Verpaechter_Adr.Name                       AS Verpaechter_Name,
+          -- Verpaechter_Adr.Familie_Name               AS Verpaechter_Name,
           Verpaechter_Adr.Vorname                    AS Verpaechter_Vorname,
           Verpaechter_Adr.Private_Strasse            AS Verpaechter_Strasse,
           Verpaechter_Adr.Private_Hausnummer         AS Verpaechter_Hausnummer,
@@ -689,8 +916,7 @@ CREATE VIEW Pachtlandzuteilung AS
 	FROM Landteil AS L
     LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_Adresse     = Paechter_Adr.id
 	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_Adresse  = Verpaechter_Adr.id;
-
-
+-- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS EMail_Main; 
 CREATE VIEW EMail_Main AS
 	SELECT
