@@ -16,6 +16,10 @@ import sqlparse
 import csv
 import json
 
+# Lambda function to check if a x is from WAHR / FALSCH.
+ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
+ifIntEmpty = lambda x: True if (x == '' or x == 'TRUE') else False
+
 def db_connect(host='localhost', schema='stammdaten', user=None, password=None, trace=False):
     if trace:
         print("Connecting to " + schema + "@" + host + "....", end="", flush=True)
@@ -176,34 +180,14 @@ def read_from_file_and_call_stored_procedure(
         if proc_name == 'getPersonenId':
             personen_id = result_args[11]
 
-            # Update Personen
-            datGeburtstag = a_data_tuple['datGeburtstag']
-            if datGeburtstag != "":
-                datGeburtstag = "Geburtstag=str_to_date('" + a_data_tuple['datGeburtstag'] + "','%d.%m.%Y')"
-            else:
-                datGeburtstag = "Geburtstag=NULL"
-            # print('datGeburtstag:', datGeburtstag)
-
-            datGestorben = a_data_tuple['datGestorben']
-            if datGestorben != "":
-                datGestorben = "Todestag=str_to_date('" + a_data_tuple['datGestorben'] + "','%d.%m.%Y')"
-            else:
-                datGestorben = "Todestag=NULL"
-            # print('datGestorben:', datGestorben)
-
-            sql = "UPDATE Personen SET " + datGeburtstag + "," + datGestorben + " WHERE id = " + str(personen_id)
-            # print(sql)
-            mycursor.execute(sql)
-            db_connection.commit()
 
             # Update Adressen
             postfach = a_data_tuple['strPostfach']
-            if postfach != "":
-                # print(str(personen_id) + ":Postfach:" + postfach)
-                sql = "UPDATE ADRESSEN SET Postfachnummer = " + postfach + " WHERE id=(SELECT Privat_Adressen_id from Personen where id=" + str(personen_id) + ")"
-                # print(sql)
-                mycursor.execute(sql)
-                db_connection.commit()
+            # print(str(personen_id) + ":Postfach:" + postfach)
+            sql = "UPDATE ADRESSEN SET Postfachnummer = '" + postfach + "' WHERE id=(SELECT Privat_Adressen_id from Personen where id=" + str(personen_id) + ")"
+            # print(sql)
+            mycursor.execute(sql)
+            db_connection.commit()
 
             # Update Telefonnummer
             prio = 0
@@ -250,13 +234,166 @@ def read_from_file_and_call_stored_procedure(
                 telnr_ids.append(result_args[6])
                 prio += 1
 
-            print(personen_id, "TelIds:", telnr_ids)
+            print("personen_id:", personen_id, "TelIds:", telnr_ids)
             for aTelnNerId in telnr_ids:
                 sql = "INSERT INTO Personen_has_telefonnummern (Personen_id, Telefonnummern_id) VALUES (" + str(personen_id) + "," + str(aTelnNerId) + ")"
                 print(sql)
                 mycursor.execute(sql)
                 db_connection.commit()
 
+            # Update eMail
+            prio = 0
+            email_ids = []
+            if a_data_tuple['strEmail'] != "":
+                args = (a_data_tuple['strEmail'], 'Sonstige', prio, 'x')
+                # print("     args:", args)
+                result_args = mycursor.callproc('getEmailAdrId', args)
+                # print("     resu:", args)
+                email_ids.append(result_args[3])
+                prio += 1
+
+
+            print("personen_id:", personen_id, "eMailIds:", email_ids, "len(eMailIds):", len(email_ids))
+            for aEmailId in email_ids:
+                sql = "INSERT INTO Personen_has_email_adressen (Personen_id, EMail_Adressen_id) VALUES (" + str(personen_id) + "," + str(aEmailId) + ")"
+                # print(sql)
+                mycursor.execute(sql)
+                db_connection.commit()
+
+            # IBAN
+            if a_data_tuple['strKonto_Nr'] != "":
+                iban_str = a_data_tuple['strKonto_Nr']
+                print("personen_id:", personen_id, "iban_str:", iban_str)
+                sql = """
+                         INSERT INTO iban 
+                             (Personen_id, 
+                             Nummer,
+                             Prio) 
+                         VALUES (""" + str(personen_id) + """,
+                                 '""" + iban_str + """',
+                                 0)
+                    """
+                # print(sql)
+                mycursor.execute(sql)
+                db_connection.commit()
+
+            # Legacy-Fields
+            lintNutzenKey = a_data_tuple['lintNutzenKey']
+            if lintNutzenKey == '':
+                lintNutzenKey = '-1'
+            lintZivilstandkey = a_data_tuple['lintZivilstandkey']
+            if lintZivilstandkey == '':
+                lintZivilstandkey = '-1'
+
+
+            # Boolean Values
+            bolNutzenberechtigung = ifTrue(a_data_tuple['bolNutzenberechtigung'])
+            bolBaulandgesuch = ifTrue(a_data_tuple['bolBaulandgesuch'])
+            bolMutationen_Aktuell = ifTrue(a_data_tuple['bolMutationen_Aktuell'])
+            bolMitarbeiter_Genossenrat = ifTrue(a_data_tuple['bolMitarbeiter_Genossenrat'])
+            bolWeggezogen = ifTrue(a_data_tuple['bolWeggezogen'])
+            bolAktiv = ifTrue(a_data_tuple['bolAktiv'])
+            bolBürgerauflage = ifTrue(a_data_tuple['bolBürgerauflage'])
+
+            kategorien = []
+            bolLandwirt = ifTrue(a_data_tuple['bolLandwirt'])
+            if bolLandwirt:
+                kategorien.append('Landwirt')
+
+            bolGenossenbürger = ifTrue(a_data_tuple['bolGenossenbürger'])
+            if bolGenossenbürger:
+                kategorien.append('Bürger')
+
+            if len(kategorien) > 0:
+                kategorien = ','.join(kategorien)
+                kategorien = "Kategorien = '" + kategorien + "',"
+            else:
+                kategorien = ""
+
+            # Changed Mapping
+            bolChronik = ifTrue(a_data_tuple['bolChronik'])
+            if bolChronik:
+                Chronik_Bezogen_Am = "Chronik_Bezogen_Am = str_to_date('5.8.1960','%d.%m.%Y'),"
+            else:
+                Chronik_Bezogen_Am = ""
+
+            memBaulandgesuch_Info = a_data_tuple['memBaulandgesuch_Info']
+            if memBaulandgesuch_Info == '':
+                Baulandgesuch_Details = ""
+            else:
+                Baulandgesuch_Details = "Baulandgesuch_Details = '" + str(memBaulandgesuch_Info) + "',"
+
+            memBemerkungen = a_data_tuple['memBemerkungen']
+            if memBemerkungen == '':
+                Bemerkungen = ""
+            else:
+                Bemerkungen = "Bemerkungen = '" + str(memBemerkungen) + "',"
+
+            # Dates
+            if a_data_tuple['datGeburtstag'] != '':
+                Geburtstag = "Geburtstag = str_to_date('" + a_data_tuple['datGeburtstag'] + "','%d.%m.%Y'),"
+            else:
+                Geburtstag = ""
+
+            if a_data_tuple['datGestorben'] != '':
+                Todestag = "Todestag = str_to_date('" + a_data_tuple['datGestorben'] + "','%d.%m.%Y'),"
+            else:
+                Todestag = ""
+
+            if a_data_tuple['datBaulandgesuch_Termin'] != '':
+                Baulandgesuch_Eingereicht_Am = "Baulandgesuch_Eingereicht_Am = str_to_date('" + a_data_tuple['datBaulandgesuch_Termin'] + "','%d.%m.%Y'),"
+            else:
+                Baulandgesuch_Eingereicht_Am = ""
+
+            if a_data_tuple['datBauland_Kauf'] != '':
+                Bauland_Gekauft_Am = "Bauland_Gekauft_Am = str_to_date('" + a_data_tuple['datBauland_Kauf'] + "','%d.%m.%Y'),"
+            else:
+                Bauland_Gekauft_Am = ""
+
+            if a_data_tuple['datAngemeldet'] != '':
+                Angemeldet_Am = "Angemeldet_Am = str_to_date('" + a_data_tuple['datAngemeldet'] + "','%d.%m.%Y'),"
+            else:
+                Angemeldet_Am = ""
+
+
+
+
+            # print("personen_id:", personen_id, "bolNutzenberechtigung:", bolNutzenberechtigung)
+            sql = """
+                     UPDATE Personen SET
+                                -- Date Values
+                                """ + Geburtstag + """
+                                """ + Todestag + """
+                                """ + Baulandgesuch_Eingereicht_Am + """
+                                """ + Bauland_Gekauft_Am + """
+                                """ + Angemeldet_Am + """
+                                
+                                -- Changed Mapping
+                                """ + Chronik_Bezogen_Am + """
+                                """ + Bemerkungen + """
+                                """ + Baulandgesuch_Details + """
+                                """ + kategorien + """
+                     
+                                -- Legacy Fields
+                                lintNutzenKey            = """ + str(lintNutzenKey) + """,
+                                lintZivilstandkey        = """ + lintZivilstandkey + """,
+                                
+                                -- Boolean Values
+                                bolNutzenberechtigung    = """ + str(bolNutzenberechtigung) + """,
+                                bolBaulandgesuch         = """ + str(bolBaulandgesuch) + """,
+                                bolMutationen_Aktuell    = """ + str(bolMutationen_Aktuell) + """,
+                                bolMitarbeiter_Genossame = """ + str(bolMitarbeiter_Genossenrat) + """,
+                                bolWeggezogen            = """ + str(bolWeggezogen) + """,
+                                bolAktiv                 = """ + str(bolAktiv) + """,
+                                bolLandwirt              = """ + str(bolLandwirt) + """,
+                                bolGenossenbürger        = """ + str(bolGenossenbürger) + """,
+                                bolBürgerauflage         = """ + str(bolBürgerauflage) + """
+                                
+                     WHERE id = """ + str(personen_id) + """
+                """
+            print(sql)
+            mycursor.execute(sql)
+            db_connection.commit()
     '''
     mycursor = db_connection.cursor()
     
@@ -269,18 +406,7 @@ def read_from_file_and_call_stored_procedure(
     
     '''
 
-
-
-
-
-if __name__ == '__main__':
-    stammdaten_schema = db_connect(host='localhost',
-                                   schema='stammdaten',
-                                   user="App_User_Stammdaten",
-                                   password="1234ABCD12abcd",
-                                   trace=True)
-
-
+def load_data_from_BuergerDB():
     read_from_file_and_call_stored_procedure(
         db_connection=stammdaten_schema,
         csv_file_name=r'N:\02_EDV\Land_Import.csv',
@@ -302,6 +428,18 @@ if __name__ == '__main__':
         proc_name='getPersonenId',
         db_file_mapping={'Sex': 'Sex', 'Firma': 'Firma', 'Vorname': 'Vorname', 'Ledig_Name': 'Ledig_Name', 'Partner_Name': 'Partner_Name', 'Partner_Name_Angenommen': 'Partner_Name_Angenommen', 'Strasse': 'Strasse', 'Hausnummer': 'Hausnummer', 'PLZ': 'PLZ', 'Ort': 'Ort'})
 
+
+
+
+
+if __name__ == '__main__':
+    stammdaten_schema = db_connect(host='localhost',
+                                   schema='stammdaten',
+                                   user="App_User_Stammdaten",
+                                   password="1234ABCD12abcd",
+                                   trace=True)
+
+    load_data_from_BuergerDB()
 
 
     '''

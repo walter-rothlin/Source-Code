@@ -49,11 +49,11 @@ while doLoop:
 
     if antwort == "3":
         fahrenheitValue = float(input("Fahrenheit:"))
-        print(gradValue, "Fahrenheit ==> ", (fahrenheitValue - 32) / 1.8, "Celsius")
+        print(fahrenheitValue, "Fahrenheit ==> ", (fahrenheitValue - 32) / 1.8, "Celsius")
 
     if antwort == "4":
         celsiusValue = float(input("Celsius:"))
-        print(gradValue, "Celsius ==> ", (celsiusValue*1.8) - 32, "Fahrenheit")
+        print(celsiusValue, "Celsius ==> ", (celsiusValue*1.8) - 32, "Fahrenheit")
 
     if antwort == "9":
         feldLength = int(input("Feld 1 Length:"))

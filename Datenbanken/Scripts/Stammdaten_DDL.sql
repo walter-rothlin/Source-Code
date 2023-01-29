@@ -110,8 +110,8 @@ DROP TABLE IF EXISTS Personen;
 CREATE TABLE IF NOT EXISTS Personen (
   `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Source`      ENUM('Initial_1', 'Loader_1', 'BuergerDB','ImmoTop') DEFAULT NULL,
-  `History`     VARCHAR(45) NULL,
-  `Bemerkungen` VARCHAR(45) NULL,
+  `History`     VARCHAR(500) NULL,
+  `Bemerkungen` VARCHAR(500) NULL,
 
   `Sex`                      VARCHAR(5) NULL,
   `Firma`                    VARCHAR(45) NULL,
@@ -124,8 +124,8 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Betriebs_Nr`              VARCHAR(45) NULL,
   
   `Zivilstand`  ENUM('Ledig','Verheiratet','Geschieden','Verwitwed','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
-  `Kategorien`  SET('Firma','Buerger','Angestellter', 'Auftragnehmer','Genossenrat','Bewirtschafter','Landteilbesitzer',
-					'Paechter','Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezueger', 'Nutzungsberechtigt') DEFAULT NULL,
+  `Kategorien`  SET('Firma','Bürger','Angestellter', 'Auftragnehmer','Genossenrat','Bewirtschafter','Landteilbesitzer',
+					'Pächter','Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezüger', 'Nutzungsberechtigt') DEFAULT NULL,
   
   -- Datumsangaben
   `Geburtstag`                   DATE NULL,
@@ -134,12 +134,25 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Von_Wangen_Weggezogen`        DATE NULL,
   `Baulandgesuch_Eingereicht_Am` DATE NULL,
   `Bauland_Gekauft_Am`           DATE NULL,
-  `Baulandgesuch_Details`        VARCHAR(45) NULL,
+  `Baulandgesuch_Details`        VARCHAR(200) NULL,
   `Angemeldet_Am`                DATE NULL,
   `Aufgenommen_Am`               DATE NULL,
   `Funktion_Uebernommen_Am`      DATE NULL,
   `Funktion_Abgegeben_Am`        DATE NULL,
   `Chronik_Bezogen_Am`           DATE NULL,
+  
+  -- von ACCESS-DB 1:1 uebernommen (Temporär)
+  lintNutzenKey					INT,
+  bolNutzenberechtigung			BOOL DEFAULT FALSE,
+  bolBaulandgesuch   			BOOL DEFAULT FALSE,
+  bolMutationen_Aktuell         BOOL DEFAULT FALSE,
+  bolMitarbeiter_Genossame      BOOL DEFAULT FALSE,
+  bolWeggezogen                 BOOL DEFAULT FALSE,
+  bolAktiv                      BOOL DEFAULT FALSE,
+  bolLandwirt					BOOL DEFAULT FALSE,
+  bolGenossenbürger			    BOOL DEFAULT FALSE,
+  bolBürgerauflage  			BOOL DEFAULT FALSE,
+  lintZivilstandkey             SMALLINT,
   
   -- FK: Adressen
   `Privat_Adressen_id`          INT UNSIGNED NULL,
@@ -174,7 +187,7 @@ DROP TABLE IF EXISTS EMail_Adressen;
 CREATE TABLE IF NOT EXISTS EMail_Adressen (
   `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `eMail`        VARCHAR(45)  NOT NULL,
-  `Type`         VARCHAR(45)  NULL,
+  `Type`         ENUM('Privat', 'Geschaeft', 'Sonstige')  NULL,
   `Prio`         TINYINT      NOT NULL DEFAULT 0, 
   `last_update`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -352,8 +365,8 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
   `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Nummer`      VARCHAR(26) NOT NULL,
   `Bezeichnung` VARCHAR(45) NULL,
-  `Bankname`    VARCHAR(45) NOT NULL,
-  `Bankort`     VARCHAR(45) NOT NULL,
+  `Bankname`    VARCHAR(45) NOT NULL DEFAULT '',
+  `Bankort`     VARCHAR(45) NOT NULL DEFAULT '',
   `personen_id` INT UNSIGNED NOT NULL,
   `Prio`        TINYINT      NOT NULL DEFAULT 0, 
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -635,26 +648,57 @@ DELIMITER ;
 -- SELECT getPrio_0_TelNr(4);  -- --> 0793315587
 
 -- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getPrio_0_EMail;
+Delimiter //
+CREATE FUNCTION getPrio_0_EMail(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
+END
+//
+DELIMITER ;
+
+-- Testen
+-- SELECT getPrio_0_EMail(4);  -- --> abajschne@gmx.ch
+
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getPrio_0_IBAN;
+Delimiter //
+CREATE FUNCTION getPrio_0_IBAN(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT Nummer FROM iban WHERE personen_id = p_id AND prio=0 LIMIT 1);
+END
+//
+DELIMITER ;
+
+-- Testen
+-- SELECT getPrio_0_IBAN(16);  -- --> abajschne@gmx.ch
+
+-- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getStrassenAdresse;
 Delimiter //
 CREATE FUNCTION getStrassenAdresse(p_strasse VARCHAR(45), p_hausnummer VARCHAR(5), p_postfach VARCHAR(5)) RETURNS CHAR(100)
 BEGIN
-    RETURN CONCAT('STRASSE TBD:');
-    IF (strasse = NULL OR strasse = '') THEN
+    IF (p_postfach = "") THEN
+		RETURN CONCAT(p_strasse, ' ', p_hausnummer);
+	ELSE
+    	RETURN CONCAT(p_strasse, ' ', p_hausnummer, ' / Postfach:', p_postfach);
+    END IF;
+    
+    IF (strasse = '') THEN
          IF (postfach = '' OR postfach = NULL) THEN
 			RETURN '';
 		 ELSE
             RETURN CONCAT('Postfach ', postfach);
          END IF;
     ELSE
-       IF (hausnummer = NULL OR hausnummer = '') THEN
-          IF (postfach = NULL OR postfach = '') THEN
+       IF (hausnummer = '') THEN
+          IF (postfach = '') THEN
                RETURN CONCAT('', strasse);
 		  ELSE
                RETURN CONCAT(strasse, ' / Postfach:', postfach);
 		  END IF;
 	   ELSE
-		  IF (postfach = NULL OR postfach = '') THEN
+		  IF (postfach = '') THEN
 		       RETURN CONCAT(strasse, ' ', hausnummer);
 		  ELSE
                RETURN CONCAT(strasse, ' ', hausnummer, ' / Postfach:', postfach);
@@ -715,6 +759,9 @@ CREATE VIEW Telnr_Liste AS
 	SELECT
         pers.ID                                     AS Pers_ID,
         pers.Sex                                    AS Sex,
+        pers.Partner_Name_Angenommen                AS Name_Angenommen_P,
+        pers.Ledig_Name                             AS Ledig_Name_P, 
+		pers.Partner_Name                           AS Partner_Name_P,
 		getFamilieName(pers.Sex, 
                   pers.Partner_Name_Angenommen, 
                   pers.Ledig_Name, 
@@ -738,6 +785,9 @@ DROP VIEW IF EXISTS Personen_Daten;
 CREATE VIEW Personen_Daten AS
 	SELECT
 		  P.id                                         AS ID,
+          P.Zivilstand                                 AS Zivilstand,
+          P.Kategorien                                 AS Kategorien,
+          
 		  P.Sex                                        AS Geschlecht,       -- Herr | Frau
 		  P.Firma                                      AS Firma,
 		  P.Vorname                                    AS Vorname,
@@ -805,11 +855,9 @@ CREATE VIEW Personen_Daten AS
                                          
           P.AHV_Nr                                     AS AHV_Nr,
 		  P.Betriebs_Nr                                AS Betriebs_Nr,
-          P.Zivilstand                                 AS Zivilstand,
-		  P.Kategorien                                 AS Kategorien,
-          
-          ""                                           AS IBAN,
-          ""                                           AS eMail,
+
+          getPrio_0_IBAN(P.id)                         AS IBAN,
+          getPrio_0_EMail(P.id)                        AS eMail,
           getPrio_0_TelNr(P.id)                        AS Tel_Nr,
           P.Geburtstag                                 AS Geburtstag,
           P.Todestag                                   AS Todestag,
@@ -879,6 +927,68 @@ CREATE VIEW Telnr_Liste_Prio_0 AS
 	SELECT * FROM Telnr_Liste_Sorted WHERE PRIO=0;
     
 -- -----------------------------------------------------
+DROP VIEW IF EXISTS Personen_Daten_Tel_Email; 
+CREATE VIEW Personen_Daten_Tel_Email AS
+	SELECT
+		  ID,
+		  Geschlecht,       -- Herr | Frau
+		  Firma,
+		  Vorname,
+          Vorname_2,
+          Vorname_Initial,  -- Walter M.
+          Ledig_Name,
+          Partner_Name,
+		  Partner_Name_Angenommen,
+		  LastName,         -- Rothlin
+          Familie_Name,     -- Rothlin-Collet
+		  Anrede_Short_Short,		 -- Herr W.Rothlin
+		  Anrede_Long_Short,		 -- Herr Walter Rothlin
+		  Anrede_Short_Long,		-- Herr W.Rothlin-Collet
+		  Anrede_Long_Long,		  -- Herr Walter Rothlin-Collet
+          Brief_Anrede,           -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen, Sehr geehrte Herren
+		  Brief_Anrede_Long,     -- Sehr geehrter Herr Rothlin-Collet | Sehr geehrte Frau Collet Rothlin | Sehr geehrte Damen, Sehr geehrte Herren    
+          Brief_Anrede_PerDu,     -- Lieber Walter | Liebe Claudia 
+          AHV_Nr,
+		  Betriebs_Nr,
+          Zivilstand,
+		  Kategorien,
+          IBAN,
+          eMail,
+          Tel_Nr,
+          Geburtstag,
+          Todestag,
+          Nach_Wangen_Gezogen,
+          Von_Wangen_Weggezogen,
+          Baulandgesuch_Eingereicht_Am,
+          Bauland_Gekauft_Am,
+          Angemeldet_Am,
+          Aufgenommen_Am,
+          Funktion_Uebernommen_Am,
+          Funktion_Abgegeben_Am,
+          Chronik_Bezogen_Am,
+		  Private_Strasse,
+		  Private_Hausnummer,
+          Private_Postfachnummer,
+          Private_Strassen_Adresse,
+		  Private_PLZ,
+          Private_PLZ_International,
+		  Private_Ort,
+		  Private_Land,
+		  Geschaeft_Strasse,
+		  Geschaeft_Hausnummer,
+          Geschaeft_Postfachnummer,
+          Geschaeft_Strassen_Adresse,
+		  Geschaeft_PLZ,
+          Geschaeft_PLZ_International,    -- CH-8855
+		  Geschaeft_Ort,
+		  Geschaeft_Land,
+          last_update
+	FROM Personen_Daten AS P;
+    -- ORDER BY LastName, Vorname;
+
+-- SELECT * FROM Personen_Daten;
+
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
 CREATE VIEW Pachtlandzuteilung AS
 	SELECT
@@ -935,6 +1045,31 @@ CREATE VIEW EMail_Main AS
 -- ===============================================================================================
 -- Create stored procedures for business (external) write access
 -- ===============================================================================================
+-- ------------------------------------------------------
+-- EMail Adressen
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getEmailAdrId;
+DELIMITER $$
+CREATE PROCEDURE getEmailAdrId(IN email_addr VARCHAR(45), IN email_type ENUM('Privat', 'Geschaeft', 'Sonstige'), IN Prio TINYINT, OUT email_id SMALLINT(5))
+BEGIN
+    IF ((SELECT count(*) FROM email_adressen WHERE eMail=email_addr AND Type=email_type) = 0) THEN
+        INSERT INTO email_adressen (`eMail`,`Type`,`Prio`) VALUES (email_addr, email_type, Prio);
+        COMMIT;
+    END IF;
+    SELECT id FROM email_adressen WHERE eMail=email_addr AND Type=email_type INTO email_id;
+END$$
+DELIMITER ;
+
+-- Tests
+-- set @id = 0;
+-- call getEmailAdrId('walter@rothlin.com', 'Sonstige', 0,  @id);
+-- select @id;
+
+-- set @id = 0;
+-- call getTelefonnummerId('0041', '', '0793689492', 'Privat','Mobile',1, @id);
+-- select @id;
+
+
 -- ------------------------------------------------------
 -- Telefonnummer
 -- ------------------------------------------------------

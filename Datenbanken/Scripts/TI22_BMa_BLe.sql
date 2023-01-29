@@ -1,0 +1,1 @@
+SELECT city,country_id,city_id FROM city;
