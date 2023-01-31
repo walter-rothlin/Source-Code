@@ -21,15 +21,20 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- Schema Stammdaten kreieren
--- -----------------------------------------------------
+-- ===============================================================================================
+-- == Schema Stammdaten kreieren                                                                ==
+-- ===============================================================================================
 DROP SCHEMA IF EXISTS stammdaten;
 CREATE SCHEMA IF NOT EXISTS stammdaten  DEFAULT CHARACTER SET utf8 ;
 
 -- Als default Schema setzen
 SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
 USE stammdaten;
+
+
+-- ===============================================================================================
+-- == Create Tables                                                                             ==
+-- ===============================================================================================
 
 -- -----------------------------------------------------
 -- Table `Land`
@@ -384,11 +389,9 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
   ON DELETE NO ACTION
   ON UPDATE NO ACTION);
 
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Create Funtions used in Joins
--- -----------------------------------------------------
--- -----------------------------------------------------
+-- ===============================================================================================
+-- == Create Funtions used in Joins                                                             ==
+-- ===============================================================================================
 SET GLOBAL log_bin_trust_function_creators = 1;
 
 -- --------------------------------------------------------------------------------
@@ -652,7 +655,8 @@ DROP FUNCTION IF EXISTS getPrio_0_EMail;
 Delimiter //
 CREATE FUNCTION getPrio_0_EMail(p_id INT) RETURNS CHAR(100)
 BEGIN
-    RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
+    -- RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
+    RETURN (SELECT eMail FROM email_main WHERE Person_id = p_id AND prio=0 LIMIT 1);
 END
 //
 DELIMITER ;
@@ -711,11 +715,10 @@ DELIMITER ;
 
 -- Testen
 
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Create Views
--- -----------------------------------------------------
--- -----------------------------------------------------
+-- ===============================================================================================
+-- == Create Views                                                                              ==
+-- ===============================================================================================
+
 DROP VIEW IF EXISTS Ort_Land; 
 CREATE VIEW Ort_Land AS
 	SELECT
@@ -788,6 +791,10 @@ CREATE VIEW Personen_Daten AS
           P.Zivilstand                                 AS Zivilstand,
           P.Kategorien                                 AS Kategorien,
           
+          CONCAT(P.Vorname,';',
+                 P.Ledig_Name,';',
+                 P.Partner_Name,';',
+                 DATE_FORMAT(P.Geburtstag,'%Y%MM%DD')) AS Such_Begriff,     -- YYYYMMDD
 		  P.Sex                                        AS Geschlecht,       -- Herr | Frau
 		  P.Firma                                      AS Firma,
 		  P.Vorname                                    AS Vorname,
@@ -909,14 +916,14 @@ CREATE VIEW Telnr_Liste_Sorted AS
          P.Private_Strassen_Adresse   AS Strasse,
          P.Private_PLZ_International  AS PLZ,
          P.Private_Ort                AS Ort,
-		 T.Tel_ID            AS Tel_ID,
-         T.Laendercode       AS Laendercode,
-         T.Vorwahl           AS Vorwahl,
-         T.Nummer            AS Nummer,
-         T.Type              AS Type,
-         T.Endgeraet         AS Endgeraet,
-         T.Prio              AS Prio,
-         T.last_update       AS last_update
+		 T.Tel_ID                     AS Tel_ID,
+         T.Laendercode                AS Laendercode,
+         T.Vorwahl                    AS Vorwahl,
+         T.Nummer                     AS Nummer,
+         T.Type                       AS Type,
+         T.Endgeraet                  AS Endgeraet,
+         T.Prio                       AS Prio,
+         T.last_update                AS last_update
 	FROM Telnr_Liste AS T
     LEFT OUTER JOIN Personen_Daten AS P ON  P.ID  = T.Pers_ID
     ORDER BY Familie_Name;
@@ -925,29 +932,42 @@ CREATE VIEW Telnr_Liste_Sorted AS
 DROP VIEW IF EXISTS Telnr_Liste_Prio_0; 
 CREATE VIEW Telnr_Liste_Prio_0 AS
 	SELECT * FROM Telnr_Liste_Sorted WHERE PRIO=0;
-    
+
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS EMail_Main; 
+CREATE VIEW EMail_Main AS
+	SELECT
+		pEMail.Personen_id       AS Person_id,
+        pEMail.EMail_Adressen_id AS email_id,
+		eMailAdr.eMail           AS eMail,
+        eMailAdr.prio            AS Prio
+	FROM Personen_has_EMail_Adressen AS pEMail
+	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_id = eMailAdr.id
+	WHERE
+	   eMailAdr.Prio = 0;    -- MIN(eMailAdr.Prio); 
+       
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Personen_Daten_Tel_Email; 
 CREATE VIEW Personen_Daten_Tel_Email AS
 	SELECT
 		  ID,
-		  Geschlecht,       -- Herr | Frau
+		  Geschlecht,               -- Herr | Frau
 		  Firma,
 		  Vorname,
           Vorname_2,
-          Vorname_Initial,  -- Walter M.
+          Vorname_Initial,          -- Walter M.
           Ledig_Name,
           Partner_Name,
 		  Partner_Name_Angenommen,
-		  LastName,         -- Rothlin
-          Familie_Name,     -- Rothlin-Collet
-		  Anrede_Short_Short,		 -- Herr W.Rothlin
-		  Anrede_Long_Short,		 -- Herr Walter Rothlin
+		  LastName,                 -- Rothlin
+          Familie_Name,             -- Rothlin-Collet
+		  Anrede_Short_Short,		-- Herr W.Rothlin
+		  Anrede_Long_Short,		-- Herr Walter Rothlin
 		  Anrede_Short_Long,		-- Herr W.Rothlin-Collet
-		  Anrede_Long_Long,		  -- Herr Walter Rothlin-Collet
-          Brief_Anrede,           -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen, Sehr geehrte Herren
-		  Brief_Anrede_Long,     -- Sehr geehrter Herr Rothlin-Collet | Sehr geehrte Frau Collet Rothlin | Sehr geehrte Damen, Sehr geehrte Herren    
-          Brief_Anrede_PerDu,     -- Lieber Walter | Liebe Claudia 
+		  Anrede_Long_Long,		    -- Herr Walter Rothlin-Collet
+          Brief_Anrede,             -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen, Sehr geehrte Herren
+		  Brief_Anrede_Long,        -- Sehr geehrter Herr Rothlin-Collet | Sehr geehrte Frau Collet Rothlin | Sehr geehrte Damen, Sehr geehrte Herren    
+          Brief_Anrede_PerDu,       -- Lieber Walter | Liebe Claudia 
           AHV_Nr,
 		  Betriebs_Nr,
           Zivilstand,
@@ -1026,24 +1046,9 @@ CREATE VIEW Pachtlandzuteilung AS
 	FROM Landteil AS L
     LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_Adresse     = Paechter_Adr.id
 	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_Adresse  = Verpaechter_Adr.id;
--- --------------------------------------------------------------------------------
-DROP VIEW IF EXISTS EMail_Main; 
-CREATE VIEW EMail_Main AS
-	SELECT
-		pEMail.Personen_id       AS Person_id,
-		eMailAdr.eMail           AS eMail
-	FROM Personen_has_EMail_Adressen AS pEMail
-	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_id = eMailAdr.id
-	WHERE
-	   eMailAdr.Prio = 0;    -- MIN(eMailAdr.Prio); 
-
-
-
-
-
 
 -- ===============================================================================================
--- Create stored procedures for business (external) write access
+-- == Create stored procedures for business (external) write access                             ==
 -- ===============================================================================================
 -- ------------------------------------------------------
 -- EMail Adressen
@@ -1315,13 +1320,13 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS createPerson;
 DELIMITER $$
 CREATE PROCEDURE createPerson(IN vorname VARCHAR(45),
-                               IN ledig_name VARCHAR(45),
-                               IN partner_name VARCHAR(45),
-                               IN firma VARCHAR(45),
-							   IN strasse VARCHAR(45), 
-							   IN hausnummer VARCHAR(10), 
-							   IN plz SMALLINT(4), 
-							   IN ortsname VARCHAR(45),
+							  IN ledig_name VARCHAR(45),
+                              IN partner_name VARCHAR(45),
+                              IN firma VARCHAR(45),
+							  IN strasse VARCHAR(45), 
+							  IN hausnummer VARCHAR(10), 
+							  IN plz SMALLINT(4), 
+							  IN ortsname VARCHAR(45),
 							  OUT generatedId SMALLINT(5))
 BEGIN
     CALL getAdressId(strasse, hausnummer, plz, ortsname, @adressen_id);

@@ -65,6 +65,16 @@ a = input('a: ')     # INFO: str(input('a: ')  str ist nicht nötig da input ret
 b = input('b: ')
 c = input('c: ')
 
+# Konvertiert a,b,c zurück zu floats
+a = float(a)
+b = float(b)
+c = float(c)
+loesungen = Mitternachtsformel(a, b, c)  # INFO Function immer mit Parameter aufrufen!
+print(loesungen)
+print("Diskriminante:", loesungen[0])
+graph(a, b, c)               # INFO Function immer mit Parameter aufrufen!
+
+'''
 # Check if a or b or c is a str or not
 # INFO nicht optimal #  if a.isalpha() or b.isalpha() or c.isalpha():  # INFO nicht nötig == True:
 if a.isnumeric() and b.isnumeric() and c.isnumeric():
@@ -78,3 +88,5 @@ if a.isnumeric() and b.isnumeric() and c.isnumeric():
     graph(a, b, c)               # INFO Function immer mit Parameter aufrufen!
 else:
     print('ERROR Bitte gebe keine Buchstaben an.')
+    
+'''

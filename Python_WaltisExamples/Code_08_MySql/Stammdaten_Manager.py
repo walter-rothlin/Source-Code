@@ -15,6 +15,8 @@ import mysql.connector
 import sqlparse
 import csv
 import json
+from openpyxl import load_workbook
+from waltisLibrary import *
 
 # Lambda function to check if a x is from WAHR / FALSCH.
 ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
@@ -429,7 +431,101 @@ def load_data_from_BuergerDB():
         db_file_mapping={'Sex': 'Sex', 'Firma': 'Firma', 'Vorname': 'Vorname', 'Ledig_Name': 'Ledig_Name', 'Partner_Name': 'Partner_Name', 'Partner_Name_Angenommen': 'Partner_Name_Angenommen', 'Strasse': 'Strasse', 'Hausnummer': 'Hausnummer', 'PLZ': 'PLZ', 'Ort': 'Ort'})
 
 
+def searchPerson(vorname, ledigname, partnername=None, gebdatum_YYYYMMDD=None):
+    mycursor = stammdaten_schema.cursor()
+    sql = """
+             SELECT
+                ID
+             FROM Personen_Daten
+             WHERE Vorname    = '""" + str(vorname)   + """' AND
+                   Ledig_Name = '""" + str(ledigname) + """'
+        """
+    # print(sql)
+    mycursor.execute(sql)
+    myresult = mycursor.fetchall()
+    if len(myresult) == 0:
+        # print("Not Found:", len(myresult), "\n", sql)
+        return None
+    elif len(myresult) > 1:
+        # print("Multiple found:", len(myresult), "\n", sql)
+        return -1
+    elif len(myresult) == 1:
+        return myresult[0][0]
 
+def load_bewirtschafter_details_from_Landteil_EXCEL ():
+    wb = load_workbook(r'V:\Landwirtschaft\Pachtland\Landwirtschaftliche_Gütertabelle.xlsx')
+    print(wb.sheetnames)
+
+    Bewirtschafter_Sicht = wb['Bewirtschafter_Sicht']
+    column = 0
+    columnHeaders = {}
+    while Bewirtschafter_Sicht.cell(row=2, column=column+1).value is not None:
+        headerStr = str(Bewirtschafter_Sicht.cell(row=2, column=column+1).value).replace('\n', '')
+        columnHeaders.update({headerStr: column+1})
+        column += 1
+    print(columnHeaders)
+
+    row = 3
+    last_value = ''
+    while Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['BewirtschafterNummer']).value is not None:
+        aDataSet = []
+
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['BewirtschafterVorname']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Name']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Name4']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Adresse']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['PLZ']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Ort']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Geb.-Datum']).value)[0:10].replace('-', ''))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Tel.-Nr.']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Mail']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['BewirtschafterNummer']).value))
+
+        if aDataSet[0] is not None and aDataSet[9].count("Ergebnis") != 1:
+            new_value = aDataSet[0] + ';' + aDataSet[1] + ';' + aDataSet[6]
+            if new_value != last_value:
+                last_value = new_value
+                # print(new_value)
+                aDataSet.insert(0, str(searchPerson(aDataSet[0], aDataSet[1], aDataSet[2], aDataSet[6])))
+                print(';'.join(aDataSet))
+        row += 1
+
+def load_landteile_from_Landteil_EXCEL():
+    wb = load_workbook(r'V:\Landwirtschaft\Pachtland\Landwirtschaftliche_Gütertabelle.xlsx')
+    print(wb.sheetnames)
+
+    Bewirtschafter_Sicht = wb['Bewirtschafter_Sicht']
+    column = 0
+    columnHeaders = {}
+    while Bewirtschafter_Sicht.cell(row=2, column=column+1).value is not None:
+        headerStr = str(Bewirtschafter_Sicht.cell(row=2, column=column+1).value).replace('\n', '')
+        columnHeaders.update({headerStr: column+1})
+        column += 1
+    print(columnHeaders)
+
+    row = 3
+    last_value = ''
+    while Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['BewirtschafterNummer']).value is not None:
+        aDataSet = []
+
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Gemeinde']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['ParzellenNummer']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['ParzellenFlurname']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['BG/GGja / nein']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['FlächeAren']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Pacht vonGenossame/Are']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Pachtzins/AreFr.']).value)[0:10].replace('-', ''))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Tel.-Nr.']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['Mail']).value))
+        aDataSet.append(str(Bewirtschafter_Sicht.cell(row=row, column=columnHeaders['PachtzinsFr.']).value))
+
+        if aDataSet[0] is not None and aDataSet[9].count("Ergebnis") != 1:
+            new_value = aDataSet[0] + ';' + aDataSet[1] + ';' + aDataSet[6]
+            if new_value != last_value:
+                last_value = new_value
+                # print(new_value)
+                print(';'.join(aDataSet))
+        row += 1
 
 
 if __name__ == '__main__':
@@ -439,7 +535,9 @@ if __name__ == '__main__':
                                    password="1234ABCD12abcd",
                                    trace=True)
 
-    load_data_from_BuergerDB()
+    # load_data_from_BuergerDB()
+    # load_bewirtschafter_details_from_Landteil_EXCEL()
+    load_landteile_from_Landteil_EXCEL()
 
 
     '''
