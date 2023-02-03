@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS Adressen (
 
 
 -- -----------------------------------------------------
--- Table `Personen`
+-- Table `Personen` 
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Personen;
 CREATE TABLE IF NOT EXISTS Personen (

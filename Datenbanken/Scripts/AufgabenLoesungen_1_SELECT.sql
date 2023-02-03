@@ -49,7 +49,7 @@ FROM
 
 -- 1.2) Beschrifte die Resultat-Tabelle von 1.1 mit Vorname und Nachname als Spalten-Header
 SELECT 
-    sakila.act.first_name AS `Vorname`,
+    `sakila`.`act`.`first_name` AS `Vorname`,
     last_name  AS Nachname
 FROM
     sakila.actor AS act;
@@ -115,7 +115,7 @@ ORDER BY
     first_name;  -- 121
 
 -- 1.8) Liste alle Schauspielern (Vorname und Nachname) auf, welche Kirsten zum Vornamen heissen? Sortiere diese
---      nach Nachnamen absteigend und nach Vorname aufsteigend
+--      nach Nachnamen absteigend (Z..A) und nach Vorname aufsteigend (A..Z)
 SELECT 
     first_name, last_name
 FROM
