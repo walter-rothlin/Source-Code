@@ -17,6 +17,7 @@
 -- 17-Mar-2022	 Walter Rothlin      Added Date_Format Str_To_Date section
 -- 20-Mar-2022	 Walter Rothlin      Added DATE and TIME functions
 -- 25-Mar-2022	 Walter Rothlin      Added Variablen
+-- 10-Feb-2023	 Walter Rothlin      Added SET and ENUM in Where-Clause
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -165,6 +166,24 @@ SELECT
     special_features   -- Set / Menge
 FROM
     film;
+    
+SELECT 
+    film_id,
+    title,
+    rating,            -- Enumeration
+    special_features   -- Set / Menge
+FROM
+    film
+WHERE rating = 'PG';
+
+SELECT 
+    film_id,
+    title,
+    rating,            -- Enumeration
+    special_features   -- Set / Menge
+FROM
+    film
+WHERE FIND_IN_SET(special_features, 'Commentaries') > 0;
 
 -- 1.12) Erstellen Sie eine Listen der bezahlten Betraege (FROM payment), sortiert nach customer_id und Betraege
 SELECT 

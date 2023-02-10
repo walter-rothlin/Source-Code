@@ -535,9 +535,9 @@ if __name__ == '__main__':
                                    password="1234ABCD12abcd",
                                    trace=True)
 
-    # load_data_from_BuergerDB()
+    load_data_from_BuergerDB()
     # load_bewirtschafter_details_from_Landteil_EXCEL()
-    load_landteile_from_Landteil_EXCEL()
+    # load_landteile_from_Landteil_EXCEL()
 
 
     '''
