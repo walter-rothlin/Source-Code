@@ -1,0 +1,505 @@
+###  PyC0FFEE  ###
+------------------
+
+0.16    26.11.2022  Basis Code mit Kontroll-Strukturen und Klassen für 20x2 Zeichen-LCD, 
+                    Breath LED, Tasten-Entprellung, Status LEDs, PWM, Temperatur und 
+                    Flow-Sensor.
+0.17    30.11.2022  Klasse für das Erstellen von Log-Dateien erstellt, manuelles Setzen der 
+                    PWM Duty Cycle über Tasten für Regler-Tests, erster funktionsfähiger
+                    P-Regler mit je einem Kp-Wert für Aufheizen und Kaffee-Ausgabe.
+0.18    13.12.2022  Ersatz des Zeichen-LCDs durch 480x320 Pixel TFT, Implementierung eines
+                    Framebuffers mit halber Auflösung und Skalierung während Datenübertragung.
+0.19    14.12.2022  Beschleunigung der TFT-Ausgabe von 3200 ms pro Frame auf 123 ms mittels
+                    Code-Optimierung, @micropython.viper Dekorator, Pointern und Multi-Threading.
+0.20    14.01.2023  Methode zum Einlesen von PPM-Dateien (Portable Pixmam): Einlesen und
+                    Übertragen in Framebuffer dauert 3800 ms > Optimierung auf 800 ms pro Bild.
+0.21    20.01.2023  Python-Konverter für PPM-Datei im RGB888-Format (3 Byte per Pixel) in 
+                    PPH-Datei mit RGB565 (2 Bytes per Pixel) erstellt, Einlese-Methode optmiert,
+                    ohne Farbraum-Konvertierung und Optimierungen Einlesen und Anzeigen auf 275 ms
+                    reduziert.
+0.22    31.01.2023  Code und Kommentare überarbeitet
+0.23    02.02.2023  Screenshot-Funktion hinzugefügt
+0.24    03.02.2023  Temperatur-Graph in Status-Bildschirm
+0.25    05.02.2023  State-Machine für Kaffee-Ausgabe implementiert -> Feature Stopp!
+
+
+class TFT_LCD_ILI9488(framebuf.FrameBuffer):
+--------------------------------------------
+
+    Klasse zur Unterstützung des Waveshare 3.5" TFT-LCD Bildschirms mit ILI9488-Controller.
+
+
+    def __init__(self, update_time):
+
+        Initialisierung der TFT-LCD-Klasse. 
+        
+        Die Übertragung des Framebuffers von der CPU zum RAM des Bildschirms benötigt
+        mindestens 125 ms, abhängig vom Clock des SPI-Bus. Empfohlen sind Werte von 
+        250 ms (4 FPS) bis 500 ms (2 FPS).
+
+        Argumente:      update_time     Aktualisierungs-Intervall in ms
+
+
+    def write_cmd(self, buf):
+
+        Überträgt Daten per SPI an das TFT-Display. Der erste Wert muss ein 
+        gültiges Kommando sein, gefolgt von Datenwerten.
+        
+        Argumente:      buf     bytestring b'\xC5\x00\x1E\x80' oder List [0xC5, 0x00, 0x1E, 0x80]
+
+
+    def init_display(self):
+
+        Setzt das TFT-Display per Reset-Cycle in Ursprungszustand zurück und sendet dann 
+        eine Initialisierungs-Sequenz für den Betriebsmodus mit RGB565-Farbraum und Anzeige
+        im Queerformat.
+
+
+    def show(self):
+
+        Setzt Spalten und Zeilen-Adresse auf 0 und überträgt den Framebuffer 
+        in den Speicher des TFT-Displays.
+
+
+    def update(self):
+
+        Die Update-Methode muss ein Mal pro Durchlauf in der Main-Loop aufgerufen werden. 
+        Sie aktualisiert den TFT-Bildschirm mit den aktuellen Status-Informationen wenn:
+        - der Zeitintervall für die regelmässige Aktualisierung abgelaufen ist
+        - keine manuell angeforderte Bildschirmaktualisierung aktiv ist
+        
+        Argumente:              keine
+
+
+    def loadPicture(self, x_pos, y_pos, file_name, transparency=-1):
+
+        Lädt Bilder im PPH-Format (RGB565) in den Framebuffer des TFT-Displays.
+
+        Argumente:      x_pos, y_pos    X- und Y-Wert von Einfügeposition
+                        file_name       Name der Bitmap-Datei (PPH-Format)
+                        transparency    Farbwert, welcher Transparenz markiert
+
+
+    def screenshot(self, file_name='screenshot.ppm'):
+
+        Speichert den aktuellen Framebuffer als Portable Pixmap Grafik-Datei (*.ppm) im Flash-Speicher.
+
+        Argumente:      file_name   Datei-Name für das gespeicherte Bild.
+
+
+    def bl_ctrl(self,duty):
+
+        Setzt Helligkeit der Hintergrund-Beleuchtung.
+
+        Argumente:      duty        Duty-Cycle 0-100%
+
+
+    def RGB888_to_RGB565(self, r, g, b):
+
+        Wandelt einen 3-Byte RGB-Farbwert in einen 2-Byte RGB-Farbewert um. Der Framebuffer arbeitet
+        im Little-Endian Format. Der Rückgabewert erfolgt in der Byte-Reihenfolge LSB/MSB und wird
+        so in den Buffer übertragen.
+
+            RGB565 Farb-Bitmuster
+            Farbe   -Hex--    -MSB----- -LSB-----
+            RED =   0x00F8  # 1111 1000 0000 0000
+            GREEN = 0xE007  # 0000 0111 1110 0000
+            BLUE =  0x1F00  # 0000 0000 0001 1111
+
+        Argumente:      r, g, b     Drei Farbwerte von 0-254 für Rot, Blau und Grün
+        Rückgabewert:               16-Bit Farbwert im RGB565-Format
+
+
+class BreathLED:
+----------------
+
+    Langsam pulsierende Status-LED. Unregelmässiger Helligkeitsverlauf deutet auf hohe
+    CPU-Last oder blockierenden Programm-Code hin.
+
+
+    def __init__(self, led_pin, duration = 1000):
+
+        Initialisierung der Status-LED.
+
+        Argumente:      led_pin     GPIO-Pin, an dem die LED angeschlossen ist
+                        duration    Zeit für einen Zyklus in ms
+
+
+    def update(self):
+
+        Aktualisiert den Zustand der Breath-LED. Muss in der Main-Loop 
+        ein Mal pro Durchlauf aufgerufen werden.
+
+
+class PushButton:
+-----------------
+
+    Wertet die Tasten über Interrupts aus. Nach der Entprellung setzt der 
+    Interrupt-Handler die Eigenschaft 'pressed' als Signal für die gedrückte 
+    Taste.
+
+
+    def __init__(self, pin, debounce_time):
+
+        Initialiserung des Tasten-Objekts.
+
+        Argumente:      pin             Nummer des verwendeten GPIO-Pins
+                        debounce_time   minimale Zeit in ms, in der keine 
+                                        Pegeländerung auftreten darf
+
+
+    def irq_handler(self, pin):
+
+        IRQ-Handler zur Tastenauswertung. Wird über die IRQ-Methode von 
+        MicroPython mit dem Interrupt verbunden:
+
+        button.pin.irq(trigger=Pin.IRQ_RISING, handler=button.irq_handler)
+
+        Argumente:      pin         Wird von MicroPython beim Aufruf übergeben
+
+
+    def debounce(self):
+
+        Entprellung, wertet Mehrfachauslösung von Tasten aus (Debouncing).
+
+
+    def clear(self):
+
+        Setzt die Eigenschaft 'pressed' eines Tastenobjektes zurück. Wird 
+        üblicherweise nach der Umsetzung des mit der Taste verbundenen 
+        Programm-Codes zurückgesetzt.
+
+
+class FlowSensor:
+-----------------
+
+    Wertet den Flüssigkeits-Volumen-Sensor über einen Interrupt aus. Der Sensor 
+    liefert ~2000 Impulse pro 1000 ml. 
+
+
+    def __init__(self, pin):
+
+        Initialisierung des Sensor-Objekts.
+
+        Argumente:      pin         GPIO-Pin, an dem der Sensor angeschlossen ist.
+
+
+    def get_count(self):
+
+        Liefert die Anzahl gezählter Impulse seit der letzten Rücksetzung.
+
+        Rückgabewert:               Anzahl Impulse (~2000 pro 1000 ml)
+
+
+    def reset(self):
+
+        Setzt den Zähler auf Null zurück.
+
+
+    def irq_handler(self, pin):
+
+        Interrupt-Handler für die Signalauswertung. Wird über die IRQ-Methode von 
+        MicroPython mit dem Interrupt verbunden:
+
+        flow_sensor.pin.irq(trigger=Pin.IRQ_RISING, handler=flow_sensor.irq_handler)
+
+        Argumente:      pin         Wird von MicroPython beim Aufruf übergeben
+
+
+class FrontLED:
+---------------
+
+    Klasse zur Steuerung der in den Tasten integrierten LEDs.
+
+
+    def __init__(self, pin):
+
+        Initialisiert das LED-Objekt.
+
+        Argumente:      pin         GPIO-Pin, an der die Kathode der LED angeschlossen 
+                                    ist. (VCC)---|>|---[ R ]---(Open Drain)
+
+
+    def on(self):
+
+        Aktiviert die LED.
+
+
+    def off(self):
+
+        Schaltet die LED aus.
+
+
+    def toggle(self):
+
+        Invertiert den aktuellen Zustand der LED.
+
+
+class WaterPump:
+----------------
+
+    Steuert die Wasserpumpe.
+
+
+    def __init__(self, pin):
+
+        Initialisiert das Objekt für die Wasser-Pumpe.
+
+        Argumente:      pin     GPIO-Pin, über den die Pumpe gesteuert wird.
+
+
+    def on(self):
+
+        Aktiviert die Wasser-Pumpe.
+
+
+    def off(self):
+
+        Schaltet die Wasser-Pumpe aus.
+
+
+    def get_state(self):
+
+        Gibt den aktuellen Zustand der Wasser-Pumpe zurück.
+
+
+class WaterHeater:
+------------------
+
+    Klasse zur Steuerung des Heiz-Elements über PWM. Da der Pi Pico PWM
+    in Hardware erst ab 7 Hz unterstützt, enthält die Klasse eine eigene 
+    PWM-Implementierung. Zusammen mit einer Nulldurchgangs-Erkennung der 
+    Leistungsstufe lassen sich so passende Wellenpakete für die Heizung
+    erzeugen.
+
+    Bei 50 Hz Netzfrequenz und einer Periodenndauer von 1000 ms entspricht
+    ein Tastverhätnis von 10 % einem Paket von 5 Sinus-Vollwellen.
+
+
+    def __init__(self, pin, cycle_time=1000):
+
+        Initialisiert das Objekt für das Heizungs-Elements.
+
+        Argumente:      pin         GPIO-Pin, welcher die Leistungsstufe steuert
+                        cycle_time  Dauer einer PWM-Periode, Default = 1000 ms.
+
+
+
+    def on(self):
+
+        Aktiviert die Ausgabe des PWM-Signals mit dem aktuell gesetzten 
+        PWM-Tastverhältnis.
+
+
+    def off(self):
+
+        Deaktiviert die Ausgabe des PWM-Signals.
+
+
+    def set_duty(self, duty_cycle):
+
+        Setzt das Tastverhältnis des PWM-Signals. Die Ausgabe an die 
+        Leistungsstufe erfolgt erst nach Aufruf der on-Methode.
+
+        Argument:   duty_cycle      Tastverhältnis, 0-100%
+
+
+    def get_duty(self):
+
+        Liefert das aktuell gesetzte Tastverhältnis zurück (int).
+
+
+    def get_state(self):
+
+        Liefert den aktuellen Zustand der Signal-Ausgabe zurück (bool).
+
+
+    def update(self):
+
+        Aktualisiert das PWM-Signal. Wird über die Main-Loop aufgerufen. Für
+        eine stabile Signalisierung sollte die Methode mindestens alle 100 ms
+        ausgeführt werden.
+
+
+class TempSensor:
+-----------------
+
+    Diese Klasse wertet den vorgegebenen NTC-Temperaturfühler der Maschine aus.
+    Statt über eine grafisch bestimmte Linearisierung wird die Temperatur unter
+    Berücksichtigung der ausgemessenen Werte der Messschaltung und des NTC 
+    berechnet.
+
+
+    def __init__(self, adc_pin, R0, RT, R1, R2, VREF):
+
+        Initialisierung des Temperatur-Sensor-Objekts. Für die Berechnung sind
+        die tatsächlichen Werte der in der Schaltung eingesetzten Bauelemente
+        notwendig.
+
+        Argumente:      adc_pin     ADC-Eingang für die Messwerterfassung.
+                        R0          Widerstand NTC @ 25°C
+                        RT          Widerstand NTC @ 85°C
+                        R1          Wert R1 aus Messschaltung [Ohm]
+                        R2          Wert R2 aus Messschaltung [Ohm]
+                        VREF        Referenz-Spannung des ADC
+
+
+    def update(self):
+
+        Aktualisiert die Temperatur-Berechnungen. Muss ein Mal pro Durchgang
+        in der Main-Loop aufgerufen werden.
+
+
+    def get_temp(self):
+
+        Liefert die aktuell ermittelte Temperatur in °C zurück.
+
+
+class LogOutput:
+----------------
+
+    Bereitet diverse Mess- und Status-werte für eine regelmässige Ausgabe auf der Konsole
+    oder für die Übernahme in die Log-Datei auf. 
+
+
+    def __init__(self, interval):
+
+        Initialisierung des Log-Objektes.
+
+        Argumente:      interval    Ausgabe-Intervall in ms.
+
+
+    def update(self, show = True):
+
+        Aktualisiert alle Log-Werte im definierten Zeitintervall. Muss ein 
+        Mal pro Durchgang in der Main-Loop aufgerufen werden.
+
+        Argumente:      show    True = Ausgabe auf Konsole
+
+
+    def new_data(self):
+
+        Prüft, ob seit letzter Abfrage neue Werte vorliegen.
+
+        Argumente:      keine
+        Rückgabewert:   True, wenn neue Werte anleigen, sonst False
+
+
+    def get_data(self):
+
+        Liefert Liste mit allen Werten zurück, z.B. zur Speicherung in einer 
+        Datei über die Methoden der Klasse Log2File.
+
+        Argumente:      keine
+        Rückgabewert:   Liste mit aktuellen Log-Werten.
+                        [Time, Pump, Heater, Duty, Temp, Xa, P, I, D, RAM, Status]
+
+
+class Log2File:
+---------------
+
+    Klasse: log2disk.py
+
+    Schreibt Log-Daten in Datei.
+
+
+    def __init__(self, fname="log.txt", headline='', delimiter=";", max_entries=0, append=False):
+
+        Initialisierung: x = log2disk(fname = "logname.txt", fpath = ".")
+
+        Argumente:  fname          Name der Logdatei
+                    fpath          Pfad der Logdatei
+                    delimiter      Standardwert = '|'
+                    max_entries    Standardwert 0 = Endlos-Aufzeichnung
+                    append         True = Fügt Datein bestehendem Log an
+
+
+    def writeln(self, logdata):
+
+        Schreibt aktuelle Werte in Log-Datei.
+
+        Argumente:  logdata         Log-Einträge als Liste.
+
+
+    def removeFirstLogEntry(self):
+
+        Entfernt ersten Log-Eintrag aus Log-Datei. Wird bei rollender Aufzeichnung
+        vor dem Anfügen eines neuen Eintrages aufgerufen.
+
+        Argumente:          keine
+
+
+class PID:
+----------
+
+    Klasse eines einfachen PID-Kontrollers. 
+    http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
+    
+
+
+    def __init__(self, set_point, Kp=3, Ki=0.01, Kd=0.0, sample_time=1000):
+
+        Initialisiert das PID-Objekt.
+
+        Argumente:      set_point       Sollwert, z.B. Zieltemperatur
+                        Kp              Proportionaler Beiwert, Default = 3
+                        Ki              Integraler Beiwert, Default = 0.01
+                        Kd              Differenzieller Beiwert, Default = 0
+                        sample_time     Zeitintervall zwischen zwei Berechnungen
+
+
+    def set(self, Kp, Ki, Kd):
+
+        Setzt bei Bedarf neue PID-Werte. Dann sinvoll, wenn eine Strecke sich 
+        je nach Betriebszustand sehr unterschiedlich verhält. Z.B. mit und ohne
+        starker Wärmeabführung.
+
+
+    def update(self, input):
+
+        Berechnet im vorgegebenen Intervall eine neue Stellgrösse. Die Update-
+        Methode muss mindestens ein Mal pro Zeitintervall über die Main-Loop
+        aufgerufen werden.
+
+        Argumente:      input   Istwert, aktuelle Rückführgrösse
+
+
+    def set_manual_mode(self, manual_mode=False):
+
+        Wird der Aktor (z.B. Heizelement) manuell deaktiviert, sollte auch
+        der PID-Regler in den manuellen Modus geschaltet werden, um ein
+        ungünstiges Hochlaufen der Regeldifferenz zu verhindern.
+        Bei Wiederaufnahme der Berechnung startet der PID-Regler mit dem
+        aktuellen Istwert und eingeschränktem Integralteil.
+
+        Argument:       manual_mode     True = kontinuierliche Berechnung
+                                        False = Nachführung ausgesetzt
+
+
+    def new_output(self):
+
+        Prüft, on eine neue Stellgrösse vorliegt.
+
+        Argumente:      keine
+        Rückgabewert:   True, wenn neue Stellgrösse, sonst False
+
+
+def limit(value, minimum, maximum):
+-----------------------------------
+
+    Limitiert einen beliebigen Wert auf einen definierten Bereich.
+
+    Argumente:      value       zu prüfender Wert
+                    minimum     Minimalwert
+                    maximum     Maximalwert
+
+    Rückgabewert:   Minimum <= Wert <= Maximum
+
+
+def main():
+-----------
+
+    Main-Loop für uController
+
+
+

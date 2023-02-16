@@ -94,34 +94,21 @@ SELECT
         `first_name` AS Vorname,
         `last_name`  AS Nachname
 FROM `sakila`.`actor`
-WHERE `first_name` LIKE BINARY 'NICK'
+WHERE `first_name`  LIKE BINARY 'NICK'            OR   -- Nick (case-insensitive)
+	   `first_name` LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
+       `first_name` LIKE '___'              -- _ genau ein Zeichen
 ORDER BY
-    last_name DESC,
-    first_name;
-
-
-
-
-
-
-
-
-
-
-
-
-
+    `last_name` DESC,
+    `first_name`;
 
 
 -- 1.10) Liste alle Schauspielern (Vorname und Nachname) auf, bei welchen der Nachname mit BER beginnt oder deren Vorname mit NA endet
 -- https://dev.mysql.com/doc/refman/5.7/en/regexp.html
-
-
-
-
-
-
-
+SELECT 
+        `first_name` AS Vorname,
+        `last_name`  AS Nachname
+FROM  `actor`
+WHERE `first_name` REGEXP "^BER";
 
 
 -- 1.11) Liste film_id, title, rating, special_features von der Tabelle film auf.

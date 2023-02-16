@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Partner_Name_Angenommen`  BOOLEAN DEFAULT FALSE,
   `AHV_Nr`                   VARCHAR(45) NULL,
   `Betriebs_Nr`              VARCHAR(45) NULL,
+  `Genossen_Partner` 		 INT NULL,
   `Vater` 					 INT NULL,
   `Mutter` 					 INT NULL,
   `Zivilstand`  ENUM('Ledig','Verheiratet','Geschieden','Verwitwed','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
@@ -174,21 +175,11 @@ CREATE TABLE IF NOT EXISTS Personen (
   -- Indizes
   INDEX `fk_Personen_Adressen1_idx` (`Privat_Adressen_id` ASC)     VISIBLE,
   INDEX `fk_Personen_Adressen2_idx` (`Geschaefts_Adressen_id` ASC) VISIBLE,
-  INDEX `fk_Personen_Adressen3_idx` (`Vater` ASC) VISIBLE,
-  INDEX `fk_Personen_Adressen4_idx` (`Mutter` ASC) VISIBLE,
+  INDEX `fk_Personen_Adressen3_idx` (`Vater` ASC)                  VISIBLE,
+  INDEX `fk_Personen_Adressen4_idx` (`Mutter` ASC)                 VISIBLE,
+  INDEX `fk_Personen_Adressen5_idx` (`Genossen_Partner` ASC)       VISIBLE,
   
   -- FK-Constraints
-    CONSTRAINT `fk_Personen_Adressen3`
-    FOREIGN KEY (`Vater`)
-    REFERENCES `Person` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Personen_Adressen4`
-    FOREIGN KEY (`Mutter`)
-    REFERENCES `Person` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  
   CONSTRAINT `fk_Personen_Adressen1`
     FOREIGN KEY (`Privat_Adressen_id`)
     REFERENCES `Adressen` (`id`)
@@ -198,8 +189,23 @@ CREATE TABLE IF NOT EXISTS Personen (
     FOREIGN KEY (`Geschaefts_Adressen_id`)
     REFERENCES `Adressen` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  
+  CONSTRAINT `fk_Personen_Adressen3`
+    FOREIGN KEY (`Vater`)
+    REFERENCES `Person` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Personen_Adressen4`
+    FOREIGN KEY (`Mutter`)
+    REFERENCES `Person` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Personen_Adressen5`
+    FOREIGN KEY (`Genossen_Partner`)
+    REFERENCES `Person` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-
 
 -- -----------------------------------------------------
 -- Table `EMail_Adressen`

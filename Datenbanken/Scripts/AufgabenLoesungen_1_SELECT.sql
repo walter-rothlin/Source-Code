@@ -18,6 +18,7 @@
 -- 20-Mar-2022	 Walter Rothlin      Added DATE and TIME functions
 -- 25-Mar-2022	 Walter Rothlin      Added Variablen
 -- 10-Feb-2023	 Walter Rothlin      Added SET and ENUM in Where-Clause
+-- 16-Feb-2023	 Walter Rothlin      Changed GROUP-BY questions
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -136,7 +137,7 @@ SELECT
 FROM 
     actor
 WHERE
-    -- in where-clause koennen keine Alias verwendet werden     
+    -- in where-clause koennen keine Alias verwendet werden
     -- FName      = 'NICK'            OR
     first_name = 'NICK'           OR   -- Nick (case-insensitive)
     first_name LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
@@ -144,7 +145,17 @@ WHERE
 ORDER BY
     FName,   -- hier koennen ALIAS verwendet werden
     LName;
-
+    
+SELECT 
+        `first_name` AS Vorname,
+        `last_name`  AS Nachname
+FROM `sakila`.`actor`
+WHERE `first_name`  LIKE BINARY 'NICK'            OR   -- Nick (case-insensitive)
+	   `first_name` LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
+       `first_name` LIKE '___'              -- _ genau ein Zeichen
+ORDER BY
+    `last_name` DESC,
+    `first_name`; 
     
 -- 1.10) Liste alle Schauspielern (Vorname und Nachname) auf, bei welchen der Nachname mit BER beginnt oder deren Vorname mit NA endet
 -- https://dev.mysql.com/doc/refman/5.7/en/regexp.html
@@ -185,55 +196,51 @@ FROM
     film
 WHERE FIND_IN_SET(special_features, 'Commentaries') > 0;
 
--- 1.12) Erstellen Sie eine Listen der bezahlten Betraege (FROM payment), sortiert nach customer_id und Betraege
+-- 1.12) Erstellen Sie eine Listen der bezahlten Betraege (FROM payment), sortiert nach Betraege
 SELECT 
-   customer_id,
-   amount
+   `p`.`customer_id`  AS `Customer_ID`,
+   `p`.`amount`       AS `Betrag`
 FROM 
-   payment
+   `payment` AS `p`
 ORDER BY
-   customer_id,
-   amount    DESC;
+   `amount`    DESC;
 
--- 1.12.1) Erstellen Sie eine Listen (mit Vor- und Nachnamen) der bezahlten Betraege (FROM payment), sortiert nach customer_id und Betraege   
+-- 1.12.1) Erstellen Sie eine Liste (mit Vor- und Nachnamen) der bezahlten Betraege (FROM payment), sortiert nach Betraege   
 SELECT
-   C.first_name,
-   C.last_name,
-   P.customer_id,
-   P.amount
+   `C`.`first_name`,
+   `C`.`last_name`,
+   `P`.`customer_id`,
+   `P`.`amount`
 FROM 
-   payment AS P
-LEFT JOIN customer AS C ON C.customer_id = P.customer_id
+   `payment` AS `P`
+INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
 ORDER BY
-   P.customer_id,
-   P.amount    DESC;
+   `P`.`amount`    DESC;
 
 -- 1.13) Erstellen Sie eine Listen aller Kunden_id mit deren Umsaetzen (FROM payment), sortiert nach customer_id und Betraege   
 SELECT 
-   P.customer_id,
-   sum(P.amount)
+   `P`.`customer_id`    AS `Customer_ID`,
+   sum(`P`.`amount`)    AS `Betrag`,
+   count(`P`.`amount`)  AS `Anzahl Kaeufe`
 FROM 
-   payment AS P
+   `payment` AS `P`
 GROUP BY
-   P.customer_id
-ORDER BY
-   P.customer_id,
-   P.amount    DESC;
+   `P`.`customer_id`
+ORDER BY `Betrag`;
 
 -- 1.13.1) Erstellen Sie eine Listen aller Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment), sortiert nach customer_id und Betraege   
 SELECT
-   C.first_name,
-   C.last_name,
-   P.customer_id,
-   sum(P.amount)
+   `C`.`first_name`     AS `Vorname`,
+   `C`.`last_name`      AS `Nachname`,
+   -- `P`.`customer_id` AS `Customer_ID`,
+   sum(`P`.`amount`)    AS `Betrag`,
+   count(`P`.`amount`)  AS `Anzahl Kaeufe`
 FROM 
-   payment AS P
-LEFT OUTER JOIN customer AS C ON C.customer_id = P.customer_id
+   `payment` AS `P`
+INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
 GROUP BY
-   P.customer_id
-ORDER BY
-   P.customer_id,
-   P.amount    DESC;
+   `P`.`customer_id`
+ORDER BY `Betrag`;
    
 -- 1.14) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
 --       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
