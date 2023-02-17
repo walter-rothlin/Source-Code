@@ -147,177 +147,175 @@ ORDER BY
     LName;
     
 SELECT 
-        `first_name` AS Vorname,
-        `last_name`  AS Nachname
-FROM `sakila`.`actor`
-WHERE `first_name`  LIKE BINARY 'NICK'            OR   -- Nick (case-insensitive)
-	   `first_name` LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
-       `first_name` LIKE '___'              -- _ genau ein Zeichen
+	`act`.`first_name` AS `Vorname`,
+	`act`.`last_name`  AS `Nachname`
+FROM `sakila`.`actor`  AS `act`
+WHERE `act`.`first_name` LIKE BINARY 'NICK'            OR   -- Nick (case-insensitive)
+	  `act`.`first_name` LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
+	  `act`.`first_name` LIKE '___'              -- _ genau ein Zeichen
 ORDER BY
-    `last_name` DESC,
-    `first_name`; 
+    `Nachname` DESC,  -- hier koennen ALIAS verwendet werden
+    `act`.`first_name`; 
     
--- 1.10) Liste alle Schauspielern (Vorname und Nachname) auf, bei welchen der Nachname mit BER beginnt oder deren Vorname mit NA endet
+-- 1.10) Liste alle Schauspielern (Vorname und Nachname) auf, 
+--       bei welchen der Nachname mit BER beginnt oder deren Vorname 
+--       mit NA endet
 -- https://dev.mysql.com/doc/refman/5.7/en/regexp.html
 SELECT 
-    first_name AS FName,
-    last_name  AS LName
-FROM
-    actor
+    `ac`.`first_name` AS `FName`,
+    `ac`.`last_name`  AS `LName`
+FROM `actor` AS `ac`
 WHERE    
-    last_name  REGEXP BINARY "^BER"  OR
-    first_name REGEXP BINARY "NA$";
+    `ac`.`last_name`  REGEXP '^BER'  OR
+    `ac`.`first_name` REGEXP 'NA$';
+	-- `ac`.`last_name`  LIKE 'BER%'  OR
+    -- `ac`.`first_name` LIKE '%NA';
     
--- 1.11) Liste film_id, title, rating, special_features von der Tabelle film auf.
---       Was ist der Type der Attribute rating und special_features?
+-- 1.11) Liste film_id, title, rating, special_features von der Tabelle film 
+--       auf. Was ist der Type der Attribute rating und special_features?
 SELECT 
-    film_id,
-    title,
-    rating,            -- Enumeration
-    special_features   -- Set / Menge
+    `film_id`,
+    `title`,
+    `rating`,            -- Enumeration
+    `special_features`   -- Set / Menge
 FROM
-    film;
+    `film`;
     
 SELECT 
-    film_id,
-    title,
-    rating,            -- Enumeration
-    special_features   -- Set / Menge
+    `film_id`,
+    `title`,
+    `rating`,            -- Enumeration
+    `special_features`   -- Set / Menge
 FROM
-    film
-WHERE rating = 'PG';
+    `film`
+WHERE `rating` = 'PG';
 
 SELECT 
-    film_id,
-    title,
-    rating,            -- Enumeration
-    special_features   -- Set / Menge
+    `film_id`,
+    `title`,
+    `rating`,            -- Enumeration
+    `special_features`   -- Set / Menge
 FROM
-    film
-WHERE FIND_IN_SET(special_features, 'Commentaries') > 0;
+    `film`
+WHERE FIND_IN_SET(`special_features`, 'Commentaries') > 0;
 
--- 1.12) Erstellen Sie eine Listen der bezahlten Betraege (FROM payment), sortiert nach Betraege
+-- 1.12) Erstellen Sie eine Liste der bezahlten Betraege (FROM payment), 
+--       sortiert nach Betraege
 SELECT 
-   `p`.`customer_id`  AS `Customer_ID`,
-   `p`.`amount`       AS `Betrag`
+   `P`.`customer_id`  AS `Customer_ID`,
+   `P`.`amount`       AS `Betrag`
 FROM 
-   `payment` AS `p`
+   `payment` AS `P`
 ORDER BY
-   `amount`    DESC;
+   `Customer_ID`,
+   `Betrag`         DESC;
 
--- 1.12.1) Erstellen Sie eine Liste (mit Vor- und Nachnamen) der bezahlten Betraege (FROM payment), sortiert nach Betraege   
+-- 1.12.1) Erstellen Sie eine Liste (mit Vor- und Nachnamen) der bezahlten 
+--         Beträge (FROM payment), sortiert nach Beträge   
 SELECT
-   `C`.`first_name`,
-   `C`.`last_name`,
-   `P`.`customer_id`,
-   `P`.`amount`
+   `C`.`first_name`   AS `Vorname`,
+   `C`.`last_name`    AS `Nachname`,
+   `P`.`customer_id`  AS `FK`,
+   `P`.`amount`       AS `Betrag`
 FROM 
    `payment` AS `P`
 INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
 ORDER BY
-   `P`.`amount`    DESC;
+   `Betrag`    DESC;
 
--- 1.13) Erstellen Sie eine Listen aller Kunden_id mit deren Umsaetzen (FROM payment), sortiert nach customer_id und Betraege   
+-- 1.13) Erstellen Sie eine Liste aller Kunden_id mit deren Umsätzen 
+--       und Anzahl Rechnungen (FROM payment), sortiert nach customer_id und Beträge   
 SELECT 
    `P`.`customer_id`    AS `Customer_ID`,
    sum(`P`.`amount`)    AS `Betrag`,
    count(`P`.`amount`)  AS `Anzahl Kaeufe`
-FROM 
-   `payment` AS `P`
-GROUP BY
-   `P`.`customer_id`
+FROM `payment` AS `P`
+GROUP BY `P`.`customer_id`
 ORDER BY `Betrag`;
 
--- 1.13.1) Erstellen Sie eine Listen aller Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment), sortiert nach customer_id und Betraege   
+-- 1.13.1) Erstellen Sie eine Liste aller Kunden_id, Vor- und Nachnamen 
+-- mit deren Umsätzen und Anzahl Rechnungen (FROM payment), 
+-- sortiert nach Umsätzen (höchster zu oberst).
+-- Wer sind unsere 'besten' (umsatzstärksten) Kunden
 SELECT
    `C`.`first_name`     AS `Vorname`,
    `C`.`last_name`      AS `Nachname`,
    -- `P`.`customer_id` AS `Customer_ID`,
-   sum(`P`.`amount`)    AS `Betrag`,
-   count(`P`.`amount`)  AS `Anzahl Kaeufe`
-FROM 
-   `payment` AS `P`
+   sum(`P`.`amount`)    AS `Umsatz`,
+   count(`P`.`amount`)  AS `Anzahl Kaeufe`,
+   avg(`P`.`amount`)    AS `Durchschnitt`
+FROM `payment` AS `P`
 INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
-GROUP BY
-   `P`.`customer_id`
-ORDER BY `Betrag`;
+GROUP BY `P`.`customer_id`
+ORDER BY `Umsatz`  DESC;
    
--- 1.14) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
---       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
---       Nur von den Kunden mit ID < 5
+-- 1.13.2) Erstellen Sie eine Liste Kunden_id, Vor- und Nachnamen mit 
+--         deren Umsätzen (FROM payment), ordnen Sie die Liste nach den 
+--         Umsätzen (Bester Kunde zuoberst)
+--         Nur von den Kunden mit ID < 5
 SELECT
-   C.first_name,
-   C.last_name,
-   P.customer_id    AS Kunden_ID,
-   sum(P.amount)    AS Umsatz
-FROM 
-   payment as P
-LEFT OUTER JOIN customer as C on C.customer_id = P.customer_id
-WHERE P.customer_id < 5
-GROUP BY
-   P.customer_id
-Order BY
-   Umsatz DESC;
+   `C`.`first_name`     AS `Vorname`,
+   `C`.`last_name`      AS `Nachname`,
+   -- `P`.`customer_id` AS `Customer_ID`,
+   sum(`P`.`amount`)    AS `Umsatz`,
+   count(`P`.`amount`)  AS `Anzahl Kaeufe`,
+   avg(`P`.`amount`)    AS `Durchschnitt`
+FROM `payment` AS `P`
+INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
+WHERE `P`.`customer_id` < 5
+GROUP BY `P`.`customer_id`
+ORDER BY `Umsatz`  DESC;
    
--- 1.14) Erstellen Sie eine Listen Kunden_id mit deren Umsaetzen (FROM payment),
+-- 1.13.3) Erstellen Sie eine Liste mit Kunden_id mit deren Umsaetzen (FROM payment),
 --       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
 --       Nur von den Kunden mit einem Umsatz > 170
 SELECT 
-    UmsatzListe.Kunden_ID AS Kunde,
-    UmsatzListe.Umsatz    AS Sales
+    `UmsatzListe`.`Kunden_ID` AS `Kunde`,
+    `UmsatzListe`.`Umsatz`    AS `Sales`
 FROM (
     SELECT 
-       P.customer_id AS Kunden_ID,
-       sum(P.amount) AS Umsatz
-    FROM 
-       payment AS P
-    GROUP BY
-       P.customer_id
-    ORDER BY
-       P.customer_id,
-       P.amount    DESC) AS UmsatzListe
+       `P`.`customer_id` AS `Kunden_ID`,
+       sum(`P`.`amount`) AS `Umsatz`
+    FROM `payment` AS `P`
+    GROUP BY `P`.`customer_id`
+    ORDER BY `Umsatz`    DESC) AS `UmsatzListe`
 WHERE
-    UmsatzListe.Umsatz > 170;
+    `UmsatzListe`.`Umsatz` > 170;
 
--- 1.14.1) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
---       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
---       Nur von den Kunden mit einem Umsatz > 170
+-- 1.13.4) Erstellen Sie eine Liste Kunden_id, Vor- und Nachnamen mit 
+--         deren Umsätzen (FROM payment), ordnen Sie die Liste nach den 
+--         Umsätzen (Bester Kunde zuoberst)
+--         Nur von den Kunden mit einem Umsatz > 170
 SELECT 
-    UmsatzListe.Vorname   AS Firstname,
-    UmsatzListe.Nachname  AS Lastname,
-    UmsatzListe.Kunden_ID AS Kunde,
-    UmsatzListe.Umsatz    AS Sales
+    `UmsatzListe`.`Vorname`   AS `Firstname`,
+    `UmsatzListe`.`Nachname`  AS `Lastname`,
+    `UmsatzListe`.`Kunden_ID` AS `Kunde`,
+    `UmsatzListe`.`Umsatz`    AS `Sales`
 FROM (
     SELECT
-       C.first_name  AS Vorname,
-       C.last_name   AS Nachname,
-       P.customer_id AS Kunden_ID,
-       sum(P.amount) AS Umsatz
-    FROM 
-       payment AS P
-    LEFT OUTER JOIN customer AS C on C.customer_id = P.customer_id
-    GROUP BY
-       P.customer_id
-    ORDER BY
-       P.customer_id,
-       P.amount    DESC) AS UmsatzListe
+       `C`.`first_name`      AS `Vorname`,
+       `C`.`last_name`       AS `Nachname`,
+       `P`.`customer_id`     AS `Kunden_ID`,
+       sum(`P`.`amount`)     AS `Umsatz`
+    FROM `payment` AS `P`
+    LEFT OUTER JOIN `customer` AS `C` on `C`.`customer_id` = `P`.`customer_id`
+    GROUP BY `P`.`customer_id`
+    ORDER BY `Umsatz`    DESC) AS `UmsatzListe`
 WHERE
-    UmsatzListe.Umsatz > 170;
+    `UmsatzListe`.`Umsatz` > 170;
     
 
--- 1.14.2) Erstellen Sie eine Listen mit allen Staedten und die dazugehoerenden Laender.
+-- 1.14.1) Erstellen Sie eine Listen mit allen Staedten und die dazugehoerenden Laender.
 SELECT
-	A.city AS Stadt,
-    B.country AS Land
-FROM
-	city as A
-INNER JOIN country AS B ON A.country_id = B.country_id;
+	`CI`.`city`    AS `Stadt`,
+    `CO`.`country` AS `Land`
+FROM  `city` as `CI`
+INNER JOIN `country` AS `CO` ON `CI`.`country_id` = `CO`.`country_id`;
 
 SELECT
 	A.city AS Stadt,
     B.country AS Land
-FROM
-	city as A
+FROM city as A
 INNER JOIN country AS B ON A.country_id = B.country_id;
 
 SELECT
