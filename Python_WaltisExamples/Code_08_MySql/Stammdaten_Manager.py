@@ -283,10 +283,23 @@ def read_from_file_and_call_stored_procedure(
             lintNutzenKey = a_data_tuple['lintNutzenKey']
             if lintNutzenKey == '':
                 lintNutzenKey = '-1'
-            lintZivilstandkey = a_data_tuple['lintZivilstandkey']
-            if lintZivilstandkey == '':
-                lintZivilstandkey = '-1'
 
+            match a_data_tuple['lintZivilstandkey']:
+                case '-1':
+                    zivilstand = 'Unbestimmt'
+                case '1':
+                    zivilstand = 'Ledig'
+                case '2':
+                    zivilstand = 'Verheiratet'
+                case '3':
+                    zivilstand = 'Geschieden'
+                case '4':
+                    zivilstand = 'Getrennt'
+                case '5':
+                    zivilstand = 'Verwitwet'
+                case other:
+                    zivilstand = 'Leer'
+            Zivilstand = "Zivilstand = '" + str(zivilstand) + "',"
 
             # Boolean Values
             bolNutzenberechtigung = ifTrue(a_data_tuple['bolNutzenberechtigung'])
@@ -375,10 +388,11 @@ def read_from_file_and_call_stored_procedure(
                                 """ + Bemerkungen + """
                                 """ + Baulandgesuch_Details + """
                                 """ + kategorien + """
+                                """ + Zivilstand + """
+                                
                      
                                 -- Legacy Fields
                                 lintNutzenKey            = """ + str(lintNutzenKey) + """,
-                                lintZivilstandkey        = """ + lintZivilstandkey + """,
                                 
                                 -- Boolean Values
                                 bolNutzenberechtigung    = """ + str(bolNutzenberechtigung) + """,

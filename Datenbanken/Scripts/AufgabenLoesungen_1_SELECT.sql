@@ -197,7 +197,7 @@ SELECT
     `special_features`   -- Set / Menge
 FROM
     `film`
-WHERE FIND_IN_SET(`special_features`, 'Commentaries') > 0;
+WHERE FIND_IN_SET('Commentaries', `special_features`) > 0 OR FIND_IN_SET('Trailers', `special_features`) > 0;
 
 -- 1.12) Erstellen Sie eine Liste der bezahlten Betraege (FROM payment), 
 --       sortiert nach Betraege

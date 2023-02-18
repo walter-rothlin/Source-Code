@@ -12,8 +12,9 @@
 -- 17-Jun_2022   Walter Rothlin		 Added Waermebezueger and its relations
 -- 15-Jul-2022   Walter Rothlin      Added Functions and extended views with functions fields
 -- 14-Jan-2023   Walter Rothlin      Prepared for takeover from Buerger_DB
---                                   Added landteil
+-- 21-Jan-2023   Walter Rothlin      Added landteil
 -- 08-Feb-2023   Walter Rothlin      Added more attributes to Person, Landteil
+-- 18-Feb-2023   Walter Rothlin      Fix Charset issue in firstUpper()
 -- ---------------------------------------------------------------------------------------------
 
 -- MySQL Workbench Forward Engineering
@@ -42,38 +43,38 @@ USE stammdaten;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Land;
 CREATE TABLE IF NOT EXISTS Land (
-  `id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Name`          VARCHAR(45) NOT NULL,
   `Code`          VARCHAR(5) NULL,
   `Landesvorwahl` VARCHAR(4) NULL,
   `last_update`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   
   -- PK-Constraints
-  PRIMARY KEY (`id`));
+  PRIMARY KEY (`ID`));
 
 -- -----------------------------------------------------
 -- Table `Orte`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Orte;
 CREATE TABLE IF NOT EXISTS Orte (
-  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `PLZ`         VARCHAR(10) NOT NULL,
   `Name`        VARCHAR(45) NULL,
-  `Land_id`     INT UNSIGNED NULL DEFAULT 1,
+  `Land_ID`     INT UNSIGNED NULL DEFAULT 1,
   `Kanton`      VARCHAR(10) NULL,
   `Tel_Vorwahl` VARCHAR(3) NULL,
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
   
   -- Indizes
-  INDEX `fk_Orte_Land1_idx` (`Land_id` ASC) VISIBLE,
+  INDEX `fk_Orte_Land1_idx` (`Land_ID` ASC) VISIBLE,
   
   -- FK-Constraints
   CONSTRAINT `fk_Orte_Land1`
-    FOREIGN KEY (`Land_id`)
-    REFERENCES `Land` (`id`)
+    FOREIGN KEY (`Land_ID`)
+    REFERENCES `Land` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -83,28 +84,28 @@ CREATE TABLE IF NOT EXISTS Orte (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Adressen;
 CREATE TABLE IF NOT EXISTS Adressen (
-  `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Strasse`        VARCHAR(45) NULL,
   `Hausnummer`     VARCHAR(5) NULL,
   `Postfachnummer` VARCHAR(5) NULL,
   `Adresszusatz`   VARCHAR(20) NULL,
   `Wohnung`        VARCHAR(10) NULL,
-  `Orte_id`        INT UNSIGNED NULL,
+  `Orte_ID`        INT UNSIGNED NULL,
   `KatasterNr`     VARCHAR(10) NULL,
   `x_CH1903`       INT(7) UNSIGNED NULL,
   `y_CH1903`       INT(7) UNSIGNED NULL,
   `last_update`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
   
   -- Indizes
-  INDEX `fk_Adressen_Orte_idx` (`Orte_id` ASC) VISIBLE,
+  INDEX `fk_Adressen_Orte_idx` (`Orte_ID` ASC) VISIBLE,
   
   -- FK-Constraints
   CONSTRAINT `fk_Adressen_Orte`
-    FOREIGN KEY (`Orte_id`)
-    REFERENCES `Orte` (`id`)
+    FOREIGN KEY (`Orte_ID`)
+    REFERENCES `Orte` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -115,7 +116,7 @@ CREATE TABLE IF NOT EXISTS Adressen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Personen;
 CREATE TABLE IF NOT EXISTS Personen (
-  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Source`      ENUM('Initial_1', 'Loader_1', 'BuergerDB','ImmoTop') DEFAULT NULL,
   `History`     VARCHAR(500) NULL,
   `Bemerkungen` VARCHAR(500) NULL,
@@ -132,9 +133,10 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Genossen_Partner` 		 INT NULL,
   `Vater` 					 INT NULL,
   `Mutter` 					 INT NULL,
-  `Zivilstand`  ENUM('Ledig','Verheiratet','Geschieden','Verwitwed','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
+  `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt','Geschieden','Verwitwet','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
   `Kategorien`  SET('Firma','Bürger','Angestellter', 'Auftragnehmer','Genossenrat','Bewirtschafter','Landteilbesitzer',
-					'Pächter','Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezüger', 'Nutzungsberechtigt') DEFAULT NULL,
+					'Pächter','Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezüger', 'Nutzungsberechtigt', 
+                    'Betriebsgemeinschaft', 'Generationengemeinschaft') DEFAULT NULL,
   
   -- Datumsangaben
   `Geburtstag`                   DATE NULL,
@@ -161,49 +163,48 @@ CREATE TABLE IF NOT EXISTS Personen (
   bolLandwirt					BOOL DEFAULT FALSE,
   bolGenossenbürger			    BOOL DEFAULT FALSE,
   bolBürgerauflage  			BOOL DEFAULT FALSE,
-  lintZivilstandkey             SMALLINT,
   
   -- FK: Adressen
-  `Privat_Adressen_id`          INT UNSIGNED NULL,
-  `Geschaefts_Adressen_id`      INT UNSIGNED NULL,
+  `Privat_Adressen_ID`          INT UNSIGNED NULL,
+  `Geschaefts_Adressen_ID`      INT UNSIGNED NULL,
   
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
   
   -- Indizes
-  INDEX `fk_Personen_Adressen1_idx` (`Privat_Adressen_id` ASC)     VISIBLE,
-  INDEX `fk_Personen_Adressen2_idx` (`Geschaefts_Adressen_id` ASC) VISIBLE,
+  INDEX `fk_Personen_Adressen1_idx` (`Privat_Adressen_ID` ASC)     VISIBLE,
+  INDEX `fk_Personen_Adressen2_idx` (`Geschaefts_Adressen_ID` ASC) VISIBLE,
   INDEX `fk_Personen_Adressen3_idx` (`Vater` ASC)                  VISIBLE,
   INDEX `fk_Personen_Adressen4_idx` (`Mutter` ASC)                 VISIBLE,
   INDEX `fk_Personen_Adressen5_idx` (`Genossen_Partner` ASC)       VISIBLE,
   
   -- FK-Constraints
   CONSTRAINT `fk_Personen_Adressen1`
-    FOREIGN KEY (`Privat_Adressen_id`)
-    REFERENCES `Adressen` (`id`)
+    FOREIGN KEY (`Privat_Adressen_ID`)
+    REFERENCES `Adressen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Personen_Adressen2`
-    FOREIGN KEY (`Geschaefts_Adressen_id`)
-    REFERENCES `Adressen` (`id`)
+    FOREIGN KEY (`Geschaefts_Adressen_ID`)
+    REFERENCES `Adressen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   
   CONSTRAINT `fk_Personen_Adressen3`
     FOREIGN KEY (`Vater`)
-    REFERENCES `Person` (`id`)
+    REFERENCES `Person` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Personen_Adressen4`
     FOREIGN KEY (`Mutter`)
-    REFERENCES `Person` (`id`)
+    REFERENCES `Person` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Personen_Adressen5`
     FOREIGN KEY (`Genossen_Partner`)
-    REFERENCES `Person` (`id`)
+    REFERENCES `Person` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -212,14 +213,14 @@ CREATE TABLE IF NOT EXISTS Personen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS EMail_Adressen;
 CREATE TABLE IF NOT EXISTS EMail_Adressen (
-  `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `eMail`        VARCHAR(45)  NOT NULL,
   `Type`         ENUM('Privat', 'Geschaeft', 'Sonstige')  NULL,
   `Prio`         TINYINT      NOT NULL DEFAULT 0, 
   `last_update`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   -- PK-Constraints
-  PRIMARY KEY (`id`));
+  PRIMARY KEY (`ID`));
 
 
 -- -----------------------------------------------------
@@ -227,27 +228,27 @@ CREATE TABLE IF NOT EXISTS EMail_Adressen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Personen_has_EMail_Adressen;
 CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
-  `id`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Personen_id`       INT UNSIGNED NOT NULL,
-  `EMail_Adressen_id` INT UNSIGNED NOT NULL,
+  `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Personen_ID`       INT UNSIGNED NOT NULL,
+  `EMail_Adressen_ID` INT UNSIGNED NOT NULL,
   `last_update`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
     
   -- Indizes
-  INDEX `fk_Personen_has_EMail_Adressen_EMail_Adressen1_idx` (`EMail_Adressen_id` ASC) VISIBLE,
-  INDEX `fk_Personen_has_EMail_Adressen_Personen1_idx`       (`Personen_id` ASC)       VISIBLE,
+  INDEX `fk_Personen_has_EMail_Adressen_EMail_Adressen1_idx` (`EMail_Adressen_ID` ASC) VISIBLE,
+  INDEX `fk_Personen_has_EMail_Adressen_Personen1_idx`       (`Personen_ID` ASC)       VISIBLE,
   
   -- FK-Constraints
   CONSTRAINT `fk_Personen_has_EMail_Adressen_Personen1`
-    FOREIGN KEY (`Personen_id`)
-    REFERENCES `Personen` (`id`)
+    FOREIGN KEY (`Personen_ID`)
+    REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Personen_has_EMail_Adressen_EMail_Adressen1`
-    FOREIGN KEY (`EMail_Adressen_id`)
-    REFERENCES `EMail_Adressen` (`id`)
+    FOREIGN KEY (`EMail_Adressen_ID`)
+    REFERENCES `EMail_Adressen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -257,7 +258,7 @@ CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Telefonnummern` ;
 CREATE TABLE IF NOT EXISTS `Telefonnummern` (
-  `id`           INT UNSIGNED                                 NOT NULL AUTO_INCREMENT,
+  `ID`           INT UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `Laendercode`  VARCHAR(4)                                   NOT NULL DEFAULT '0041',
   `Vorwahl`      VARCHAR(3)                                   NULL,
   `Nummer`       VARCHAR(11)                                  NULL,
@@ -267,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `Telefonnummern` (
   `last_update`  TIMESTAMP                                    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
-  PRIMARY KEY (`id`));
+  PRIMARY KEY (`ID`));
 
 
 -- -----------------------------------------------------
@@ -275,27 +276,27 @@ CREATE TABLE IF NOT EXISTS `Telefonnummern` (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Personen_has_Telefonnummern`;
 CREATE TABLE IF NOT EXISTS `Personen_has_Telefonnummern` (
-  `id`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Personen_id`       INT UNSIGNED NOT NULL,
-  `Telefonnummern_id` INT UNSIGNED NOT NULL,
+  `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Personen_ID`       INT UNSIGNED NOT NULL,
+  `Telefonnummern_ID` INT UNSIGNED NOT NULL,
   `last_update`       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
   
   -- Indizes
-  INDEX `fk_Personen_has_Telefonnummern_Telefonnummern1_idx` (`Telefonnummern_id` ASC) VISIBLE,
-  INDEX `fk_Personen_has_Telefonnummern_Personen1_idx`       (`Personen_id` ASC)       VISIBLE,
+  INDEX `fk_Personen_has_Telefonnummern_Telefonnummern1_idx` (`Telefonnummern_ID` ASC) VISIBLE,
+  INDEX `fk_Personen_has_Telefonnummern_Personen1_idx`       (`Personen_ID` ASC)       VISIBLE,
   
   -- FK-Constraints
   CONSTRAINT `fk_Personen_has_Telefonnummern_Personen1`
-    FOREIGN KEY (`Personen_id`)
-    REFERENCES `Personen` (`id`)
+    FOREIGN KEY (`Personen_ID`)
+    REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Personen_has_Telefonnummern_Telefonnummern1`
-    FOREIGN KEY (`Telefonnummern_id`)
-    REFERENCES `Telefonnummern` (`id`)
+    FOREIGN KEY (`Telefonnummern_ID`)
+    REFERENCES `Telefonnummern` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
     
@@ -304,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `Personen_has_Telefonnummern` (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Waermebezueger`;
 CREATE TABLE IF NOT EXISTS `Waermebezueger` (
-  `id`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `kW_Leistung`          INT UNSIGNED NULL,
   `ZaehlerNr`            VARCHAR(20) NULL,
   `Vertragsende`         DATE NULL,
@@ -315,7 +316,7 @@ CREATE TABLE IF NOT EXISTS `Waermebezueger` (
   `last_update`          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
   
   -- Indizes
   INDEX `fk_Waermebezueger_Adressen1_idx` (`Objekt_Adresse` ASC)       VISIBLE,
@@ -326,22 +327,22 @@ CREATE TABLE IF NOT EXISTS `Waermebezueger` (
   -- FK-Constraints
   CONSTRAINT `fk_Waermebezueger_Adressen1`
     FOREIGN KEY (`Objekt_Adresse`)
-    REFERENCES `Adressen` (`id`)
+    REFERENCES `Adressen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Waermebezueger_Personen1`
     FOREIGN KEY (`Objekt_Owner`)
-    REFERENCES `Personen` (`id`)
+    REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Waermebezueger_Personen2`
     FOREIGN KEY (`Rechnungs_Empfaenger`)
-    REFERENCES `Personen` (`id`)
+    REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Waermebezueger_Personen3`
     FOREIGN KEY (`Handwerker`)
-    REFERENCES `Personen` (`id`)
+    REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -350,44 +351,68 @@ CREATE TABLE IF NOT EXISTS `Waermebezueger` (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Landteil`;
 CREATE TABLE IF NOT EXISTS `Landteil` (
-  `id`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `AV_Parzellen_Nr`      VARCHAR(20) NOT NULL,
   `GENO_Parzellen_Nr`    VARCHAR(20) NOT NULL,
   `Flur_Bezeichnung`     VARCHAR(20) NULL,
+  `Gemeindegebiet_ID`    INT UNSIGNED NULL,
+  
   `Flaeche_In_Aren`      FLOAT UNSIGNED NULL,
   `Pachtzins_Pro_Are`    FLOAT UNSIGNED NULL,
+  `Fix_Pachtzins`        FLOAT UNSIGNED NULL,
+  `Vertragsart`          ENUM('Pachtvertrag','Fixpacht','Gebrauchsleihe','Gekündigt','Bürger_ist_Verpächter') DEFAULT NULL,
+  
   `Buergerlandteil`      ENUM('16a','35a','Geno') DEFAULT NULL,
-  `Qualitaet`            ENUM('Futter','Streu','Verbuscht') DEFAULT NULL,
+  `Qualitaet`            ENUM('Futter','Streu','Verbuscht','Wald') DEFAULT NULL,
   `Polygone_Flaeche`     VARCHAR(300) NULL,
-  `Vertragsende`         DATE NULL,
-  `Rueckgabe_Am`         DATE NULL,
-  `Paechter_Adresse`     INT UNSIGNED NULL,
-  `Verpaechter_Adresse`  INT UNSIGNED NOT NULL,
-  `Gemeindegebiet`       INT UNSIGNED NULL,
+  
+   `Pachtbeginn_Am`      DATE NULL,
+   `Rueckgabe_Am`        DATE NULL,
+   `Vertragsende_Am`     DATE NULL,
+   `Pachtende_Am`        DATE NULL,
+
+  `Paechter_ID`                  INT UNSIGNED NULL,
+  `Verpaechter_ID`               INT UNSIGNED NOT NULL,
+  `Vorheriger_Paechter_ID`       INT UNSIGNED NULL,
+  `Vorheriger_Verpaechter_ID`    INT UNSIGNED NOT NULL,
+
   `last_update`          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
   
   -- Indizes
-  INDEX `fk_Landteil_Paechter_Adresse_idx`    (`Paechter_Adresse` ASC)       VISIBLE,
-  INDEX `fk_Landteil_Verpaechter_Adresse_idx` (`Verpaechter_Adresse` ASC)    VISIBLE,
-  INDEX `fk_Landteil_Gemeindegebiet_idx`      (`Gemeindegebiet` ASC)    VISIBLE,
+  INDEX `fk_Landteil_Paechter_Adresse_idx`        (`Paechter_ID`               ASC)    VISIBLE,
+  INDEX `fk_Landteil_Verpaechter_Adresse_idx`     (`Verpaechter_ID`            ASC)    VISIBLE,
+  INDEX `fk_Landteil_Pre_Paechter_Adresse_idx`    (`Vorheriger_Paechter_ID`    ASC)    VISIBLE,
+  INDEX `fk_Landteil_Pre_Verpaechter_Adresse_idx` (`Vorheriger_Verpaechter_ID` ASC)    VISIBLE,
+  INDEX `fk_Landteil_Gemeindegebiet_idx`          (`Gemeindegebiet_ID`         ASC)    VISIBLE,
 
   -- FK-Constraints
-  CONSTRAINT `fk_Landteil_Paechter_Adresse`
-    FOREIGN KEY (`Paechter_Adresse`)
-    REFERENCES `Personen` (`id`)
+  CONSTRAINT `fk_Paechter_ID`
+    FOREIGN KEY (`Paechter_ID`)
+    REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `Landteil_Verpaechter_Adresse`
-    FOREIGN KEY (`Verpaechter_Adresse`)
-    REFERENCES `Personen` (`id`)
+  CONSTRAINT `fk_Verpaechter_ID`
+    FOREIGN KEY (`Verpaechter_ID`)
+    REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Pre_Verpaechter_ID`
+    FOREIGN KEY (`Vorheriger_Paechter_ID`)
+    REFERENCES `Personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Pre_Paechter_ID`
+    FOREIGN KEY (`Vorheriger_Verpaechter_ID`)
+    REFERENCES `Personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+
   CONSTRAINT `Landteil_Gemeindegebiet`
-    FOREIGN KEY (`Gemeindegebiet`)
-    REFERENCES `Orte` (`id`)
+    FOREIGN KEY (`Gemeindegebiet_ID`)
+    REFERENCES `Orte` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -397,25 +422,25 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `IBAN` ;
 CREATE TABLE IF NOT EXISTS `IBAN` (
-  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Nummer`      VARCHAR(26) NOT NULL,
   `Bezeichnung` VARCHAR(45) NULL,
   `Bankname`    VARCHAR(45) NOT NULL DEFAULT '',
   `Bankort`     VARCHAR(45) NOT NULL DEFAULT '',
-  `personen_id` INT UNSIGNED NOT NULL,
+  `personen_ID` INT UNSIGNED NOT NULL,
   `Prio`        TINYINT      NOT NULL DEFAULT 0, 
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
        
   -- PK-Constraints
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`ID`),
   
   -- Indizes
-  INDEX `fk_iban_personen1_idx` (`personen_id` ASC) VISIBLE,
+  INDEX `fk_iban_personen1_idx` (`personen_ID` ASC) VISIBLE,
   
   -- FK-Constraints
   CONSTRAINT `fk_iban_personen1`
-     FOREIGN KEY (`personen_id`)
-     REFERENCES `personen` (`id`)
+     FOREIGN KEY (`personen_ID`)
+     REFERENCES `personen` (`ID`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION);
 
@@ -472,18 +497,23 @@ DELIMITER ;
 --  -------------------------------------------------------------
 DROP FUNCTION IF EXISTS firstUpper;
 Delimiter //
-CREATE FUNCTION firstUpper(p_str CHAR(100)) RETURNS CHAR(100)
+CREATE FUNCTION firstUpper(p_str VARCHAR(255)) RETURNS VARCHAR(255)
 BEGIN
-   RETURN  CONCAT(UPPER(LEFT(p_str, 1)), LOWER(RIGHT(p_str,LENGTH(p_str)-1)));
+   RETURN  CONCAT(UPPER(LEFT(p_str, 1)), LOWER(RIGHT(p_str,CHAR_LENGTH(p_str)-1)));
 END
 //
 DELIMITER ;
 
 -- Testen
--- SELECT firstUpper("herr");  -- --> Herr
--- SELECT firstUpper("HERR");  -- --> Herr
--- SELECT firstUpper("Herr");  -- --> Herr
--- SELECT firstUpper("hERR");  -- --> Herr
+/*
+-- SHOW CHARACTER SET;
+SELECT firstUpper("herr");  -- --> Herr
+SELECT firstUpper("HERR");  -- --> Herr
+SELECT firstUpper("Herr");  -- --> Herr
+SELECT firstUpper("hERR");  -- --> Herr
+SELECT firstUpper("züger");  -- --> Zzaüger
+SELECT firstUpper("zueger");  -- --> Zzaüger
+*/
 
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getInitial;
@@ -530,9 +560,9 @@ BEGIN
 		RETURN  '';
    ELSE
 		IF (p_vorname_short) THEN
-			RETURN  CONCAT(firstUpper(p_sex), ' ', LEFT(p_firstname, 1), '.', p_lastname);
+			RETURN  CONCAT(p_sex, ' ', LEFT(p_firstname, 1), '.', p_lastname);
 		ELSE
-            RETURN  CONCAT(firstUpper(p_sex), ' ', p_firstname, ' ', p_lastname);
+            RETURN  CONCAT(p_sex, ' ', p_firstname, ' ', p_lastname);
 		END IF;
    END IF;
 END
@@ -594,7 +624,7 @@ CREATE FUNCTION getFamilieName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_led
 BEGIN
 	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
 		IF (p_partner_name = '') THEN
-			RETURN  firstUpper(p_ledig_name);
+			RETURN  p_ledig_name;
 		ELSE
             IF (p_sex = 'Herr') THEN
 				IF (p_name_angenommen = True) THEN
@@ -763,14 +793,14 @@ CREATE VIEW Ort_Land AS
         o.last_update                            AS o_last_update,
         l.last_update                            AS l_last_update
 	FROM orte AS o
-	LEFT OUTER JOIN Land AS l ON o.Land_id = l.id;
+	LEFT OUTER JOIN Land AS l ON o.Land_ID = l.ID;
 
 -- SELECT * FROM Ort_Land;
 -- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS Adress_Daten; 
 CREATE VIEW Adress_Daten AS
 	SELECT
-		a.id                                      AS ID,
+		a.ID                                      AS ID,
 		a.Strasse                                 AS Strasse,
 		a.Hausnummer                              AS Hausnummer,
         a.postfachnummer                          AS Postfachnummer,
@@ -798,7 +828,7 @@ CREATE VIEW Telnr_Liste AS
 		getFamilieName(pers.Sex, 
                   pers.Partner_Name_Angenommen, 
                   pers.Ledig_Name, 
-                  pers.Partner_Name)                AS Familie_Name,          -- Rothlin-Collet
+                  pers.Partner_Name)                AS Familien_Name,          -- Rothlin-Collet
 		getName_With_Initial(pers.Vorname, 
                              pers.Vorname_2)        AS Vorname_Initial,
 		tel.ID                                      AS Tel_ID,
@@ -810,21 +840,24 @@ CREATE VIEW Telnr_Liste AS
         tel.prio                                    AS Prio,
         getYounger(pt.last_update, tel.last_update) AS last_update
 	FROM personen_has_telefonnummern AS pt
-	LEFT OUTER JOIN Telefonnummern AS tel  ON pt.telefonnummern_id = tel.id
-    LEFT OUTER JOIN Personen       AS pers ON pt.personen_id       = pers.id;
+	LEFT OUTER JOIN Telefonnummern AS tel  ON pt.telefonnummern_ID = tel.ID
+    LEFT OUTER JOIN Personen       AS pers ON pt.personen_ID       = pers.ID;
     
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Personen_Daten; 
 CREATE VIEW Personen_Daten AS
 	SELECT
-		  P.id                                         AS ID,
+		  P.ID                                         AS ID,
           P.Zivilstand                                 AS Zivilstand,
           P.Kategorien                                 AS Kategorien,
           
           CONCAT(P.Vorname,';',
                  P.Ledig_Name,';',
                  P.Partner_Name,';',
-                 DATE_FORMAT(P.Geburtstag,'%Y%MM%DD')) AS Such_Begriff,     -- YYYYMMDD
+				 pAdr.Strasse,';',
+                 pAdr.Ort,';',
+                 -- P.Betriebs_Nr,';',
+                 DATE_FORMAT(P.Geburtstag,'%Y%m%d'))   AS Such_Begriff,     -- YYYYMMDD
 		  P.Sex                                        AS Geschlecht,       -- Herr | Frau
 		  P.Firma                                      AS Firma,
 		  P.Vorname                                    AS Vorname,
@@ -841,8 +874,7 @@ CREATE VIEW Personen_Daten AS
           getFamilieName(P.Sex, 
                       P.Partner_Name_Angenommen, 
                       P.Ledig_Name, 
-                      P.Partner_Name)                 AS Familie_Name,     -- Rothlin-Collet
-
+                      P.Partner_Name)                 AS Familien_Name,     -- Rothlin-Collet
           
           getAnrede(P.Sex, 
 					P.Vorname,
@@ -892,9 +924,9 @@ CREATE VIEW Personen_Daten AS
           P.AHV_Nr                                     AS AHV_Nr,
 		  P.Betriebs_Nr                                AS Betriebs_Nr,
 
-          getPrio_0_IBAN(P.id)                         AS IBAN,
-          getPrio_0_EMail(P.id)                        AS eMail,
-          getPrio_0_TelNr(P.id)                        AS Tel_Nr,
+          getPrio_0_IBAN(P.ID)                         AS IBAN,
+          getPrio_0_EMail(P.ID)                        AS eMail,
+          getPrio_0_TelNr(P.ID)                        AS Tel_Nr,
           P.Geburtstag                                 AS Geburtstag,
           P.Todestag                                   AS Todestag,
           P.Nach_Wangen_Gezogen                        AS Nach_Wangen_Gezogen,
@@ -928,9 +960,9 @@ CREATE VIEW Personen_Daten AS
 		  gAdr.Land                                    AS Geschaeft_Land,
           getYounger(P.last_update, pAdr.last_update)  AS last_update
 	FROM Personen AS P
-    LEFT OUTER JOIN Adress_Daten AS pAdr ON  P.Privat_Adressen_id         = pAdr.id
-	LEFT OUTER JOIN Adress_Daten AS gAdr ON  P.Geschaefts_Adressen_id     = gAdr.id
-    ORDER BY Familie_Name, Vorname_Initial;
+    LEFT OUTER JOIN Adress_Daten AS pAdr ON  P.Privat_Adressen_ID         = pAdr.ID
+	LEFT OUTER JOIN Adress_Daten AS gAdr ON  P.Geschaefts_Adressen_ID     = gAdr.ID
+    ORDER BY Familien_Name, Vorname_Initial;
 
 -- SELECT * FROM Personen_Daten;
 
@@ -940,7 +972,7 @@ CREATE VIEW Telnr_Liste_Sorted AS
 	SELECT         
          T.Pers_ID           AS Pers_ID,
          T.Sex               AS Sex,
-		 T.Familie_Name      AS Familie_Name,          -- Rothlin-Collet
+		 T.Familien_Name      AS Familien_Name,          -- Rothlin-Collet
 		 T.Vorname_Initial   AS Vorname_Initial,
          P.Private_Strassen_Adresse   AS Strasse,
          P.Private_PLZ_International  AS PLZ,
@@ -955,7 +987,7 @@ CREATE VIEW Telnr_Liste_Sorted AS
          T.last_update                AS last_update
 	FROM Telnr_Liste AS T
     LEFT OUTER JOIN Personen_Daten AS P ON  P.ID  = T.Pers_ID
-    ORDER BY Familie_Name;
+    ORDER BY Familien_Name;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Telnr_Liste_Prio_0; 
@@ -966,12 +998,12 @@ CREATE VIEW Telnr_Liste_Prio_0 AS
 DROP VIEW IF EXISTS EMail_Main; 
 CREATE VIEW EMail_Main AS
 	SELECT
-		pEMail.Personen_id       AS Person_id,
-        pEMail.EMail_Adressen_id AS email_id,
+		pEMail.Personen_ID       AS Person_ID,
+        pEMail.EMail_Adressen_ID AS email_ID,
 		eMailAdr.eMail           AS eMail,
         eMailAdr.prio            AS Prio
 	FROM Personen_has_EMail_Adressen AS pEMail
-	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_id = eMailAdr.id
+	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_ID = eMailAdr.ID
 	WHERE
 	   eMailAdr.Prio = 0;    -- MIN(eMailAdr.Prio); 
        
@@ -989,7 +1021,7 @@ CREATE VIEW Personen_Daten_Tel_Email AS
           Partner_Name,
 		  Partner_Name_Angenommen,
 		  LastName,                 -- Rothlin
-          Familie_Name,             -- Rothlin-Collet
+          Familien_Name,            -- Rothlin-Collet
 		  Anrede_Short_Short,		-- Herr W.Rothlin
 		  Anrede_Long_Short,		-- Herr Walter Rothlin
 		  Anrede_Short_Long,		-- Herr W.Rothlin-Collet
@@ -1041,7 +1073,7 @@ CREATE VIEW Personen_Daten_Tel_Email AS
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
 CREATE VIEW Pachtlandzuteilung AS
 	SELECT
-		  L.id                                       AS ID,
+		  L.ID                                       AS ID,
           L.AV_Parzellen_Nr                          AS AV_Parzelle,
           L.GENO_Parzellen_Nr                        AS GENO_Parzelle,
           L.Flur_Bezeichnung                         AS FLur_Bezeichnung,
@@ -1049,32 +1081,39 @@ CREATE VIEW Pachtlandzuteilung AS
           L.Pachtzins_Pro_Are                        AS Pachtzins_pro_Are,
           calc_yearly_pachtfee(L.Flaeche_In_Aren,
                                L.Pachtzins_Pro_Are)  AS Pachtzins_pro_Jahr,
+	      L.Fix_Pachtzins                            AS FixPachtPreis,
+          L.Vertragsart                              AS Vertragsart,
           L.Buergerlandteil                          AS Buergerteil,
           L.Polygone_Flaeche                         AS Polygone,
-          L.Vertragsende                             AS Vertragsende,
-          L.Rueckgabe_Am                             AS Rueckgabe,
           
-          L.Paechter_Adresse                         AS Paechter_ID,
+          L.Pachtbeginn_Am                           AS Pachtbeginn,
+          L.Rueckgabe_Am                             AS Rueckgabe,
+          L.Vertragsende_Am                          AS Vertragsende,
+          L.Pachtende_Am                             AS Pachtende,
+          
+          L.Vorheriger_Paechter_ID                   AS Vorheriger_Paechter_ID,
+          L.Paechter_ID                              AS Paechter_ID,
           Paechter_Adr.Betriebs_Nr                   AS Pachter_Betriebs_Nr,
           Paechter_Adr.Firma                         AS Pachter_Firma,
-          -- Paechter_Adr.Familie_Name                  AS Paechter_Name,
+          Paechter_Adr.Familien_Name                  AS Paechter_Name,
           Paechter_Adr.Vorname                       AS Paechter_Vorname,
           Paechter_Adr.Private_Strasse               AS Paechter_Strasse,
           Paechter_Adr.Private_Hausnummer            AS Paechter_Hausnummer,
           Paechter_Adr.Private_PLZ                   AS Paechter_PLZ,
           Paechter_Adr.Private_Ort                   AS Paechter_Ort,
 
-          L.Verpaechter_Adresse                      AS Verpaechter_ID,
+          L.Vorheriger_Verpaechter_ID                AS Vorheriger_Verpaechter_ID,
+          L.Verpaechter_ID                           AS Verpaechter_ID,
 		  Verpaechter_Adr.Firma                      AS Verpaechter_Firma,
-          -- Verpaechter_Adr.Familie_Name               AS Verpaechter_Name,
+          Verpaechter_Adr.Familien_Name              AS Verpaechter_Name,
           Verpaechter_Adr.Vorname                    AS Verpaechter_Vorname,
           Verpaechter_Adr.Private_Strasse            AS Verpaechter_Strasse,
           Verpaechter_Adr.Private_Hausnummer         AS Verpaechter_Hausnummer,
           Verpaechter_Adr.Private_PLZ                AS Verpaechter_PLZ,
           Verpaechter_Adr.Private_Ort                AS Verpaechter_Ort
 	FROM Landteil AS L
-    LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_Adresse     = Paechter_Adr.id
-	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_Adresse  = Verpaechter_Adr.id;
+    LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_ID     = Paechter_Adr.ID
+	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_ID  = Verpaechter_Adr.ID;
 
 -- ===============================================================================================
 -- == Create stored procedures for business (external) write access                             ==
@@ -1376,3 +1415,45 @@ DELIMITER ;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+-- ------------------------------------------------------
+-- Hilfreiche Abfragen
+-- ------------------------------------------------------
+-- SELECT ID,Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Kategorien FROM personen_daten Where Such_Begriff LIKE Binary '%Züger%' ORDER BY Vorname_Initial;
+
+ -- SELECT ID,Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Kategorien FROM personen_daten Where ID in (11,23,42) ORDER BY Familien_Name, Vorname_Initial;
+ 
+ /*
+ SELECT Vorname_Initial,
+       getFamilieName(P.Sex, 
+                      P.Partner_Name_Angenommen, 
+                      P.Ledig_Name, 
+                      P.Partner_Name) AS Familien_Name,
+       P.Sex, 
+       P.Partner_Name_Angenommen, 
+	   P.Ledig_Name, 
+       P.Partner_Name
+FROM personen AS P 
+WHERE ID in (11,23,42,889) 
+ORDER BY Familien_Name;
+*/
+
+SELECT
+    ID                                                 AS ID,
+    Anrede_Long_Long                                   AS Anrede,
+    Private_Strassen_Adresse                           AS Strasse,
+    CONCAT(Private_PLZ_International,' ',Private_Ort)  AS PLZ_Ort,
+    
+    DATE_FORMAT(Geburtstag, '%d.%m.%Y') AS Geburtstag,
+
+    Zivilstand    AS Zivilstand,
+    Kategorien    AS Kategorien,
+    SUch_Begriff  AS Such_Begriff
+FROM Personen_Daten 
+WHERE 
+        ID is NOT NULL
+        -- AND ID in (11,23,42,488,487,889)
+        -- AND (FIND_IN_SET('Landwirt', `Kategorien`) > 0 OR FIND_IN_SET('Bürger', `Kategorien`) > 0)
+        AND (Such_Begriff LIKE BINARY '%Rogenm%' AND Such_Begriff LIKE BINARY '%%')
+ORDER BY Familien_Name, Vorname;
