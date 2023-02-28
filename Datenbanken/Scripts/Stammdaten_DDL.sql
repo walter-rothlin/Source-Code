@@ -15,6 +15,7 @@
 -- 21-Jan-2023   Walter Rothlin      Added landteil
 -- 08-Feb-2023   Walter Rothlin      Added more attributes to Person, Landteil
 -- 18-Feb-2023   Walter Rothlin      Fix Charset issue in firstUpper()
+-- 26-Feb-2023   Walter Rothlin      Added IDs to orte....personen views
 -- ---------------------------------------------------------------------------------------------
 
 -- MySQL Workbench Forward Engineering
@@ -134,7 +135,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Vater` 					 INT NULL,
   `Mutter` 					 INT NULL,
   `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt','Geschieden','Verwitwet','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
-  `Kategorien`  SET('Firma','Bürger','Angestellter', 'Auftragnehmer','Genossenrat','Bewirtschafter','Landteilbesitzer',
+  `Kategorien`  SET('Firma','Bürger','Angestellter', 'Auftragnehmer','Genossenrat', 'LWK', 'Bewirtschafter','Landteilbesitzer',
 					'Pächter','Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezüger', 'Nutzungsberechtigt', 
                     'Betriebsgemeinschaft', 'Generationengemeinschaft') DEFAULT NULL,
   
@@ -366,10 +367,10 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
   `Qualitaet`            ENUM('Futter','Streu','Verbuscht','Wald') DEFAULT NULL,
   `Polygone_Flaeche`     VARCHAR(300) NULL,
   
-   `Pachtbeginn_Am`      DATE NULL,
-   `Rueckgabe_Am`        DATE NULL,
-   `Vertragsende_Am`     DATE NULL,
-   `Pachtende_Am`        DATE NULL,
+  `Pachtbeginn_Am`      DATE NULL,
+  `Rueckgabe_Am`        DATE NULL,
+  `Vertragsende_Am`     DATE NULL,
+  `Pachtende_Am`        DATE NULL,
 
   `Paechter_ID`                  INT UNSIGNED NULL,
   `Verpaechter_ID`               INT UNSIGNED NOT NULL,
@@ -787,6 +788,7 @@ CREATE VIEW Ort_Land AS
         formatPLZinternational(l.Code, o.PLZ)    AS PLZ_International,
 		l.Code                                   AS Code,
 		o.Name                                   AS Ort,
+        l.ID                                     AS Land_ID,
 		l.Name                                   AS Land,
 		l.Landesvorwahl                          AS Landesvorwahl,
         getYounger(l.last_update, o.last_update) AS last_update,
@@ -804,9 +806,11 @@ CREATE VIEW Adress_Daten AS
 		a.Strasse                                 AS Strasse,
 		a.Hausnummer                              AS Hausnummer,
         a.postfachnummer                          AS Postfachnummer,
+        ol.ID                                     AS Ort_ID,
 		ol.PLZ	                                  AS PLZ,
         ol.PLZ_International	                  AS PLZ_International,
 		ol.Ort	                                  AS Ort,
+        ol.Land_ID                                AS Land_ID,
 		ol.Land	                                  AS Land,
 		getYounger(a.last_update, ol.last_update) AS last_update,
         a.last_update                             AS a_last_update,
@@ -850,14 +854,18 @@ CREATE VIEW Personen_Daten AS
 		  P.ID                                         AS ID,
           P.Zivilstand                                 AS Zivilstand,
           P.Kategorien                                 AS Kategorien,
-          
+          -- IF(P.Geburtstag is NULL, "NoGeburi", "GeburiFound") AS NoYesGeburi,
+          -- IF(P.Geburtstag is NULL, "NoGeburi", DATE_FORMAT(P.Geburtstag,'%Y%m%d')) AS NoWithGeburi,
           CONCAT(P.Vorname,';',
                  P.Ledig_Name,';',
                  P.Partner_Name,';',
-				 pAdr.Strasse,';',
+                 getStrassenAdresse(pAdr.Strasse, 
+                             pAdr.Hausnummer, 
+							 pAdr.Postfachnummer),';',
                  pAdr.Ort,';',
-                 -- P.Betriebs_Nr,';',
-                 DATE_FORMAT(P.Geburtstag,'%Y%m%d'))   AS Such_Begriff,     -- YYYYMMDD
+                 -- IF(P.Geburtstag is NULL, "NoGeburi", DATE_FORMAT(P.Geburtstag,'%Y%m%d')),';',
+                 IF(P.Betriebs_Nr is NULL, "NoBetriebsNr", P.Betriebs_Nr),';',
+                 IF(P.Geburtstag is NULL, "NoGeburi", DATE_FORMAT(P.Geburtstag,'%Y%m%d')))   AS Such_Begriff,     -- YYYYMMDD
 		  P.Sex                                        AS Geschlecht,       -- Herr | Frau
 		  P.Firma                                      AS Firma,
 		  P.Vorname                                    AS Vorname,
@@ -938,25 +946,33 @@ CREATE VIEW Personen_Daten AS
           P.Funktion_Uebernommen_Am                    AS Funktion_Uebernommen_Am,
           P.Funktion_Abgegeben_Am                      AS Funktion_Abgegeben_Am,
           P.Chronik_Bezogen_Am                         AS Chronik_Bezogen_Am,
+          
+          pAdr.ID                                      AS Private_Adressen_ID,
 		  pAdr.Strasse                                 AS Private_Strasse,
 		  pAdr.Hausnummer                              AS Private_Hausnummer,
           pAdr.Postfachnummer                          AS Private_Postfachnummer,
           getStrassenAdresse(pAdr.Strasse, 
                              pAdr.Hausnummer, 
 							 pAdr.Postfachnummer)      AS Private_Strassen_Adresse,
+		  pAdr.Ort_ID                                  AS Private_Ort_ID,
 		  pAdr.PLZ                                     AS Private_PLZ,
           pAdr.PLZ_International                       AS Private_PLZ_International,
 		  pAdr.Ort                                     AS Private_Ort,
+          pAdr.Land_ID                                 AS Private_Land_ID,
 		  pAdr.Land                                    AS Private_Land,
+          
+          gAdr.ID                                      AS Geschaeft_Adressen_ID,
 		  gAdr.Strasse                                 AS Geschaeft_Strasse,
 		  gAdr.Hausnummer                              AS Geschaeft_Hausnummer,
           gAdr.Postfachnummer                          AS Geschaeft_Postfachnummer,
           getStrassenAdresse(gAdr.Strasse, 
                              gAdr.Hausnummer, 
                              gAdr.Postfachnummer)      AS Geschaeft_Strassen_Adresse,
+		  gAdr.Ort_ID                                  AS Geschaeft_Ort_ID,
 		  gAdr.PLZ                                     AS Geschaeft_PLZ,
           gAdr.PLZ_International                       AS Geschaeft_PLZ_International,    -- CH-8855
 		  gAdr.Ort                                     AS Geschaeft_Ort,
+		  gAdr.Land_ID                                 AS Geschaeft_Land_ID,
 		  gAdr.Land                                    AS Geschaeft_Land,
           getYounger(P.last_update, pAdr.last_update)  AS last_update
 	FROM Personen AS P
@@ -1418,6 +1434,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 -- ------------------------------------------------------
+-- Zwingende Data updates
+-- ------------------------------------------------------
+UPDATE Personen SET Zivilstand = 'Gestorben' WHERE Todestag is not NULL;
+
+
+
+-- ------------------------------------------------------
 -- Hilfreiche Abfragen
 -- ------------------------------------------------------
 -- SELECT ID,Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Kategorien FROM personen_daten Where Such_Begriff LIKE Binary '%Züger%' ORDER BY Vorname_Initial;
@@ -1439,6 +1462,8 @@ WHERE ID in (11,23,42,889)
 ORDER BY Familien_Name;
 */
 
+
+
 SELECT
     ID                                                 AS ID,
     Anrede_Long_Long                                   AS Anrede,
@@ -1449,11 +1474,23 @@ SELECT
 
     Zivilstand    AS Zivilstand,
     Kategorien    AS Kategorien,
-    SUch_Begriff  AS Such_Begriff
+    Such_Begriff  AS Such_Begriff
 FROM Personen_Daten 
 WHERE 
         ID is NOT NULL
         -- AND ID in (11,23,42,488,487,889)
         -- AND (FIND_IN_SET('Landwirt', `Kategorien`) > 0 OR FIND_IN_SET('Bürger', `Kategorien`) > 0)
-        AND (Such_Begriff LIKE BINARY '%Rogenm%' AND Such_Begriff LIKE BINARY '%%')
+        AND (Such_Begriff LIKE BINARY '%Kä' AND Such_Begriff LIKE BINARY '%holz%')
 ORDER BY Familien_Name, Vorname;
+
+        SELECT
+            ID AS ID,
+             Anrede_Long_Long                                   AS Anrede,
+             Private_Strassen_Adresse                           AS Strasse,
+             CONCAT(Private_PLZ_International,' ',Private_Ort)  AS PLZ_Ort
+        FROM Personen_Daten 
+        WHERE Such_Begriff LIKE BINARY '%Vogel%' AND 
+              Such_Begriff LIKE BINARY '%%' AND 
+              Such_Begriff LIKE BINARY '%%'
+        ORDER BY Familien_Name, Vorname;
+    

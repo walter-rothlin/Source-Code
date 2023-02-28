@@ -9,7 +9,7 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 24-Jun-2022   Walter Rothlin      Initial Version
+# 01-Jan-2023   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 import mysql.connector
 import sqlparse
@@ -467,7 +467,7 @@ def searchPerson(vorname, ledigname, partnername=None, gebdatum_YYYYMMDD=None):
         return myresult[0][0]
 
 def load_bewirtschafter_details_from_Landteil_EXCEL ():
-    wb = load_workbook(r'V:\Landwirtschaft\Pachtland\Landwirtschaftliche_Gütertabelle.xlsx')
+    wb = load_workbook(r'V:\Landwirtschaft\Pachtland\Landwirtschaftliche_Gütertabelle Stand_2023_02_17.xlsx')
     print(wb.sheetnames)
 
     Bewirtschafter_Sicht = wb['Bewirtschafter_Sicht']
@@ -504,8 +504,59 @@ def load_bewirtschafter_details_from_Landteil_EXCEL ():
                 print(';'.join(aDataSet))
         row += 1
 
+
+def reco_personen():
+    wb = load_workbook(r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_02_25.xlsx')
+    # print(wb.sheetnames)
+
+    name_liste = wb['Bewirtschafter']
+    column = 0
+    columnHeaders = {}
+    while name_liste.cell(row=1, column=column+1).value is not None:
+        headerStr = str(name_liste.cell(row=1, column=column+1).value).replace('\n', '')
+        columnHeaders.update({headerStr: column+1})
+        column += 1
+    print(columnHeaders)
+
+    row = 2
+    last_value = ''
+    while name_liste.cell(row=row, column=columnHeaders['Paechter_Id']).value is not None:
+        select_criterias = [str(name_liste.cell(row=row, column=columnHeaders['Ledig_Name']).value),
+                            str(name_liste.cell(row=row, column=columnHeaders['Vorname']).value),
+                            str(name_liste.cell(row=row, column=columnHeaders['Adresse']).value),
+                            str(name_liste.cell(row=row, column=columnHeaders['Partner_Name']).value)]
+        person_id_from_file = name_liste.cell(row=row, column=columnHeaders['Paechter_Id']).value
+        rs = find_person(select_criterias)
+
+        # print(rs)
+        if len(rs) == 1:
+            if rs[0] == 0:
+                print(f'{person_id_from_file:4d} not found in DB!', str(select_criterias))
+
+                args = ('Loader_1',  'x')
+                proc_name = 'getPersonenId'
+                result_args = mycursor.callproc(proc_name, args)
+                print(proc_name, result_args, sep="")
+                if proc_name == 'getPersonenId':
+                    personen_id = result_args[11]
+            else:
+                if person_id_from_file == rs[0]:
+                    db_attr_list = ['`Betriebs_Nr`', '`Geburtstag`', '`Tel_Nr`', '`eMail`']
+                    db_record = get_person_details_from_DB_by_ID(rs[0], db_attr_list)[0]
+                    print(f'{rs[0]:4d}    o.k.', str(db_record))
+                else:
+                    db_attr_list = ['Vorname', 'Ledig_Name', 'Partner_Name', 'Private_Strassen_Adresse', 'Private_PLZ', 'Private_Ort', 'Betriebs_Nr', 'Geburtstag']
+                    db_record = get_person_details_from_DB_by_ID(rs[0], db_attr_list)[0]
+                    print(person_id_from_file, rs[0], 'Wrong Person found!!!!!!', str(select_criterias), str(db_record))
+        else:
+            # print(person_id_from_file, "  ;".join(rs), ' multiple found in DB!')
+            print(person_id_from_file, str(rs), ' multiple found in DB!')
+        row += 1
+
+
+
 def load_landteile_from_Landteil_EXCEL():
-    wb = load_workbook(r'V:\Landwirtschaft\Pachtland\Landwirtschaftliche_Gütertabelle.xlsx')
+    wb = load_workbook(r'V:\Landwirtschaft\Pachtland\Landwirtschaftliche_Gütertabelle Stand_2023_02_17.xlsx')
     print(wb.sheetnames)
 
     Bewirtschafter_Sicht = wb['Bewirtschafter_Sicht']
@@ -541,6 +592,78 @@ def load_landteile_from_Landteil_EXCEL():
                 print(';'.join(aDataSet))
         row += 1
 
+def get_WHERE_for_person_search(criteria_list, count_of_criterias_use=None):
+    where_clauses_AND = []
+    if count_of_criterias_use is None:
+        count_of_criterias_use = len(criteria_list)
+
+    used_items = []
+    # print('==> count_of_criterias_use:', count_of_criterias_use, 'criteria_list:', len(criteria_list))
+    if count_of_criterias_use > len(criteria_list):
+        count_of_criterias_use = len(criteria_list)
+    for ci in range(count_of_criterias_use):
+        used_items.append("Such_Begriff LIKE BINARY '%" + criteria_list[ci] + "%'")
+
+    # print(used_items)
+    where_clause = ' AND \n              '.join(used_items)
+    return where_clause
+
+def get_SELECT_for_person_search(criteria_list, count_of_criterias_use=None):
+    where_clause = get_WHERE_for_person_search(criteria_list, count_of_criterias_use)
+
+    sql = """
+        SELECT
+            ID AS ID
+        FROM Personen_Daten 
+        WHERE """ + where_clause + """
+        ORDER BY Familien_Name, Vorname;
+    """
+    # print(sql)
+    return sql
+
+def find_person_fix(criteria_list, count_of_criterias_use=None, doDebug=False):
+    if count_of_criterias_use is None:
+        count_of_criterias_use = len(criteria_list)
+    mycursor = stammdaten_schema.cursor()
+    mycursor.execute(get_SELECT_for_person_search(criteria_list, count_of_criterias_use))
+    return mycursor.fetchall()
+
+def find_person(criteria_list, count_of_criterias_use=1, doDebug=False):
+        # print('==> ', criteria_list)
+        if count_of_criterias_use > len(criteria_list):
+            rs = find_person_fix(criteria_list)
+            return [x[0] for x in rs]
+        else:
+            myresult = find_person_fix(criteria_list, count_of_criterias_use)
+            # print('myresult:', myresult)
+            if len(myresult) == 0:
+                # print("Not Found:", len(myresult), "\n", sql)
+                return [0]
+            elif len(myresult) > 1:
+                # print("Multiple found:", len(myresult), "\n", sql)
+                return find_person(criteria_list, count_of_criterias_use + 1)
+            elif len(myresult) == 1:
+                return [myresult[0][0]]
+
+def get_person_details_from_DB_by_ID(id, attr_list=['*']):
+    fieldStr = (',\n            ').join(attr_list)
+
+    sql = """
+        SELECT
+            """ + fieldStr + """
+        FROM Personen_Daten 
+        WHERE ID = """ + str(id) + """;
+    """
+    ### print(sql)
+    mycursor = stammdaten_schema.cursor()
+    mycursor.execute(sql)
+    return mycursor.fetchall()
+def TEST_findPerson():
+    search_criteria = ["Bruhin", "Eugen", "Pesenti"]
+    print(find_person(search_criteria))
+
+    search_criteria = ["Rothlin", "Walter"]
+    print(find_person(search_criteria))
 
 if __name__ == '__main__':
     stammdaten_schema = db_connect(host='localhost',
@@ -549,7 +672,11 @@ if __name__ == '__main__':
                                    password="1234ABCD12abcd",
                                    trace=True)
 
-    load_data_from_BuergerDB()
+    # load_data_from_BuergerDB()
+
+    # TEST_findPerson()
+    reco_personen()
+
     # load_bewirtschafter_details_from_Landteil_EXCEL()
     # load_landteile_from_Landteil_EXCEL()
 
