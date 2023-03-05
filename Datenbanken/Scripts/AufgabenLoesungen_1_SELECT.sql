@@ -40,8 +40,8 @@
 
 
 -- START select
--- Select mit Order by und Where-Clause
--- ====================================
+-- Select mit Order by, Where-Clauses and Group by
+-- ===============================================
 -- 1.1) Von welchen Schauspielern (Vorname und Nachname) hat der Store Filme?
 SELECT 
     first_name,
@@ -211,7 +211,7 @@ ORDER BY
    `Betrag`         DESC;
 
 -- 1.12.1) Erstellen Sie eine Liste (mit Vor- und Nachnamen) der bezahlten 
---         Beträge (FROM payment), sortiert nach Beträge   
+--         Betraege (FROM payment), sortiert nach Betraege   
 SELECT
    `C`.`first_name`   AS `Vorname`,
    `C`.`last_name`    AS `Nachname`,
@@ -223,8 +223,8 @@ INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
 ORDER BY
    `Betrag`    DESC;
 
--- 1.13) Erstellen Sie eine Liste aller Kunden_id mit deren Umsätzen 
---       und Anzahl Rechnungen (FROM payment), sortiert nach customer_id und Beträge   
+-- 1.13) Erstellen Sie eine Liste aller Kunden_id mit deren Umsaetzen 
+--       und Anzahl Rechnungen (FROM payment), sortiert nach customer_id und Betraege   
 SELECT 
    `P`.`customer_id`    AS `Customer_ID`,
    sum(`P`.`amount`)    AS `Betrag`,
@@ -234,9 +234,9 @@ GROUP BY `P`.`customer_id`
 ORDER BY `Betrag`;
 
 -- 1.13.1) Erstellen Sie eine Liste aller Kunden_id, Vor- und Nachnamen 
--- mit deren Umsätzen und Anzahl Rechnungen (FROM payment), 
--- sortiert nach Umsätzen (höchster zu oberst).
--- Wer sind unsere 'besten' (umsatzstärksten) Kunden
+-- mit deren Umsaetzen und Anzahl Rechnungen (FROM payment), 
+-- sortiert nach Umsaetzen (hoechster zu oberst).
+-- Wer sind unsere 'besten' (umsatzstaerksten) Kunden
 SELECT
    `C`.`first_name`     AS `Vorname`,
    `C`.`last_name`      AS `Nachname`,
@@ -250,8 +250,8 @@ GROUP BY `P`.`customer_id`
 ORDER BY `Umsatz`  DESC;
    
 -- 1.13.2) Erstellen Sie eine Liste Kunden_id, Vor- und Nachnamen mit 
---         deren Umsätzen (FROM payment), ordnen Sie die Liste nach den 
---         Umsätzen (Bester Kunde zuoberst)
+--         deren Umsaetzen (FROM payment), ordnen Sie die Liste nach den 
+--         Umsaetzen (Bester Kunde zuoberst)
 --         Nur von den Kunden mit ID < 5
 SELECT
    `C`.`first_name`     AS `Vorname`,
@@ -283,8 +283,8 @@ WHERE
     `UmsatzListe`.`Umsatz` > 170;
 
 -- 1.13.4) Erstellen Sie eine Liste Kunden_id, Vor- und Nachnamen mit 
---         deren Umsätzen (FROM payment), ordnen Sie die Liste nach den 
---         Umsätzen (Bester Kunde zuoberst)
+--         deren Umsaetzen (FROM payment), ordnen Sie die Liste nach den 
+--         Umsaetzen (Bester Kunde zuoberst)
 --         Nur von den Kunden mit einem Umsatz > 170
 SELECT 
     `UmsatzListe`.`Vorname`   AS `Firstname`,
@@ -472,7 +472,7 @@ WHERE last_update >= STR_TO_DATE('18.03.2022','%d.%m.%Y') AND
 ORDER BY last_update;
 
 
--- 2.1.3.4) Suchen Sie alle Eintraege in der Tabelle staff, welche am 17. Maerz 22 geändert wurden
+-- 2.1.3.4) Suchen Sie alle Eintraege in der Tabelle staff, welche am 17. Maerz 22 geaendert wurden
 SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%d.%M %Y %H:%i:%s') FROM staff
 WHERE DATE_FORMAT(last_update, '%d.%m.%Y') = '17.03.2022' ORDER BY last_update;
 
@@ -534,7 +534,7 @@ WHERE last_update  > STR_TO_DATE('17.03.2022', '%d.%m.%Y') ORDER BY last_update;
 SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%d.%M %Y %H:%i:%s') FROM staff
 WHERE last_update  = STR_TO_DATE('17.03.2022', '%d.%m.%Y') ORDER BY last_update;  -- Gleichheit funktioniert nicht!
 
--- 2.1.8) Suchen Sie alle Eintraege in der Tabelle staff, welche nach 10 Uhr am 17. Maerz 22 geändert wurden
+-- 2.1.8) Suchen Sie alle Eintraege in der Tabelle staff, welche nach 10 Uhr am 17. Maerz 22 geaendert wurden
 SELECT email, last_update, DATE_FORMAT(last_update, '%d.%M %Y %H:%i:%s') FROM staff
 WHERE last_update > STR_TO_DATE('17.03.2022 10','%d.%m.%Y %H');
 
@@ -593,8 +593,8 @@ SELECT
     WEEK(STR_TO_DATE('2004-02-05',' %Y-%m-%d'))       AS `Week Nr`,            -- --> '5'
     WEEKOFYEAR(STR_TO_DATE('2004-02-05',' %Y-%m-%d')) AS `Kalenderwoche`;       -- --> '6' 
 
--- 2.1.13) Vor wievielen Tagen wurden die Eintraege geändert? 
---         Sortiert das kürzlich geaenderte zu erst!       
+-- 2.1.13) Vor wievielen Tagen wurden die Eintraege geaendert? 
+--         Sortiert das kuerzlich geaenderte zu erst!       
 SELECT 
    last_name,
    first_name,
@@ -876,6 +876,20 @@ GROUP BY
 Order BY
    Umsatz DESC;
 
+-- 3.9.10) Erstellen Sie eine Liste mit allen Filmtitle und den beteiligten Acotrs
+SELECT
+   f.title              AS Film_Title,
+   GROUP_CONCAT(CONCAT(`a`.`first_name`,
+                       _utf8mb4 ' ',
+					   `a`.`last_name`)
+            SEPARATOR ', ') AS `Actors`
+   
+FROM film_actor  AS FA
+INNER JOIN film  AS f ON FA.film_id  = f.film_id
+INNER JOIN actor AS a ON FA.actor_id = a.actor_id
+GROUP BY FA.film_id;
+    
+
 --  4.0) Erstellen Sie eine Abfrage von film (mit inner joins) mit  title, original_language und language
 SELECT
      f.film_id      AS Id,
@@ -1107,19 +1121,55 @@ ORDER BY
 -- START views
 -- VIEWS
 -- =====
--- Kreieren sie eine View mit alle Staedte und deren Laender.
-DROP VIEW IF EXISTS test_city_country;
-
-CREATE VIEW test_city_country AS
+-- V1.0.0 Kreieren sie eine View mit alle City_id, Staedte und deren Laender sortiert nach Staedtenamen.
+DROP VIEW IF EXISTS x_city_country;
+CREATE VIEW x_city_country AS
      SELECT 
+        city.city_id    AS ID, 
         city.city       AS Stadt, 
         country.country AS Land
-     FROM
-        city
-        INNER JOIN country ON city.country_id=country.country_id
+     FROM city
+	 INNER JOIN country ON city.country_id=country.country_id
      ORDER BY city.city ASC;
 
-S Stadt, Land from test_city_country;
+-- SELECT * from x_city_country;
+
+-- V1.0.1 Kreieren sie eine View mit alle Adress_id, Staedte und deren Laender sortiert nach Staedtenamen.
+--        Verwenden Sie die city_country view
+DROP VIEW IF EXISTS x_adress_city_country;
+CREATE VIEW x_adress_city_country AS
+     SELECT 
+        a.address_id  AS ID,
+        a.address     AS Address,
+        a.district    AS District,
+        a.postal_code AS Postal_Code,
+        cc.Stadt      AS Stadt, 
+        cc.Land       AS Land
+     FROM address AS a
+	 INNER JOIN x_city_country AS cc ON a.address_id=cc.id
+     ORDER BY cc.Stadt ASC;
+     
+-- SELECT * from x_adress_city_country;
+
+
+-- V1.0.2 Erstellen Sie eine Personal-Liste sortiert nach Shop.
+
+
+
+-- V1.0.3 Erstellen Sie eine Shop-Liste der Adresse und dem Manager des Shops.
+
+
+-- V1.0.4 Erstellen Sie eine Liste mit allen Film Title, Sprache, Original_Sprache, rating, Specialfeatures
+
+
+-- V1.0.5 Erstellen Sie eine Hitliste mit den Besten Kunden (Nach Umsatz sortiert und Anzahl Ausleihungen)
+
+
+-- V1.0.6 Analysieren und bauen Sie die View actor_info nach (Actorsdetails with all film titles the took part in)
+
+-- V1.0.7 Analysieren und bauen Sie die View film_list nach (Filmedetails mit allen actors involved)
+
+-- V1.0.8 Erstellen Sie eine Liste mit allen Film_IDS, und allen beteiligten Actors
 
 -- END views
 
@@ -1517,7 +1567,7 @@ SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
 -- START variablen
 -- Variablen
 -- =========
-SET @dolphin:='BZUöäü';
+SET @dolphin:='BZUäöü';
 SELECT LENGTH(@dolphin), CHAR_LENGTH(@dolphin);
 SELECT 'HAlloäöü';
 SELECT @dolphin;

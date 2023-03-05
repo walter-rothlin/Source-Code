@@ -1447,6 +1447,8 @@ UPDATE Personen SET Zivilstand = 'Gestorben' WHERE Todestag is not NULL;
 
  -- SELECT ID,Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Kategorien FROM personen_daten Where ID in (11,23,42) ORDER BY Familien_Name, Vorname_Initial;
  
+SELECT * FROM Personen_Daten WHERE ID = 11;
+
  /*
  SELECT Vorname_Initial,
        getFamilieName(P.Sex, 
