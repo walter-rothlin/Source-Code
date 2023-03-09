@@ -1185,13 +1185,12 @@ INSERT INTO country (country) VALUES ('Lichtenstein');
 --  CRUD 1a)  Wie lautet der PK von 'Lichtenstein'?
 SELECT country_id from country where country = 'Lichtenstein';
 
-
 --  CRUD 2)  Fuegen Sie die beiden Staedte "Vaduz" und "Schan" ein. Beide gehoeren zum Land "Lichtenstein".
 INSERT INTO city (city,country_id) VALUES 
     ('Vaduz', 111), 
     ('Schan', 111);
 
---  CRUD 2a)  Wie lauten die beiden PKs dieser beiden Orte?    
+--  CRUD 2a)  Wie lauten die PKs aller Orte in Lichtenstein (Mit Otrsnamen, City_id, Country_Id)?    
 SELECT
     city_id     AS Id,
     city        AS Stadt,
