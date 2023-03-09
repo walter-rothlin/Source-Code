@@ -1217,7 +1217,9 @@ SELECT
 FROM
     city AS ci
 INNER JOIN country AS co ON ci.country_id = co.country_id
-WHERE ci.country_id = (SELECT country_id from country where country = 'Andora'); 
+WHERE ci.country_id = (SELECT country_id 
+					   FROM country 
+                       WHERE country = 'Andora'); 
 
 SELECT
     ci.city_id          AS Id,
@@ -1254,7 +1256,9 @@ SELECT
     ci.country_id       AS CountryId
 FROM
     city AS ci
-WHERE country_id = (SELECT country_id from country where country = 'Andora');
+WHERE country_id = (SELECT country_id 
+                    FROM country 
+                    WHERE country = 'Andora');
 
 --  CRUD 4)  Setzen Sie die Originalsprache von den Filmen 'ACADEMY DINOSAUR', 'ACE GOLDFINGER' auf 'Mandarin' 
 UPDATE
