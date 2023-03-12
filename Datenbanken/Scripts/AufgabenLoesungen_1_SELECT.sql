@@ -1180,13 +1180,13 @@ CREATE VIEW x_adress_city_country AS
 --  CRUD 0)  Welche Laender sind erfasst?
 SELECT * FROM country;
 
---  CRUD 1)  Fuegen Sie das Land "Andora" ein
-INSERT INTO country (country) VALUES ('Andora');
+--  CRUD 1)  Fuegen Sie das Land "Andorra ein
+INSERT INTO country (country) VALUES ('Andorra');
 
---  CRUD 1a)  Wie lautet der PK von 'Andora'?
-SELECT country_id from country where country = 'Andora';
+--  CRUD 1a)  Wie lautet der PK von 'Andorra'?
+SELECT country_id from country where country = 'Andorra';
 
---  CRUD 2)  Fuegen Sie die beiden Staedte "Soldeuu" und "Erts" ein. Beide gehoeren zum Land "Andora".
+--  CRUD 2)  Fuegen Sie die beiden Staedte "Soldeuu" und "Erts" ein. Beide gehoeren zum Land "Andorra".
 INSERT INTO city (city,country_id) VALUES 
     ('Soldeuu', 111), 
     ('Erts', 111);
@@ -1206,9 +1206,9 @@ SELECT
     country_id  AS CountryId
 FROM
     city
-WHERE country_id = (SELECT country_id from country where country = 'Andora');
+WHERE country_id = (SELECT country_id from country where country = 'Andorra');
 
---  CRUD 2b)  Erstellen sie eine Liste mit den Orten und dem Landesnamen von Andora (inner Join)
+--  CRUD 2b)  Erstellen sie eine Liste mit den Orten und dem Landesnamen von Andorra (inner Join)
 SELECT
     ci.city_id          AS Id,
     ci.city             AS Stadt,
@@ -1219,7 +1219,7 @@ FROM
 INNER JOIN country AS co ON ci.country_id = co.country_id
 WHERE ci.country_id = (SELECT country_id 
 					   FROM country 
-                       WHERE country = 'Andora'); 
+                       WHERE country = 'Andorra'); 
 
 SELECT
     ci.city_id          AS Id,
@@ -1229,7 +1229,7 @@ SELECT
 FROM
     city AS ci
 INNER JOIN country AS co ON ci.country_id = co.country_id
-WHERE ci.country = 'Andora'; 
+WHERE ci.country = 'Andorra'; 
 
 --  CRUD 2c)  Koorigieren Sie den Namen von 'Soldeuu' auf 'Soldeu'
 --            Moegliche Fehlermeldung: "Safe Updates". Forbid UPDATEs and DELETEs with no key in WHERE clause
@@ -1237,18 +1237,18 @@ WHERE ci.country = 'Andora';
 UPDATE city SET city='Soldeu' WHERE city='Soldeuu';
 
 
---  CRUD 3)  Loeschen Sie das Land "Lichtenstein". Lesen Sie die Fehlermeldung? Wieso geht das nicht?
-DELETE FROM country WHERE country = 'Andora';
+--  CRUD 3)  Loeschen Sie das Land "Andorra". Lesen Sie die Fehlermeldung? Wieso geht das nicht?
+DELETE FROM country WHERE country = 'Andorra';
 
---  CRUD 3a)  Loeschen Sie nun zuerst alle Staedte von "Andora".
+--  CRUD 3a)  Loeschen Sie nun zuerst alle Staedte von "Andorra".
 DELETE FROM city
-WHERE country_id = (SELECT country_id FROM country WHERE country = 'Andora');
+WHERE country_id = (SELECT country_id FROM country WHERE country = 'Andorra');
 
---  CRUD 3b)  Nun koennen Sie das Land "Andora" loeschen.
-DELETE FROM country WHERE country = 'Andora';
+--  CRUD 3b)  Nun koennen Sie das Land "Andorra" loeschen.
+DELETE FROM country WHERE country = 'Andorra';
 
 --  CRUD 3c)  Kontrollieren Sie, ob Sie die Staedte und das Land wirklich geloescht haben.
-SELECT country_id from country where country = 'Andora';    
+SELECT country_id from country where country = 'Andorra';    
 
 SELECT
     ci.city_id          AS Id,
@@ -1258,7 +1258,7 @@ FROM
     city AS ci
 WHERE country_id = (SELECT country_id 
                     FROM country 
-                    WHERE country = 'Andora');
+                    WHERE country = 'Andorra');
 
 --  CRUD 4)  Setzen Sie die Originalsprache von den Filmen 'ACADEMY DINOSAUR', 'ACE GOLDFINGER' auf 'Mandarin' 
 UPDATE

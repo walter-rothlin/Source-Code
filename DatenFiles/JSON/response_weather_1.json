@@ -1,0 +1,44 @@
+{
+   "coord": {
+      "lon": 8.895,
+      "lat": 47.1908
+   },
+   "weather": [
+      {
+         "id": 804,
+         "main": "Clouds",
+         "description": "overcast clouds",
+         "icon": "04d"
+      }
+   ],
+   "base": "stations",
+   "main": {
+      "temp": 280.68,
+      "feels_like": 280.68,
+      "temp_min": 277.28,
+      "temp_max": 281.52,
+      "pressure": 1015,
+      "humidity": 70
+   },
+   "visibility": 8649,
+   "wind": {
+      "speed": 0.89,
+      "deg": 87,
+      "gust": 2.24
+   },
+   "clouds": {
+      "all": 95
+   },
+   "dt": 1678615988,
+   "sys": {
+      "type": 2,
+      "id": 2006037,
+      "country": "CH",
+      "sunrise": 1678599864,
+      "sunset": 1678641862
+   },
+   "timezone": 3600,
+   "id": 2658054,
+   "name": "Wangen",
+   "cod": 200
+}
