@@ -368,6 +368,24 @@ LEFT OUTER JOIN country AS B ON A.country_id = B.country_id;
 -- %%     A literal % character
 --
 
+-- 2.1.1.0 Testen und analysieren Sie folgende Statements:
+/*
+SELECT STR_TO_DATE('01,5,2013','%d,%m,%Y');
+SELECT
+	language_id AS ID,
+    `name` AS Sprache,
+    last_update AS Last_Update,
+    DATE_FORMAT(last_update,'%d.%m.%Y %T') AS `Changed on`,
+	DATE_FORMAT(last_update,'%M') AS `Changed in Month`,
+    DATE_FORMAT(STR_TO_DATE('17.03.2023','%d.%m.%Y'),'%d.%m.%Y %T') AS `17.3.2023`,
+    DATE_FORMAT(NOW() ,'%d.%m.%Y %T') AS today,
+    DATE_FORMAT(last_update,'%d.%m.%Y') AS last_Update_Day
+FROM language
+-- WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(STR_TO_DATE('17.03.2023','%d.%m.%Y'),'%d.%m.%Y')
+WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(NOW(),'%d.%m.%Y')
+ORDER BY last_update DESC;
+*/
+
 -- 2.1.1) liste alle Mitarbeiter (staff) mit (Vorname, Nachname und LAST_UPDATE im format [yyyy-mon-dd hh:mm:ss]) auf, 
 --        sowie den entsprechenden Wochentag,
 --        wann die Daten-Saetze geaendert wurden. Sortiere nach Aenderungs-Datum.
@@ -406,7 +424,7 @@ WHERE
 
 
 -- 2.1.2.1) last_update e.g. 2006-02-15 03:57:16 --> 3 AM Uhr 57
-SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%l%p Uhr %i') FROM staff;
+SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%l %p Uhr %i') FROM staff;
 
 -- 2.1.2.2) last_update e.g. 2006-02-15 03:57:16 --> 3 Uhr 57
 SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%k Uhr %i') FROM staff;
@@ -432,6 +450,8 @@ SELECT staff_id, email, last_update, DATE_FORMAT(last_update, '%h-%i %p') FROM s
 -- ------------------------------------------------------------------------------
 --        Erstellen Sie weiter ein SQL fuer einen Update und Delete dieses Tabelle / Eintrages
 --        und testen Sie ihre Loesungen
+
+
 
 -- 2.1.3.1) SELECT staff_id, first_name, last_name,DATE_FORMAT(last_update) im Date-Format e.g.: Wed, 15.Feb 2006 03-57-16
 --          Sortiere nach Aenderungs-Datum.
