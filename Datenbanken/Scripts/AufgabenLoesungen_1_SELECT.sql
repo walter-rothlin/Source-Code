@@ -369,22 +369,22 @@ LEFT OUTER JOIN country AS B ON A.country_id = B.country_id;
 --
 
 -- 2.1.1.0 Testen und analysieren Sie folgende Statements:
-/*
-SELECT STR_TO_DATE('01,5,2013','%d,%m,%Y');
-SELECT
-	language_id AS ID,
-    `name` AS Sprache,
-    last_update AS Last_Update,
-    DATE_FORMAT(last_update,'%d.%m.%Y %T') AS `Changed on`,
-	DATE_FORMAT(last_update,'%M') AS `Changed in Month`,
-    DATE_FORMAT(STR_TO_DATE('17.03.2023','%d.%m.%Y'),'%d.%m.%Y %T') AS `17.3.2023`,
-    DATE_FORMAT(NOW() ,'%d.%m.%Y %T') AS today,
-    DATE_FORMAT(last_update,'%d.%m.%Y') AS last_Update_Day
-FROM language
--- WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(STR_TO_DATE('17.03.2023','%d.%m.%Y'),'%d.%m.%Y')
-WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(NOW(),'%d.%m.%Y')
-ORDER BY last_update DESC;
-*/
+
+-- SELECT STR_TO_DATE('01,5,2013','%d,%m,%Y');
+--  SELECT
+--	language_id AS ID,
+--    `name` AS Sprache,
+--    last_update AS Last_Update,
+--    DATE_FORMAT(last_update,'%d.%m.%Y %T') AS `Changed on`,
+--	DATE_FORMAT(last_update,'%M') AS `Changed in Month`,
+--    DATE_FORMAT(STR_TO_DATE('17.03.2023','%d.%m.%Y'),'%d.%m.%Y %T') AS `17.3.2023`,
+--    DATE_FORMAT(NOW() ,'%d.%m.%Y %T') AS today,
+--    DATE_FORMAT(last_update,'%d.%m.%Y') AS last_Update_Day
+-- FROM language
+-- -- WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(STR_TO_DATE('17.03.2023','%d.%m.%Y'),'%d.%m.%Y')
+-- WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(NOW(),'%d.%m.%Y')
+-- ORDER BY last_update DESC;
+
 
 -- 2.1.1) liste alle Mitarbeiter (staff) mit (Vorname, Nachname und LAST_UPDATE im format [yyyy-mon-dd hh:mm:ss]) auf, 
 --        sowie den entsprechenden Wochentag,
