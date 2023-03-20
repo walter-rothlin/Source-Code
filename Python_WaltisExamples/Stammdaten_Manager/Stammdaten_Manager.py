@@ -658,6 +658,7 @@ def get_person_details_from_DB_by_ID(id, attr_list=['*']):
     mycursor = stammdaten_schema.cursor()
     mycursor.execute(sql)
     return mycursor.fetchall()
+
 def TEST_findPerson():
     search_criteria = ["Bruhin", "Eugen", "Pesenti"]
     print(find_person(search_criteria))

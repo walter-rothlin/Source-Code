@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+{% block body %}
+<div class="content">
+    <h1>Person-Liste</h1>
+
+    <div class="form">
+        <form action="/" method="POST">
+            <input type="text" name="search_criteria" id="search_criteria">
+            <input type="submit" value="suchen">
+        </form>
+        <br/>
+    </div>
+
+    <table>
+        <tr>
+            <th>Firma</th>
+            <th>Anrede</th>
+            <th>Strasse</th>
+            <th>Ort</th>
+            <th>Actions</th>
+        </tr>
+        {% for addr in result_liste %}
+            <tr>
+                <td>{{ addr.Firma }}</td>
+                <td>{{ addr.Anrede_Long_Long }}</td>
+                <td>{{ addr.Private_Strassen_Adresse }}</td>
+                <td>{{ addr.Private_PLZ_International }} {{ addr.Private_Ort }}</td>
+                <td>
+                    <a href="/delete/{{addr.ID}}">Delete</a>
+                    <br>
+                    <a href="/update/{{addr.ID}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+
+
+{% endblock %}

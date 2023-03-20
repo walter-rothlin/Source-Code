@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Person Details</title>
+{% endblock %}
+
+
+{% block body %}
+<div class="content">
+    <h1>Person-Details</h1>
+    {{ details.Anrede_Long_Long }}<BR/>
+    {{ details.Private_Strassen_Adresse }}<BR/>
+    {{ details.Private_PLZ_International }} {{ details.Private_Ort }}<BR/><BR/>
+
+</div>
+
+
+{% endblock %}
