@@ -18,6 +18,10 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+
+
+# Response produced by String-Oberations
+# ======================================
 @app.route('/')
 def index():
     return '''<H1>Hello Requester!</H1>

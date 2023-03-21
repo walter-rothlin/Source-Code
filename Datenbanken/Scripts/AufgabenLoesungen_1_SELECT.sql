@@ -640,7 +640,9 @@ ORDER BY last_update DESC;
 -- https://www.w3schools.com/sql/sql_join.asp
 
 
--- 2.2) liste alle Schauspielern (Vorname, Nachname und LAST_UPDATE [yyyy-mon-dd]), bei welchen der Vorname mit A beginnt und der zweitletzte Buchstabe im Vornamen ebenfalls  ein A ist sowie der Nachname nicht ALLEN oder BAILEY ist.
+-- 2.2) liste alle Schauspielern (Vorname, Nachname und LAST_UPDATE [yyyy-mon-dd]), 
+--      bei welchen der Vorname mit A beginnt und der zweitletzte Buchstabe im Vornamen ebenfalls  ein A ist
+--      sowie der Nachname ALLEN oder BAILEY ist.
 SELECT 
     first_name AS Vorname,
     last_name AS Nachname,
@@ -648,8 +650,13 @@ SELECT
 FROM
     actor
 WHERE
-    (NOT (first_name LIKE 'A%A_')) AND
-    (last_name NOT IN ('Allen' , 'Bailey'));
+    -- -- Positiv formulierte Bedingung
+    -- (first_name LIKE 'A%A_') OR
+    -- (last_name IN ('Allen' , 'Bailey'));
+    
+    -- -- Negativ formulierte Bedingung
+    NOT ((first_name NOT LIKE 'A%A_') AND
+         (last_name NOT IN ('Allen' , 'Bailey')));
 
 
 -- 2.3) Listen Sie nur die Rows auf, welche im rating eine PG haben und in den special_features Trailes enthalten.
