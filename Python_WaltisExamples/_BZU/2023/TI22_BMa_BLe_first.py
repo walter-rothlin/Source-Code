@@ -1,16 +1,17 @@
 # Autor: Walter Rothlin
 # ----------------------
 
-_12_Hallo = 1234  # jshfklhDJHFlksdhjfl
-_ = "Hallo"
+_12_Hallo = 1234.0  # jshfklhDJHFlksdhjfl
+_ = 'Franz sagte:"Hallo"'
+vorname = "Walter's"
 
 pi = 3.1415926
 hundert = 100
 maximale_leistung = 100
 
-print("Hallo, World!!!!", 123.00, 456, 'Uster\'s', True, 123*3, 'B' + 'ZU', maximale_leistung)
+print("Hallo,\"nicht\" heuteWorld!!!!", 123.00, 456, 'Uster\'s', True, 123*3, 'B' + 'ZU', maximale_leistung)
 
-# eingabe = input('Deine Eingabe: ')
+eingabe = input('Deine Eingabe: ')
 # print("Deine Eingabe war:", eingabe)
 
 # eingabe = input('Deine Name: ')
@@ -19,7 +20,7 @@ print('Wie gehts\nes\t\tDir?')
 
 ein_langer_text = """
 Ein ganz langer Text von mir an die Klasse!
-                Auf einer neuen Zeile!
+                Auf einer "neuen" Zeile!
 123.45      45.21
  23.12     105.10"""
 
