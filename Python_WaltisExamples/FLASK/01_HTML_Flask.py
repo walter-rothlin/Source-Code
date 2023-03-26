@@ -14,7 +14,7 @@
 # 30-Dec-2021   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-from flask import Flask, request
+from flask import Flask, render_template, request, url_for, request, redirect
 
 app = Flask(__name__)
 
@@ -24,14 +24,23 @@ app = Flask(__name__)
 # ======================================
 @app.route('/')
 def index():
-    return '''<H1>Hello Requester!</H1>
-    Einige Links zur Applikation:</BR>
+    return '''
+    <H1>Welcome requester on index-page!</H1>
+    Some links to static pages:</BR>
     <UL>
-        <LI><A href='http://www.fh-hwz.ch'>HWZ</A></LI>
-        <LI><A href='/emojiOverview'>Page mit Emojis</A></LI>
-        <LI><A href='/echo?lastName=Rothlin&firstName=Walti'>HTML-Page with parameter</A></LI>
-        <LI><A href='/rest?firstName=Felix&lastName=Muster'>JSON response with parameter</A></LI>
+        <LI>Source-Code: <A href='https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK/01_HTML_Flask.py'>This FLASK application</A></LI>
+        <LI>Just a Link: <A href='http://www.fh-hwz.ch'>Link to another external page</A></LI>
+        <LI>From this FLASK App: <A href='/emojiOverview'>Page with Emojis</A></LI>
+        <LI>Echo-Page :<A href='/echo?lastName=Rothlin&firstName=Walti'>HTML-Page with request-parameters</A></LI>
+        <LI>REST Request / JSON Response: <A href='/rest?firstName=Felix&lastName=Muster'>JSON response with parameter</A></LI>
     </UL>
+    </BR>
+    Links to this Applications (other endpoints):</BR>
+    <UL>
+        <LI>Static-Page: <A href='/get_static_page?filename=static/html/index_static.html'>static/html/index_static.html:</A></LI>
+        <LI>Parsed Template-Page: <A href='/get_parsed_template?filename=index_template.html'>index_template.html:</A></LI>
+    </UL>
+    
     '''
 
 @app.route('/emojiOverview')
@@ -55,7 +64,7 @@ def singleEmoji():
 
     return responseHtml
 
-@app.route('/echo', methods = ['GET', 'POST'])
+@app.route('/echo', methods=['GET', 'POST'])
 def echo():
     args = request.args
     responseHtml = '''
@@ -82,12 +91,57 @@ def echo():
     responseHtml += '</table>'
     return responseHtml
 
-@app.route('/rest', methods = ['GET', 'POST'])
+
+# Response read from static file
+# ==============================
+@app.route('/get_static_page', methods=['GET', 'POST'])
+def get_static_page():
+    filename = request.args.get("filename")
+    print("get_static_page():", filename)
+    if filename is None:
+        filename = 'static/html/index_static.html'
+    '''
+    # read file into string variable
+    text_file = open(filename, "r")
+    file_content = text_file.read()
+    text_file.close()
+    '''
+
+    # read file into string variable
+    with open(filename) as text_file:
+        file_content = text_file.read()
+
+    # print(file_content)
+    return file_content
+
+
+# Response Using Templats (
+# ==============================
+@app.route('/get_parsed_template')
+def get_parsed_template():
+    filename = request.args.get("filename")
+    print("get_static_page():", filename)
+    if filename is None:
+        filename = 'index_template.html'
+    return render_template(filename)
+
+
+
+
+# Response as JSON Structure
+# ==========================
+@app.route('/rest', methods=['GET', 'POST'])
 def REST():
     lastName = request.args.get("lastName")
     firstName = request.args.get("firstName")
     noName = request.args.get("noName")
     return {'Key': 'Value', 'lastName': lastName, 'firstName': firstName, 'noName': noName}, 200, {'Etag': 'some-opaque-string'}
 
+
+
+
+# =========================================================
+# main
+# =========================================================
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5001)
