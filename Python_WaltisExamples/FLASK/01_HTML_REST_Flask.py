@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name  : 01_HTML_Flask.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK/01_HTML_Flask.py
+# Name  : 01_HTML_REST_Flask.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK/01_HTML_REST_Flask.py
 #
 # Description: FLASK Web-Applikation
 # https://flask-restful.readthedocs.io/en/latest/quickstart.html#a-minimal-api
@@ -26,19 +26,21 @@ app = Flask(__name__)
 def index():
     return '''
     <H1>Welcome requester on index-page!</H1>
-    Some links to static pages:</BR>
+    Some links to static pages or fully produced response text:</BR>
     <UL>
         <LI>Source-Code: <A href='https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK/01_HTML_Flask.py'>This FLASK application</A></LI>
         <LI>Just a Link: <A href='http://www.fh-hwz.ch'>Link to another external page</A></LI>
         <LI>From this FLASK App: <A href='/emojiOverview'>Page with Emojis</A></LI>
         <LI>Echo-Page :<A href='/echo?lastName=Rothlin&firstName=Walti'>HTML-Page with request-parameters</A></LI>
-        <LI>REST Request / JSON Response: <A href='/rest?firstName=Felix&lastName=Muster'>JSON response with parameter</A></LI>
     </UL>
     </BR>
     Links to this Applications (other endpoints):</BR>
     <UL>
         <LI>Static-Page: <A href='/get_static_page?filename=static/html/index_static.html'>static/html/index_static.html:</A></LI>
         <LI>Parsed Template-Page: <A href='/get_parsed_template?filename=index_template.html'>index_template.html:</A></LI>
+        <LI>Parsed Template-Page: <A href='/get_parsed_template?filename=table_template.html'>table_template.html:</A></LI>
+        <LI>Parsed Template-Page with parameters: <A href='/adresslist/Roth'>table_template.html:</A></LI>
+        <LI>REST Request / JSON Response: <A href='/simple_REST?firstName=Felix&lastName=Muster'>JSON response with parameter</A></LI>
     </UL>
     
     '''
@@ -126,16 +128,37 @@ def get_parsed_template():
     return render_template(filename)
 
 
+@app.route('/adresslist/<string:search_criterium>', methods=['GET', 'POST'])
+def adresslist(search_criterium):
+    rs = [{'nachname': 'Rothlin'    , 'vorname': 'Walter'},
+          {'nachname': 'Meier'      , 'vorname': 'Max'},
+          {'nachname': 'Roth'       , 'vorname': 'Josef'},
+          {'nachname': 'Bamert'     , 'vorname': 'Fritz'},
+          {'nachname': 'Schnellmann', 'vorname': 'Daniel'}]
+    print(rs)
+    return render_template('table_template.html', result_liste=rs, search_criterium=search_criterium)
 
 
 # Response as JSON Structure
 # ==========================
-@app.route('/rest', methods=['GET', 'POST'])
-def REST():
+@app.route('/simple_REST', methods=['GET', 'POST'])
+def simple_REST():
     lastName = request.args.get("lastName")
     firstName = request.args.get("firstName")
-    noName = request.args.get("noName")
-    return {'Key': 'Value', 'lastName': lastName, 'firstName': firstName, 'noName': noName}, 200, {'Etag': 'some-opaque-string'}
+
+    rs = {'Title:': 'Turnverein',
+          'adress_data':
+              [
+                  {'key': 1, 'lastName': 'Rothlin'    , 'firstName': 'Walter'},
+                  {'key': 2, 'lastName': 'Meier'      , 'firstName': 'Max'},
+                  {'key': 3, 'lastName': 'Roth'       , 'firstName': 'Josef'},
+                  {'key': 4, 'lastName': 'Bamert'     , 'firstName': 'Fritz'},
+                  {'key': 5, 'lastName': 'Schnellmann', 'firstName': 'Daniel'}
+              ]
+         }
+    rs['adress_data'].append({'key': 6, 'lastName': lastName, 'firstName': firstName})
+
+    return rs, 200, {'Etag': 'some-opaque-string'}
 
 
 

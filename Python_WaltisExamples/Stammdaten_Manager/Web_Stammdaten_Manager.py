@@ -97,13 +97,6 @@ def adresslist(search_criterium):
     return render_template('personen_liste.html', result_liste=rs)
 
 
-@app.route('/rest', methods=['GET', 'POST'])
-def REST():
-    lastName = request.args.get("lastName")
-    firstName = request.args.get("firstName")
-    noName = request.args.get("noName")
-    return {'Key': 'Value', 'lastName': lastName, 'firstName': firstName, 'noName': noName}, 200, {'Etag': 'some-opaque-string'}
-
 if __name__ == '__main__':
     genossame = Stammdaten()
 

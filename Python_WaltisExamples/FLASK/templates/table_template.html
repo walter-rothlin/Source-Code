@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+    <!--
+    Source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK/templates/table_template.html
+    Run-Time: templates/table_template.html
+    -->
+{% block head %}
+
+{% endblock %}
+
+
+{% block body %}
+<div class="content">
+    <h1>Person-Liste</h1>
+
+    <div class="form">
+        <form action="/adressliste" method="POST">
+            <input type="text" name="search_criteria" id="search_criteria" value="{{ search_criterium }}">
+            <!-- <input type="submit" value="suchen"> -->
+        </form>
+        <br/>
+    </div>
+
+    <table>
+        <tr>
+            <th>Nachname</th>
+            <th>Vorname</th>
+        </tr>
+        {% for addr in result_liste %}
+            {% if search_criterium in addr.nachname -%}
+            <tr>
+                <td>{{ addr.nachname }}</td>
+                <td>{{ addr.vorname }}</td>
+            </tr>
+            {%- endif %}
+        {% endfor %}
+    </table>
+
+</div>
+
+
+{% endblock %}
