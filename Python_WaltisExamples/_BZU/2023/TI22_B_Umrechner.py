@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : TI22_B_Umrechner.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/BZU/2023/TI22_B_Umrechner.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_BZU/2023/TI22_B_Umrechner.py
 #
 # Description: Rechnet verschiedene physikalische Grössen um.
 #
