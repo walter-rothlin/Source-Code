@@ -102,52 +102,14 @@ ORDER BY
 
 
 
-
-
-
-
-
-
 -- 1.11) Liste film_id, title, rating, special_features von der Tabelle film 
 --       auf. Was ist der Type der Attribute rating und special_features?
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- 1.11.1) Liste film_id, title, rating, special_features von der Tabelle film 
---       auf. Filtern Sie wo rating PG und special_features Trailers oder special_features sind?
-
-
-
-
-
-
-
-
-
-
+--       auf. Filtern Sie wo rating PG und special_features Trailers sind?
 
 
 -- 1.12) Erstellen Sie eine Liste der bezahlten Betraege (FROM payment), 
@@ -156,14 +118,18 @@ ORDER BY
 
 
 
-
-
-
-
-
 -- 1.12.1) Erstellen Sie eine Liste (mit Vor- und Nachnamen) der bezahlten 
 --         Betraege (FROM payment), sortiert nach Betraege   
-
+SELECT 
+     P.customer_id AS Cust_ID,
+     C.first_name  AS Vornamne,
+     C.last_name   AS Nachname,
+     sum(`P`.`amount`)    AS `Betrag`,
+     count(`P`.`amount`)  AS `Anzahl Kaeufe`
+ FROM payment AS P
+ INNER JOIN customer AS C ON P.customer_id = C.customer_id
+ GROUP BY P.customer_id
+ ORDER BY Betrag DESC;
 
 
 
