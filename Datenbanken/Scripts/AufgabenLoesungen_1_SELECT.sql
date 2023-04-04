@@ -2,6 +2,7 @@
 
 -- ---------------------------------------------------------------------------------------------
 -- AufgabenLoesungen_1_SELECT.sql
+-- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/AufgabenLoesungen_1_SELECT.sql
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin

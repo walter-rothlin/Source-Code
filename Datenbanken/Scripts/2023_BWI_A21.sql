@@ -1,5 +1,6 @@
 -- ---------------------------------------------------------------------------------------------
 -- 2023_BWI_A21.sql
+-- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/2023_BWI_A21.sql
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin
