@@ -20,6 +20,7 @@
 -- 10-Feb-2023	 Walter Rothlin      Added SET and ENUM in Where-Clause
 -- 16-Feb-2023	 Walter Rothlin      Changed GROUP-BY questions
 -- 09-Mar-2023   Walter Rothlin      Changed Lichtenstein auf Andora
+-- 04-Apr-2023   Walter Rothlin      Added special types and 1.11.1)
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -199,6 +200,20 @@ SELECT
 FROM
     `film`
 WHERE FIND_IN_SET('Commentaries', `special_features`) > 0 OR FIND_IN_SET('Trailers', `special_features`) > 0;
+
+-- 1.11.1) Liste film_id, title, rating, special_features von der Tabelle film 
+--       auf. Filtern Sie wo rating PG und special_features Trailers oder special_features sind?
+SELECT
+    film_id, 
+    title, 
+    rating,          -- enum
+    special_features -- set
+FROM 
+    film
+WHERE
+    rating = 'PG' AND    -- e.g. Parental Guidance (Amerikanische Alterbeschränkung)
+    find_in_set('Trailers', special_features);
+
 
 -- 1.12) Erstellen Sie eine Liste der bezahlten Betraege (FROM payment), 
 --       sortiert nach Betraege
