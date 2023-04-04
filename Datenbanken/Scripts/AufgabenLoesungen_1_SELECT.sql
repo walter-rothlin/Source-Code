@@ -21,7 +21,7 @@
 -- 10-Feb-2023	 Walter Rothlin      Added SET and ENUM in Where-Clause
 -- 16-Feb-2023	 Walter Rothlin      Changed GROUP-BY questions
 -- 09-Mar-2023   Walter Rothlin      Changed Lichtenstein auf Andora
--- 04-Apr-2023   Walter Rothlin      Added special types and 1.11.1)
+-- 04-Apr-2023   Walter Rothlin      Added special types and 1.11.1), 1.8.1)
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -94,7 +94,7 @@ FROM
     actor
 ORDER BY Nachname;
 
--- 1.6) Von wie vielen Schauspieler hat es DVD im Store?
+-- 1.6) Von wie vielen Schauspieler hat oder hatte es eine DVD?
 SELECT 
     COUNT(last_name)
 FROM
@@ -122,17 +122,33 @@ ORDER BY
 -- 1.8) Liste alle Schauspielern (Vorname und Nachname) auf, welche Kirsten zum Vornamen heissen? Sortiere diese
 --      nach Nachnamen absteigend (Z..A) und nach Vorname aufsteigend (A..Z)
 SELECT 
-    first_name, last_name
+    `first_name`  AS `Vorname`, 
+    `last_name`   AS `Nachname`
 FROM
-    actor
+    `actor`
 WHERE
-    first_name = 'Kirsten'
+    `first_name` = 'Kirsten'
 ORDER BY
-    last_name DESC,
-    first_name;
+    `last_name` DESC,
+    `first_name`;
 
+-- 1.8.1) Liste alle Schauspielern (Vorname und Nachname) auf, welche NICHT Kirsten zum Vornamen heissen oder die Id 10 haben? Sortiere diese
+--      nach Nachnamen absteigend (Z..A) und nach Vorname aufsteigend (A..Z)
+SELECT 
+    `first_name`  AS `Vorname`, 
+    `last_name`   AS `Nachname`
+FROM
+    `actor`
+WHERE
+    `first_name` != 'Kirsten' OR
+     `actor_id` = 10
+ORDER BY
+    `last_name` DESC,
+    `first_name`;
 
--- 1.9) Liste alle Schauspielern (Vorname und Nachname) auf, welche NICK zum Vornamen heissen oder ein SS im Vornamen haben oder deren Vorname genau 4 Buchstaben lang ist.
+-- 1.9) Liste alle Schauspielern (Vorname und Nachname) auf, welche NICK zum Vornamen heissen 
+--        oder ein SS im Vornamen haben 
+--        oder deren Vorname genau 4 Buchstaben lang ist.
 --      Sortiert nach first_name und last_name
 SELECT 
     first_name AS FName,
@@ -203,7 +219,7 @@ FROM
 WHERE FIND_IN_SET('Commentaries', `special_features`) > 0 OR FIND_IN_SET('Trailers', `special_features`) > 0;
 
 -- 1.11.1) Liste film_id, title, rating, special_features von der Tabelle film 
---       auf. Filtern Sie wo rating PG und special_features Trailers oder special_features sind?
+--       auf. Filtern Sie wo rating PG und special_features Trailers sind?
 SELECT
     film_id, 
     title, 
