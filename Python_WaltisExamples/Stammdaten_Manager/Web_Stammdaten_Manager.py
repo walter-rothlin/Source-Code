@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : Web_Stammdaten_Manager.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Stamdaten_Manager/Web_Stammdaten_Manager.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Stammdaten_Manager/Web_Stammdaten_Manager.py
 #
 # Description: FLASK Web-Applikation for Maintaining Stammdaten
 #

@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : Stammdaten_Manager.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Stamdaten_Manager/Stammdaten_Manager.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Stammdaten_Manager/Stammdaten_Manager.py
 #
 # Description: Manager für Stammdaten
 #
