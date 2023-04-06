@@ -40,6 +40,7 @@
 # 05-Sep-2022   Stefan Rueeger      Typo fixed
 # 26-Sep-2022   Walter Rothlin      halt() returns string
 # 31-Dec-2022   Walter Rothlin      Added generateQRInvoiceData
+# 06-Apr-2022   Walter Rothlin      Added readFloat_00() guard with regex
 # ------------------------------------------------------------------
 
 
@@ -84,6 +85,11 @@ def waltisPythonLib_Version():
 # Regular-Expressions
 # ===================
 regEx_email = r'([\w\.-]+)@([\w\.-]+)'
+regEx_Float = '[+-]?\d*\.[0-9]+'
+regEx_Int = '[+-]?[0-9]'
+regEx_Float_Or_Int = '[+-]?\d*\.?\d+'
+
+
 
 # Bildschirmsteuerung
 # ===================
@@ -242,6 +248,17 @@ def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must b
             error = True
     return userInputFloat
 
+def readFloat_00(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
+    error = True
+    while error:
+        userInputStr = input(prompt)
+        if re.fullmatch(regEx_Float_Or_Int, userInputStr):
+            userInputFloat = float(userInputStr)
+            error = False
+        else:
+            print(errPreMsg + userInputStr + errPostMsg)
+            error = True
+    return userInputFloat
 
 def readFloat_1(prompt="Input [Float]:",
                 preErrorStr="Wrong Format:",

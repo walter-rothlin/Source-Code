@@ -29,8 +29,8 @@ while doLoop:
     print("  1: Grad in Bogenmass")  # rad  = grad*pi/180
     print("  2: Bogenmass in Grad")  # grad = rad*180/pi
     print()
-    print("  3: Fahrenheit in Celsius")  #32F -> 0°C    100F -> 38.8°C     °C = (°F - 32) / 1.8
-    print("  4: Celsius in Fahrenheit")  #32F -> 0°C    100F -> 38.8°C     °F = (°C * 1.8) - 32
+    print("  3: Fahrenheit in Celsius")  #32F -> 0°C    100F -> 37.78°C     °C = (°F - 32) / 1.8
+    print("  4: Celsius in Fahrenheit")  #32F -> 0°C    100F -> 37.78°C     °F = (°C * 1.8) + 32
     print()
     print("  5: Fakultät")
     print()
