@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: Stammdaten_Manager.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_08_MySql/Stammdaten_Manager.py
+# Name  : Stammdaten_Manager.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Stamdaten_Manager/Stammdaten_Manager.py
 #
 # Description: Manager für Stammdaten
 #
