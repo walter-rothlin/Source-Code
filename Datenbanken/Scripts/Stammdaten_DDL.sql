@@ -87,7 +87,7 @@ DROP TABLE IF EXISTS Adressen;
 CREATE TABLE IF NOT EXISTS Adressen (
   `ID`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Strasse`        VARCHAR(45) NULL,
-  `Hausnummer`     VARCHAR(5) NULL,
+  `Hausnummer`     VARCHAR(15) NULL,
   `Postfachnummer` VARCHAR(5) NULL,
   `Adresszusatz`   VARCHAR(20) NULL,
   `Wohnung`        VARCHAR(10) NULL,
@@ -741,7 +741,7 @@ DELIMITER ;
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getStrassenAdresse;
 Delimiter //
-CREATE FUNCTION getStrassenAdresse(p_strasse VARCHAR(45), p_hausnummer VARCHAR(5), p_postfach VARCHAR(5)) RETURNS CHAR(100)
+CREATE FUNCTION getStrassenAdresse(p_strasse VARCHAR(45), p_hausnummer VARCHAR(15), p_postfach VARCHAR(5)) RETURNS CHAR(100)
 BEGIN
     IF (p_postfach = "") THEN
 		RETURN CONCAT(p_strasse, ' ', p_hausnummer);
@@ -1265,7 +1265,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS getAdressId;
 DELIMITER $$
 CREATE PROCEDURE getAdressId(IN strasse VARCHAR(45), 
-							 IN hausnummer VARCHAR(10), 
+							 IN hausnummer VARCHAR(15), 
                              IN plz SMALLINT(4), 
                              IN ortsname VARCHAR(45), 
                              OUT adress_id SMALLINT(5))
@@ -1293,7 +1293,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS createAdresse;
 DELIMITER $$
 CREATE PROCEDURE createAdresse(IN strasse VARCHAR(45), 
-                               IN hausnummer VARCHAR(10), 
+                               IN hausnummer VARCHAR(15), 
                                IN plz SMALLINT(4), 
                                IN ortsname VARCHAR(45), 
                                OUT generatedId SMALLINT(5))
@@ -1312,7 +1312,7 @@ DELIMITER ;
 -- updateAdresse
 DROP PROCEDURE IF EXISTS updateAdresse;
 DELIMITER $$
-CREATE PROCEDURE updateAdresse(IN id SMALLINT(5), IN strasse VARCHAR(45), IN hausnummer VARCHAR(10), IN plz SMALLINT(4), IN ortsBezeichnung VARCHAR(45))
+CREATE PROCEDURE updateAdresse(IN id SMALLINT(5), IN strasse VARCHAR(45), IN hausnummer VARCHAR(15), IN plz SMALLINT(4), IN ortsBezeichnung VARCHAR(45))
 BEGIN
     CALL getOrtId(plz, ortsBezeichnung, @ort_id);
     UPDATE adressen SET strasse=strasse, hausnummer=hausnummer, orte_id=@ort_id WHERE id=id;
@@ -1366,7 +1366,7 @@ CREATE PROCEDURE getPersonenId(IN source ENUM('Initial_1', 'Loader_1', 'BuergerD
                                IN partner_name VARCHAR(45),
                                IN partner_name_angenommen BOOLEAN,
 							   IN strasse VARCHAR(45), 
-							   IN hausnummer VARCHAR(10), 
+							   IN hausnummer VARCHAR(15), 
 							   IN plz SMALLINT(4), 
 							   IN ortsname VARCHAR(45), 
                                OUT personen_id SMALLINT(5))
@@ -1408,7 +1408,7 @@ CREATE PROCEDURE createPerson(IN vorname VARCHAR(45),
                               IN partner_name VARCHAR(45),
                               IN firma VARCHAR(45),
 							  IN strasse VARCHAR(45), 
-							  IN hausnummer VARCHAR(10), 
+							  IN hausnummer VARCHAR(15), 
 							  IN plz SMALLINT(4), 
 							  IN ortsname VARCHAR(45),
 							  OUT generatedId SMALLINT(5))

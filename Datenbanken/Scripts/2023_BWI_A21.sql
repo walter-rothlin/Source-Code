@@ -8,6 +8,7 @@
 --
 -- History:
 -- 04-Apr-2023   Walter Rothlin      Initial Version (Select)
+-- 11-Apr-2023   Walter Rothlin		 Joins
 -- ---------------------------------------------------------------------------------------------
 
 
@@ -226,6 +227,38 @@ SELECT
 
 
 
+-- ============================
+-- Joins in der Lektion 11.4.23
+-- ============================
+SELECT
+     ci.city_id     AS ID,
+     ci.city        AS Ortsname,
+     -- ci.country_id  AS Land_ID,
+     co.country     AS Landesname
+FROM city AS ci
+INNER JOIN country AS co ON ci.country_id = co.country_id;
+
+SELECT
+     ci.city_id     AS ID,
+     ci.city        AS Ortsname,
+     -- ci.country_id  AS Land_ID,
+     co.country     AS Landesname
+FROM city AS ci, country AS co
+WHERE ci.country_id = co.country_id;
+
+DROP VIEW IF EXISTS film_languages;
+CREATE VIEW film_languages AS 
+	SELECT 
+		 f.film_id     AS Film_ID,
+		 f.title       AS Titel,
+		 -- f.language_id AS Sprache_ID,
+		 -- f.original_language_id AS Original_Sprache,
+		 l.name        AS Sprache,
+		 ol.name       AS Original_Sprache
+	FROM film AS f
+	INNER JOIN language AS l ON f.language_id = l.language_id
+	LEFT OUTER JOIN language AS ol ON f.original_language_id = ol.language_id;
+	-- WHERE l.name != 'English';
 
 
-
+SELECT * FROM language;

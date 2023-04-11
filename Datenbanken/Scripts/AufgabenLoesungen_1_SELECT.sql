@@ -1812,7 +1812,7 @@ FROM (
     LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id) AS SUBQ_1
 WHERE SUBQ_1.Originalsprache IS NOT NULL;
 
--- 5.2 (siehe 1.14.1) Erstellen Sie eine Listen Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
+-- 5.2 (siehe 1.14.1) Erstellen Sie eine Liste Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
 --       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
 --       Nur von den Kunden mit einem Umsatz > 170
 SELECT 

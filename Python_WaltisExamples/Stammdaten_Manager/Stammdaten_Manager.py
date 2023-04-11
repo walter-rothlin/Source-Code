@@ -142,7 +142,7 @@ def read_from_file_and_call_stored_procedure(
         for a_attribute in requested_attributs:
             values.append(a_data_tuple[db_file_mapping[a_attribute]])
             # print('==>', a_attribute, a_data_tuple[db_file_mapping[a_attribute]])
-        # print(','.join(requested_attributs), ' --> ', ','.join(values))
+        print(','.join(requested_attributs), ' --> ', ','.join(values))
 
         if arg_counts == 0:
             args = ('x')
@@ -423,26 +423,31 @@ def read_from_file_and_call_stored_procedure(
     '''
 
 def load_data_from_BuergerDB():
-    read_from_file_and_call_stored_procedure(
-        db_connection=stammdaten_schema,
-        csv_file_name=r'N:\02_EDV\Land_Import.csv',
-        csv_delimiter=',',
-        proc_name='getLandId',
-        db_file_mapping={'Name': 'Landname', 'Code': 'Code', 'Landesvorwahl': 'Landesvorwahl'})
 
-    read_from_file_and_call_stored_procedure(
-        db_connection=stammdaten_schema,
-        csv_file_name=r'N:\02_EDV\Orte_Import.csv',
-        csv_delimiter=',',
-        proc_name='getOrtId',
-        db_file_mapping={'PLZ': 'PLZ', 'Name': 'Ortsname', 'Kanton': 'Kanton', 'Tel_Vorwahl': 'TelVorwahl'})
+    if True:
+        read_from_file_and_call_stored_procedure(
+            db_connection=stammdaten_schema,
+            csv_file_name=r'N:\02_EDV\Land_Import.csv',
+            csv_delimiter=',',
+            proc_name='getLandId',
+            db_file_mapping={'Name': 'Landname', 'Code': 'Code', 'Landesvorwahl': 'Landesvorwahl'})
 
-    read_from_file_and_call_stored_procedure(
-        db_connection=stammdaten_schema,
-        csv_file_name=r'N:\02_EDV\Personen_Import.csv',
-        csv_delimiter=',',
-        proc_name='getPersonenId',
-        db_file_mapping={'Sex': 'Sex', 'Firma': 'Firma', 'Vorname': 'Vorname', 'Ledig_Name': 'Ledig_Name', 'Partner_Name': 'Partner_Name', 'Partner_Name_Angenommen': 'Partner_Name_Angenommen', 'Strasse': 'Strasse', 'Hausnummer': 'Hausnummer', 'PLZ': 'PLZ', 'Ort': 'Ort'})
+    if True:
+        read_from_file_and_call_stored_procedure(
+            db_connection=stammdaten_schema,
+            csv_file_name=r'N:\02_EDV\Orte_Import.csv',
+            csv_delimiter=',',
+            proc_name='getOrtId',
+            db_file_mapping={'PLZ': 'PLZ', 'Name': 'Ortsname', 'Kanton': 'Kanton', 'Tel_Vorwahl': 'TelVorwahl'})
+
+
+    if True:
+        read_from_file_and_call_stored_procedure(
+            db_connection=stammdaten_schema,
+            csv_file_name=r'N:\02_EDV\Personen_Import.csv',
+            csv_delimiter=',',
+            proc_name='getPersonenId',
+            db_file_mapping={'Sex': 'Sex', 'Firma': 'Firma', 'Vorname': 'Vorname', 'Ledig_Name': 'Ledig_Name', 'Partner_Name': 'Partner_Name', 'Partner_Name_Angenommen': 'Partner_Name_Angenommen', 'Strasse': 'Strasse', 'Hausnummer': 'Hausnummer', 'PLZ': 'PLZ', 'Ort': 'Ort'})
 
 
 def searchPerson(vorname, ledigname, partnername=None, gebdatum_YYYYMMDD=None):
@@ -673,10 +678,10 @@ if __name__ == '__main__':
                                    password="1234ABCD12abcd",
                                    trace=True)
 
-    # load_data_from_BuergerDB()
+    load_data_from_BuergerDB()
 
     # TEST_findPerson()
-    reco_personen()
+    # reco_personen()
 
     # load_bewirtschafter_details_from_Landteil_EXCEL()
     # load_landteile_from_Landteil_EXCEL()
