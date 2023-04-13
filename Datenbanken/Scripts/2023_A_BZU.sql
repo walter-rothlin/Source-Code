@@ -238,14 +238,47 @@ WHERE `first_name` REGEXP "^BER";
 
 
 
+-- 13.04.23
+DROP VIEW IF EXISTS Adress_liste;
+CREATE VIEW Adress_liste AS 
+	SELECT 
+		a.address  AS Strasse,
+		ci.city    AS Ort,
+		co.country AS Land
+	FROM address AS a
+	INNER JOIN city AS ci ON a.city_id = ci.city_id
+	INNER JOIN country AS co ON ci.country_id = co.country_id
+    ORDER BY ci.city;
 
 
+SELECT 
+    ADRESS_LISTE.Strasse,
+    ADRESS_LISTE.Land
+FROM (
+	SELECT 
+		a.address  AS Strasse,
+		ci.city    AS Ort,
+		co.country AS Land
+	FROM address AS a
+	INNER JOIN city AS ci ON a.city_id = ci.city_id
+	INNER JOIN country AS co ON ci.country_id = co.country_id) AS ADRESS_LISTE;
+    
+SELECT * FROM adress_liste;
 
 
+SELECT
+     f.title                 AS Film_Titel,
+     -- f.language_id AS Sprache_id,
+     l.name                  AS Sprache,
+     -- f.original_language_id  AS `Original Sprache ID`,
+     ol.name                 AS `Original Sprache`
+FROM film AS f
+INNER JOIN language      AS l  ON f.language_id               = l.language_id
+LEFT OUTER JOIN language AS ol ON f.original_language_id      = ol.language_id;
 
 
-
-
-
-
-
+SELECT
+    c.city     AS `Stadt NAME`,
+    co.country AS Land
+FROM city AS c, country AS co
+WHERE c.country_id = co.country_id;

@@ -32,7 +32,9 @@
 # 13-Nov-2021   Walter Rothlin      Added crypto functions (shiftChr(), chipher(), encrypt(), decrypt())
 # 22-Nov-2021   Walter Rothlin      Added readFile
 # 22-Nov-2021   Walter Rothlin      Added Search and XML fct: dictify, getFieldFromTelSearchXML
-#                                        getResultsFromAdressSearch, getResults_search_ch, getResults_geoAdmin
+#                                         getResultsFromAdressSearch,
+#                                         getResults_search_ch,
+#                                         getResults_geoAdmin
 # 04-Dec-2021   Walter Rothlin      Added getMenuStrFromList
 # 06-Dec-2021   Walter Rothlin      Added getFilenameWithoutExtension, getFilenameExtension, addTimestampToFileName, getPath
 # 15-Jan-2022   Walter Rothlin      Added File_remove

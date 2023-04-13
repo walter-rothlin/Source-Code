@@ -248,22 +248,3 @@ ORDER BY `Nachname` DESC, `Vorname`;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
