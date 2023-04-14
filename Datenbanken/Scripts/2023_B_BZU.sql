@@ -246,5 +246,36 @@ ORDER BY `Nachname` DESC, `Vorname`;
 
 
 
+-- 14.04.23
+-- ========
+SELECT
+      adr.address        AS Strasse,
+      -- adr.city_id     AS Stadt_ID,
+      ci.city            AS Stadt,
+      -- ci.country_id   AS Land_ID,
+      co.country         AS Land
+FROM address AS adr
+INNER JOIN city    AS ci ON adr.city_id   = ci.city_id
+INNER JOIN country AS co ON ci.country_id = co.country_id;
+
+CREATE VIEW film_sprachen AS
+	SELECT
+		 f.title                   AS Titel,
+		 -- f.language_id          AS Sprach_ID,
+		 l.name                    AS Sprache,
+		 -- f.original_language_id AS Original_Sprache_ID,
+		 ol.name                   AS Original_Sprache
+	FROM film AS f
+	INNER JOIN language      AS l  ON f.language_id           = l.language_id
+	LEFT OUTER JOIN language AS ol ON f.original_language_id  = ol.language_id;
+
+
+SELECT 
+	ci.city         AS Stadt,
+	ci.country_id   AS Land_ID,
+    co.country      AS Land
+FROM city AS ci, country AS co
+WHERE ci.country_id = co.country_id;
+
 
 

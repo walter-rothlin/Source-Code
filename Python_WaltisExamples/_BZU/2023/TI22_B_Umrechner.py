@@ -21,9 +21,7 @@ halbbogen = 180
 null_celsius = 32
 celsius_fahrenheit_factor = 1.8
 
-regEx_Float = '[+-]?\d*\.[0-9]+'
-regEx_Int = '[+-]?[0-9]'
-regEx_Float_Or_Int = '[+-]?\d*\.?\d+'
+regEx_Float = r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?'
 
 
 # Functions
@@ -42,6 +40,37 @@ def fahr_in_celsius(fahr_value):
 def celsius_in_fahr(celsius_value):
     return (cel_value * celsius_fahrenheit_factor) + null_celsius
 
+def read_float_pre_condition(prompt):
+    has_error = True
+    while has_error:
+        float_str = input(prompt)
+        if re.fullmatch(regEx_Float, float_str):
+            float_value = float(float_str)
+            has_error = False
+        else:
+            print('Kein gültiger Float-String!!!!')
+
+    return float_value
+
+
+
+# exception handling
+def read_float(prompt, min_value=None, max_value=None):
+    has_error = True
+    while has_error:
+        try:
+            float_str = input(prompt)
+            float_value = float(float_str)
+            if min_value is not None and float_value < min_value:
+                print('Zu klein!!')
+            elif max_value is not None and float_value > max_value:
+                print('Zu gross')
+            else:
+                has_error = False
+        except ValueError:
+            print('Kein gültiger Float-String')
+
+    return float_value
 
 # =============
 # Hauptprogramm
@@ -69,25 +98,25 @@ while do_loop:
 
     elif wahl == '1':  # rad  = grad*pi/180
         print("Grad in RAD!!!")
-        grad_value = float(input('Grad:'))
+        grad_value = read_float('Grad:', min_value=0, max_value=360)
         rad_value = grad_in_rad(grad_value)
         print('Grad:{grad:1.2f}    Rad:{rad:1.4f}'.format(grad=grad_value, rad=rad_value))
 
     elif wahl == '2':  # grad = rad*180/pi
         print("RAD in Grad!!!")
-        rad_value = float(input('Rad:'))
+        rad_value = read_float('Rad:')
         grad_value = rad_in_grad(rad_value)
         print('Rad:{rad:1.4f}    Grad:{grad:1.2f}'.format(grad=grad_value, rad=rad_value))
 
     elif wahl == '3':
         print("Fahrenheit in Celsius!")
-        fahr_value = float(input('Fahrenheit:'))
+        fahr_value = read_float('Fahrenheit:')
         cel_value = fahr_in_celsius(fahr_value)
         print('Fahrenheit:{far:1.2f}    Celsius:{cel:1.4f}'.format(far=fahr_value, cel=cel_value))
 
     elif wahl == '4':
         print("Celsius in Fahrenheit!")
-        cel_value = float(input('Celsius:'))
+        cel_value = read_float('Celsius:')
         fahr_value = celsius_in_fahr(cel_value)
         print('Celsius:{cel:1.2f}    Fahrenheit:{far:1.4f}'.format(cel=cel_value, far=fahr_value))
 
