@@ -465,6 +465,9 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Test-Cases
+-- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+
 -- --------------------------------------------------------------------------------
 --  Fct 10.1) Gibt den juengeren Timestamp zurueck
 DROP FUNCTION IF EXISTS getYounger;
@@ -479,8 +482,9 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Test-Cases
 -- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
--- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.3) Gibt die internationale PLZ zurueck
@@ -492,7 +496,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
 -- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
@@ -506,16 +510,15 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
-/*
+-- Test-Cases
 -- SHOW CHARACTER SET;
-SELECT firstUpper("herr");    -- --> Herr
-SELECT firstUpper("HERR");    -- --> Herr
-SELECT firstUpper("Herr");    -- --> Herr
-SELECT firstUpper("hERR");    -- --> Herr
-SELECT firstUpper("züger");   -- --> Zzaüger
-SELECT firstUpper("zueger");  -- --> Zzaüger
-*/
+-- SELECT firstUpper("herr");    -- --> Herr
+-- SELECT firstUpper("HERR");    -- --> Herr
+-- SELECT firstUpper("Herr");    -- --> Herr
+-- SELECT firstUpper("hERR");    -- --> Herr
+-- SELECT firstUpper("züger");   -- --> Zzaüger
+-- SELECT firstUpper("zueger");  -- --> Zzaüger
+
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.5) Gibt ersten Buchstaben von p_name als Grossbuchstabe zurueck gefolgt von p_tail
@@ -527,8 +530,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
-
+-- Test-Cases
 -- SELECT getInitial("Walter",".");  -- --> W.
 -- SELECT getInitial("walti", ".");  -- --> W.
 -- SELECT getInitial("Max", ",");    -- --> M,
@@ -549,7 +551,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getName_With_Initial('Walter', 'Max');  -- --> Walter M.
 -- SELECT getName_With_Initial('Walti', '');      -- --> Walti
 -- SELECT getName_With_Initial('Walti', NULL);    -- --> Walti
@@ -572,7 +574,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getAnrede("Herr", "Walter", TRUE, "Rothlin");         -- --> Herr W.Rothlin
 -- SELECT getAnrede("Frau", "Claudia", TRUE, "Collet Rothlin"); -- --> Frau C.Collet Rothlin
 
@@ -594,7 +596,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
 -- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
 
@@ -616,7 +618,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
 -- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
  
@@ -650,7 +652,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getFamilieName('Herr', FALSE, 'Rothlin', '');        -- --> Rothlin
 -- SELECT getFamilieName('Frau', FALSE, 'Collet', '');         -- --> Collet
 -- SELECT getFamilieName('Herr', TRUE,  'Rothlin', '');        -- --> Rothlin
@@ -690,6 +692,9 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
+
+-- Test-Cases
+
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS calc_yearly_pachtfee;
 DELIMITER //
@@ -698,6 +703,8 @@ BEGIN
    RETURN  flaeche_in_aren * preis_pro_are;
 END//
 DELIMITER ;
+
+-- Test-Cases
 
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_TelNr;
@@ -708,7 +715,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getPrio_0_TelNr(4);  -- --> 0793315587
 
 -- --------------------------------------------------------------------------------
@@ -721,7 +728,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getPrio_0_EMail(4);  -- --> abajschne@gmx.ch
 
 -- --------------------------------------------------------------------------------
@@ -733,7 +740,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getPrio_0_IBAN(16);  -- --> abajschne@gmx.ch
 
 -- --------------------------------------------------------------------------------
@@ -772,7 +779,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getStrassenAdresse('Peterliwiese', '33a', '');  -- --> Peterliwiese 33
 -- SELECT getStrassenAdresse('Peterliwiese', '33a', '243' );  -- --> Peterliwiese 33 / Postfach:243
 

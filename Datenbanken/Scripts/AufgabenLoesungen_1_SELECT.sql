@@ -1546,7 +1546,7 @@ BEGIN
   RETURN  'Hoi!!';
 END//
 
--- Testen
+-- Test-Cases
 -- SELECT sayHelloSimple();
 -- SELECT 'Hello???';
 
@@ -1560,7 +1560,7 @@ BEGIN
   RETURN  CONCAT('Hallo: ', p_input_string);
 END$$$
 
--- Testen
+-- Test-Cases
 -- SELECT sayHello('Walti');-- --> Hallo: Walti
 
 --  -------------------------------------------------------------
@@ -1575,7 +1575,7 @@ END
 //
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT formatPLZ(8854) AS PLZ_Formated;     -- --> CH-8855
 
 --  -------------------------------------------------------------
@@ -1591,7 +1591,7 @@ END
 //
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
 -- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
@@ -1610,16 +1610,13 @@ END
 //
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT firstUpper("herr");  -- --> Herr
 -- SELECT firstUpper("HERR");  -- --> Herr
 -- SELECT firstUpper("Herr");  -- --> Herr
 -- SELECT firstUpper("hERR");  -- --> Herr
 
 --  -------------------------------------------------------------
---  Fct 4.0) Generiert Anreden.
---           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
---           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
 --  Fct 10.0) Gibt den aelteren Timestamp zurueck
 DROP FUNCTION IF EXISTS getOlder;
 DELIMITER //
@@ -1632,6 +1629,9 @@ BEGIN
    END IF;
 END//
 DELIMITER ;
+
+-- Test-Cases
+-- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.1) Gibt den juengeren Timestamp zurueck
@@ -1647,8 +1647,8 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Test-Cases
 -- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
--- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.3) Gibt die internationale PLZ zurueck
@@ -1660,7 +1660,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
 -- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
@@ -1674,16 +1674,15 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
-/*
+-- Test-Cases
 -- SHOW CHARACTER SET;
-SELECT firstUpper("herr");    -- --> Herr
-SELECT firstUpper("HERR");    -- --> Herr
-SELECT firstUpper("Herr");    -- --> Herr
-SELECT firstUpper("hERR");    -- --> Herr
-SELECT firstUpper("züger");   -- --> Zzaüger
-SELECT firstUpper("zueger");  -- --> Zzaüger
-*/
+-- SELECT firstUpper("herr");    -- --> Herr
+-- SELECT firstUpper("HERR");    -- --> Herr
+-- SELECT firstUpper("Herr");    -- --> Herr
+-- SELECT firstUpper("hERR");    -- --> Herr
+-- SELECT firstUpper("züger");   -- --> Zzaüger
+-- SELECT firstUpper("zueger");  -- --> Zzaüger
+
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.5) Gibt ersten Buchstaben von p_name als Grossbuchstabe zurueck gefolgt von p_tail
@@ -1695,8 +1694,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
-
+-- Test-Cases
 -- SELECT getInitial("Walter",".");  -- --> W.
 -- SELECT getInitial("walti", ".");  -- --> W.
 -- SELECT getInitial("Max", ",");    -- --> M,
@@ -1717,7 +1715,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Case
 -- SELECT getName_With_Initial('Walter', 'Max');  -- --> Walter M.
 -- SELECT getName_With_Initial('Walti', '');      -- --> Walti
 -- SELECT getName_With_Initial('Walti', NULL);    -- --> Walti
@@ -1740,7 +1738,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Case
 -- SELECT getAnrede("Herr", "Walter", TRUE, "Rothlin");         -- --> Herr W.Rothlin
 -- SELECT getAnrede("Frau", "Claudia", TRUE, "Collet Rothlin"); -- --> Frau C.Collet Rothlin
 
@@ -1762,7 +1760,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Case
 -- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
 -- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
 
@@ -1784,7 +1782,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Case
 -- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
 -- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
  
@@ -1818,7 +1816,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
+-- Test-Cases
 -- SELECT getFamilieName('Herr', FALSE, 'Rothlin', '');        -- --> Rothlin
 -- SELECT getFamilieName('Frau', FALSE, 'Collet', '');         -- --> Collet
 -- SELECT getFamilieName('Herr', TRUE,  'Rothlin', '');        -- --> Rothlin
@@ -1858,9 +1856,10 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
+
+-- Test-Cases
+
 -- --------------------------------------------------------------------------------
-
-
 --  Fct 10.12) Gibt Strasse mit Nr resp Postfach zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getStrassenAdresse;
 DELIMITER //
@@ -1896,8 +1895,8 @@ BEGIN
 END//
 DELIMITER ;
 
--- Testen
--- SELECT getStrassenAdresse('Peterliwiese', '33a', '');  -- --> Peterliwiese 33
+-- Test-Cases
+-- SELECT getStrassenAdresse('Peterliwiese', '33a', '');      -- --> Peterliwiese 33
 -- SELECT getStrassenAdresse('Peterliwiese', '33a', '243' );  -- --> Peterliwiese 33 / Postfach:243
 
 -- END ownFunctions
