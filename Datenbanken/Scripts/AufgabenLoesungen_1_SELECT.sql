@@ -819,7 +819,7 @@ DESCRIBE INFORMATION_SCHEMA.COLUMNS;
 -- =====
 -- 3.9.1) Erstellen Sie eine Orte Laenderliste  (Kreuzprodukt)
 SELECT
-     city.city as Stadt,
+	city.city as Stadt,
     country.country as Land
 FROM
     city, country;
@@ -1526,7 +1526,7 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 --         https://www.tutorialspoint.com/plsql/index.htm
 --         https://www.oracletutorial.com/plsql-tutorial/
 
--- Schreiben sie eine eigene Function gemaess Spezification
+-- Schreiben sie eine eigene Functionen gemaess folgenden Spezification
 
 -- Bei folgendem Fehler:
 --    Error Code: 1418. This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA in its declaration and binary logging is enabled (you *might* want to use the less safe log_bin_trust_function_creators variable)
@@ -1617,7 +1617,7 @@ SELECT firstUpper("Herr");  -- --> Herr
 SELECT firstUpper("hERR");  -- --> Herr
 
 --  -------------------------------------------------------------
---  Fct 4.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
+--  Fct 4.0) Generiert Anreden.
 --           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
 --           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
 DROP FUNCTION IF EXISTS getAnrede;
