@@ -15,7 +15,8 @@
 -- 21-Jan-2023   Walter Rothlin      Added landteil
 -- 08-Feb-2023   Walter Rothlin      Added more attributes to Person, Landteil
 -- 18-Feb-2023   Walter Rothlin      Fix Charset issue in firstUpper()
--- 26-Feb-2023   Walter Rothlin      Added IDs to orte....personen views
+-- 26-Feb-2023   Walter Rothlin      Added IDs to orte....personen viewsstored-Procedure section
+-- 18-Apr-2023   Walter Rothlin      Fixed DELIMITER in Fct and 
 -- ---------------------------------------------------------------------------------------------
 
 -- MySQL Workbench Forward Engineering
@@ -451,8 +452,9 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
 SET GLOBAL log_bin_trust_function_creators = 1;
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.0) Gibt den aelteren Timestamp zurueck
 DROP FUNCTION IF EXISTS getOlder;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION  getOlder(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
 BEGIN
    IF timeStamp_1 < timeStamp_2 THEN
@@ -460,13 +462,13 @@ BEGIN
    ELSE
          RETURN  timeStamp_2;
    END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.1) Gibt den juengeren Timestamp zurueck
 DROP FUNCTION IF EXISTS getYounger;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
 BEGIN
    IF timeStamp_1 > timeStamp_2 THEN
@@ -474,21 +476,20 @@ BEGIN
    ELSE
          RETURN  timeStamp_2;
    END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 -- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.3) Gibt die internationale PLZ zurueck
 DROP FUNCTION IF EXISTS formatPLZinternational;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION formatPLZinternational(p_countryCode CHAR(50), p_input_plz SMALLINT) RETURNS CHAR(50)
 BEGIN
    RETURN  concat(p_countryCode, '-', p_input_plz);
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -496,34 +497,34 @@ DELIMITER ;
 -- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
 --  -------------------------------------------------------------
+--  Fct 10.4) Gibt p_str zurueck mit erstem Buchstaben als Grossbuchstabe
 DROP FUNCTION IF EXISTS firstUpper;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION firstUpper(p_str VARCHAR(255)) RETURNS VARCHAR(255)
 BEGIN
    RETURN  CONCAT(UPPER(LEFT(p_str, 1)), LOWER(RIGHT(p_str,CHAR_LENGTH(p_str)-1)));
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
 /*
 -- SHOW CHARACTER SET;
-SELECT firstUpper("herr");  -- --> Herr
-SELECT firstUpper("HERR");  -- --> Herr
-SELECT firstUpper("Herr");  -- --> Herr
-SELECT firstUpper("hERR");  -- --> Herr
-SELECT firstUpper("züger");  -- --> Zzaüger
+SELECT firstUpper("herr");    -- --> Herr
+SELECT firstUpper("HERR");    -- --> Herr
+SELECT firstUpper("Herr");    -- --> Herr
+SELECT firstUpper("hERR");    -- --> Herr
+SELECT firstUpper("züger");   -- --> Zzaüger
 SELECT firstUpper("zueger");  -- --> Zzaüger
 */
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.5) Gibt ersten Buchstaben von p_name als Grossbuchstabe zurueck gefolgt von p_tail
 DROP FUNCTION IF EXISTS getInitial;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getInitial(p_name CHAR(100), p_tail CHAR(5)) RETURNS CHAR(10)
 BEGIN
    RETURN  CONCAT(UPPER(LEFT(p_name, 1)), p_tail);
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -534,17 +535,18 @@ DELIMITER ;
 -- SELECT getInitial("max", ",");    -- --> M,
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.6) Gibt p_firstname gefolgt von, falls existiert, einem Space und ersten 
+--            Buchstaben von p_firstname2 als Grossbuchstabe zurueck 
 DROP FUNCTION IF EXISTS getName_With_Initial;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getName_With_Initial(p_firstname CHAR(100), p_firstname2 CHAR(100)) RETURNS CHAR(45)
 BEGIN
    IF (p_firstname2 = '' OR p_firstname2 is NULL) THEN
-	   RETURN  p_firstname;
+	   RETURN  firstUpper(p_firstname);
    ELSE
-       RETURN  CONCAT(p_firstname, ' ', getInitial(p_firstname2, '.'));
+       RETURN  CONCAT(firstUpper(p_firstname), ' ', getInitial(p_firstname2, '.'));
    END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -553,8 +555,9 @@ DELIMITER ;
 -- SELECT getName_With_Initial('Walti', NULL);    -- --> Walti
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.7) Gibt Anrede zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getAnrede;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getAnrede(p_sex CHAR(20), p_firstname CHAR(45), p_vorname_short BOOLEAN, p_lastname CHAR(100) ) RETURNS CHAR(150)
 BEGIN
    IF (p_sex = 'Firma') THEN 
@@ -566,17 +569,17 @@ BEGIN
             RETURN  CONCAT(p_sex, ' ', p_firstname, ' ', p_lastname);
 		END IF;
    END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
--- SELECT getAnrede("Herr", "Walter", TRUE, "Rothlin"); -- --> Herr W.Rothlin
+-- SELECT getAnrede("Herr", "Walter", TRUE, "Rothlin");         -- --> Herr W.Rothlin
 -- SELECT getAnrede("Frau", "Claudia", TRUE, "Collet Rothlin"); -- --> Frau C.Collet Rothlin
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.8) Gibt Brief-Anrede zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getBrief_Anrede;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getBrief_Anrede(p_sex CHAR(20), p_lastname CHAR(100) ) RETURNS CHAR(100)
 BEGIN
    IF (p_sex = 'Firma') THEN 
@@ -588,8 +591,7 @@ BEGIN
             RETURN  CONCAT('Sehr geehrte ',firstUpper(p_sex), ' ', p_lastname);
 		END IF;
    END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -597,8 +599,9 @@ DELIMITER ;
 -- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.9) Gibt perDu Brief-Anrede zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getBrief_Anrede_PerDu;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getBrief_Anrede_PerDu(p_sex CHAR(20), p_firstname CHAR(100) ) RETURNS CHAR(100)
 BEGIN
    IF (p_sex = 'Firma') THEN 
@@ -610,8 +613,7 @@ BEGIN
             RETURN  CONCAT('Liebe ', p_firstname);
 		END IF;
    END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -619,8 +621,9 @@ DELIMITER ;
 -- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
  
 --  ------------------------------------------------------------- 
+--  Fct 10.10) Gibt Familienname zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getFamilieName;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getFamilieName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(100)
 BEGIN
 	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
@@ -644,8 +647,7 @@ BEGIN
 	ELSE 
 		RETURN  "";
     END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -660,8 +662,9 @@ DELIMITER ;
 -- SELECT getFamilieName('Frau', TRUE,  'Collet', 'Rothlin');  -- --> Rothlin-Collet
 
 --  ------------------------------------------------------------- 
+--  Fct 10.11) Gibt LastName zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getLastName;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getLastName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(50)
 BEGIN
 	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
@@ -685,27 +688,24 @@ BEGIN
 	ELSE 
 		RETURN  '';
     END IF;
-END
-//
+END//
 DELIMITER ;
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS calc_yearly_pachtfee;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION calc_yearly_pachtfee(flaeche_in_aren FLOAT, preis_pro_are FLOAT) RETURNS FLOAT
 BEGIN
    RETURN  flaeche_in_aren * preis_pro_are;
-END
-//
+END//
 DELIMITER ;
 
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_TelNr;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getPrio_0_TelNr(p_id INT) RETURNS CHAR(100)
 BEGIN
     RETURN (SELECT nummer FROM Telnr_Liste_Prio_0 WHERE Pers_ID = p_id AND prio=0 LIMIT 1);
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -713,13 +713,12 @@ DELIMITER ;
 
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_EMail;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getPrio_0_EMail(p_id INT) RETURNS CHAR(100)
 BEGIN
     -- RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
     RETURN (SELECT eMail FROM email_main WHERE Person_id = p_id AND prio=0 LIMIT 1);
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
@@ -727,20 +726,20 @@ DELIMITER ;
 
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_IBAN;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getPrio_0_IBAN(p_id INT) RETURNS CHAR(100)
 BEGIN
     RETURN (SELECT Nummer FROM iban WHERE personen_id = p_id AND prio=0 LIMIT 1);
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
 -- SELECT getPrio_0_IBAN(16);  -- --> abajschne@gmx.ch
 
 -- --------------------------------------------------------------------------------
+--  Fct 10.12) Gibt Strasse mit Nr resp Postfach zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getStrassenAdresse;
-Delimiter //
+DELIMITER //
 CREATE FUNCTION getStrassenAdresse(p_strasse VARCHAR(45), p_hausnummer VARCHAR(15), p_postfach VARCHAR(5)) RETURNS CHAR(100)
 BEGIN
     IF (p_postfach = "") THEN
@@ -770,11 +769,12 @@ BEGIN
 		  END IF;
        END IF;
     END IF;
-END
-//
+END//
 DELIMITER ;
 
 -- Testen
+-- SELECT getStrassenAdresse('Peterliwiese', '33a', '');  -- --> Peterliwiese 33
+-- SELECT getStrassenAdresse('Peterliwiese', '33a', '243' );  -- --> Peterliwiese 33 / Postfach:243
 
 -- ===============================================================================================
 -- == Create Views                                                                              ==

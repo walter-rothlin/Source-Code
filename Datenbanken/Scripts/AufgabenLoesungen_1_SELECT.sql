@@ -22,6 +22,7 @@
 -- 16-Feb-2023	 Walter Rothlin      Changed GROUP-BY questions
 -- 09-Mar-2023   Walter Rothlin      Changed Lichtenstein auf Andora
 -- 04-Apr-2023   Walter Rothlin      Added special types and 1.11.1), 1.8.1)
+-- 18-Apr-2023   Walter Rothlin      Added more Fct and Proc and fixed DELIMITER in Fct and 
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -1546,14 +1547,13 @@ BEGIN
 END//
 
 -- Testen
-SELECT sayHelloSimple();
-SELECT 'Hello???';
+-- SELECT sayHelloSimple();
+-- SELECT 'Hello???';
 
 --  -------------------------------------------------------------
 --  Fct 2.0) Nimmt eine Zeichenkette und haengt Hallo: vorne an.
 --           SELECT sayHello('Walti');-- --> Hallo: Walti
 DROP FUNCTION IF EXISTS sayHello;
--- DROP FUNCTION IF EXISTS HelloFct;
 Delimiter $$$
 CREATE FUNCTION sayHello(p_input_string CHAR(20)) RETURNS CHAR(50)
 BEGIN
@@ -1561,7 +1561,7 @@ BEGIN
 END$$$
 
 -- Testen
-SELECT sayHello('Walti');-- --> Hallo: Walti
+-- SELECT sayHello('Walti');-- --> Hallo: Walti
 
 --  -------------------------------------------------------------
 --  Fct 2.1)  Nimmt eine PLZ und haengt CH- vorne an.
@@ -1576,7 +1576,7 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT formatPLZ(8854) AS PLZ_Formated;     -- --> CH-8855
+-- SELECT formatPLZ(8854) AS PLZ_Formated;     -- --> CH-8855
 
 --  -------------------------------------------------------------
 --  Fct 2.2)  Nimmt einen Laendercode und eine PLZ und haengt diese mit 
@@ -1592,8 +1592,8 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
-SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
+-- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
+-- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
 --  -------------------------------------------------------------
 --  Fct 3.0) Nimmt eine Zeichenkette und macht den 1.Buchstaben Uppercase und die restlichen Lowercase
@@ -1611,28 +1611,294 @@ END
 DELIMITER ;
 
 -- Testen
-SELECT firstUpper("herr");  -- --> Herr
-SELECT firstUpper("HERR");  -- --> Herr
-SELECT firstUpper("Herr");  -- --> Herr
-SELECT firstUpper("hERR");  -- --> Herr
+-- SELECT firstUpper("herr");  -- --> Herr
+-- SELECT firstUpper("HERR");  -- --> Herr
+-- SELECT firstUpper("Herr");  -- --> Herr
+-- SELECT firstUpper("hERR");  -- --> Herr
 
 --  -------------------------------------------------------------
 --  Fct 4.0) Generiert Anreden.
 --           SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
 --           SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
-DROP FUNCTION IF EXISTS getAnrede;
-Delimiter //
-CREATE FUNCTION getAnrede(p_sex CHAR(20), p_firstname CHAR(20), p_lastname CHAR(20) ) RETURNS CHAR(50)
+--  Fct 10.0) Gibt den aelteren Timestamp zurueck
+DROP FUNCTION IF EXISTS getOlder;
+DELIMITER //
+CREATE FUNCTION  getOlder(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
 BEGIN
-   RETURN  CONCAT(firstUpper(p_sex), ' ', UPPER(LEFT(p_firstname, 1)), '.', firstUpper(p_lastname));
-END
-//
+   IF timeStamp_1 < timeStamp_2 THEN
+         RETURN  timeStamp_1;
+   ELSE
+         RETURN  timeStamp_2;
+   END IF;
+END//
+DELIMITER ;
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.1) Gibt den juengeren Timestamp zurueck
+DROP FUNCTION IF EXISTS getYounger;
+DELIMITER //
+CREATE FUNCTION  getYounger(timeStamp_1 datetime, timeStamp_2 datetime) RETURNS datetime
+BEGIN
+   IF timeStamp_1 > timeStamp_2 THEN
+         RETURN  timeStamp_1;
+   ELSE
+         RETURN  timeStamp_2;
+   END IF;
+END//
+DELIMITER ;
+
+-- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+-- SELECT getOlder(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.3) Gibt die internationale PLZ zurueck
+DROP FUNCTION IF EXISTS formatPLZinternational;
+DELIMITER //
+CREATE FUNCTION formatPLZinternational(p_countryCode CHAR(50), p_input_plz SMALLINT) RETURNS CHAR(50)
+BEGIN
+   RETURN  concat(p_countryCode, '-', p_input_plz);
+END//
 DELIMITER ;
 
 -- Testen
-SELECT getAnrede("Herr", "Walter", "Rothlin"); -- --> Herr W.Rothlin
-SELECT getAnrede("herr", "walter", "rothlin"); -- --> Herr W.Rothlin
+-- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
+-- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
 
+--  -------------------------------------------------------------
+--  Fct 10.4) Gibt p_str zurueck mit erstem Buchstaben als Grossbuchstabe
+DROP FUNCTION IF EXISTS firstUpper;
+DELIMITER //
+CREATE FUNCTION firstUpper(p_str VARCHAR(255)) RETURNS VARCHAR(255)
+BEGIN
+   RETURN  CONCAT(UPPER(LEFT(p_str, 1)), LOWER(RIGHT(p_str,CHAR_LENGTH(p_str)-1)));
+END//
+DELIMITER ;
+
+-- Testen
+/*
+-- SHOW CHARACTER SET;
+SELECT firstUpper("herr");    -- --> Herr
+SELECT firstUpper("HERR");    -- --> Herr
+SELECT firstUpper("Herr");    -- --> Herr
+SELECT firstUpper("hERR");    -- --> Herr
+SELECT firstUpper("züger");   -- --> Zzaüger
+SELECT firstUpper("zueger");  -- --> Zzaüger
+*/
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.5) Gibt ersten Buchstaben von p_name als Grossbuchstabe zurueck gefolgt von p_tail
+DROP FUNCTION IF EXISTS getInitial;
+DELIMITER //
+CREATE FUNCTION getInitial(p_name CHAR(100), p_tail CHAR(5)) RETURNS CHAR(10)
+BEGIN
+   RETURN  CONCAT(UPPER(LEFT(p_name, 1)), p_tail);
+END//
+DELIMITER ;
+
+-- Testen
+
+-- SELECT getInitial("Walter",".");  -- --> W.
+-- SELECT getInitial("walti", ".");  -- --> W.
+-- SELECT getInitial("Max", ",");    -- --> M,
+-- SELECT getInitial("max", ",");    -- --> M,
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.6) Gibt p_firstname gefolgt von, falls existiert, einem Space und ersten 
+--            Buchstaben von p_firstname2 als Grossbuchstabe zurueck 
+DROP FUNCTION IF EXISTS getName_With_Initial;
+DELIMITER //
+CREATE FUNCTION getName_With_Initial(p_firstname CHAR(100), p_firstname2 CHAR(100)) RETURNS CHAR(45)
+BEGIN
+   IF (p_firstname2 = '' OR p_firstname2 is NULL) THEN
+	   RETURN  p_firstname;
+   ELSE
+       RETURN  CONCAT(p_firstname, ' ', getInitial(p_firstname2, '.'));
+   END IF;
+END//
+DELIMITER ;
+
+-- Testen
+-- SELECT getName_With_Initial('Walter', 'Max');  -- --> Walter M.
+-- SELECT getName_With_Initial('Walti', '');      -- --> Walti
+-- SELECT getName_With_Initial('Walti', NULL);    -- --> Walti
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.7) Gibt Anrede zurueck (siehe Testcases) 
+DROP FUNCTION IF EXISTS getAnrede;
+DELIMITER //
+CREATE FUNCTION getAnrede(p_sex CHAR(20), p_firstname CHAR(45), p_vorname_short BOOLEAN, p_lastname CHAR(100) ) RETURNS CHAR(150)
+BEGIN
+   IF (p_sex = 'Firma') THEN 
+		RETURN  '';
+   ELSE
+		IF (p_vorname_short) THEN
+			RETURN  CONCAT(p_sex, ' ', LEFT(p_firstname, 1), '.', p_lastname);
+		ELSE
+            RETURN  CONCAT(p_sex, ' ', p_firstname, ' ', p_lastname);
+		END IF;
+   END IF;
+END//
+DELIMITER ;
+
+-- Testen
+-- SELECT getAnrede("Herr", "Walter", TRUE, "Rothlin");         -- --> Herr W.Rothlin
+-- SELECT getAnrede("Frau", "Claudia", TRUE, "Collet Rothlin"); -- --> Frau C.Collet Rothlin
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.8) Gibt Brief-Anrede zurueck (siehe Testcases) 
+DROP FUNCTION IF EXISTS getBrief_Anrede;
+DELIMITER //
+CREATE FUNCTION getBrief_Anrede(p_sex CHAR(20), p_lastname CHAR(100) ) RETURNS CHAR(100)
+BEGIN
+   IF (p_sex = 'Firma') THEN 
+		RETURN  'Sehr geehrte Damen, Sehr geehrte Herren,';
+   ELSE
+		IF (p_sex = 'Herr') THEN 
+			RETURN  CONCAT('Sehr geehrter ',firstUpper(p_sex), ' ', p_lastname);
+		ELSE
+            RETURN  CONCAT('Sehr geehrte ',firstUpper(p_sex), ' ', p_lastname);
+		END IF;
+   END IF;
+END//
+DELIMITER ;
+
+-- Testen
+-- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
+-- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.9) Gibt perDu Brief-Anrede zurueck (siehe Testcases) 
+DROP FUNCTION IF EXISTS getBrief_Anrede_PerDu;
+DELIMITER //
+CREATE FUNCTION getBrief_Anrede_PerDu(p_sex CHAR(20), p_firstname CHAR(100) ) RETURNS CHAR(100)
+BEGIN
+   IF (p_sex = 'Firma') THEN 
+		RETURN  '';
+   ELSE
+		IF (p_sex = 'Herr') THEN 
+			RETURN  CONCAT('Lieber ', p_firstname);
+		ELSE
+            RETURN  CONCAT('Liebe ', p_firstname);
+		END IF;
+   END IF;
+END//
+DELIMITER ;
+
+-- Testen
+-- SELECT getBrief_Anrede("Herr", "Walter", "Rothlin"); -- --> Sehr geehrter Herr Rothlin
+-- SELECT getBrief_Anrede("Frau", "Claudia", "Collet"); -- --> Sehr geehrte Frau Collet
+ 
+--  ------------------------------------------------------------- 
+--  Fct 10.10) Gibt Familienname zurueck (siehe Testcases) 
+DROP FUNCTION IF EXISTS getFamilieName;
+DELIMITER //
+CREATE FUNCTION getFamilieName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(100)
+BEGIN
+	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
+		IF (p_partner_name = '') THEN
+			RETURN  p_ledig_name;
+		ELSE
+            IF (p_sex = 'Herr') THEN
+				IF (p_name_angenommen = True) THEN
+					RETURN CONCAT(p_partner_name,' ', p_ledig_name);
+				ELSE
+					RETURN CONCAT(p_ledig_name,'-', p_partner_name);
+                END IF;
+			ELSE
+                IF (p_name_angenommen = True) THEN
+					RETURN CONCAT(p_partner_name,'-', p_ledig_name);
+				ELSE
+					RETURN CONCAT(p_ledig_name,' ', p_partner_name);
+                END IF;
+            END IF;
+        END IF;
+	ELSE 
+		RETURN  "";
+    END IF;
+END//
+DELIMITER ;
+
+-- Testen
+-- SELECT getFamilieName('Herr', FALSE, 'Rothlin', '');        -- --> Rothlin
+-- SELECT getFamilieName('Frau', FALSE, 'Collet', '');         -- --> Collet
+-- SELECT getFamilieName('Herr', TRUE,  'Rothlin', '');        -- --> Rothlin
+-- SELECT getFamilieName('Frau', TRUE,  'Collet', '');         -- --> Collet
+
+-- SELECT getFamilieName('Herr', FALSE, 'Rothlin', 'Collet');  -- --> Rothlin-Collet
+-- SELECT getFamilieName('Frau', FALSE, 'Collet', 'Rothlin');  -- --> Collet Rothlin
+-- SELECT getFamilieName('Herr', TRUE,  'Rothlin', 'Collet');  -- --> Collet Rothlin
+-- SELECT getFamilieName('Frau', TRUE,  'Collet', 'Rothlin');  -- --> Rothlin-Collet
+
+--  ------------------------------------------------------------- 
+--  Fct 10.11) Gibt LastName zurueck (siehe Testcases) 
+DROP FUNCTION IF EXISTS getLastName;
+DELIMITER //
+CREATE FUNCTION getLastName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(50)
+BEGIN
+	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
+		IF (p_partner_name = '' OR p_partner_name is NULL) THEN
+			RETURN  firstUpper(p_ledig_name);
+		ELSE
+            IF (p_sex = 'Herr') THEN
+				IF (p_name_angenommen = True) THEN
+					RETURN p_partner_name;
+				ELSE
+					RETURN p_ledig_name;
+                END IF;
+			ELSE
+                IF (p_name_angenommen = True) THEN
+					RETURN p_partner_name;
+				ELSE
+					RETURN p_ledig_name;
+                END IF;
+            END IF;
+        END IF;
+	ELSE 
+		RETURN  '';
+    END IF;
+END//
+DELIMITER ;
+-- --------------------------------------------------------------------------------
+
+
+--  Fct 10.12) Gibt Strasse mit Nr resp Postfach zurueck (siehe Testcases) 
+DROP FUNCTION IF EXISTS getStrassenAdresse;
+DELIMITER //
+CREATE FUNCTION getStrassenAdresse(p_strasse VARCHAR(45), p_hausnummer VARCHAR(15), p_postfach VARCHAR(5)) RETURNS CHAR(100)
+BEGIN
+    IF (p_postfach = "") THEN
+		RETURN CONCAT(p_strasse, ' ', p_hausnummer);
+	ELSE
+    	RETURN CONCAT(p_strasse, ' ', p_hausnummer, ' / Postfach:', p_postfach);
+    END IF;
+    
+    IF (strasse = '') THEN
+         IF (postfach = '' OR postfach = NULL) THEN
+			RETURN '';
+		 ELSE
+            RETURN CONCAT('Postfach ', postfach);
+         END IF;
+    ELSE
+       IF (hausnummer = '') THEN
+          IF (postfach = '') THEN
+               RETURN CONCAT('', strasse);
+		  ELSE
+               RETURN CONCAT(strasse, ' / Postfach:', postfach);
+		  END IF;
+	   ELSE
+		  IF (postfach = '') THEN
+		       RETURN CONCAT(strasse, ' ', hausnummer);
+		  ELSE
+               RETURN CONCAT(strasse, ' ', hausnummer, ' / Postfach:', postfach);
+		  END IF;
+       END IF;
+    END IF;
+END//
+DELIMITER ;
+
+-- Testen
+-- SELECT getStrassenAdresse('Peterliwiese', '33a', '');  -- --> Peterliwiese 33
+-- SELECT getStrassenAdresse('Peterliwiese', '33a', '243' );  -- --> Peterliwiese 33 / Postfach:243
 
 -- END ownFunctions
 
