@@ -13,64 +13,9 @@
 # 30-Mar-2023   Walter Rothlin      Added Loop, if and formulas
 # 06-Apr-2023   Walter Rothlin      Functions and Function calls
 # ------------------------------------------------------------------
-import re
+from Lib_2023_A import *
 import sys
 
-# Constants
-pi = 3.1415926
-halbbogen = 180
-null_celsius = 32
-celsius_fahrenheit_factor = 1.8
-
-
-# regEx
-regex_float = r'[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?'
-
-# Functions
-# ==========
-
-# pre check
-def read_float_pre_condition(prompt):
-    has_error = True
-    while has_error:
-        float_str = input(prompt)
-
-        # pre condition check
-        if re.fullmatch(regex_float, float_str):
-            float_value = float(float_str)
-            has_error = False
-        else:
-            print('Ungültige Eingabe (Kein Float)')
-    return float_value
-
-# exception handling
-def read_float(prompt, min_value=None, max_value=None):
-    has_error = True
-    while has_error:
-        # TBT: Testen von Grenzen
-        try:
-            float_value = float(input(prompt))
-            if min_value is not None and float_value < min_value:
-                print('ERROR: Wert zu klein!!!!')
-            elif max_value is not None and float_value > max_value:
-                print('ERROR: Wert zu gross!!!!')
-            else:
-                has_error = False
-        except ValueError:
-            print('Ungültige Eingabe (Kein Float!!!!)')
-    return float_value
-
-def grad_in_rad(grad_value):
-    return grad_value*pi/halbbogen
-
-def rad_in_grad(rad_value):
-    return rad_value*halbbogen/pi
-
-def fahr_in_celsius(fahr_value):
-    return (fahr_value - null_celsius) / celsius_fahrenheit_factor
-
-def celsius_in_fahr(celsius_value):
-    return (cel_value*celsius_fahrenheit_factor) + null_celsius
 
 # =============
 # Hauptprogramm
@@ -101,7 +46,10 @@ while do_loop:
 
     elif wahl == '1':      # rad  = grad*pi/180
         print("Grad in RAD!!!")
-        grad_value = read_float('Grad (0-360):', min_value=0, max_value=360)
+        grad_value = read_float('Grad (0-360):',
+                                min_value=0,
+                                max_value=360,
+                                err_not_a_figure='Bitte eine Dezimalzahl von 0..360 eingeben')
         rad_value = grad_in_rad(grad_value)
         print('Grad:{grad:1.2f}    Rad:{rad:1.4f}'.format(grad=grad_value, rad=rad_value))
 
