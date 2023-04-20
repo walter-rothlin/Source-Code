@@ -265,16 +265,16 @@ FROM (
     
 SELECT * FROM adress_liste;
 
-
-SELECT
-     f.title                 AS Film_Titel,
-     -- f.language_id AS Sprache_id,
-     l.name                  AS Sprache,
-     -- f.original_language_id  AS `Original Sprache ID`,
-     ol.name                 AS `Original Sprache`
-FROM film AS f
-INNER JOIN language      AS l  ON f.language_id               = l.language_id
-LEFT OUTER JOIN language AS ol ON f.original_language_id      = ol.language_id;
+CREATE VIEW film_sprachen_bzu AS 
+	SELECT
+		 f.title                 AS Film_Titel,
+		 -- f.language_id AS Sprache_id,
+		 l.name                  AS Sprache,
+		 -- f.original_language_id  AS `Original Sprache ID`,
+		 ol.name                 AS `Original Sprache`
+	FROM film AS f
+	INNER JOIN language      AS l  ON f.language_id               = l.language_id
+	LEFT OUTER JOIN language AS ol ON f.original_language_id      = ol.language_id;
 
 
 SELECT
