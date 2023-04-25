@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Meine Webseite</title>
+	<style>
+		/* Stilregeln für das Menü */
+		nav {
+			background-color: #333; /* Hintergrundfarbe */
+			color: #fff; /* Textfarbe */
+			font-size: 16px; /* Schriftgröße */
+			font-weight: bold; /* Schriftstärke */
+			padding: 10px; /* Innenabstand */
+		}
+		nav ul {
+			list-style: none; /* Entfernen der Aufzählungspunkte */
+			margin: 0; /* Entfernen des Außenabstands */
+			padding: 0; /* Entfernen des Innenabstands */
+			display: flex; /* Aktivieren von Flexbox */
+			justify-content: flex-end; /* Elemente am rechten Rand ausrichten */
+		}
+		nav li {
+			margin: 0 10px; /* Abstand zwischen den Elementen */
+			position: relative; /* Aktivieren der relativen Positionierung */
+		}
+		nav a {
+			color: #fff; /* Textfarbe */
+			text-decoration: none; /* Entfernen von Unterstreichungen */
+			padding: 5px 10px; /* Innenabstand */
+			border-radius: 5px; /* Abgerundete Ecken */
+			transition: background-color 0.3s ease; /* Flüssiger Übergang */
+			display: block; /* Aktivieren der Blockanzeige */
+		}
+		nav a:hover {
+			background-color: #555; /* Hintergrundfarbe bei Hover */
+		}
+		nav ul ul {
+			display: none; /* Untermenüs standardmäßig ausblenden */
+			position: absolute; /* Aktivieren der absoluten Positionierung */
+			top: 100%; /* Untermenüs unter dem Hauptmenü anzeigen */
+			left: 0; /* Untermenüs links ausrichten */
+			background-color: #333; /* Hintergrundfarbe */
+			padding: 0; /* Entfernen des Innenabstands */
+			z-index: 1; /* Sicherstellen, dass die Untermenüs über allem anderen liegen */
+		}
+		nav ul li:hover > ul {
+			display: flex; /* Aktivieren von Flexbox beim Hover */
+			flex-direction: column; /* Untermenüs in einer Spalte ausrichten */
+		}
+	</style>
+</head>
+<body>
+	<nav>
+		<ul>
+			<li><a href="#">Startseite</a></li>
+			<li>
+				<a href="#">Über uns</a>
+				<ul>
+					<li><a href="#">Unser Team</a></li>
+					<li><a href="#">Geschichte</a></li>
+					<li><a href="#">Partner</a></li>
+				</ul>
+			</li>
+			<li><a href="#">Leistungen</a></li>
+			<li>
+				<a href="#">Kontakt</a>
+				<ul>
+					<li><a href="#">Adresse</a></li>
+					<li><a href="#">Telefon</a></li>
+					<li><a href="#">E-Mail</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+	<!-- Der Rest der Webseite -->
+</body>
+</html>

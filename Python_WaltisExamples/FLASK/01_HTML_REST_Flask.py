@@ -14,7 +14,7 @@
 # 30-Dec-2021   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-from flask import Flask, render_template, request, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect
 
 app = Flask(__name__)
 
