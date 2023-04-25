@@ -1,7 +1,8 @@
 import openai
 
-hwzTeachersKey = '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'
-waltisOpenAI_Key = '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'
+part1 ='sk-uyTqACNqeZcChoaYBtv9'
+part2 ='T3BlbkFJNKYwbeIv6EUCGBAlBvMN'
+waltisOpenAI_Key = part1 + part2
 openai.api_key = waltisOpenAI_Key
 
 

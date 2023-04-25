@@ -22,7 +22,8 @@
 -- 16-Feb-2023	 Walter Rothlin      Changed GROUP-BY questions
 -- 09-Mar-2023   Walter Rothlin      Changed Lichtenstein auf Andora
 -- 04-Apr-2023   Walter Rothlin      Added special types and 1.11.1), 1.8.1)
--- 18-Apr-2023   Walter Rothlin      Added more Fct and Proc and fixed DELIMITER in Fct and 
+-- 18-Apr-2023   Walter Rothlin      Added more Fct and Proc and fixed DELIMITER in Fct
+-- 25-Apr-2023   Walter Rothlin      Added more Functions 10.3.1 and 10.3.2
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -1663,7 +1664,32 @@ DELIMITER ;
 -- Test-Cases
 -- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
 -- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
+--  -------------------------------------------------------------
+--  Fct 10.3.1) Gibt die internationale PLZ mit dem Ort zurueck
+DROP FUNCTION IF EXISTS formatPLZinternational_ort;
+DELIMITER //
+CREATE FUNCTION formatPLZinternational_ort(p_countryCode CHAR(50), p_input_plz SMALLINT, p_ort CHAR(50)) RETURNS CHAR(50)
+BEGIN
+   RETURN  concat(p_countryCode, '-', p_input_plz, ' ', p_ort);
+END//
+DELIMITER ;
 
+-- Test-Cases
+-- SELECT formatPLZinternational_ort('CH', 8854, 'Siebnen') AS PLZ_Ort;     -- --> CH-8854 Siebnen
+-- SELECT formatPLZinternational_ort('D', 10115, 'Berlin') AS PLZ_Ort;     -- --> D-10115 Berlin
+--  -------------------------------------------------------------
+--  Fct 10.3.2) Gibt die PLZ mit dem Ort zurueck
+DROP FUNCTION IF EXISTS formatPLZ_ort;
+DELIMITER //
+CREATE FUNCTION formatPLZ_ort(p_input_plz SMALLINT, p_ort CHAR(50)) RETURNS CHAR(50)
+BEGIN
+   RETURN  concat(p_input_plz, ' ', p_ort);
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT formatPLZ_ort(8854, 'Siebnen') AS PLZ_Ort;     -- --> 8854 Siebnen
+-- SELECT formatPLZ_ort(10115, 'Berlin') AS PLZ_Ort;     -- --> 10115 Berlin
 --  -------------------------------------------------------------
 --  Fct 10.4) Gibt p_str zurueck mit erstem Buchstaben als Grossbuchstabe
 DROP FUNCTION IF EXISTS firstUpper;

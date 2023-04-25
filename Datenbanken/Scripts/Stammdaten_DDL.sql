@@ -16,7 +16,8 @@
 -- 08-Feb-2023   Walter Rothlin      Added more attributes to Person, Landteil
 -- 18-Feb-2023   Walter Rothlin      Fix Charset issue in firstUpper()
 -- 26-Feb-2023   Walter Rothlin      Added IDs to orte....personen viewsstored-Procedure section
--- 18-Apr-2023   Walter Rothlin      Fixed DELIMITER in Fct and 
+-- 18-Apr-2023   Walter Rothlin      Fixed DELIMITER in Fct
+-- 25-Apr-2023   Walter Rothlin      Added history and Bemerkungen to view personen_daten
 -- ---------------------------------------------------------------------------------------------
 
 -- MySQL Workbench Forward Engineering
@@ -132,9 +133,9 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Partner_Name_Angenommen`  BOOLEAN DEFAULT FALSE,
   `AHV_Nr`                   VARCHAR(45) NULL,
   `Betriebs_Nr`              VARCHAR(45) NULL,
-  `Genossen_Partner` 		 INT NULL,
-  `Vater` 					 INT NULL,
-  `Mutter` 					 INT NULL,
+  `Partner_ID` 		         INT NULL,
+  `Vater_ID`         		 INT NULL,
+  `Mutter_ID`				 INT NULL,
   `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt','Geschieden','Verwitwet','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
   `Kategorien`  SET('Firma','Bürger','Angestellter', 'Auftragnehmer','Genossenrat', 'LWK', 'Bewirtschafter','Landteilbesitzer',
 					'Pächter','Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezüger', 'Nutzungsberechtigt', 
@@ -178,9 +179,9 @@ CREATE TABLE IF NOT EXISTS Personen (
   -- Indizes
   INDEX `fk_Personen_Adressen1_idx` (`Privat_Adressen_ID` ASC)     VISIBLE,
   INDEX `fk_Personen_Adressen2_idx` (`Geschaefts_Adressen_ID` ASC) VISIBLE,
-  INDEX `fk_Personen_Adressen3_idx` (`Vater` ASC)                  VISIBLE,
-  INDEX `fk_Personen_Adressen4_idx` (`Mutter` ASC)                 VISIBLE,
-  INDEX `fk_Personen_Adressen5_idx` (`Genossen_Partner` ASC)       VISIBLE,
+  INDEX `fk_Personen_Adressen3_idx` (`Vater_ID` ASC)               VISIBLE,
+  INDEX `fk_Personen_Adressen4_idx` (`Mutter_ID` ASC)              VISIBLE,
+  INDEX `fk_Personen_Adressen5_idx` (`Partner_ID` ASC)             VISIBLE,
   
   -- FK-Constraints
   CONSTRAINT `fk_Personen_Adressen1`
@@ -195,17 +196,17 @@ CREATE TABLE IF NOT EXISTS Personen (
     ON UPDATE NO ACTION,
   
   CONSTRAINT `fk_Personen_Adressen3`
-    FOREIGN KEY (`Vater`)
+    FOREIGN KEY (`Vater_ID`)
     REFERENCES `Person` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Personen_Adressen4`
-    FOREIGN KEY (`Mutter`)
+    FOREIGN KEY (`Mutter_ID`)
     REFERENCES `Person` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Personen_Adressen5`
-    FOREIGN KEY (`Genossen_Partner`)
+    FOREIGN KEY (`Partner_ID`)
     REFERENCES `Person` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
@@ -499,7 +500,32 @@ DELIMITER ;
 -- Test-Cases
 -- SELECT formatPLZinternational('CH', 8854) AS PLZ_Formated;     -- --> CH-8854
 -- SELECT formatPLZinternational('D', 10115) AS PLZ_Formated;     -- --> D-10115
+--  -------------------------------------------------------------
+--  Fct 10.3.1) Gibt die internationale PLZ mit dem Ort zurueck
+DROP FUNCTION IF EXISTS formatPLZinternational_ort;
+DELIMITER //
+CREATE FUNCTION formatPLZinternational_ort(p_countryCode CHAR(50), p_input_plz SMALLINT, p_ort CHAR(50)) RETURNS CHAR(50)
+BEGIN
+   RETURN  concat(p_countryCode, '-', p_input_plz, ' ', p_ort);
+END//
+DELIMITER ;
 
+-- Test-Cases
+-- SELECT formatPLZinternational_ort('CH', 8854, 'Siebnen') AS PLZ_Ort;     -- --> CH-8854 Siebnen
+-- SELECT formatPLZinternational_ort('D', 10115, 'Berlin') AS PLZ_Ort;     -- --> D-10115 Berlin
+--  -------------------------------------------------------------
+--  Fct 10.3.2) Gibt die PLZ mit dem Ort zurueck
+DROP FUNCTION IF EXISTS formatPLZ_ort;
+DELIMITER //
+CREATE FUNCTION formatPLZ_ort(p_input_plz SMALLINT, p_ort CHAR(50)) RETURNS CHAR(50)
+BEGIN
+   RETURN  concat(p_input_plz, ' ', p_ort);
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT formatPLZ_ort(8854, 'Siebnen') AS PLZ_Ort;     -- --> 8854 Siebnen
+-- SELECT formatPLZ_ort(10115, 'Berlin') AS PLZ_Ort;     -- --> 10115 Berlin
 --  -------------------------------------------------------------
 --  Fct 10.4) Gibt p_str zurueck mit erstem Buchstaben als Grossbuchstabe
 DROP FUNCTION IF EXISTS firstUpper;
@@ -815,6 +841,7 @@ CREATE VIEW Adress_Daten AS
         a.postfachnummer                          AS Postfachnummer,
         ol.ID                                     AS Ort_ID,
 		ol.PLZ	                                  AS PLZ,
+        ol.Code                                   AS Land_Code,
         ol.PLZ_International	                  AS PLZ_International,
 		ol.Ort	                                  AS Ort,
         ol.Land_ID                                AS Land_ID,
@@ -873,6 +900,8 @@ CREATE VIEW Personen_Daten AS
                  -- IF(P.Geburtstag is NULL, "NoGeburi", DATE_FORMAT(P.Geburtstag,'%Y%m%d')),';',
                  IF(P.Betriebs_Nr is NULL, "NoBetriebsNr", P.Betriebs_Nr),';',
                  IF(P.Geburtstag is NULL, "NoGeburi", DATE_FORMAT(P.Geburtstag,'%Y%m%d')))   AS Such_Begriff,     -- YYYYMMDD
+		  P.History                                    AS History,
+          P.Bemerkungen                                AS Bemerkungen,
 		  P.Sex                                        AS Geschlecht,       -- Herr | Frau
 		  P.Firma                                      AS Firma,
 		  P.Vorname                                    AS Vorname,
@@ -963,8 +992,11 @@ CREATE VIEW Personen_Daten AS
 							 pAdr.Postfachnummer)      AS Private_Strassen_Adresse,
 		  pAdr.Ort_ID                                  AS Private_Ort_ID,
 		  pAdr.PLZ                                     AS Private_PLZ,
+          pAdr.Land_Code                               AS Private_Land_Code,
           pAdr.PLZ_International                       AS Private_PLZ_International,
 		  pAdr.Ort                                     AS Private_Ort,
+          formatPLZ_ort(pAdr.PLZ, 
+                        pAdr.Ort)                      AS Private_PLZ_Ort,
           pAdr.Land_ID                                 AS Private_Land_ID,
 		  pAdr.Land                                    AS Private_Land,
           
@@ -977,8 +1009,11 @@ CREATE VIEW Personen_Daten AS
                              gAdr.Postfachnummer)      AS Geschaeft_Strassen_Adresse,
 		  gAdr.Ort_ID                                  AS Geschaeft_Ort_ID,
 		  gAdr.PLZ                                     AS Geschaeft_PLZ,
+          gAdr.Land_Code                               AS Geschaeft_Land_Code,
           gAdr.PLZ_International                       AS Geschaeft_PLZ_International,    -- CH-8855
 		  gAdr.Ort                                     AS Geschaeft_Ort,
+		  formatPLZ_ort(gAdr.PLZ, 
+                        gAdr.Ort)                      AS Geschaeft_PLZ_Ort,
 		  gAdr.Land_ID                                 AS Geschaeft_Land_ID,
 		  gAdr.Land                                    AS Geschaeft_Land,
           getYounger(P.last_update, pAdr.last_update)  AS last_update
@@ -988,6 +1023,44 @@ CREATE VIEW Personen_Daten AS
     ORDER BY Familien_Name, Vorname_Initial;
 
 -- SELECT * FROM Personen_Daten;
+
+DROP VIEW IF EXISTS Personen_Daten_Lebend; 
+CREATE VIEW Personen_Daten_Lebend AS
+    SELECT * 
+    FROM Personen_Daten 
+    WHERE Todestag IS NULL;
+    
+DROP VIEW IF EXISTS Personen_Daten_Gestorben; 
+CREATE VIEW Personen_Daten_Gestorben AS
+    SELECT * 
+    FROM Personen_Daten 
+    WHERE Todestag IS NOT NULL
+    ORDER BY Todestag;
+    
+DROP VIEW IF EXISTS Bewirtschafter; 
+CREATE VIEW Bewirtschafter AS
+	SELECT
+		ID,
+		-- Kategorien,
+        -- FIND_IN_SET('Bürger', `Kategorien`) AS Is_Bürger,
+		CASE 
+		  WHEN FIND_IN_SET('Bürger', `Kategorien`) = 1   THEN 'Ja'
+		  WHEN FIND_IN_SET('Bürger', `Kategorien`) = 0   THEN ''
+		  ELSE Kategorien
+		END AS Ist_Bürger,
+		Geschlecht,
+		Vorname_Initial          AS Vorname,
+		Familien_Name,
+		Private_Strassen_Adresse AS Strasse,
+		Private_PLZ_Ort,
+		eMail,
+		Tel_Nr,
+		Betriebs_Nr,
+		IBAN,
+		Geburtstag
+	FROM Personen_Daten_Lebend
+	WHERE FIND_IN_SET('Landwirt', `Kategorien`) > 0
+	ORDER BY Familien_Name;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Telnr_Liste_Sorted; 
@@ -1401,9 +1474,42 @@ BEGIN
 END$$
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS getPersonenId_New;
+DELIMITER $$
+CREATE PROCEDURE getPersonenId_New(IN source ENUM('Initial_1', 'Loader_1', 'BuergerDB', 'ImmoTop'),
+							       IN personen_id_old SMALLINT(5),
+                                   IN sex VARCHAR(45),
+                                   IN firma VARCHAR(45),
+							       IN vorname VARCHAR(45),
+                                   IN ledig_name VARCHAR(45),
+                                   IN partner_name VARCHAR(45),
+                                   IN partner_name_angenommen BOOLEAN,
+							       IN strasse VARCHAR(45), 
+							       IN hausnummer VARCHAR(15), 
+							       IN plz SMALLINT(4), 
+							       IN ortsname VARCHAR(45), 
+                                   OUT personen_id SMALLINT(5))
+BEGIN
+    CALL getAdressId(strasse, hausnummer, plz, ortsname, @adressen_id);
+    IF ((SELECT count(*) 
+         FROM personen 
+         WHERE personen.id = personen_id_old) = 0) THEN
+        INSERT personen (`source`, `ID`, `sex`, `firma`, `vorname`, `ledig_name`, `partner_name`,`partner_name_angenommen`, `privat_adressen_id`) VALUES (source, personen_id_old, sex, firma, vorname, ledig_name, partner_name, partner_name_angenommen, @adressen_id);
+        COMMIT;
+    END IF;
+    SELECT id FROM personen WHERE personen.sex = sex AND
+                                  personen.firma = firma AND 
+								  personen.vorname = vorname AND 
+                                  personen.ledig_name = ledig_name AND
+                                  personen.partner_name = partner_name AND
+                                  personen.partner_name_angenommen = partner_name_angenommen AND 
+                                  personen.privat_adressen_id = @adressen_id INTO personen_id;
+END$$
+DELIMITER ;
+
 -- Tests
 -- set @id = 0;
--- call getPersonenId('BuergerDB', 'Herr', 'M_Firma', 'M_Vorname','M_LedigName', 'M_PartnerName', True, 'M_Strasse', '33_M', '8855', 'M_Wangen', @id);
+-- call getPersonenId_New('BuergerDB', 9999, 'Herr', 'M_Firma', 'M_Vorname','M_LedigName', 'M_PartnerName', 1, 'M_Strasse', '33_M', '8855', 'M_Wangen', @id);
 -- select @id;
 -- call getPersonenId('Walter','Rothlin',NULL,NULL,'Peterliwiese', '33', '8855', 'Wangen', @id);
 -- select @id;

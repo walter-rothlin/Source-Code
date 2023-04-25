@@ -128,20 +128,27 @@ def read_from_file_and_call_stored_procedure(
 
     mycursor = stammdaten_schema.cursor()
     input_csv_json = csv_to_json(csv_file_name, delimiter=',')
-    # print(input_csv_json)
+    print(input_csv_json)  #TB commented
 
-    # print('db_file_mapping:', db_file_mapping)
+    # print('db_file_mapping:', db_file_mapping) #TB commented
     requested_attributs = db_file_mapping.keys()
-    arg_counts=len(requested_attributs)
-    # print('requested_attributs:', requested_attributs)
+    arg_counts = len(requested_attributs)
+    # print('requested_attributs:', requested_attributs) #TB commented
 
     print(proc_name, ":", len(input_csv_json))
+    rcount = 0
     for a_data_tuple in input_csv_json:
         # print('-->', a_data_tuple)
         values = []
         for a_attribute in requested_attributs:
             values.append(a_data_tuple[db_file_mapping[a_attribute]])
             # print('==>', a_attribute, a_data_tuple[db_file_mapping[a_attribute]])
+        rcount += 1
+        print('''
+        
+        
+
+        New Datarecord from file Nr:''' + str(rcount))
         print(','.join(requested_attributs), ' --> ', ','.join(values))
 
         if arg_counts == 0:
@@ -165,22 +172,22 @@ def read_from_file_and_call_stored_procedure(
         elif arg_counts == 9:
             args = (values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], 'x')
         elif arg_counts == 10:
-            if proc_name == 'getPersonenId':
-                if values[5] == 'Ja':
+            args = (values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], 'x')
+        elif arg_counts == 11:
+            if proc_name == 'getPersonenId_New':
+                if values[6] == 'Ja':
                     Name_Angenommen = True
                 else:
                     Name_Angenommen = False
 
-                args = ('BuergerDB', values[0], values[1], values[2], values[3], values[4], Name_Angenommen, values[6], values[7], values[8], values[9], 'x')
-        elif arg_counts == 11:
-            args = (values[0], values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10], 'x')
+                args = ('BuergerDB', values[0], values[1], values[2], values[3], values[4], values[5], Name_Angenommen, values[7], values[8], values[9], values[10], 'x')
         else:
             print("ERROR: arg_counts ", arg_counts, " NOT defined")
-        print(proc_name, args, sep="", end="  -->  ")
+        print('Call Stored-Procedure:', proc_name, args, sep="", end="  -->  ")
         result_args = mycursor.callproc(proc_name, args)
         print(proc_name, result_args, sep="")
-        if proc_name == 'getPersonenId':
-            personen_id = result_args[11]
+        if proc_name == 'getPersonenId_New':
+            personen_id = result_args[12]
 
 
             # Update Adressen
@@ -425,6 +432,12 @@ def read_from_file_and_call_stored_procedure(
 def load_data_from_BuergerDB():
 
     if True:
+        print('''
+        
+        
+        Load Land.....
+        ==============
+        ''')
         read_from_file_and_call_stored_procedure(
             db_connection=stammdaten_schema,
             csv_file_name=r'N:\02_EDV\Land_Import.csv',
@@ -433,6 +446,12 @@ def load_data_from_BuergerDB():
             db_file_mapping={'Name': 'Landname', 'Code': 'Code', 'Landesvorwahl': 'Landesvorwahl'})
 
     if True:
+        print('''
+
+
+        Load Ort.....
+        ==============
+        ''')
         read_from_file_and_call_stored_procedure(
             db_connection=stammdaten_schema,
             csv_file_name=r'N:\02_EDV\Orte_Import.csv',
@@ -442,12 +461,18 @@ def load_data_from_BuergerDB():
 
 
     if True:
+        print('''
+
+
+        Load Person.....
+        ==============
+        ''')
         read_from_file_and_call_stored_procedure(
             db_connection=stammdaten_schema,
             csv_file_name=r'N:\02_EDV\Personen_Import.csv',
             csv_delimiter=',',
-            proc_name='getPersonenId',
-            db_file_mapping={'Sex': 'Sex', 'Firma': 'Firma', 'Vorname': 'Vorname', 'Ledig_Name': 'Ledig_Name', 'Partner_Name': 'Partner_Name', 'Partner_Name_Angenommen': 'Partner_Name_Angenommen', 'Strasse': 'Strasse', 'Hausnummer': 'Hausnummer', 'PLZ': 'PLZ', 'Ort': 'Ort'})
+            proc_name='getPersonenId_New',
+            db_file_mapping={'ID': '\ufefflintPersonIdx', 'Sex': 'Sex', 'Firma': 'Firma', 'Vorname': 'Vorname', 'Ledig_Name': 'Ledig_Name', 'Partner_Name': 'Partner_Name', 'Partner_Name_Angenommen': 'Partner_Name_Angenommen', 'Strasse': 'Strasse', 'Hausnummer': 'Hausnummer', 'PLZ': 'PLZ', 'Ort': 'Ort'})
 
 
 def searchPerson(vorname, ledigname, partnername=None, gebdatum_YYYYMMDD=None):
@@ -539,10 +564,10 @@ def reco_personen():
                 print(f'{person_id_from_file:4d} not found in DB!', str(select_criterias))
 
                 args = ('Loader_1',  'x')
-                proc_name = 'getPersonenId'
+                proc_name = 'getPersonenId_New'
                 result_args = mycursor.callproc(proc_name, args)
                 print(proc_name, result_args, sep="")
-                if proc_name == 'getPersonenId':
+                if proc_name == 'getPersonenId_New':
                     personen_id = result_args[11]
             else:
                 if person_id_from_file == rs[0]:
