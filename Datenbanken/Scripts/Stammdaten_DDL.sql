@@ -20,7 +20,16 @@
 -- 25-Apr-2023   Walter Rothlin      Added history and Bemerkungen to view personen_daten
 -- ---------------------------------------------------------------------------------------------
 
--- MySQL Workbench Forward Engineering
+-- To-Does
+-- Split Strasse Hausnummer
+-- TelefonNummer splitten
+-- Format Telefonnummer
+-- Format IBAN
+-- View PERSONEN_DATEN mit Partner, Vater und Mutter erweitern
+-- get_age() Aktuelles Alter berechnen, wenn Todestag dann Alter fixiert
+-- If Todestag is not NULL then alle Telefonnummer und eMail Adressen löschen
+-- Ueberprüfen ob jede Person nur 1 Telnr, IBAN und eMail addresse pro Prioritaet hat und die schön aufsteigend von 0 an sind
+-- ---------------------------------------------------------------------------------------------
 SET NAMES utf8mb4;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -137,7 +146,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Vater_ID`         		 INT NULL,
   `Mutter_ID`				 INT NULL,
   `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt','Geschieden','Verwitwet','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
-  `Kategorien`  SET('Firma','Bürger','Angestellter', 'Auftragnehmer','Genossenrat', 'LWK', 'Bewirtschafter','Landteilbesitzer',
+  `Kategorien`  SET('Firma','Bürger','Angestellter', 'Auftragnehmer','Genossenrat', 'LWK', 'Landteilbesitzer',
 					'Pächter','Wohnungsmieter', 'Bootsplatzmieter', 'Landwirt', 'Waermebezüger', 'Nutzungsberechtigt', 
                     'Betriebsgemeinschaft', 'Generationengemeinschaft') DEFAULT NULL,
   
@@ -453,6 +462,40 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
 SET GLOBAL log_bin_trust_function_creators = 1;
 
 -- --------------------------------------------------------------------------------
+--  Added a value to a SET
+DROP FUNCTION IF EXISTS addSetValue;
+DELIMITER //
+CREATE FUNCTION  addSetValue(oldSetValue VARCHAR(500), valueToAdd VARCHAR(30)) RETURNS VARCHAR(500)
+BEGIN
+   IF oldSetValue IS NULL OR length(oldSetValue) = 0 THEN
+         RETURN  valueToAdd;
+   ELSE
+         RETURN  CONCAT(oldSetValue, ',', valueToAdd);
+   END IF;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- UPDATE `personen` SET Kategorien = addSetValue(Kategorien, 'Pächter') WHERE  id = 1112;
+
+-- --------------------------------------------------------------------------------
+--  Remove a value from a SET
+DROP FUNCTION IF EXISTS removeSetValue;
+DELIMITER //
+CREATE FUNCTION  removeSetValue(oldSetValue VARCHAR(500), valueToRremove VARCHAR(30)) RETURNS VARCHAR(500)
+BEGIN
+   IF oldSetValue IS NULL OR length(oldSetValue) = 0 THEN
+         RETURN  oldSetValue;
+   ELSE
+         RETURN  REPLACE(REPLACE(oldSetValue, valueToRremove, ''),',,', ',');
+   END IF;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- UPDATE `personen` SET Kategorien = removeSetValue(Kategorien, 'Pächter') WHERE  id = 1112;
+
+-- --------------------------------------------------------------------------------
 --  Fct 10.0) Gibt den aelteren Timestamp zurueck
 DROP FUNCTION IF EXISTS getOlder;
 DELIMITER //
@@ -486,6 +529,23 @@ DELIMITER ;
 -- Test-Cases
 -- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
 
+-- --------------------------------------------------------------------------------
+--  Fct 10.2) getAge() Aktuelles Alter berechnen, wenn Todestag dann Alter fixiert, sonst NOW() - Birthday (Nur Jahre)
+DROP FUNCTION IF EXISTS getAge;
+DELIMITER //
+CREATE FUNCTION  getAge(birthday date, deathDate date) RETURNS int
+BEGIN
+	IF deathDate IS NULL THEN
+		RETURN timestampdiff(YEAR,birthday, CURDATE());
+    ELSE
+       RETURN timestampdiff(YEAR,birthday, deathDate);
+	END IF;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT getAge(STR_TO_DATE('1960-08-05', '%Y-%m-%d'), STR_TO_DATE('2023-04-28', '%Y-%m-%d')) AS Age;
+-- SELECT getAge(STR_TO_DATE('1960-08-05', '%Y-%m-%d'), NULL) AS Age;
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.3) Gibt die internationale PLZ zurueck
@@ -493,7 +553,7 @@ DROP FUNCTION IF EXISTS formatPLZinternational;
 DELIMITER //
 CREATE FUNCTION formatPLZinternational(p_countryCode CHAR(50), p_input_plz SMALLINT) RETURNS CHAR(50)
 BEGIN
-   RETURN  concat(p_countryCode, '-', p_input_plz);
+   RETURN  CONCAT(p_countryCode, '-', p_input_plz);
 END//
 DELIMITER ;
 
@@ -506,7 +566,7 @@ DROP FUNCTION IF EXISTS formatPLZinternational_ort;
 DELIMITER //
 CREATE FUNCTION formatPLZinternational_ort(p_countryCode CHAR(50), p_input_plz SMALLINT, p_ort CHAR(50)) RETURNS CHAR(50)
 BEGIN
-   RETURN  concat(p_countryCode, '-', p_input_plz, ' ', p_ort);
+   RETURN  CONCAT(p_countryCode, '-', p_input_plz, ' ', p_ort);
 END//
 DELIMITER ;
 
@@ -519,7 +579,7 @@ DROP FUNCTION IF EXISTS formatPLZ_ort;
 DELIMITER //
 CREATE FUNCTION formatPLZ_ort(p_input_plz SMALLINT, p_ort CHAR(50)) RETURNS CHAR(50)
 BEGIN
-   RETURN  concat(p_input_plz, ' ', p_ort);
+   RETURN  CONCAT(p_input_plz, ' ', p_ort);
 END//
 DELIMITER ;
 
@@ -673,7 +733,7 @@ BEGIN
             END IF;
         END IF;
 	ELSE 
-		RETURN  "";
+		RETURN  CONCAT(p_ledig_name, ' ', p_partner_name);
     END IF;
 END//
 DELIMITER ;
@@ -714,7 +774,7 @@ BEGIN
             END IF;
         END IF;
 	ELSE 
-		RETURN  '';
+		RETURN  CONCAT(p_ledig_name, ' ', p_partner_name);
     END IF;
 END//
 DELIMITER ;
@@ -731,6 +791,18 @@ END//
 DELIMITER ;
 
 -- Test-Cases
+
+-- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getPrio_1_TelNr;
+DELIMITER //
+CREATE FUNCTION getPrio_1_TelNr(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT nummer FROM Telnr_Liste_Prio_0 WHERE Pers_ID = p_id AND prio=1 LIMIT 1);
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT getPrio_1_TelNr(4);  -- --> 0793315587
 
 -- --------------------------------------------------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_TelNr;
@@ -879,7 +951,8 @@ CREATE VIEW Telnr_Liste AS
         getYounger(pt.last_update, tel.last_update) AS last_update
 	FROM personen_has_telefonnummern AS pt
 	LEFT OUTER JOIN Telefonnummern AS tel  ON pt.telefonnummern_ID = tel.ID
-    LEFT OUTER JOIN Personen       AS pers ON pt.personen_ID       = pers.ID;
+    LEFT OUTER JOIN Personen       AS pers ON pt.personen_ID       = pers.ID
+    WHERE pers.Todestag IS NULL;
     
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Personen_Daten; 
@@ -888,6 +961,22 @@ CREATE VIEW Personen_Daten AS
 		  P.ID                                         AS ID,
           P.Zivilstand                                 AS Zivilstand,
           P.Kategorien                                 AS Kategorien,
+		  -- FIND_IN_SET('Bürger', `Kategorien`) AS Is_Bürger,
+			CASE 
+			  WHEN FIND_IN_SET('Bürger', P.Kategorien) > 0   THEN 'Ja'
+			  WHEN FIND_IN_SET('Bürger', P.Kategorien ) = 0   THEN ''
+			  -- ELSE Kategorien
+			END AS Ist_Bürger,
+			CASE 
+			  WHEN FIND_IN_SET('Pächter', P.Kategorien) >  0   THEN 'Ja'
+			  WHEN FIND_IN_SET('Pächter', P.Kategorien) =  0   THEN ''
+			  -- ELSE Kategorien
+			END AS Ist_Pächter,
+			CASE 
+			  WHEN FIND_IN_SET('Landwirt', P.Kategorien) >  0  THEN 'Ja'
+			  WHEN FIND_IN_SET('Landwirt', P.Kategorien) =  0   THEN ''
+			  -- ELSE Kategorien
+			END AS Ist_Direktzahlungsberechtigt,
           -- IF(P.Geburtstag is NULL, "NoGeburi", "GeburiFound") AS NoYesGeburi,
           -- IF(P.Geburtstag is NULL, "NoGeburi", DATE_FORMAT(P.Geburtstag,'%Y%m%d')) AS NoWithGeburi,
           CONCAT(P.Vorname,';',
@@ -909,12 +998,15 @@ CREATE VIEW Personen_Daten AS
 		  P.Ledig_Name                                 AS Ledig_Name,
           P.Partner_Name                               AS Partner_Name,
 		  P.Partner_Name_Angenommen                    AS Partner_Name_Angenommen,
+          P.Partner_ID                                 AS Partner_ID,
+          P.Mutter_ID                                  AS Mutter_ID,
+          P.Vater_ID                                   AS Vater_ID,
 		  getLastName(P.Sex, 
                       P.Partner_Name_Angenommen, 
                       P.Ledig_Name, 
                       P.Partner_Name)                  AS LastName,         -- Rothlin
 		  getName_With_Initial(P.Vorname, 
-                               P.Vorname_2)           AS Vorname_Initial,  -- Walter M.
+                               P.Vorname_2)            AS Vorname_Initial,  -- Walter M.
           getFamilieName(P.Sex, 
                       P.Partner_Name_Angenommen, 
                       P.Ledig_Name, 
@@ -971,18 +1063,18 @@ CREATE VIEW Personen_Daten AS
           getPrio_0_IBAN(P.ID)                         AS IBAN,
           getPrio_0_EMail(P.ID)                        AS eMail,
           getPrio_0_TelNr(P.ID)                        AS Tel_Nr,
-          P.Geburtstag                                 AS Geburtstag,
-          P.Todestag                                   AS Todestag,
-          P.Nach_Wangen_Gezogen                        AS Nach_Wangen_Gezogen,
-          P.Von_Wangen_Weggezogen                      AS Von_Wangen_Weggezogen,
-          P.Baulandgesuch_Eingereicht_Am               AS Baulandgesuch_Eingereicht_Am,
-          P.Bauland_Gekauft_Am                         AS Bauland_Gekauft_Am,
-          P.Angemeldet_Am                              AS Angemeldet_Am,
-          P.Aufgenommen_Am                             AS Aufgenommen_Am,
-          P.Funktion_Uebernommen_Am                    AS Funktion_Uebernommen_Am,
-          P.Funktion_Abgegeben_Am                      AS Funktion_Abgegeben_Am,
-          P.Chronik_Bezogen_Am                         AS Chronik_Bezogen_Am,
-          
+          DATE_FORMAT(P.Geburtstag,'%d.%m.%Y')                                 AS Geburtstag,
+		  DATE_FORMAT(P.Todestag ,'%d.%m.%Y')                                  AS Todestag,
+          getAge(P.Geburtstag, P.Todestag)                                     AS Age,
+          DATE_FORMAT(P.Nach_Wangen_Gezogen,'%d.%m.%Y')                        AS Nach_Wangen_Gezogen,
+          DATE_FORMAT(P.Von_Wangen_Weggezogen,'%d.%m.%Y')                      AS Von_Wangen_Weggezogen,
+          DATE_FORMAT(P.Baulandgesuch_Eingereicht_Am,'%d.%m.%Y')               AS Baulandgesuch_Eingereicht_Am,
+          DATE_FORMAT(P.Bauland_Gekauft_Am,'%d.%m.%Y')                         AS Bauland_Gekauft_Am,
+          DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                              AS Angemeldet_Am,
+          DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                             AS Aufgenommen_Am,
+          DATE_FORMAT(P.Funktion_Uebernommen_Am,'%d.%m.%Y')                    AS Funktion_Uebernommen_Am,
+          DATE_FORMAT(P.Funktion_Abgegeben_Am,'%d.%m.%Y')                      AS Funktion_Abgegeben_Am,
+          DATE_FORMAT(P.Chronik_Bezogen_Am,'%d.%m.%Y')                         AS Chronik_Bezogen_Am,
           pAdr.ID                                      AS Private_Adressen_ID,
 		  pAdr.Strasse                                 AS Private_Strasse,
 		  pAdr.Hausnummer                              AS Private_Hausnummer,
@@ -1024,44 +1116,101 @@ CREATE VIEW Personen_Daten AS
 
 -- SELECT * FROM Personen_Daten;
 
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Personen_Daten_Lebend; 
 CREATE VIEW Personen_Daten_Lebend AS
-    SELECT * 
-    FROM Personen_Daten 
-    WHERE Todestag IS NULL;
-    
+    SELECT
+	*
+    FROM Personen_Daten
+    WHERE Todestag IS NULL
+    ORDER BY Geschlecht, Familien_Name, Vorname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Lebend; 
+CREATE VIEW Bürger_Lebend AS
+    SELECT
+		ID,
+		Zivilstand,
+        Geschlecht,
+		-- Anrede_Long_Long          AS Anrede,
+        Vorname_Initial           AS Vorname,
+        Familien_Name             AS Name,
+		Private_Strassen_Adresse  AS Strasse,
+        Private_PLZ_Ort           AS PLZ_Ort,
+        Geburtstag,
+        Age,
+        eMail,
+        Tel_Nr,
+        IBAN,
+		History,
+		Bemerkungen
+    FROM Personen_Daten_Lebend
+    WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0
+    ORDER BY Familien_Name, Vorname;
+-- -----------------------------------------------------    
 DROP VIEW IF EXISTS Personen_Daten_Gestorben; 
 CREATE VIEW Personen_Daten_Gestorben AS
-    SELECT * 
+    SELECT 
+		ID,
+        Vorname_Initial                                        AS Vorname,
+        Familien_Name                                          AS Familienname,
+        CONCAT(Private_Strassen_Adresse,' ; ',Private_PLZ_ORT) AS `Letzte Adresse`,
+        Geburtstag,
+        Todestag,
+        Age
     FROM Personen_Daten 
     WHERE Todestag IS NOT NULL
-    ORDER BY Todestag;
-    
+    ORDER BY STR_TO_DATE(Todestag,'%d.%m.%Y');
+
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Bewirtschafter; 
 CREATE VIEW Bewirtschafter AS
 	SELECT
 		ID,
-		-- Kategorien,
-        -- FIND_IN_SET('Bürger', `Kategorien`) AS Is_Bürger,
-		CASE 
-		  WHEN FIND_IN_SET('Bürger', `Kategorien`) = 1   THEN 'Ja'
-		  WHEN FIND_IN_SET('Bürger', `Kategorien`) = 0   THEN ''
-		  ELSE Kategorien
-		END AS Ist_Bürger,
+		Kategorien,
+		Ist_Bürger,
+		Ist_Pächter,
+		Ist_Direktzahlungsberechtigt,
+		Betriebs_Nr,
+        Age,
+		Geburtstag,
 		Geschlecht,
 		Vorname_Initial          AS Vorname,
-		Familien_Name,
+		Familien_Name            AS `Name`,
 		Private_Strassen_Adresse AS Strasse,
-		Private_PLZ_Ort,
+		Private_PLZ_Ort          AS Ort,
 		eMail,
 		Tel_Nr,
-		Betriebs_Nr,
 		IBAN,
-		Geburtstag
+        Bemerkungen
 	FROM Personen_Daten_Lebend
-	WHERE FIND_IN_SET('Landwirt', `Kategorien`) > 0
-	ORDER BY Familien_Name;
+	WHERE Ist_Pächter = 'Ja' OR
+		  Ist_Direktzahlungsberechtigt = 'Ja' OR
+          Betriebs_Nr IS NOT NULL
+	ORDER BY `Name`, `Vorname`;
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Pächter; 
+CREATE VIEW Pächter AS
+	SELECT
+		ID,
+		Ist_Bürger,
+		Ist_Direktzahlungsberechtigt,
+        Geschlecht   AS Sex,
+        Vorname,
+		`Name`       AS Familien_Name,
+		Strasse      AS Adresse,
+		Ort,
+        Geburtstag,
+        Tel_Nr,
+        eMail,
+		Betriebs_Nr,
+        Age,
+        Bemerkungen
+	FROM Bewirtschafter
+	WHERE Ist_Pächter = 'Ja'
+	ORDER BY ID;
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Telnr_Liste_Sorted; 
 CREATE VIEW Telnr_Liste_Sorted AS

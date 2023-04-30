@@ -703,7 +703,7 @@ if __name__ == '__main__':
                                    password="1234ABCD12abcd",
                                    trace=True)
 
-    load_data_from_BuergerDB()
+    ## load_data_from_BuergerDB()
 
     # TEST_findPerson()
     # reco_personen()

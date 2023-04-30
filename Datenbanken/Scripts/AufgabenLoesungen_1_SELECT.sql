@@ -24,6 +24,7 @@
 -- 04-Apr-2023   Walter Rothlin      Added special types and 1.11.1), 1.8.1)
 -- 18-Apr-2023   Walter Rothlin      Added more Fct and Proc and fixed DELIMITER in Fct
 -- 25-Apr-2023   Walter Rothlin      Added more Functions 10.3.1 and 10.3.2
+-- 28-Apr-2023   Walter Rothlin      Added getAge() Aktuelles Alter berechnen, wenn Todestag dann Alter fixiert, sonst NOW() - Birthday (Nur Jahre)
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -1650,6 +1651,24 @@ DELIMITER ;
 
 -- Test-Cases
 -- SELECT getYounger(STR_TO_DATE('20050527-194523', '%Y%m%d-%H%i%s'), STR_TO_DATE('20050527-194524', '%Y%m%d-%H%i%s')) AS latest_change;
+
+-- --------------------------------------------------------------------------------
+--  Fct 10.2) getAge() Aktuelles Alter berechnen, wenn Todestag dann Alter fixiert, sonst NOW() - Birthday (Nur Jahre)
+DROP FUNCTION IF EXISTS getAge;
+DELIMITER //
+CREATE FUNCTION  getAge(birthday date, deathDate date) RETURNS int
+BEGIN
+	IF deathDate IS NULL THEN
+		RETURN timestampdiff(YEAR,birthday, CURDATE());
+    ELSE
+       RETURN timestampdiff(YEAR,birthday, deathDate);
+	END IF;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT getAge(STR_TO_DATE('1960-08-05', '%Y-%m-%d'), STR_TO_DATE('2023-04-28', '%Y-%m-%d')) AS Age;
+-- SELECT getAge(STR_TO_DATE('1960-08-05', '%Y-%m-%d'), NULL) AS Age;
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.3) Gibt die internationale PLZ zurueck
