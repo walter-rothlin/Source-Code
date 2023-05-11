@@ -37,16 +37,27 @@ def db_connect(host='localhost', schema='stammdaten', user=None, password=None, 
     return db_connection
 
 
+def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
+    sql_insert = f'SELECT count(*) FROM {db_tbl_name} '
+    mycursor = db.cursor()
+    mycursor.execute(sql_insert)
+    myresult = mycursor.fetchall()
+    if retValueWithTblName:
+        return {'rows_in_db   (' + db_tbl_name + '):': myresult[0][0]}
+    else:
+        return myresult[0][0]
 
 
-def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None, db_tbl_name=None):
+def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None, db_tbl_name=None, verbal=False, ingnore_sql_error=False):
     sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
     csv_column_names = csv_db_col_mapping.keys()
     # print('columns:', csv_column_names)
     df = pd.DataFrame(sheet_data, columns=csv_column_names)
 
+    row_counter_file_loaded = 0
     mycursor = db.cursor()
     for index, row in df.iterrows():
+        row_counter_file_loaded += 1
         csv_values = []
         db_attributes_names = []
 
@@ -86,20 +97,40 @@ def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None,
 
         # print('db_attributes_types:', db_attributes_types)
 
-        sql_insert = f'''
-         INSERT IGNORE INTO {db_tbl_name} ({db_attributes_names_as_string}) VALUES 
-                ({csv_values_as_string})
-        '''
+        if ingnore_sql_error:
+            sql_insert = f'''
+             INSERT IGNORE INTO {db_tbl_name} ({db_attributes_names_as_string}) VALUES 
+                    ({csv_values_as_string})
+            '''
+        else:
+            sql_insert = f'''
+             INSERT INTO {db_tbl_name} ({db_attributes_names_as_string}) VALUES 
+                    ({csv_values_as_string})
+            '''
 
-
-        print(sql_insert)
-        mycursor.execute(sql_insert)
+        try:
+            mycursor.execute(sql_insert)
+        except Exception:
+            print('ERROR:', sql_insert)
     db.commit()
+
+    prompt_file = 'rows_in_file (' + sheet_name + '):'
+    rec_count_file = {prompt_file: row_counter_file_loaded}
+
+    prompt_db = 'rows_in_db   (' + db_tbl_name + '):'
+    rec_count_db = get_record_count(db, db_tbl_name)
+
+    if rec_count_file[prompt_file] != rec_count_db[prompt_db]:
+        print('1) rec_count_db  :', str(rec_count_db))
+        print('2) rec_count_file:', str(rec_count_file))
+        print('3)', 'WARNING!!!!!!\n')
+
+    return [rec_count_file, rec_count_db]
 
 def initial_load(inport_excel_fn, tabels_to_load, db_connection):
     for a_table in tabels_to_load:
         if a_table == 'Länder':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Länder',
                                    csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
                                                        'Land': {'db_table_attribute_name': 'Name'},
@@ -109,9 +140,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='Land')
+            print(resultat)
 
         if a_table == 'Orte':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Orte',
                                    csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
                                                        'PLZ': {'db_table_attribute_name': 'PLZ'},
@@ -123,9 +155,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='Orte')
+            print(resultat)
 
         if a_table == 'Adressen':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Adressen',
                                    csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
                                                        'Strasse': {'db_table_attribute_name': 'Strasse'},
@@ -136,9 +169,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='Adressen')
+            print(resultat)
 
         if a_table == 'Personen':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Personen',
                                    csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
                                                        'Source': {'db_table_attribute_name': 'Source'},
@@ -182,9 +216,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='Personen')
+            print(resultat)
 
         if a_table == 'IBAN':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='IBAN_Liste',
                                    csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
                                                        'IBAN_Nummer': {'db_table_attribute_name': 'Nummer'},
@@ -197,9 +232,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='IBAN')
+            print(resultat)
 
         if a_table == 'IBAN':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='IBAN_Liste',
                                    csv_db_col_mapping={'IBAN_ID': {'db_table_attribute_name': 'ID'},
                                                        'IBAN_Nummer': {'db_table_attribute_name': 'Nummer'},
@@ -212,9 +248,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='IBAN')
+            print(resultat)
 
         if a_table == 'EMail':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='EMail_Liste',
                                    csv_db_col_mapping={'Email_ID': {'db_table_attribute_name': 'ID'},
                                                        'Email_Adresse': {'db_table_attribute_name': 'eMail'},
@@ -224,9 +261,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='email_adressen')
+            print(resultat)
 
         if a_table == 'Person_Has_EMail':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='EMail_Liste',
                                    csv_db_col_mapping={'Pers_ID': {'db_table_attribute_name': 'Personen_ID'},
                                                        'Email_ID': {'db_table_attribute_name': 'EMail_adressen_ID'},
@@ -234,9 +272,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='personen_has_email_adressen')
+            print(resultat)
 
         if a_table == 'Telefon':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Telefon_Liste',
                                    csv_db_col_mapping={'Tel_ID': {'db_table_attribute_name': 'ID'},
                                                        'Laendercode': {'db_table_attribute_name': 'Laendercode'},
@@ -248,10 +287,11 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        'last_update': {'db_table_attribute_name': 'last_update'}
                                                        },
                                    db=db_connection,
-                                   db_tbl_name='telefonnummern')
+                                   db_tbl_name='Telefonnummern')
+            print(resultat)
 
         if a_table == 'Person_Has_Telefonnummer':
-            import_data_from_EXCEL(inport_excel_fn,
+            resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Telefon_Liste',
                                    csv_db_col_mapping={'Pers_ID': {'db_table_attribute_name': 'Personen_ID'},
                                                        'Tel_ID': {'db_table_attribute_name': 'Telefonnummern_ID'},
@@ -259,7 +299,7 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        },
                                    db=db_connection,
                                    db_tbl_name='personen_has_telefonnummern')
-
+            print(resultat)
 
 if __name__ == '__main__':
     stammdaten_schema = db_connect(host='localhost',
@@ -269,7 +309,7 @@ if __name__ == '__main__':
                                    trace=True)
 
 
-    data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Gen_Listen_2023_04_30.xlsx'
+    data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Stammdaten_2023_05_08.xlsx'
     initial_load(data_import_fn, ['Länder', 'Orte', 'Adressen', 'Personen'], stammdaten_schema)
     initial_load(data_import_fn, ['IBAN'], stammdaten_schema)
     initial_load(data_import_fn, ['EMail', 'Person_Has_EMail'], stammdaten_schema)

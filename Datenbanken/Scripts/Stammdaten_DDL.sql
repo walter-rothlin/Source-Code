@@ -18,7 +18,8 @@
 -- 26-Feb-2023   Walter Rothlin      Added IDs to orte....personen viewsstored-Procedure section
 -- 18-Apr-2023   Walter Rothlin      Fixed DELIMITER in Fct
 -- 25-Apr-2023   Walter Rothlin      Added history and Bemerkungen to view personen_daten
--- 08-May-2023   Walter Rothlin	     removed ID and Added combined PK to personen_has_email_adressen and personen_has_telefonnummern
+-- 08-May-2023   Walter Rothlin	     Removed ID and Added combined PK to personen_has_email_adressen and personen_has_telefonnummern
+-- 11-May-2023   Walter Rothlin      Added eMailing_liste
 -- ---------------------------------------------------------------------------------------------
 
 -- To-Does
@@ -1007,6 +1008,7 @@ CREATE VIEW EMail_Liste AS
 	SELECT
 		pers.ID                                     AS Pers_ID,
 		pers.Sex                                    AS Sex,
+        getAge(pers.Geburtstag, pers.Todestag)      AS Age,
 		pers.Partner_Name_Angenommen                AS Name_Angenommen_P,
 		pers.Ledig_Name                             AS Ledig_Name_P, 
 		pers.Partner_Name                           AS Partner_Name_P,
@@ -1025,7 +1027,21 @@ CREATE VIEW EMail_Liste AS
 	LEFT OUTER JOIN email_adressen AS email  ON pt.EMail_Adressen_ID   = email.ID
 	LEFT OUTER JOIN Personen       AS pers   ON pt.personen_ID         = pers.ID
 	WHERE pers.Todestag IS NULL;
-    
+
+
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS EMailing_Liste; 
+CREATE VIEW EMailing_Liste AS
+	SELECT 
+		Pers_ID AS ID,
+		Age AS `Alter`,
+        Sex, 
+        Vorname_Initial AS Vorname, 
+        Familien_Name AS Nachname, 
+        eMail_Adresse AS eMail 
+	FROM EMail_Liste 
+    WHERE sex IN ('Herr', 'Frau') 
+    ORDER BY Sex,Age;
 -- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS IBAN_Liste; 
 CREATE VIEW IBAN_Liste AS
@@ -1846,7 +1862,8 @@ UPDATE Personen SET Zivilstand = 'Gestorben' WHERE Todestag is not NULL;
 
  -- SELECT ID,Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Kategorien FROM personen_daten Where ID in (11,23,42) ORDER BY Familien_Name, Vorname_Initial;
  
-SELECT * FROM Personen_Daten WHERE ID = 11;
+-- SELECT * FROM Personen_Daten WHERE ID IN (223, 644, 1103);   -- Rothlin-Meier, Rothlin-Collet, Tobias Rothlin
+-- SELECT * FROM Personen  WHERE ID IN (223, 644, 1103);  
 
  /*
  SELECT Vorname_Initial,
@@ -1864,7 +1881,7 @@ ORDER BY Familien_Name;
 */
 
 
-
+/*
 SELECT
     ID                                                 AS ID,
     Anrede_Long_Long                                   AS Anrede,
@@ -1883,7 +1900,9 @@ WHERE
         -- AND (FIND_IN_SET('Landwirt', `Kategorien`) > 0 OR FIND_IN_SET('Bürger', `Kategorien`) > 0)
         AND (Such_Begriff LIKE BINARY '%Kä' AND Such_Begriff LIKE BINARY '%holz%')
 ORDER BY Familien_Name, Vorname;
+*/
 
+/*
         SELECT
             ID AS ID,
              Anrede_Long_Long                                   AS Anrede,
@@ -1894,4 +1913,4 @@ ORDER BY Familien_Name, Vorname;
               Such_Begriff LIKE BINARY '%%' AND 
               Such_Begriff LIKE BINARY '%%'
         ORDER BY Familien_Name, Vorname;
-    
+*/    

@@ -1,12 +1,18 @@
--- MySQL Workbench Forward Engineering
+-- ---------------------------------------------------------------------------------------------
+-- Filename: BZU_2023_A_DDL_DML_Eigenes_Schema.sql
+-- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/BZU_2023_A_DDL_DML_Eigenes_Schema.sql
+-- ---------------------------------------------------------------------------------------------
+--
+-- Autor: Walter Rothlin
+-- Description: Kreiert ein eigenes Schema
+--
+-- History:
+-- 21-Apr-2023   Walter Rothlin      Initial Version, Reveresed Enginiering
+-- 11-May-2023   Walter Rothlin      Connect to Excel, add more Names and extend view
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
-
--- -----------------------------------------------------
--- Schema BZU_2023_A
--- -----------------------------------------------------
 
 -- -----------------------------------------------------
 -- Schema BZU_2023_A

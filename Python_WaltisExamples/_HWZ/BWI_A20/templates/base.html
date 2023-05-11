@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% block body %}{% endblock %}
+
+    <hr/>
+<h5>Links</h5>
+<ul>
+    <li><a href="/render?filename=index_template.html">index_template.html</a></li>
+    <li><a href="/render?filename=index_2_template.html">index_2_template.html</a></li>
+</ul>
+</body>
+</html>

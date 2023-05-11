@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : Flask_Session.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK_Sessions/Flask_Session.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK_App_01/Flask_Session.py
 #
 # Description: FLASK Web-Applikation with Sessions (Login)
 # https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
