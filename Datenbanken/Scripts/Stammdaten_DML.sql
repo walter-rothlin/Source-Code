@@ -11,6 +11,23 @@
 -- 26-Apr-2023   Walter Rothlin      Mutationen Buerger DB
 -- ---------------------------------------------------------------------------------------------
 
+/*
+            LOAD DATA INFILE 'C:/Users/Landwirtschaft/Desktop/Länder.csv'
+            INTO TABLE Land 
+            FIELDS TERMINATED BY '|' 
+            ENCLOSED BY '"'
+            LINES TERMINATED BY '\n'
+            IGNORE 1 ROWS;
+INSERT IGNORE INTO products VALUES (null, 111, '8.8.8.8')
+
+INSERT INTO products VALUES (null, 111, '8.8.8.8')
+ON DUPLICATE KEY UPDATE products SET last_modified = NOW()
+
+REPLACE INTO products VALUES (null, 111, '8.8.8.8')adressen
+*/
+
+
+
 UPDATE `personen` SET `AHV_Nr` = '756.2534.0047.47' WHERE (`ID` = 644);  -- Walter Rothlin 1960
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;

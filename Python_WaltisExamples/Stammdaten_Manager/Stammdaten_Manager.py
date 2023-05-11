@@ -428,6 +428,25 @@ def read_from_file_and_call_stored_procedure(
     # mycursor.execute(sql, val)
     
     '''
+def import_data_from_EXCEL_csv(filename, sheet_name, columns=[]):
+    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
+    ## print(sheet_data)
+    df = pd.DataFrame(sheet_data, columns=columns)
+
+    df.to_csv(r'C:/Users/Landwirtschaft/Desktop/Länder.csv', sep='|')
+
+    mycursor = stammdaten_schema.cursor()
+    sql = """
+            LOAD DATA INFILE 'C:/Users/Landwirtschaft/Desktop/Länder.csv' 
+            INTO TABLE Land 
+            FIELDS TERMINATED BY '|' 
+            ENCLOSED BY '"'
+            LINES TERMINATED BY '\n'
+            IGNORE 1 ROWS;
+    """
+    # print(sql)
+    mycursor.execute(sql)
+    stammdaten_schema.commit()
 
 def load_data_from_BuergerDB():
 
@@ -698,7 +717,7 @@ def TEST_findPerson():
 
 if __name__ == '__main__':
     stammdaten_schema = db_connect(host='localhost',
-                                   schema='stammdaten',
+                                   schema='genossame_wangen',
                                    user="App_User_Stammdaten",
                                    password="1234ABCD12abcd",
                                    trace=True)

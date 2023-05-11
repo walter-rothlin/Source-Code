@@ -18,6 +18,7 @@
 -- 26-Feb-2023   Walter Rothlin      Added IDs to orte....personen viewsstored-Procedure section
 -- 18-Apr-2023   Walter Rothlin      Fixed DELIMITER in Fct
 -- 25-Apr-2023   Walter Rothlin      Added history and Bemerkungen to view personen_daten
+-- 08-May-2023   Walter Rothlin	     removed ID and Added combined PK to personen_has_email_adressen and personen_has_telefonnummern
 -- ---------------------------------------------------------------------------------------------
 
 -- To-Does
@@ -38,12 +39,12 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- ===============================================================================================
 -- == Schema Stammdaten kreieren                                                                ==
 -- ===============================================================================================
-DROP SCHEMA IF EXISTS stammdaten;
-CREATE SCHEMA IF NOT EXISTS stammdaten  DEFAULT CHARACTER SET utf8 ;
+DROP SCHEMA IF EXISTS genossame_wangen;
+CREATE SCHEMA IF NOT EXISTS genossame_wangen  DEFAULT CHARACTER SET utf8 ;
 
 -- Als default Schema setzen
 SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
-USE stammdaten;
+USE genossame_wangen;
 
 
 -- ===============================================================================================
@@ -165,23 +166,22 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Chronik_Bezogen_Am`           DATE NULL,
   
   -- von ACCESS-DB 1:1 uebernommen (Temporär)
-  lintNutzenKey					INT,
-  bolNutzenberechtigung			BOOL DEFAULT FALSE,
-  bolBaulandgesuch   			BOOL DEFAULT FALSE,
-  bolMutationen_Aktuell         BOOL DEFAULT FALSE,
-  bolMitarbeiter_Genossame      BOOL DEFAULT FALSE,
-  bolWeggezogen                 BOOL DEFAULT FALSE,
-  bolAktiv                      BOOL DEFAULT FALSE,
-  bolLandwirt					BOOL DEFAULT FALSE,
-  bolGenossenbürger			    BOOL DEFAULT FALSE,
-  bolBürgerauflage  			BOOL DEFAULT FALSE,
+  -- lintNutzenKey				   INT,
+  -- bolNutzenberechtigung		   BOOL DEFAULT FALSE,
+  -- bolBaulandgesuch   		   BOOL DEFAULT FALSE,
+  -- bolMutationen_Aktuell         BOOL DEFAULT FALSE,
+  -- bolMitarbeiter_Genossame      BOOL DEFAULT FALSE,
+  -- bolWeggezogen                 BOOL DEFAULT FALSE,
+  -- bolAktiv                      BOOL DEFAULT FALSE,
+  -- bolLandwirt				   BOOL DEFAULT FALSE,
+  -- bolGenossenbürger			   BOOL DEFAULT FALSE,
+  -- bolBürgerauflage  			   BOOL DEFAULT FALSE,
   
   -- FK: Adressen
   `Privat_Adressen_ID`          INT UNSIGNED NULL,
   `Geschaefts_Adressen_ID`      INT UNSIGNED NULL,
   
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      
   -- PK-Constraints
   PRIMARY KEY (`ID`),
   
@@ -240,14 +240,15 @@ CREATE TABLE IF NOT EXISTS EMail_Adressen (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Personen_has_EMail_Adressen;
 CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
-  `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  -- `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Personen_ID`       INT UNSIGNED NOT NULL,
   `EMail_Adressen_ID` INT UNSIGNED NOT NULL,
   `last_update`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
-  PRIMARY KEY (`ID`),
-    
+  -- PRIMARY KEY (`ID`),
+  PRIMARY KEY (`Personen_ID`, `EMail_Adressen_ID`),
+  
   -- Indizes
   INDEX `fk_Personen_has_EMail_Adressen_EMail_Adressen1_idx` (`EMail_Adressen_ID` ASC) VISIBLE,
   INDEX `fk_Personen_has_EMail_Adressen_Personen1_idx`       (`Personen_ID` ASC)       VISIBLE,
@@ -288,13 +289,14 @@ CREATE TABLE IF NOT EXISTS `Telefonnummern` (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Personen_has_Telefonnummern`;
 CREATE TABLE IF NOT EXISTS `Personen_has_Telefonnummern` (
-  `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  -- `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Personen_ID`       INT UNSIGNED NOT NULL,
   `Telefonnummern_ID` INT UNSIGNED NOT NULL,
   `last_update`       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
-  PRIMARY KEY (`ID`),
+  -- PRIMARY KEY (`ID`),
+  PRIMARY KEY (`Personen_ID`, `Telefonnummern_ID`),
   
   -- Indizes
   INDEX `fk_Personen_has_Telefonnummern_Telefonnummern1_idx` (`Telefonnummern_ID` ASC) VISIBLE,
@@ -311,7 +313,36 @@ CREATE TABLE IF NOT EXISTS `Personen_has_Telefonnummern` (
     REFERENCES `Telefonnummern` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-    
+
+-- -----------------------------------------------------
+-- Table `IBAN`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `IBAN` ;
+CREATE TABLE IF NOT EXISTS `IBAN` (
+  `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Nummer`      VARCHAR(26) NOT NULL,
+  `Bezeichnung` VARCHAR(45) NULL,
+  `Bankname`    VARCHAR(45) NOT NULL DEFAULT '',
+  `Bankort`     VARCHAR(45) NOT NULL DEFAULT '',
+  `Personen_ID` INT UNSIGNED NOT NULL,
+  `Prio`        TINYINT      NOT NULL DEFAULT 0, 
+  `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+       
+  -- PK-Constraints
+  PRIMARY KEY (`ID`),
+  
+  -- Indizes
+  INDEX `fk_iban_personen1_idx` (`personen_ID` ASC) VISIBLE,
+  
+  -- FK-Constraints
+  CONSTRAINT `fk_iban_personen1`
+     FOREIGN KEY (`personen_ID`)
+     REFERENCES `personen` (`ID`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION);
+
+-- ALTER TABLE `iban` 
+-- ADD UNIQUE INDEX `Nummer_UNIQUE` (`Nummer` ASC) VISIBLE;
 -- -----------------------------------------------------
 -- Table `Waermebezueger`
 -- -----------------------------------------------------
@@ -429,39 +460,28 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
     ON UPDATE NO ACTION);
 
 
--- -----------------------------------------------------
--- Table `IBAN`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `IBAN` ;
-CREATE TABLE IF NOT EXISTS `IBAN` (
-  `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Nummer`      VARCHAR(26) NOT NULL,
-  `Bezeichnung` VARCHAR(45) NULL,
-  `Bankname`    VARCHAR(45) NOT NULL DEFAULT '',
-  `Bankort`     VARCHAR(45) NOT NULL DEFAULT '',
-  `personen_ID` INT UNSIGNED NOT NULL,
-  `Prio`        TINYINT      NOT NULL DEFAULT 0, 
-  `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-       
-  -- PK-Constraints
-  PRIMARY KEY (`ID`),
-  
-  -- Indizes
-  INDEX `fk_iban_personen1_idx` (`personen_ID` ASC) VISIBLE,
-  
-  -- FK-Constraints
-  CONSTRAINT `fk_iban_personen1`
-     FOREIGN KEY (`personen_ID`)
-     REFERENCES `personen` (`ID`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION);
-
 -- ===============================================================================================
 -- == Create Funtions used in Joins                                                             ==
 -- ===============================================================================================
 SET GLOBAL log_bin_trust_function_creators = 1;
 
 -- --------------------------------------------------------------------------------
+DROP FUNCTION IF EXISTS getRowCount;
+DELIMITER //
+CREATE FUNCTION getRowCount(tableName varchar(255))
+RETURNS int
+BEGIN
+  DECLARE rowCount int;
+  SET rowCount = (SELECT COUNT(*) FROM tableName);
+  RETURN rowCount;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT getRowCount('land') AS rc_land;
+
+-- --------------------------------------------------------------------------------
+
 --  Added a value to a SET
 DROP FUNCTION IF EXISTS addSetValue;
 DELIMITER //
@@ -822,7 +842,7 @@ DELIMITER //
 CREATE FUNCTION getPrio_0_EMail(p_id INT) RETURNS CHAR(100)
 BEGIN
     -- RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
-    RETURN (SELECT eMail FROM email_main WHERE Person_id = p_id AND prio=0 LIMIT 1);
+    RETURN (SELECT eMail_Adresse FROM email_liste_prio_0 WHERE Pers_id = p_id AND prio=0 LIMIT 1);
 END//
 DELIMITER ;
 
@@ -834,7 +854,7 @@ DROP FUNCTION IF EXISTS getPrio_0_IBAN;
 DELIMITER //
 CREATE FUNCTION getPrio_0_IBAN(p_id INT) RETURNS CHAR(100)
 BEGIN
-    RETURN (SELECT Nummer FROM iban WHERE personen_id = p_id AND prio=0 LIMIT 1);
+    RETURN (SELECT IBAN_Nummer FROM iban_liste_prio_0 WHERE Pers_id = p_id AND prio=0 LIMIT 1);
 END//
 DELIMITER ;
 
@@ -885,6 +905,33 @@ DELIMITER ;
 -- == Create Views                                                                              ==
 -- ===============================================================================================
 
+DROP VIEW IF EXISTS Personen_Daten_Row_Counts; 
+CREATE VIEW Personen_Daten_Row_Counts AS
+	SELECT 
+		(select COUNT(*) FROM land) rc_land,
+		(select COUNT(*) FROM orte) rc_orte,
+		(select COUNT(*) FROM adressen) rc_adressen,
+		(select COUNT(*) FROM personen) rc_personen,
+		(select COUNT(*) FROM iban) rc_iban,
+		(select COUNT(*) FROM email_adressen) rc_email_adressen,
+		(select COUNT(*) FROM personen_has_email_adressen) rc_personen_has_email_adressen,
+		(select COUNT(*) FROM telefonnummern) rc_telefonnummern,
+		(select COUNT(*) FROM personen_has_telefonnummern) rc_personen_has_telefonnummern;
+    
+    
+DROP VIEW IF EXISTS Länder; 
+CREATE VIEW Länder AS
+	SELECT
+        l.ID                                     AS ID,
+		l.Name                                   AS Land,
+        l.Code                                   AS Code,
+		l.Landesvorwahl                          AS Landesvorwahl,
+        l.last_update                            AS last_update
+	FROM Land AS l;
+
+-- SELECT * FROM Länder;
+
+-- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS Ort_Land; 
 CREATE VIEW Ort_Land AS
 	SELECT
@@ -953,6 +1000,57 @@ CREATE VIEW Telnr_Liste AS
 	LEFT OUTER JOIN Telefonnummern AS tel  ON pt.telefonnummern_ID = tel.ID
     LEFT OUTER JOIN Personen       AS pers ON pt.personen_ID       = pers.ID
     WHERE pers.Todestag IS NULL;
+
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS EMail_Liste; 
+CREATE VIEW EMail_Liste AS
+	SELECT
+		pers.ID                                     AS Pers_ID,
+		pers.Sex                                    AS Sex,
+		pers.Partner_Name_Angenommen                AS Name_Angenommen_P,
+		pers.Ledig_Name                             AS Ledig_Name_P, 
+		pers.Partner_Name                           AS Partner_Name_P,
+		getFamilieName(pers.Sex, 
+				  pers.Partner_Name_Angenommen, 
+				  pers.Ledig_Name, 
+				  pers.Partner_Name)                AS Familien_Name,          -- Rothlin-Collet
+		getName_With_Initial(pers.Vorname, 
+							 pers.Vorname_2)        AS Vorname_Initial,
+		email.ID                                    AS Email_ID,
+		email.eMail                                 AS eMail_adresse,
+		email.Type                                  AS Type,
+		email.prio                                  AS Prio,
+		getYounger(pt.last_update, email.last_update) AS last_update
+	FROM personen_has_email_adressen AS pt
+	LEFT OUTER JOIN email_adressen AS email  ON pt.EMail_Adressen_ID   = email.ID
+	LEFT OUTER JOIN Personen       AS pers   ON pt.personen_ID         = pers.ID
+	WHERE pers.Todestag IS NULL;
+    
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS IBAN_Liste; 
+CREATE VIEW IBAN_Liste AS
+	SELECT
+		pers.ID                                      AS Pers_ID,
+		pers.Sex                                     AS Sex,
+		pers.Partner_Name_Angenommen                 AS Name_Angenommen_P,
+		pers.Ledig_Name                              AS Ledig_Name_P, 
+		pers.Partner_Name                            AS Partner_Name_P,
+		getFamilieName(pers.Sex, 
+				  pers.Partner_Name_Angenommen, 
+				  pers.Ledig_Name, 
+				  pers.Partner_Name)                 AS Familien_Name,          -- Rothlin-Collet
+		getName_With_Initial(pers.Vorname, 
+							 pers.Vorname_2)         AS Vorname_Initial,
+		iban.ID                                      AS IBAN_ID,
+		iban.Nummer                                  AS IBAN_Nummer,
+		iban.Bezeichnung                             AS Bezeichnung,
+		iban.Bankname                                AS Bankname,
+		iban.Bankort                                 AS Bankort,
+		iban.prio                                    AS Prio,
+		getYounger(pers.last_update, iban.last_update) AS last_update
+	FROM IBAN AS iban
+	LEFT OUTER JOIN Personen AS pers   ON iban.personen_ID  = pers.ID
+	WHERE pers.Todestag IS NULL;
     
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Personen_Daten; 
@@ -1235,23 +1333,62 @@ CREATE VIEW Telnr_Liste_Sorted AS
     ORDER BY Familien_Name;
 
 -- -----------------------------------------------------
+DROP VIEW IF EXISTS EMail_Liste_Sorted; 
+CREATE VIEW EMail_Liste_Sorted AS
+	SELECT         
+         E.Pers_ID           AS Pers_ID,
+         E.Sex               AS Sex,
+		 E.Familien_Name      AS Familien_Name,          -- Rothlin-Collet
+		 E.Vorname_Initial   AS Vorname_Initial,
+         P.Private_Strassen_Adresse   AS Strasse,
+         P.Private_PLZ_International  AS PLZ,
+         P.Private_Ort                AS Ort,
+		 E.Email_ID                   AS Email_ID,
+         E.eMail_adresse              AS Email_Adresse,
+         E.Type                       AS Type,
+         E.Prio                       AS Prio,
+         E.last_update                AS last_update
+	FROM EMail_Liste AS E
+    LEFT OUTER JOIN Personen_Daten AS P ON  P.ID  = E.Pers_ID
+    ORDER BY Familien_Name;
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS IBAN_Liste_Sorted;
+CREATE VIEW IBAN_Liste_Sorted AS
+	SELECT         
+         ib.Pers_ID            AS Pers_ID,
+         ib.Sex                AS Sex,
+		 ib.Familien_Name      AS Familien_Name,          -- Rothlin-Collet
+		 ib.Vorname_Initial    AS Vorname_Initial,
+         P.Private_Strassen_Adresse    AS Strasse,
+         P.Private_PLZ_International   AS PLZ,
+         P.Private_Ort                 AS Ort,
+		 ib.IBAN_ID                    AS Email_ID,
+         ib.IBAN_Nummer                AS IBAN_Nummer,
+         ib.Bezeichnung                AS Bezeichnung,
+		 ib.Bankname                   AS Bankname,
+		 ib.Bankort                    AS Bankort,
+         ib.Prio                       AS Prio,
+         ib.last_update                AS last_update
+	FROM IBAN_Liste AS ib
+    LEFT OUTER JOIN Personen_Daten AS P ON  P.ID  = ib.Pers_ID
+    ORDER BY Familien_Name;
+    
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Telnr_Liste_Prio_0; 
 CREATE VIEW Telnr_Liste_Prio_0 AS
-	SELECT * FROM Telnr_Liste_Sorted WHERE PRIO=0;
+	SELECT * FROM Telnr_Liste_Sorted WHERE Prio=0;
 
 -- --------------------------------------------------------------------------------
-DROP VIEW IF EXISTS EMail_Main; 
-CREATE VIEW EMail_Main AS
-	SELECT
-		pEMail.Personen_ID       AS Person_ID,
-        pEMail.EMail_Adressen_ID AS email_ID,
-		eMailAdr.eMail           AS eMail,
-        eMailAdr.prio            AS Prio
-	FROM Personen_has_EMail_Adressen AS pEMail
-	LEFT OUTER JOIN email_adressen AS eMailAdr ON pEMail.EMail_Adressen_ID = eMailAdr.ID
-	WHERE
-	   eMailAdr.Prio = 0;    -- MIN(eMailAdr.Prio); 
+DROP VIEW IF EXISTS EMail_Liste_Prio_0; 
+CREATE VIEW EMail_Liste_Prio_0 AS
+	SELECT * FROM  EMail_Liste_Sorted WHERE Prio = 0;
        
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS IBAN_Liste_Prio_0; 
+CREATE VIEW IBAN_Liste_Prio_0 AS
+	SELECT * FROM  IBAN_Liste_Sorted WHERE Prio = 0;
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Personen_Daten_Tel_Email; 
 CREATE VIEW Personen_Daten_Tel_Email AS

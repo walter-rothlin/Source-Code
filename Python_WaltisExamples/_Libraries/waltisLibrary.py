@@ -238,6 +238,13 @@ def readInt_00(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mu
             error = True
     return userInputInt
 
+def convert_str_to_int(int_str, default_value=None):
+    try:
+        ret_value = math.floor(float(int_str))
+    except Exception:
+        ret_value = default_value
+    return ret_value
+
 def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
     error = True
     while error:
