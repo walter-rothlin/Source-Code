@@ -55,6 +55,7 @@ def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None,
     df = pd.DataFrame(sheet_data, columns=csv_column_names)
 
     row_counter_file_loaded = 0
+    row_counter_file_not_loaded = 0
     mycursor = db.cursor()
     for index, row in df.iterrows():
         row_counter_file_loaded += 1
@@ -111,7 +112,9 @@ def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None,
         try:
             mycursor.execute(sql_insert)
         except Exception:
-            print('ERROR:', sql_insert)
+            if verbal:
+                print('ERROR:', sql_insert)
+            row_counter_file_not_loaded += 1
     db.commit()
 
     prompt_file = 'rows_in_file (' + sheet_name + '):'
@@ -120,12 +123,18 @@ def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None,
     prompt_db = 'rows_in_db   (' + db_tbl_name + '):'
     rec_count_db = get_record_count(db, db_tbl_name)
 
-    if rec_count_file[prompt_file] != rec_count_db[prompt_db]:
-        print('1) rec_count_db  :', str(rec_count_db))
-        print('2) rec_count_file:', str(rec_count_file))
-        print('3)', 'WARNING!!!!!!\n')
+    prompt_not_loaded = 'rows_not_loaded:'
+    rec_not_loaded = {prompt_not_loaded: row_counter_file_not_loaded}
 
-    return [rec_count_file, rec_count_db]
+    if rec_count_file[prompt_file] != rec_count_db[prompt_db]:
+        print('\nWARNING:')
+        if verbal:
+            print('1) rec_count_db  :', str(rec_count_db))
+            print('2) rec_count_file:', str(rec_count_file))
+            print('3) rec_not_loaded:', str(rec_not_loaded))
+
+
+    return [rec_count_file, rec_count_db, rec_not_loaded]
 
 def initial_load(inport_excel_fn, tabels_to_load, db_connection):
     for a_table in tabels_to_load:
@@ -172,6 +181,17 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
             print(resultat)
 
         if a_table == 'Personen':
+            '''
+            'Partner_ID': {'db_table_attribute_name': 'Partner_ID',
+                           'default_value': 'None',
+                           'db_attribute_type': 'int'},
+            'Vater_ID': {'db_table_attribute_name': 'Vater_ID',
+                           'default_value': 'None',
+                           'db_attribute_type': 'int'},
+            'Mutter_ID': {'db_table_attribute_name': 'Mutter_ID',
+                           'default_value': 'None',
+                           'db_attribute_type': 'int'},
+            '''
             resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Personen',
                                    csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
@@ -187,15 +207,6 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        'Partner_Name_Angenommen': {'db_table_attribute_name': 'Partner_Name_Angenommen'},
                                                        'AHV_Nr': {'db_table_attribute_name': 'AHV_Nr'},
                                                        'Betriebs_Nr': {'db_table_attribute_name': 'Betriebs_Nr'},
-                                                       'Partner_ID': {'db_table_attribute_name': 'Partner_ID',
-                                                                      'default_value': 'None',
-                                                                      'db_attribute_type': 'int'},
-                                                       'Vater_ID': {'db_table_attribute_name': 'Vater_ID',
-                                                                      'default_value': 'None',
-                                                                      'db_attribute_type': 'int'},
-                                                       'Mutter_ID': {'db_table_attribute_name': 'Mutter_ID',
-                                                                      'default_value': 'None',
-                                                                      'db_attribute_type': 'int'},
                                                        'Zivilstand': {'db_table_attribute_name': 'Zivilstand'},
                                                        'Kategorien': {'db_table_attribute_name': 'Kategorien'},
                                                        'Geburtstag': {'db_table_attribute_name': 'Geburtstag'},
@@ -210,28 +221,12 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        'Funktion_Uebernommen_Am': {'db_table_attribute_name': 'Funktion_Uebernommen_Am'},
                                                        'Funktion_Abgegeben_Am': {'db_table_attribute_name': 'Funktion_Abgegeben_Am'},
                                                        'Chronik_Bezogen_Am': {'db_table_attribute_name': 'Chronik_Bezogen_Am'},
-                                                       'Private_Adressen_ID': {'db_table_attribute_name': 'Private_Adressen_ID'},
+                                                       'Privat_Adressen_ID': {'db_table_attribute_name': 'Privat_Adressen_ID'},
                                                        'Geschaefts_Adressen_ID': {'db_table_attribute_name': 'Geschaefts_Adressen_ID'},
                                                        'last_update': {'db_table_attribute_name': 'last_update'}
                                                        },
                                    db=db_connection,
                                    db_tbl_name='Personen')
-            print(resultat)
-
-        if a_table == 'IBAN':
-            resultat = import_data_from_EXCEL(inport_excel_fn,
-                                   sheet_name='IBAN_Liste',
-                                   csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
-                                                       'IBAN_Nummer': {'db_table_attribute_name': 'Nummer'},
-                                                       'Bezeichnung': {'db_table_attribute_name': 'Bezeichnung'},
-                                                       'Bankname': {'db_table_attribute_name': 'Bankname'},
-                                                       'Bankort': {'db_table_attribute_name': 'Bankort'},
-                                                       'Pers_ID': {'db_table_attribute_name': 'Personen_ID'},
-                                                       'Prio': {'db_table_attribute_name': 'Prio'},
-                                                       'last_update': {'db_table_attribute_name': 'last_update'}
-                                                       },
-                                   db=db_connection,
-                                   db_tbl_name='IBAN')
             print(resultat)
 
         if a_table == 'IBAN':

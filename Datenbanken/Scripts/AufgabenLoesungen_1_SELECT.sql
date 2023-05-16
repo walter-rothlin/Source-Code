@@ -171,7 +171,7 @@ ORDER BY
 SELECT 
 	`act`.`first_name` AS `Vorname`,
 	`act`.`last_name`  AS `Nachname`
-FROM `sakila`.`actor`  AS `act`
+FROM `actor`  AS `act`
 WHERE `act`.`first_name` LIKE BINARY 'NICK'            OR   -- Nick (case-insensitive)
 	  `act`.`first_name` LIKE BINARY '%SS%' OR   -- % 0 .. n Zeichen     binary Chase-Sensitive
 	  `act`.`first_name` LIKE '___'              -- _ genau ein Zeichen

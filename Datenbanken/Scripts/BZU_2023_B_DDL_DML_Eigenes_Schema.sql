@@ -1,15 +1,23 @@
--- DDL  Forward Engineering 2023-Apr-21
--- ====================================
+-- ---------------------------------------------------------------------------------------------
+-- Filename: BZU_2023_B_DDL_DML_Eigenes_Schema.sql
+-- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/BZU_2023_B_DDL_DML_Eigenes_Schema.sql
+-- ---------------------------------------------------------------------------------------------
+--
+-- Autor: Walter Rothlin
+-- Description: Kreiert ein eigenes Schema
+--
+-- History:
+-- 22-Apr-2023   Walter Rothlin      Initial Version, Reveresed Enginiering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema bzu_2023_b
+-- Schema BZU_2023_B
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS  `bzu_2023_b`;
-CREATE SCHEMA IF NOT EXISTS `bzu_2023_b` DEFAULT CHARACTER SET utf8 ;
+DROP SCHEMA IF EXISTS  `BZU_2023_B`;
+CREATE SCHEMA IF NOT EXISTS `BZU_2023_B` DEFAULT CHARACTER SET utf8 ;
 
 SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
 USE `bzu_2023_b` ;

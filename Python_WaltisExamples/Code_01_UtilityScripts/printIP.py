@@ -1,5 +1,18 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name: printIP.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_01_UtilityScripts/printIP.py
+#
+# Description: Zeigt die IP-Adresse auf der Sense-Hat LED Matrix
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 16-May-2023   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
+
 import os
 import sys
 
