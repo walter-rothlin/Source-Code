@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name  : Stammdaten_Manager.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Stammdaten_Manager/Stammdaten_Manager.py
+# Name  : Genossame_Manager.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Genossame_Manager/Stammdaten_Manager.py
 #
-# Description: Manager für Stammdaten
+# Description: Manager für Genossame-Daten
 #
 # Autor: Walter Rothlin
 #
@@ -88,6 +88,7 @@ def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None,
             if a_csv_column_value is not None and a_csv_column_value != 'None':
                 if attribute_type == 'int':
                     csv_values.append(str(a_csv_column_value))
+                    # csv_values.append('{zahl:11d}'.format(zahl=a_csv_column_value))
                 else:
                     csv_values.append("'" + a_csv_column_value + "'")
                 db_attributes_names.append(str(csv_db_col_mapping[a_csv_column_name]['db_table_attribute_name']))
@@ -136,8 +137,8 @@ def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None,
 
     return [rec_count_file, rec_count_db, rec_not_loaded]
 
-def initial_load(inport_excel_fn, tabels_to_load, db_connection):
-    for a_table in tabels_to_load:
+def initial_load(inport_excel_fn, tables_to_load, db_connection):
+    for a_table in tables_to_load:
         if a_table == 'Länder':
             resultat = import_data_from_EXCEL(inport_excel_fn,
                                    sheet_name='Länder',
@@ -157,9 +158,8 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                    csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
                                                        'PLZ': {'db_table_attribute_name': 'PLZ'},
                                                        'Name': {'db_table_attribute_name': 'Name'},
-                                                       'Land_ID': {'db_table_attribute_name': 'Land_ID'},
                                                        'Kanton': {'db_table_attribute_name': 'Kanton'},
-                                                       'Tel_Vorwahl': {'db_table_attribute_name': 'Tel_Vorwahl'},
+                                                       'Land_ID': {'db_table_attribute_name': 'Land_ID'},
                                                        'last_update': {'db_table_attribute_name': 'last_update'}
                                                        },
                                    db=db_connection,
@@ -173,6 +173,12 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                                        'Strasse': {'db_table_attribute_name': 'Strasse'},
                                                        'Hausnummer': {'db_table_attribute_name': 'Hausnummer'},
                                                        'Postfachnummer': {'db_table_attribute_name': 'Postfachnummer'},
+                                                       'Adresszusatz': {'db_table_attribute_name': 'Adresszusatz'},
+                                                       'Wohnung': {'db_table_attribute_name': 'Wohnung'},
+                                                       'Kataster_Nr': {'db_table_attribute_name': 'Kataster_Nr'},
+                                                       'x_CH1903': {'db_table_attribute_name': 'x_CH1903'},
+                                                       'Y_CH1903': {'db_table_attribute_name': 'y_CH1903'},
+                                                       'Politisch_Wangen': {'db_table_attribute_name': 'Politisch_Wangen'},
                                                        'Ort_ID': {'db_table_attribute_name': 'Orte_ID'},
                                                        'last_update': {'db_table_attribute_name': 'last_update'}
                                                        },
@@ -247,9 +253,10 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
 
         if a_table == 'EMail':
             resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   verbal=False,
                                    sheet_name='EMail_Liste',
                                    csv_db_col_mapping={'Email_ID': {'db_table_attribute_name': 'ID'},
-                                                       'Email_Adresse': {'db_table_attribute_name': 'eMail'},
+                                                       'eMail_adresse': {'db_table_attribute_name': 'eMail'},
                                                        'Type': {'db_table_attribute_name': 'Type'},
                                                        'Prio': {'db_table_attribute_name': 'Prio'},
                                                        'last_update': {'db_table_attribute_name': 'last_update'}
@@ -271,6 +278,7 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
 
         if a_table == 'Telefon':
             resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   verbal=False,
                                    sheet_name='Telefon_Liste',
                                    csv_db_col_mapping={'Tel_ID': {'db_table_attribute_name': 'ID'},
                                                        'Laendercode': {'db_table_attribute_name': 'Laendercode'},
@@ -296,6 +304,89 @@ def initial_load(inport_excel_fn, tabels_to_load, db_connection):
                                    db_tbl_name='personen_has_telefonnummern')
             print(resultat)
 
+def inital_load_fromExcel(doit=False):
+    if doit:
+        initial_load(data_import_fn, ['Länder', 'Orte', 'Adressen', 'Personen'], stammdaten_schema)
+        initial_load(data_import_fn, ['IBAN'], stammdaten_schema)
+        initial_load(data_import_fn, ['EMail', 'Person_Has_EMail'], stammdaten_schema)
+        initial_load(data_import_fn, ['Telefon', 'Person_Has_Telefonnummer'], stammdaten_schema)
+def update_from_excel(filename, sheet_name, attribut, db_connection, verbal=False):
+
+    myCursor = db_connection.cursor()
+    insert_count = 0
+    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
+    if attribut == 'EMAIL':
+        print('Adding eMail adresses ..   ', end='')
+        if verbal:
+            print()
+        if sheet_name == 'Unbereinigt_email_telnr_iban':
+            df = pd.DataFrame(sheet_data, columns=['ID', 'eMail_ID', 'eMail'])
+            for index, row in df.iterrows():
+                # print()
+                # print(index, row)
+                pers_ID = str(row[0]).replace('.0', '')
+                email_ID = str(row[1]).replace('.0', '')
+                email = str(row[2])
+                if email_ID == 'nan' and email != 'nan':
+                    insert_count += 1
+                    args = (pers_ID, email, 'Sonstige', 0, 'x')  # 'x' in the Tuple will be replaced by OUT-Value
+                    if verbal:
+                        print('    addEmailAdr', str(args), sep='')
+                    result_args = myCursor.callproc('addEmailAdr', args)
+
+    if attribut == 'TELNR':
+        insert_count = 0
+        print('Adding TelNrs ..   ', end='')
+        if verbal:
+            print()
+        if sheet_name == 'Unbereinigt_email_telnr_iban':
+            df = pd.DataFrame(sheet_data, columns=['ID', 'Tel_Nr_ID', 'Tel_Nr'])
+            for index, row in df.iterrows():
+                pers_ID = str(row[0]).replace('.0', '')
+                telnr_ID = str(row[1]).replace('.0', '')
+                telnr = str(row[2]).replace(' ', '')
+                if telnr_ID == 'nan' and telnr != 'nan':
+                    insert_count += 1
+                    vorwahl = telnr[0:3]
+                    telnr   = telnr[3:]
+                    if vorwahl == '055':
+                        endgeraet = 'Festnetz'
+                    else:
+                        endgeraet = 'Mobile'
+                    args = (pers_ID, '0041', vorwahl, telnr, 'Sonstige', endgeraet, 0, 'x')  # 'x' in the Tuple will be replaced by OUT-Value
+                    if verbal:
+                        print('    addTelNr', str(args), sep='')
+                    result_args = myCursor.callproc('addTelNr', args)
+
+    if attribut == 'IBAN':
+        insert_count = 0
+        print('Adding IBAN ..   ', end='')
+        if verbal:
+            print()
+        if sheet_name == 'Unbereinigt_email_telnr_iban':
+            df = pd.DataFrame(sheet_data, columns=['ID', 'IBAN_ID', 'IBAN'])
+            for index, row in df.iterrows():
+                pers_ID = str(row[0]).replace('.0', '')
+                iban_ID = str(row[1]).replace('.0', '')
+                iban = str(row[2])    # .replace(' ', '')
+                if iban_ID == 'nan' and iban != 'nan':
+                    insert_count += 1
+                    args = (pers_ID, iban, 'x')
+                    if verbal:
+                        print('    addIBAN', str(args), sep='')
+                    result_args = myCursor.callproc('addTelNr', args)
+
+    print('    .. ', insert_count, 'reord(s) processed!')
+    return insert_count
+
+def execute_iportant_sql_queries(db_connection, verbal=False):
+    myCursor = db_connection.cursor()
+    print('Calling important updates...', end='')
+    args = ()
+    result_args = myCursor.callproc('important_updates', args)
+    print('done')
+
+
 if __name__ == '__main__':
     stammdaten_schema = db_connect(host='localhost',
                                    schema='genossame_wangen',
@@ -304,11 +395,22 @@ if __name__ == '__main__':
                                    trace=True)
 
 
-    data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Stammdaten_2023_05_08.xlsx'
-    initial_load(data_import_fn, ['Länder', 'Orte', 'Adressen', 'Personen'], stammdaten_schema)
-    initial_load(data_import_fn, ['IBAN'], stammdaten_schema)
-    initial_load(data_import_fn, ['EMail', 'Person_Has_EMail'], stammdaten_schema)
-    initial_load(data_import_fn, ['Telefon', 'Person_Has_Telefonnummer'], stammdaten_schema)
+    data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Wangen_2023_05_20.xlsx'
+    data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Wangen_2023_05_21.xlsx'
+    data_update_fn = r'V:\Genossame_Wangen_Daten.xlsx'
 
+    # inital_load_fromExcel(doit=True)
+
+    rc = 0
+    rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
+    rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
+    rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'IBAN',  stammdaten_schema, verbal=True)
+
+    execute_iportant_sql_queries(stammdaten_schema)
+
+    if rc > 0:
+        print('\n\n---> Update All in', data_update_fn)
+    else:
+        print('\n\n===> No changes found in', data_update_fn)
 
 

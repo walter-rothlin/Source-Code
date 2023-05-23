@@ -9,7 +9,7 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 16-May-2023   Walter Rothlin      Initial Version
+# 16-May-2023   Walter Rothlin      Added header to initial version
 # ------------------------------------------------------------------
 
 
@@ -30,11 +30,11 @@ vorname = "Waiting for Joystick Event"
 displayMsg = "Hello " + name + " " + vorname
 
 print(displayMsg)
-sense.show_message(displayMsg, text_colour=(0,125,125))
+sense.show_message(displayMsg, text_colour=(0, 125, 125))
 
 
 X = [255, 0, 0]   # Red
-O = [70,70, 0]    # Yellow
+O = [70, 70, 0]    # Yellow
 
 question_mark = [
 O, O, O, X, X, O, O, O,
@@ -59,14 +59,14 @@ while not finished:
     elif (event.direction == "left"):
         myHostname = os.popen('/bin/hostname').read().strip()
         print("  Hostname:" + myHostname + "::")
-        sense.show_message(str(myHostname), text_colour=(125,125,0))
+        sense.show_message(str(myHostname), text_colour=(125, 125, 0))
 
     ipArray = os.popen('/bin/hostname -I').read().strip().split(" ")
     for ip in ipArray:
         ipStr = str(ip).strip('\r\n')
         print("  IP:" + ipStr + "::")
-        sense.show_message(str(ipStr), text_colour=(125,125,125))
+        sense.show_message(str(ipStr), text_colour=(125, 125, 125))
 
     sense.clear()   # clear LED matrix
 
-sense.show_message("Done & Closed!!!", text_colour=(0,125,125))
+sense.show_message("Done & Closed!!!", text_colour=(0, 125, 125))

@@ -54,9 +54,8 @@ CREATE TABLE IF NOT EXISTS Orte (
   `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `PLZ`         VARCHAR(10) NOT NULL,
   `Name`        VARCHAR(45) NULL,
-  `Land_ID`     INT UNSIGNED NULL DEFAULT 1,
   `Kanton`      VARCHAR(10) NULL,
-  `Tel_Vorwahl` VARCHAR(3) NULL,
+  `Land_ID`     INT UNSIGNED NULL DEFAULT 1,
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
   -- PK-Constraints
@@ -78,17 +77,18 @@ CREATE TABLE IF NOT EXISTS Orte (
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS Adressen;
 CREATE TABLE IF NOT EXISTS Adressen (
-  `ID`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Strasse`        VARCHAR(45) NULL,
-  `Hausnummer`     VARCHAR(15) NULL,
-  `Postfachnummer` VARCHAR(5) NULL,
-  `Adresszusatz`   VARCHAR(20) NULL,
-  `Wohnung`        VARCHAR(10) NULL,
-  `Orte_ID`        INT UNSIGNED NULL,
-  `KatasterNr`     VARCHAR(10) NULL,
-  `x_CH1903`       INT(7) UNSIGNED NULL,
-  `y_CH1903`       INT(7) UNSIGNED NULL,
-  `last_update`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Strasse`              VARCHAR(45) NULL,
+  `Hausnummer`           VARCHAR(15) NULL,
+  `Postfachnummer`       VARCHAR(5) NULL,
+  `Adresszusatz`         VARCHAR(20) NULL,
+  `Wohnung`              VARCHAR(10) NULL,
+  `Kataster_Nr`          VARCHAR(10) NULL,
+  `x_CH1903`             VARCHAR(10)  NULL,
+  `y_CH1903`             VARCHAR(10)  NULL,
+  `Politisch_Wangen`     INT UNSIGNED NULL DEFAULT 0,
+  `Orte_ID`              INT UNSIGNED NULL,
+  `last_update`          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
   PRIMARY KEY (`ID`),
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS Adressen (
 DROP TABLE IF EXISTS Personen;
 CREATE TABLE IF NOT EXISTS Personen (
   `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Source`      ENUM('Initial_1', 'Loader_1', 'BuergerDB','ImmoTop') DEFAULT NULL,
+  `Source`      ENUM('Initial_1', 'Loader_1', 'BuergerDB','ImmoTop','Manuel') DEFAULT NULL,
   `History`     VARCHAR(500) NULL,
   `Bemerkungen` VARCHAR(500) NULL,
 
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS Personen (
 
   `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt','Geschieden','Verwitwet','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
   `Kategorien`  SET('Bürger', 'Nutzungsberechtigt', 'Hat_16a', 'Hat_35a', 'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'LWK', 'Forst_Komm', 'Grauer Panter', 
-					'Pächter', 'Landwirt EFZ', 'DZ betrechtigt', 'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
+					'Bewirtschafter', 'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
                     'Betriebsgemeinschaft', 'Generationengemeinschaft') DEFAULT NULL,
   
   -- Datumsangaben
@@ -140,6 +140,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Baulandgesuch_Details`        VARCHAR(500) NULL,
   `Angemeldet_Am`                DATE NULL,
   `Aufgenommen_Am`               DATE NULL,
+  `Neubürgertag_gemacht_Am`      DATE NULL,
   `Funktion_Uebernommen_Am`      DATE NULL,
   `Funktion_Abgegeben_Am`        DATE NULL,
   `Chronik_Bezogen_Am`           DATE NULL,
@@ -245,8 +246,8 @@ DROP TABLE IF EXISTS `Telefonnummern` ;
 CREATE TABLE IF NOT EXISTS `Telefonnummern` (
   `ID`           INT UNSIGNED                                 NOT NULL AUTO_INCREMENT,
   `Laendercode`  VARCHAR(4)                                   NOT NULL DEFAULT '0041',
-  `Vorwahl`      VARCHAR(3)                                   NULL,
-  `Nummer`       VARCHAR(11)                                  NULL,
+  `Vorwahl`      VARCHAR(5)                                   NULL,
+  `Nummer`       VARCHAR(13)                                  NULL,
   `Type`         ENUM('Privat', 'Geschaeft', 'Sonstige')      NULL,
   `Endgeraet`    ENUM('Festnetz', 'Mobile', 'FAX')            NULL,
   `Prio`         TINYINT                                      NOT NULL DEFAULT 0, 
@@ -430,3 +431,9 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
     REFERENCES `Orte` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+    
+    
+   
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

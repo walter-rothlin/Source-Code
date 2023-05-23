@@ -48,7 +48,7 @@ DELIMITER ;
 --  Added a value to a SET
 DROP FUNCTION IF EXISTS addSetValue;
 DELIMITER //
-CREATE FUNCTION  addSetValue(oldSetValue VARCHAR(500), valueToAdd VARCHAR(30)) RETURNS VARCHAR(500)
+CREATE FUNCTION  addSetValue(oldSetValue VARCHAR(500), valueToAdd VARCHAR(100)) RETURNS VARCHAR(500)
 BEGIN
    IF oldSetValue IS NULL OR length(oldSetValue) = 0 THEN
          RETURN  valueToAdd;
@@ -65,12 +65,14 @@ DELIMITER ;
 --  Remove a value from a SET
 DROP FUNCTION IF EXISTS removeSetValue;
 DELIMITER //
-CREATE FUNCTION  removeSetValue(oldSetValue VARCHAR(500), valueToRremove VARCHAR(30)) RETURNS VARCHAR(500)
+CREATE FUNCTION  removeSetValue(oldSetValue VARCHAR(500), valueToRremove VARCHAR(100)) RETURNS VARCHAR(500)
 BEGIN
    IF oldSetValue IS NULL OR length(oldSetValue) = 0 THEN
          RETURN  oldSetValue;
    ELSE
-         RETURN  REPLACE(REPLACE(oldSetValue, valueToRremove, ''),',,', ',');
+         -- RETURN REPLACE(REPLACE(oldSetValue, valueToRremove, ''),',,', ',');
+	  SET valueToRremove = CONCAT('\'',valueToRremove,'\'');
+	  RETURN TRIM(BOTH ',' FROM REPLACE(REPLACE(CONCAT(',',REPLACE(oldSetValue, ',', ',,'), ','),valueToRremove, ''), ',,', ','));
    END IF;
 END//
 DELIMITER ;
@@ -171,6 +173,8 @@ DELIMITER ;
 -- SELECT formatPLZ_ort(10115, 'Berlin') AS PLZ_Ort;     -- --> 10115 Berlin
 --  -------------------------------------------------------------
 --  Fct 10.4) Gibt p_str zurueck mit erstem Buchstaben als Grossbuchstabe
+--
+-- TBC:  Letzter Testcase funktioniert nicht!!
 DROP FUNCTION IF EXISTS firstUpper;
 DELIMITER //
 CREATE FUNCTION firstUpper(p_str VARCHAR(255)) RETURNS VARCHAR(255)
@@ -187,7 +191,7 @@ DELIMITER ;
 -- SELECT firstUpper("hERR");    -- --> Herr
 -- SELECT firstUpper("züger");   -- --> Zzaüger
 -- SELECT firstUpper("zueger");  -- --> Zzaüger
-
+-- SELECT firstUpper("Philip Mike");  -- --> Philip Mike
 
 -- --------------------------------------------------------------------------------
 --  Fct 10.5) Gibt ersten Buchstaben von p_name als Grossbuchstabe zurueck gefolgt von p_tail
@@ -406,7 +410,7 @@ DELIMITER ;
 -- -------------------------------------------------------------------------------- 
 DROP FUNCTION IF EXISTS format_telNr;
 DELIMITER //
-CREATE FUNCTION format_telNr(p_laender_code CHAR(20), p_vorwahl CHAR(20), p_nummer CHAR(20)) RETURNS CHAR(18)
+CREATE FUNCTION format_telNr(p_laender_code CHAR(20), p_vorwahl CHAR(20), p_nummer CHAR(20)) RETURNS CHAR(60)
 BEGIN
     IF p_laender_code = '0041' THEN
 		RETURN CONCAT(p_vorwahl, '  ', padding_telNr(p_nummer));
@@ -416,8 +420,8 @@ BEGIN
 END//
 DELIMITER ;
 
--- SELECT format_telNr('0041', '055', '4601440');
--- SELECT format_telNr('0001', '055', '4601440');
+-- SELECT format_telNr('0041', '055', '4601440');    -- 055 460 14 40
+-- SELECT format_telNr('0001', '055', '4601440');    -- +41 1 460 14 40
 
 -- --------------------------------------------------------------------------------                
 DROP FUNCTION IF EXISTS getPrio_1_TelNr;
@@ -599,7 +603,44 @@ DELIMITER ;
 
 DROP VIEW IF EXISTS PD_Row_Counts; 
 CREATE VIEW PD_Row_Counts AS
-	SELECT 
+	SELECT
+		'Land'                          AS `Table Name`,
+		(SELECT count(*) FROM `Land`)   AS `Row Count`
+	UNION
+	SELECT
+		'Orte'                          AS `Table Name`,
+		(SELECT count(*) FROM `Orte`)   AS `Row Count`
+	UNION
+	SELECT
+		'Adressen'                          AS `Table Name`,
+		(SELECT count(*) FROM `Adressen`)   AS `Row Count`
+	UNION
+	SELECT
+		'Personen'                          AS `Table Name`,
+		(SELECT count(*) FROM `Personen`)   AS `Row Count`
+	UNION
+	SELECT
+		'IBAN'                          AS `Table Name`,
+		(SELECT count(*) FROM `IBAN`)   AS `Row Count`
+	UNION
+	SELECT
+		'email_adressen'                          AS `Table Name`,
+		(SELECT count(*) FROM `email_adressen`)   AS `Row Count`
+	UNION
+	SELECT
+		'Personen_has_email_adressen'                          AS `Table Name`,
+		(SELECT count(*) FROM `Personen_has_email_adressen`)   AS `Row Count`
+	UNION
+	SELECT
+		'telefonnummern'                          AS `Table Name`,
+		(SELECT count(*) FROM `telefonnummern`)   AS `Row Count`
+	UNION
+	SELECT
+		'Personen_has_telefonnummern'                          AS `Table Name`,
+		(SELECT count(*) FROM `Personen_has_telefonnummern`)   AS `Row Count`
+	;
+
+/*	SELECT 
 		(select COUNT(*) FROM land) rc_land,
 		(select COUNT(*) FROM orte) rc_orte,
 		(select COUNT(*) FROM adressen) rc_adressen,
@@ -609,7 +650,7 @@ CREATE VIEW PD_Row_Counts AS
 		(select COUNT(*) FROM personen_has_email_adressen) rc_personen_has_email_adressen,
 		(select COUNT(*) FROM telefonnummern) rc_telefonnummern,
 		(select COUNT(*) FROM personen_has_telefonnummern) rc_personen_has_telefonnummern;
-
+*/
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Länder; 
 CREATE VIEW Länder AS
@@ -650,9 +691,15 @@ CREATE VIEW Adress_Daten AS
 		a.Strasse                                 AS Strasse,
 		a.Hausnummer                              AS Hausnummer,
         a.postfachnummer                          AS Postfachnummer,
+        a.Adresszusatz                            AS Adresszusatz,
+        a.Wohnung                                 AS Wohnung,
+        a.Kataster_Nr                             AS Kataster_Nr,
+        a.x_CH1903                                AS x_CH1903,
+        a.y_CH1903                                AS y_CH1903,
+        a.Politisch_Wangen                        AS Politisch_Wangen,
         ol.ID                                     AS Ort_ID,
 		ol.PLZ	                                  AS PLZ,
-        ol.Code                                   AS Land_Code,
+        ol.`Code`                                 AS Land_Code,
         ol.PLZ_International	                  AS PLZ_International,
 		ol.Ort	                                  AS Ort,
         ol.Land_ID                                AS Land_ID,
@@ -671,6 +718,7 @@ CREATE VIEW Telnr_Liste AS
 	SELECT
         -- Allgemeine Daten
         pers.ID                                      AS Pers_ID,
+        'Nein'                                       AS 'Geändert',
         pers.Kategorien                              AS Kategorien,
         pers.Sex                                     AS Sex,
 		getName_With_Initial(pers.Vorname, 
@@ -686,13 +734,14 @@ CREATE VIEW Telnr_Liste AS
         tel.laendercode                              AS Laendercode,
         tel.vorwahl									 AS Vorwahl,
         tel.Nummer                                   AS Nummer,
+		tel.prio                                     AS Prio,
+		tel.`Type`                                   AS `Type`,
+        tel.endgeraet                                AS Endgeraet,
         format_telNr(tel.laendercode,
                 tel.vorwahl,
                 tel.Nummer)                          AS Tel_Nr,
-        tel.`Type`                                   AS `Type`,
-        tel.endgeraet                                AS Endgeraet,
-        tel.prio                                     AS Prio,
-        CONCAT(tel.ID,
+        ''                                           AS Tel_Nr_Detailed,
+        /* CONCAT(tel.ID,
 		       ':',
                tel.prio,
                ':',
@@ -702,7 +751,7 @@ CREATE VIEW Telnr_Liste AS
                '::',
                format_telNr(tel.laendercode,
                 tel.vorwahl,
-                tel.Nummer))                         AS Tel_Nr_Detailed,
+                tel.Nummer))                         AS Tel_Nr_Detailed, */
         
         -- Personen Details
 	    DATE_FORMAT(pers.Geburtstag,'%d.%m.%Y')      AS Geburtstag,
@@ -771,6 +820,7 @@ CREATE VIEW EMail_Liste AS
 	SELECT
         -- Allgemeine Daten
         pers.ID                                      AS Pers_ID,
+        'Nein'                                       AS 'Geändert',
         pers.Kategorien                              AS Kategorien,
         pers.Sex                                     AS Sex,
 		getName_With_Initial(pers.Vorname, 
@@ -783,17 +833,18 @@ CREATE VIEW EMail_Liste AS
         
         -- Spezifische Daten
 		email.ID                                     AS Email_ID,
-		email.eMail                                  AS eMail_adresse,
-		email.Type                                   AS Type,
 		email.prio                                   AS Prio,
-		CONCAT(email.ID,
+        email.Type                                   AS Type,
+		email.eMail                                  AS eMail_adresse,
+        ''                                           AS Email_Detailed,
+		/* CONCAT(email.ID,
 		       ':',
                email.prio,
                ':',
                -- LEFT(email.`Type`, 4),
                email.`Type`, 
                ':',
-               email.eMail)                          AS Email_Detailed,
+               email.eMail)                          AS Email_Detailed, */
 		-- Personen Details
 	    DATE_FORMAT(pers.Geburtstag,'%d.%m.%Y')      AS Geburtstag,
 		DATE_FORMAT(pers.Todestag ,'%d.%m.%Y')       AS Todestag,
@@ -879,6 +930,7 @@ CREATE VIEW IBAN_Liste AS
 	SELECT
         -- Allgemeine Daten
         pers.ID                                      AS Pers_ID,
+        'Nein'                                       AS 'Geändert',
         pers.Kategorien                              AS Kategorien,
         pers.Sex                                     AS Sex,
 		getName_With_Initial(pers.Vorname, 
@@ -890,19 +942,20 @@ CREATE VIEW IBAN_Liste AS
 
         -- Spezifische Daten
 		iban.ID                                      AS IBAN_ID,
+		iban.prio                                    AS Prio,
 		iban.Nummer                                  AS IBAN_Nummer,
 		iban.Bezeichnung                             AS Bezeichnung,
 		iban.Bankname                                AS Bankname,
 		iban.Bankort                                 AS Bankort,
-		iban.prio                                    AS Prio,
-		CONCAT(iban.ID,
+		''               							 AS IBAN_Detailed,
+		/* CONCAT(iban.ID,
 		       ':',
                iban.prio,
                -- ':',
                -- LEFT(email.`Type`, 4),
                -- email.`Type`, 
                ':',
-               iban.Nummer)                          AS IBAN_Detailed,
+               iban.Nummer)                          AS IBAN_Detailed, */
                
 		-- Personen Details
 	    DATE_FORMAT(pers.Geburtstag,'%d.%m.%Y')      AS Geburtstag,
@@ -982,14 +1035,20 @@ CREATE VIEW Personen_Daten AS
           formatPLZ_ort(pAdr.PLZ, 
                         pAdr.Ort)                      AS Private_PLZ_Ort,  
                         
-		  getPrio_0_TelNr(P.ID)                        AS Tel_Nr,
-          getAll_telNr(P.ID)                           AS Tel_Nr_Alle,
-		  getPrio_0_EMail(P.ID)                        AS eMail,
-		  getAll_emailAddrs(P.ID)                      AS eMail_Alle,
-		  getPrio_0_IBAN(P.ID)                         AS IBAN,
-          getAll_IBANs(P.ID)                           AS IBAN_Alle,
+		  -- getPrio_0_TelNr(P.ID)                        AS Tel_Nr,
+          IF (getPrio_0_TelNr(P.ID)  is NULL, "",  getPrio_0_TelNr(P.ID)) AS Tel_Nr,
+          -- getAll_telNr(P.ID)                           AS Tel_Nr_Alle,
+          
+		  -- getPrio_0_EMail(P.ID)                        AS eMail,
+          IF (getPrio_0_EMail(P.ID)  is NULL, "",  getPrio_0_EMail(P.ID)) AS eMail,
+		  -- getAll_emailAddrs(P.ID)                      AS eMail_Alle,
+          
+		  -- getPrio_0_IBAN(P.ID)                         AS IBAN,
+          IF (getPrio_0_IBAN(P.ID)  is NULL, "",  getPrio_0_IBAN(P.ID)) AS IBAN,
+          -- getAll_IBANs(P.ID)                           AS IBAN_Alle,
                     
 		  DATE_FORMAT(P.Geburtstag,'%d.%m.%Y')                                 AS Geburtstag,
+          DATE_FORMAT(P.Geburtstag,'%Y')                                       AS Geburtsjahr,
 		  DATE_FORMAT(P.Todestag ,'%d.%m.%Y')                                  AS Todestag,
           DATE_FORMAT(P.Todestag ,'%Y')                                        AS Todesjahr,
           getAge(P.Geburtstag, P.Todestag)                                     AS `Alter`,
@@ -1002,8 +1061,10 @@ CREATE VIEW Personen_Daten AS
 		  
           -- Personen-Details Rohdaten
 		  P.Firma                                      AS Firma,
-		  P.Vorname                                    AS Vorname,
-          P.Vorname_2                                  AS Vorname_2,
+		  -- P.Vorname                                    AS Vorname,
+		  IF (P.Vorname is NULL, "",  P.Vorname)       AS Vorname,
+		  -- P.Vorname_2                                  AS Vorname_2,
+          IF (P.Vorname_2 is NULL, "",  P.Vorname_2)   AS Vorname_2,
 		  P.Ledig_Name                                 AS Ledig_Name,
           P.Partner_Name                               AS Partner_Name,
 		  P.Partner_Name_Angenommen                    AS Partner_Name_Angenommen,
@@ -1039,6 +1100,7 @@ CREATE VIEW Personen_Daten AS
           DATE_FORMAT(P.Bauland_Gekauft_Am,'%d.%m.%Y')                         AS Bauland_Gekauft_Am,
           DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                              AS Angemeldet_Am,
           DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                             AS Aufgenommen_Am,
+          DATE_FORMAT(P.`Neubürgertag_gemacht_Am`,'%d.%m.%Y')                  AS `Neubürgertag_gemacht_Am`,
           DATE_FORMAT(P.Funktion_Uebernommen_Am,'%d.%m.%Y')                    AS Funktion_Uebernommen_Am,
           DATE_FORMAT(P.Funktion_Abgegeben_Am,'%d.%m.%Y')                      AS Funktion_Abgegeben_Am,
           DATE_FORMAT(P.Chronik_Bezogen_Am,'%d.%m.%Y')                         AS Chronik_Bezogen_Am,
@@ -1046,6 +1108,7 @@ CREATE VIEW Personen_Daten AS
 		  pAdr.Strasse                                 AS Private_Strasse,
 		  pAdr.Hausnummer                              AS Private_Hausnummer,
           pAdr.Postfachnummer                          AS Private_Postfachnummer,
+		  pAdr.Politisch_Wangen                        AS Politisch_Wangen,
 		  pAdr.PLZ                                     AS Private_PLZ,
           pAdr.Land_Code                               AS Private_Land_Code,
           pAdr.PLZ_International                       AS Private_PLZ_International,
@@ -1201,10 +1264,20 @@ CREATE VIEW Bürger_Nutzungsberechtigt AS
     ORDER BY Familien_Name, Vorname;
     
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Bürger_Unbereinigt; 
-CREATE VIEW Bürger_Unbereinigt AS
+DROP VIEW IF EXISTS Bürger_Nicht_Nutzungsberechtigt; 
+CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
     SELECT
-        * 
+        *
+    FROM Personen_Daten
+    WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) =  0
+    ORDER BY Familien_Name, Vorname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Unbereinigt_Email_TelNr_IBAN; 
+CREATE VIEW Unbereinigt_Email_TelNr_IBAN AS
+    SELECT
+        *, 
+        '' AS Geaender 
     FROM Bürger_Lebend
     WHERE eMail  IS NULL OR
           Tel_Nr IS NULL OR
@@ -1221,7 +1294,9 @@ CREATE VIEW Bürger_Gestorben AS
         Familien_Name,
         CONCAT(Private_Strassen_Adresse,'; ',Private_PLZ_Ort) AS `Letzte Adresse`,
         Geburtstag,
+		Geburtsjahr,
         Todestag,
+        Todesjahr,
         IF (Todesjahr = DATE_FORMAT(now(),'%Y'), 'Ja', '') AS `Dieses Jahr gestorben`,
         `Alter`,
         last_update
@@ -1239,30 +1314,58 @@ CREATE VIEW Nicht_Bürger_Gestorben AS
     ORDER BY STR_TO_DATE(Todestag,'%d.%m.%Y');
 
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Bewirtschafter; 
-CREATE VIEW Bewirtschafter AS
+DROP VIEW IF EXISTS Pächter; 
+CREATE VIEW Pächter AS
 	SELECT
-		ID,
+		ID                       AS ID,
+        Ist_Bürger               AS `Ist_Bürger`,
 		Kategorien,
-		Ist_Bürger,
-		Ist_Pächter,
-		Ist_DZ_berechtigt,
-		Betriebs_Nr,
-        `Alter`,
-		Geburtstag,
-		Geschlecht,
+		Geschlecht               AS Sex,
 		Vorname_Initial          AS Vorname,
 		Familien_Name            AS `Name`,
-		Private_Strassen_Adresse AS Strasse,
+		Private_Strassen_Adresse AS Adresse,
 		Private_PLZ_Ort          AS Ort,
 		eMail,
 		Tel_Nr,
+		Betriebs_Nr,
+        `Alter`,
+		Geburtstag,
 		IBAN,
         Bemerkungen
 	FROM Personen_Daten
-    WHERE FIND_IN_SET('Bewirtschafter', Kategorien) =  0
-	ORDER BY `Name`, `Vorname`;
+    WHERE FIND_IN_SET('Pächter',        Kategorien) >  0
+	ORDER BY `ID`;
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Verpächter; 
+CREATE VIEW Verpächter AS
+	SELECT
+		ID                       AS ID,
+        Ist_Bürger               AS `Ist_Bürger`,
+		Kategorien,
+		Geschlecht               AS Sex,
+		Vorname_Initial          AS Vorname,
+		Familien_Name            AS `Name`,
+		Private_Strassen_Adresse AS Adresse,
+		Private_PLZ_Ort          AS Ort,
+		eMail,
+		Tel_Nr,
+		Betriebs_Nr,
+        `Alter`,
+		Geburtstag,
+		IBAN,
+        Bemerkungen
+	FROM Personen_Daten
+    WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
+          FIND_IN_SET('Hat_35a',        Kategorien) >  0 OR
+          `ID` IN (625,416,411,341,340,86,371,226,268,298,100,125) OR
+          `ID` IN (121,84,88,244,303,258,438,350,165,438,119,63,73,94,72) OR
+          `ID` IN (135,88,175,224,326,368,322,437,359)  OR
+          `ID` IN (261,93,281,369,97,85,293,114,85,259,244,279,182,192,383,119,97,93,281,95,144)
+	ORDER BY `ID`;
+    
+SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Donner%' AND Such_Begriff LIKE BINARY '%Meinrad%';
+SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Lüönd%';
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS PD_Tel_Email_IBAN; 
 CREATE VIEW PD_Tel_Email_IBAN AS
@@ -1382,14 +1485,19 @@ CREATE VIEW Pachtlandzuteilung AS
 -- ===============================================================================================
 -- == Create stored procedures for business (external) write access                             ==
 -- ===============================================================================================
+-- to do:
+--    1) Procedure prioritaeten bei email, iban und tel_nr unique und aufsteigen setzen innerhalb einer Person
 -- ------------------------------------------------------
 -- EMail Adressen
 -- ------------------------------------------------------
 DROP PROCEDURE IF EXISTS getEmailAdrId;
 DELIMITER $$
-CREATE PROCEDURE getEmailAdrId(IN email_addr VARCHAR(45), IN email_type ENUM('Privat', 'Geschaeft', 'Sonstige'), IN Prio TINYINT, OUT email_id SMALLINT(5))
+CREATE PROCEDURE getEmailAdrId(IN  email_addr VARCHAR(45),
+                               IN  email_type ENUM('Privat', 'Geschaeft', 'Sonstige'), 
+                               IN  Prio       TINYINT, 
+                               OUT email_id   SMALLINT(5))
 BEGIN
-    IF ((SELECT count(*) FROM email_adressen WHERE eMail=email_addr AND Type=email_type) = 0) THEN
+    IF ((SELECT count(*) FROM email_adressen WHERE eMail=email_addr) = 0) THEN
         INSERT INTO email_adressen (`eMail`,`Type`,`Prio`) VALUES (email_addr, email_type, Prio);
         COMMIT;
     END IF;
@@ -1397,26 +1505,61 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- SELECT * FROM EMail_Adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID = 644);
+
 -- Tests
 -- set @id = 0;
--- call getEmailAdrId('walter@rothlin.com', 'Sonstige', 0,  @id);
+-- call getEmailAdrId('yyyy.yyyy@rothlin.com', 'Sonstige', 0,  @id);
 -- select @id;
 
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS addEmailAdr;
+DELIMITER $$
+CREATE PROCEDURE addEmailAdr(IN  pers_id    SMALLINT(5), 
+                             IN  email_addr VARCHAR(45), 
+                             IN  email_type ENUM('Privat', 'Geschaeft', 'Sonstige'), 
+							 IN  Prio       TINYINT, 
+                             OUT email_id   SMALLINT(5))
+BEGIN
+    CALL getEmailAdrId(email_addr, email_type, Prio, @email_id);
+    -- SELECT 'ID', @email_id;
+    IF ((SELECT count(*) 
+         FROM Personen_has_email_adressen 
+		 WHERE Personen_has_email_adressen.Personen_ID       = pers_id AND 
+			   Personen_has_email_adressen.EMail_Adressen_ID = @email_id) = 0) THEN
+					INSERT INTO Personen_has_email_adressen (`Personen_ID`,`EMail_Adressen_ID`) VALUES (pers_id, @email_id);
+					COMMIT;
+	END IF;
+END$$
+DELIMITER ;
+
+-- SELECT count(*) FROM Personen_has_email_adressen WHERE Personen_has_email_adressen.Personen_ID=644 AND 
+-- 													   Personen_has_email_adressen.EMail_Adressen_ID=319;
+-- Tests
 -- set @id = 0;
--- call getTelefonnummerId('0041', '', '0793689492', 'Privat','Mobile',1, @id);
+-- call addEmailAdr('644', 'yyyy.yyyy@rothlin.com', 'Sonstige', 0, @id);
 -- select @id;
-
 
 -- ------------------------------------------------------
 -- Telefonnummer
 -- ------------------------------------------------------
 DROP PROCEDURE IF EXISTS getTelefonnummerId;
 DELIMITER $$
-CREATE PROCEDURE getTelefonnummerId(IN Laendercode VARCHAR(4), IN Vorwahl VARCHAR(3), IN Nummer VARCHAR(11), IN TEL_Type ENUM('Privat', 'Geschaeft'), IN Endgeraet ENUM('Festnetz', 'Mobile', 'FAX'), IN Prio TINYINT, OUT tel_id SMALLINT(5))
+CREATE PROCEDURE getTelefonnummerId(IN  Laendercode VARCHAR(4), 
+                                    IN  Vorwahl     VARCHAR(3), 
+								    IN  Nummer      VARCHAR(11), 
+                                    IN  TEL_Type    ENUM('Privat', 'Geschaeft', 'Sonstige'), 
+                                    IN  Endgeraet   ENUM('Festnetz', 'Mobile', 'FAX'), 
+                                    IN  Prio        TINYINT, 
+                                    OUT tel_id      SMALLINT(5))
 BEGIN
-    IF ((SELECT count(*) FROM Telefonnummern WHERE Telefonnummern.Laendercode=Laendercode AND Telefonnummern.Vorwahl=Vorwahl AND Telefonnummern.Nummer=Nummer) = 0) THEN
-        INSERT INTO Telefonnummern (`Laendercode`,`Vorwahl`,`Nummer`,`Type`,`Endgeraet`,`Prio`) VALUES (Laendercode, Vorwahl, Nummer, TEL_Type, Endgeraet, Prio);
-        COMMIT;
+    IF ((SELECT count(*) 
+         FROM Telefonnummern 
+         WHERE Telefonnummern.Laendercode = Laendercode AND 
+               Telefonnummern.Vorwahl     = Vorwahl AND 
+               Telefonnummern.Nummer=Nummer) = 0) THEN
+					INSERT INTO Telefonnummern (`Laendercode`,`Vorwahl`,`Nummer`,`Type`,`Endgeraet`,`Prio`) VALUES (Laendercode, Vorwahl, Nummer, TEL_Type, Endgeraet, Prio);
+					COMMIT;
     END IF;
     SELECT id FROM Telefonnummern WHERE Telefonnummern.Laendercode=Laendercode AND Telefonnummern.Vorwahl=Vorwahl AND Telefonnummern.Nummer=Nummer INTO tel_id;
 END$$
@@ -1431,6 +1574,102 @@ DELIMITER ;
 -- call getTelefonnummerId('0041', '', '0793689492', 'Privat','Mobile',1, @id);
 -- select @id;
 
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS addTelNr;
+DELIMITER $$
+CREATE PROCEDURE addTelNr(IN  pers_id     SMALLINT(5), 
+                          IN  Laendercode VARCHAR(4),
+                          IN  Vorwahl     VARCHAR(3), 
+                          IN  Telnummer   VARCHAR(11), 
+                          IN  TEL_Type    ENUM('Privat', 'Geschaeft', 'Sonstige'), 
+                          IN  Endgeraet   ENUM('Festnetz', 'Mobile', 'FAX'),
+                          IN  Prio        TINYINT, 
+                          OUT tel_id      SMALLINT(5))
+BEGIN
+    CALL getTelefonnummerId(Laendercode, Vorwahl, Telnummer, TEL_Type, Endgeraet, Prio, @tel_id);
+    IF ((SELECT count(*) 
+         FROM Personen_has_telefonnummern 
+         WHERE Personen_has_telefonnummern.Personen_ID       = pers_id AND 
+               Personen_has_telefonnummern.Telefonnummern_ID = @tel_id) = 0) THEN
+					INSERT INTO Personen_has_telefonnummern (`Personen_ID`,`Telefonnummern_ID`) VALUES (pers_id, @tel_id);
+					COMMIT;
+	END IF;
+END$$
+DELIMITER ;
+
+-- SELECT count(*) FROM Personen_has_telefonnummern WHERE     Personen_has_telefonnummern.Personen_ID=644;  
+--                                                        AND Personen_has_telefonnummern.Telefonnummer_ID=319;
+-- Tests
+-- set @id = 0;
+-- call addTelNr('644', '0041', '079', '3689422', 'Sonstige', 'Mobile', 0, @id);
+-- select @id;
+
+
+-- ------------------------------------------------------
+-- IBAN
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS getIBANId;
+DELIMITER $$
+CREATE PROCEDURE getIBANId(IN   pers_id        SMALLINT,
+                           IN   iban_nummer    VARCHAR(26), 
+						   OUT  iban_id        SMALLINT)
+BEGIN
+    IF ((SELECT count(*) 
+         FROM IBAN 
+         WHERE IBAN.Personen_ID = pers_id AND
+               IBAN.Nummer = iban_nummer  AND
+               IBAN.Prio = 0) = 0) THEN
+					INSERT INTO IBAN (`ID`, `Nummer`, `prio`) VALUES (pers_id, iban_nummer, 0);
+					COMMIT;
+    END IF;
+    SELECT ID 
+    FROM IBAN 
+    WHERE IBAN.Personen_ID = pers_id AND
+		  IBAN.Nummer = iban_nummer AND
+          IBAN.Prio = 0 INTO iban_id;
+END$$
+DELIMITER ;
+
+/*
+set @id = 0;
+call getIBANId(990, 'CH46 0077 7002 5458 0007 8', @id);   -- Andre Schättin 990  -- IBAN=474
+select @id;
+*/
+
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS addIBAN;
+DELIMITER $$
+CREATE PROCEDURE addIBAN(IN   pers_id          SMALLINT, 
+                         IN   iban_nummer      VARCHAR(26),
+						 OUT  iban_id          SMALLINT)
+BEGIN
+    IF ((SELECT count(*) 
+         FROM IBAN 
+         WHERE IBAN.Personen_ID = pers_id AND
+               IBAN.Nummer = iban_nummer  AND
+               IBAN.Prio = 0) = 0) THEN
+					INSERT INTO IBAN (`ID`, `Nummer`, `prio`) VALUES (pers_id, iban_nummer, 0);
+					COMMIT;
+    END IF;
+    SELECT ID 
+    FROM IBAN 
+    WHERE IBAN.Personen_ID = pers_id AND
+		  IBAN.Nummer = iban_nummer AND
+          IBAN.Prio = 0 INTO iban_id;
+END$$
+DELIMITER ;
+
+/*
+    SELECT *
+    FROM IBAN 
+    WHERE IBAN.Personen_ID = 990 AND
+		  IBAN.Nummer      = 'CH46 0077 7002 5458 0007 8';
+          
+-- Tests
+set @id = 0;
+call addIBAN(990, 'CH46 0077 7002 5458 0007 8', @id);
+select @id;
+*/
 
 -- ------------------------------------------------------
 -- Land
@@ -1708,63 +1947,97 @@ DELIMITER ;
 
 
 
-   
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
-
 -- ------------------------------------------------------
 -- Zwingende Data updates
 -- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS important_updates;
+DELIMITER $$
+CREATE PROCEDURE important_updates()
+BEGIN
+	-- Adressen Felder richtig setzen, so dass views und Fct funktionieren
+	UPDATE `Personen` SET `Partner_Name`           = ''  WHERE Partner_Name   IS NULL;
+	UPDATE `Personen` SET `History`                = ''  WHERE `History`      IS NULL;
+	UPDATE `Personen` SET `Bemerkungen`            = ''  WHERE `Bemerkungen`  IS NULL;
+	UPDATE `Personen` SET `Firma`                  = ''  WHERE `Firma`        IS NULL;
+	UPDATE `Personen` SET `Vorname_2`              = ''  WHERE `Vorname_2`    IS NULL;
+	UPDATE `Personen` SET `AHV_Nr`                 = ''  WHERE `AHV_Nr`       IS NULL;
+	UPDATE `Personen` SET `Betriebs_Nr`            = ''  WHERE `Betriebs_Nr`  IS NULL;
+	UPDATE `IBAN`     SET `Bezeichnung`            = ''  WHERE Bezeichnung    IS NULL;
+	UPDATE `Adressen` SET `Hausnummer`             = ''  WHERE Hausnummer     IS NULL;
+	UPDATE `Adressen` SET `Postfachnummer`         = ''  WHERe Postfachnummer IS NULL;
+	UPDATE `Adressen` SET `Adresszusatz`           = ''  WHERE Adresszusatz   IS NULL;
+	UPDATE `Adressen` SET `Wohnung`                = ''  WHERE Wohnung        IS NULL;
+	UPDATE `Adressen` SET `Kataster_Nr`            = ''  WHERE Kataster_Nr    IS NULL;
+	UPDATE `Adressen` SET `x_CH1903`               = 0   WHERE x_CH1903       IS NULL;
+	UPDATE `Adressen` SET `y_CH1903`               = 0   WHERE y_CH1903       IS NULL;
+	UPDATE `Adressen` SET Postfachnummer  = REPLACE(Postfachnummer, '.0', '');
 
--- Adressen Felder richtig setzen, so dass views und Fct funktionieren
-UPDATE Adressen       SET Hausnummer     = '' WHERE Hausnummer     IS NULL;
-UPDATE Adressen       SET Postfachnummer = '' WHERE Postfachnummer IS NULL;
-UPDATE Personen       SET Partner_Name   = '' WHERE Partner_Name   IS NULL;
-UPDATE Telefonnummern SET Vorwahl        = '' WHERE Vorwahl        IS NULL;
+	UPDATE Telefonnummern SET Laendercode = ''                          WHERE Laendercode IS NULL;
+	UPDATE Telefonnummern SET Laendercode = '41'                        WHERE Laendercode = '41.0';
+	UPDATE Telefonnummern SET Laendercode = CONCAT('000',Laendercode)   WHERE LENGTH(Laendercode) = 1;
+	UPDATE Telefonnummern SET Laendercode = CONCAT('00',Laendercode)    WHERE LENGTH(Laendercode) = 2;
+	UPDATE Telefonnummern SET Laendercode = CONCAT('0',Laendercode)     WHERE LENGTH(Laendercode) = 3;
+	UPDATE Telefonnummern SET Vorwahl = ''                              WHERE Vorwahl IS NULL;
+	UPDATE Telefonnummern SET Vorwahl = REPLACE(Vorwahl, '.0', '');
+	UPDATE Telefonnummern SET Nummer  = REPLACE(Nummer, '.0', '');
+	UPDATE Telefonnummern SET Vorwahl = CONCAT('0',LEFT(Nummer,2))      WHERE length(Nummer) = 9 AND Vorwahl = '';
+	UPDATE Telefonnummern SET Vorwahl = CONCAT('00',Vorwahl)            WHERE LENGTH(Vorwahl) = 1;
+	UPDATE Telefonnummern SET Vorwahl = CONCAT('0',Vorwahl)             WHERE LENGTH(Vorwahl) = 2;
+	UPDATE Telefonnummern SET Nummer  = RIGHT(Nummer,7)                 WHERE length(Nummer) = 9;
 
-UPDATE Telefonnummern SET Vorwahl = CONCAT('0',LEFT(Nummer,2)) WHERE length(Nummer) = 9 AND Vorwahl = '';
-UPDATE Telefonnummern SET Nummer  = RIGHT(Nummer,7)            WHERE length(Nummer) = 9;
+	UPDATE email_adressen SET eMail = lower(eMail);
 
-UPDATE Länder SET Landesvorwahl = CONCAT('000',Landesvorwahl) WHERE LENGTH(Landesvorwahl) = 1;
-UPDATE Länder SET Landesvorwahl = CONCAT('00',Landesvorwahl)  WHERE LENGTH(Landesvorwahl) = 2;
-UPDATE Länder SET Landesvorwahl = CONCAT('0',Landesvorwahl)   WHERE LENGTH(Landesvorwahl) = 3;
+	UPDATE Land SET Landesvorwahl = CONCAT('000',Landesvorwahl)         WHERE LENGTH(Landesvorwahl) = 1;
+	UPDATE Land SET Landesvorwahl = CONCAT('00',Landesvorwahl)          WHERE LENGTH(Landesvorwahl) = 2;
+	UPDATE Land SET Landesvorwahl = CONCAT('0',Landesvorwahl)           WHERE LENGTH(Landesvorwahl) = 3;
 
-UPDATE Telefonnummern SET Laendercode = CONCAT('000',Laendercode)   WHERE LENGTH(Laendercode) = 1;
-UPDATE Telefonnummern SET Laendercode = CONCAT('00',Laendercode)    WHERE LENGTH(Laendercode) = 2;
-UPDATE Telefonnummern SET Laendercode = CONCAT('0',Laendercode)     WHERE LENGTH(Laendercode) = 3;
-
-
-SELECT
-    'Länder'                        AS `Table Name`,
-    (SELECT count(*) FROM `Länder`)   AS `Row Count`
-;
-SELECT
-    'Adressen'                      AS `Table Name`,
-    (SELECT count(*) FROM `Adressen`)   AS `Row Count`
-;
+	/* -- NUR bei inital load ab Stammdaten
+	UPDATE Adressen SET Orte_ID=(SELECT ID FROM Orte WHERE `Name` = 'Nuolen') 
+		   WHERE ID IN (SELECT Privat_Adressen_ID FROM Personen 
+						WHERE ID IN (147,947,307,536,661,144,138,145,307,343,474,693));
 
 
--- Gestorbene Personen_Daten
--- -------------------------
-UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
-UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Bürger')  WHERE  Todestag IS NOT NULL;
+	UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Wangen' AND Kanton = 'SZ');
+	UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Nuolen' AND Kanton = 'SZ');
+	-- UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Siebnen' AND Kanton = 'SZ');
+	*/
 
--- SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben';
--- SELECT ID,Personen_ID FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
-DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
 
-DELETE FROM email_adressen WHERE ID IN (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben')); 
-DELETE FROM personen_has_email_adressen WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'); 
 
-DELETE FROM telefonnummern WHERE ID IN (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'));
-DELETE FROM personen_has_telefonnummern WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'); 
+	-- Gestorbene Personen_Daten
+	-- -------------------------
+	UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
+	UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Bürger')  WHERE  Todestag IS NOT NULL;
+	DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
+	DELETE FROM email_adressen WHERE ID IN (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben')); 
+	DELETE FROM personen_has_email_adressen WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'); 
+	DELETE FROM telefonnummern WHERE ID IN (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'));
+	DELETE FROM personen_has_telefonnummern WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'); 
 
--- Bürger / Nutzungberechtigt
--- --------------------------
--- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Nutzungsberechtigt')  WHERE  Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND ID NOT IN (785, 137, 549, 552)
--- UPDATE `Personen` SET Kategorien = removeSetValue(Kategorien, 'Nutzungsberechtigt')  WHERE  ;
+	-- Bürger / Nutzungberechtigt (wer Bürger ist und in der politschen Gemeinde Wangen lebt ist Nutzungsberechtigt)
+	-- --------------------------
+	DROP TABLE IF EXISTS Temp_Table;
+	CREATE TABLE IF NOT EXISTS Temp_Table (
+	  `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	  `last_update`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	  PRIMARY KEY (`ID`));
+
+	INSERT Temp_Table (`ID`)
+		SELECT ID FROM `Personen` WHERE FIND_IN_SET('Bürger', Kategorien) >  0 AND Privat_Adressen_ID IN (SELECT ID FROM `Adressen` WHERE Politisch_Wangen = 1);
+		
+	UPDATE `Personen` SET Kategorien = removeSetValue(Kategorien, 'Nutzungsberechtigt');
+
+	UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Nutzungsberechtigt')  
+	   WHERE Todestag IS NULL AND 
+			 ID IN (SELECT ID FROM `Temp_Table`);
+
+	DROP TABLE IF EXISTS Temp_Table;
+
+END$$
+DELIMITER ;
+
+call important_updates()
+
 -- ------------------------------------------------------
 -- Hilfreiche Abfragen
 -- ------------------------------------------------------

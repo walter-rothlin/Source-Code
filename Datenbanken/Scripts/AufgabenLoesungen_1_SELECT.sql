@@ -25,10 +25,10 @@
 -- 18-Apr-2023   Walter Rothlin      Added more Fct and Proc and fixed DELIMITER in Fct
 -- 25-Apr-2023   Walter Rothlin      Added more Functions 10.3.1 and 10.3.2
 -- 28-Apr-2023   Walter Rothlin      Added getAge() Aktuelles Alter berechnen, wenn Todestag dann Alter fixiert, sonst NOW() - Birthday (Nur Jahre)
+-- 17-May-2023   Walter Rothlin      Changed LEFT/RIGHT JOIN to LEFT/RIGHT OUTER JOIN
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
-
 
 -- START erd
 -- Fragen zum ERD
@@ -857,7 +857,7 @@ SELECT
     L.country as Land
 FROM
     city as S
-LEFT JOIN country as L on S.country_id = L.country_id;
+LEFT OUTER JOIN country as L on S.country_id = L.country_id;
 
 -- 3.9.6) Erstellen Sie eine Orte Laenderliste (mit right join)
 SELECT
@@ -865,7 +865,7 @@ SELECT
     L.country as Land
 FROM
     country as L
-RIGHT JOIN city as S on S.country_id = L.country_id; 
+RIGHT OUTER JOIN city as S on S.country_id = L.country_id; 
 
 -- 3.9.7) Erstellen Sie eine Adress-, Orte und Laenderliste
 SELECT
@@ -893,7 +893,7 @@ SELECT
      orgLang.name   AS Originalsprache
 FROM
      film AS f
-LEFT  JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 -- 3.9.8.3) Erstellen Sie eine Filmtitle Liste mit den Originalsprache als Right Join
 SELECT
@@ -902,7 +902,7 @@ SELECT
      name         AS Originalsprache
 FROM
      language
-RIGHT JOIN film ON original_language_id = language.language_id;
+RIGHT OUTER JOIN film ON original_language_id = language.language_id;
 
 -- 3.9.8.4) Erstellen Sie eine Filmtitle Liste mit den Originalsprache als Right Join
 SELECT
@@ -911,7 +911,7 @@ SELECT
      l.name         AS Originalsprache
 FROM
      language AS l
-RIGHT JOIN film AS f ON f.original_language_id = l.language_id;
+RIGHT OUTER JOIN film AS f ON f.original_language_id = l.language_id;
 
 -- 3.9.8.5) Erstellen Sie eine Filmtitle Liste mit den Sprachen und der Originalsprache
 SELECT
@@ -921,8 +921,8 @@ SELECT
      orgLang.name   AS Originalsprache
 FROM
      film AS f
-INNER JOIN language AS lang    ON f.language_id          = lang.language_id
-LEFT  JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
+INNER      JOIN language AS lang    ON f.language_id          = lang.language_id
+LEFT OUTER JOIN language AS orgLang ON f.original_language_id = orgLang.language_id;
 
 -- 3.9.9) Erstellen Sie eine Listen aller Kunden_id mit deren Umsaetzen (wie Aufgabe 1.13), nun aber neben der Kunden_ID noch die Namen und Vornamen der Kunden
 SELECT 
@@ -932,7 +932,7 @@ SELECT
    sum(payment.amount)    AS Umsatz
 FROM 
    payment
-    -- LEFT JOIN customer ON payment.customer_id = customer.customer_id
+    -- LEFT OUTER JOIN customer ON payment.customer_id = customer.customer_id
    INNER JOIN customer ON payment.customer_id = customer.customer_id
 GROUP BY
    payment.customer_id
@@ -1042,7 +1042,7 @@ SELECT
     l.name  AS Originalsprache
 FROM
    language AS l
-RIGHT JOIN film AS f ON l.language_id = f.original_language_id;    -- 1000 rows
+RIGHT OUTER JOIN film AS f ON l.language_id = f.original_language_id;    -- 1000 rows
 
 
 --  4.2.5) Erstellen Sie eine Liste mit allen Filmetitles mit dessen language und original_language mit einem left-outer join
@@ -1075,14 +1075,14 @@ SELECT
    language.name 
 FROM
    film 
-LEFT JOIN language ON language.language_id = film.original_language_id
+LEFT OUTER JOIN language ON language.language_id = film.original_language_id
 UNION
 SELECT
    film.title,
    language.name 
 FROM
    language 
-LEFT JOIN film ON language.language_id = film.original_language_id;   -- 1005 rows
+LEFT OUTER JOIN film ON language.language_id = film.original_language_id;   -- 1005 rows
 
 
 -- 4.3.1) Listen sie Alle Staedte auf und in wievielen Landern diese vorkommen absteigend sortiert nach den anzahl Laendern
@@ -1091,7 +1091,7 @@ SELECT
    count(country.country) As Count
 FROM
    city
-LEFT JOIN country ON city.country_id = country.country_id
+LEFT OUTER JOIN country ON city.country_id = country.country_id
 Group BY city.city
 ORDER BY
    Count DESC;
@@ -1104,7 +1104,7 @@ SELECT
    country.country 
 FROM
    city
-LEFT JOIN country ON city.country_id = country.country_id
+LEFT OUTER JOIN country ON city.country_id = country.country_id
 WHERE city.city IN (SELECT city.city FROM city GROUP BY city.city having count(*) > 1)
 ORDER BY
    city.city, 
@@ -1151,9 +1151,9 @@ SELECT
    film.title                                                    AS Film
 FROM
    rental
-LEFT JOIN customer  ON rental.customer_id     = customer.customer_id
-LEFT JOIN inventory ON rental.inventory_id    = inventory.inventory_id
-LEFT JOIN film      ON inventory.inventory_id = film.film_id
+LEFT OUTER JOIN customer  ON rental.customer_id     = customer.customer_id
+LEFT OUTER JOIN inventory ON rental.inventory_id    = inventory.inventory_id
+LEFT OUTER JOIN film      ON inventory.inventory_id = film.film_id
 WHERE
     return_date IS NOT NULL AND 
     DATE_FORMAT(return_date, '%Y%m%d') = '20050527'
