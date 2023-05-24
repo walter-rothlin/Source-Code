@@ -16,6 +16,7 @@ import sqlparse
 import csv
 import json
 import pandas as pd
+import openpyxl
 from waltisLibrary import *
 
 # Lambda function to check if a x is from WAHR / FALSCH.
@@ -379,12 +380,54 @@ def update_from_excel(filename, sheet_name, attribut, db_connection, verbal=Fals
     print('    .. ', insert_count, 'reord(s) processed!')
     return insert_count
 
-def execute_iportant_sql_queries(db_connection, verbal=False):
+def execute_important_sql_queries(db_connection, verbal=False):
     myCursor = db_connection.cursor()
     print('Calling important updates...', end='')
     args = ()
     result_args = myCursor.callproc('important_updates', args)
     print('done')
+
+def initial_load_pachtland(filename, db_connection, verbal=False):
+    print('initial_load_pachtland...reading', pachlandzuteilung_fn)
+
+    info_tabellen_landwirte = openpyxl.load_workbook(filename, data_only=True)
+    paechter_sheets = [x for x in info_tabellen_landwirte.sheetnames if "_" in x]
+
+    print('paechter_sheets:', paechter_sheets)
+
+    for aPaechter_sheet_name in paechter_sheets:
+        aPaechter_sheet = info_tabellen_landwirte[aPaechter_sheet_name]
+        paechter_name = aPaechter_sheet["L3"].value
+        Paechter_id = aPaechter_sheet["M3"].value
+        print(' --> ', aPaechter_sheet_name, Paechter_id, paechter_name)
+        row_index = 11
+        while True:
+            flurname = aPaechter_sheet["B"+str(row_index)].value
+            if flurname is None:
+                break
+            elif flurname == 'Total Aren:':
+                row_index += 1
+                continue
+            else:
+                gis_id = aPaechter_sheet["A" + str(row_index)].value
+                geno_id = aPaechter_sheet["C" + str(row_index)].value
+                flaeche_geno = aPaechter_sheet["D" + str(row_index)].value
+                if flaeche_geno is None:
+                    flaeche_geno = '0'
+                flaeche_bürger = aPaechter_sheet["E" + str(row_index)].value
+                if flaeche_bürger is None:
+                    flaeche_bürger = '0'
+                bemerkungen = aPaechter_sheet["F" + str(row_index)].value
+                zins_pro_are = aPaechter_sheet["G" + str(row_index)].value
+                zins_total_genossame = aPaechter_sheet["H" + str(row_index)].value
+                verpächter_id = aPaechter_sheet["I" + str(row_index)].value
+
+                print(gis_id, flurname, geno_id, flaeche_geno, flaeche_bürger, bemerkungen, zins_pro_are, zins_total_genossame, verpächter_id)
+
+
+            row_index += 1
+        break
+
 
 
 if __name__ == '__main__':
@@ -399,18 +442,27 @@ if __name__ == '__main__':
     data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Wangen_2023_05_21.xlsx'
     data_update_fn = r'V:\Genossame_Wangen_Daten.xlsx'
 
-    # inital_load_fromExcel(doit=True)
+    pachlandzuteilung_fn = r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_05_22.xlsx'
 
-    rc = 0
-    rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
-    rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
-    rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'IBAN',  stammdaten_schema, verbal=True)
+    do_initial_load = False
+    if do_initial_load:
+        inital_load_fromExcel(doit=True)
 
-    execute_iportant_sql_queries(stammdaten_schema)
+    do_update_from_reco = False
+    if do_update_from_reco:
+        rc = 0
+        rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
+        rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
+        rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'IBAN',  stammdaten_schema, verbal=True)
 
-    if rc > 0:
-        print('\n\n---> Update All in', data_update_fn)
-    else:
-        print('\n\n===> No changes found in', data_update_fn)
+        execute_important_sql_queries(stammdaten_schema)
+
+        if rc > 0:
+            print('\n\n---> Update All in', data_update_fn)
+        else:
+            print('\n\n===> No changes found in', data_update_fn)
 
 
+    do_initial_load_pachtland = True
+    if do_initial_load_pachtland:
+        initial_load_pachtland(pachlandzuteilung_fn, stammdaten_schema, verbal=True)
