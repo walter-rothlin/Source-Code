@@ -404,7 +404,7 @@ def initial_load_pachtland(filename, db_connection, verbal=False):
         aPaechter_sheet = info_tabellen_landwirte[aPaechter_sheet_name]
         paechter_name = aPaechter_sheet["L3"].value
         Paechter_id = aPaechter_sheet["M3"].value
-        print('Processing ', aPaechter_sheet_name, Paechter_id, paechter_name, end='')
+        print(f'Processing {Paechter_id:5d} {aPaechter_sheet_name:30s} {paechter_name:30s}', end='')
         row_index = 11
         landteil_count = 0
         while True:
@@ -442,7 +442,7 @@ def initial_load_pachtland(filename, db_connection, verbal=False):
                 db_connection.commit()
 
             row_index += 1
-        print('   -> ', landteil_count)
+        print(f'   -> {landteil_count:5d}', )
         # break
 
 
