@@ -18,12 +18,14 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema BZU_2023_A
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `BZU_2023_A`;
 CREATE SCHEMA IF NOT EXISTS `BZU_2023_A` DEFAULT CHARACTER SET utf8 ;
 USE `BZU_2023_A` ;
 
 -- -----------------------------------------------------
 -- Table `Orte`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Orte`;
 CREATE TABLE IF NOT EXISTS `Orte` (
   `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `PLZ`  VARCHAR(10) NOT NULL,
@@ -33,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `Orte` (
 -- -----------------------------------------------------
 -- Table `Adressen`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `Adressen`;
 CREATE TABLE IF NOT EXISTS `Adressen` (
   `id`      INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Name`    VARCHAR(45) NOT NULL,
@@ -47,6 +50,38 @@ CREATE TABLE IF NOT EXISTS `Adressen` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+
+-- DML für Test-Daten erfassen
+INSERT INTO `Orte` (`ID`, `PLZ`, `Name`) 
+VALUES (1, 8855, 'Wangen'),
+       (2, 8855, 'Nuolen'),
+       (3, 8854, 'Siebnen'),
+       (4, 8854, 'Galgenen'),
+       (5, 8853, 'Lachen');
+       
+-- DELETE FROM `Orte`;
+-- TRUNCATE `Orte`;
+
+DELETE FROM `Orte` WHERE id = 1;
+DELETE FROM `Orte` WHERE id = 5;
+
+INSERT INTO `Adressen` (`ID`, `Name`, `Vorname`, `Strasse`, `Orte_id`) 
+VALUES (1, 'Rothlin', 'Walter', 'Peterliwiese 33', 1),
+	   (2, 'Rothlin', 'Tobias', 'Peterliwiese 33', 1),
+	   (3, 'Collet', 'Claudia', 'Blumenweg 8', 5);
+       
+DROP VIEW IF EXISTS `Adress_Daten`; 
+CREATE VIEW `Adress_Daten` AS
+	SELECT
+	   `a`.`id`        AS `ID`,
+	   `a`.`Name`      AS `Lastname`,
+	   `a`.`Vorname`   AS `Firstname`,
+	   `a`.`Strasse`   AS `Strasse`,
+	   -- `a`.`orte_id`   AS `Orte_ID`,
+	   `o`.`PLZ`       AS `PLZ`,
+	   `o`.`Name`      AS `Name`
+	   FROM `Adressen` AS `a`
+	   INNER JOIN `Orte` AS `o` ON `a`.`orte_id` = `o`.`id`;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
