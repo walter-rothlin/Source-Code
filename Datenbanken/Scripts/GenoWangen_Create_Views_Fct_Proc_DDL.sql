@@ -1,6 +1,6 @@
 -- ---------------------------------------------------------------------------------------------
--- Filename: Stammdaten_DDL.sql
--- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/GenoWangen_Creat_Views_Fct_Proc_DDL.sql
+-- Filename: GenoWangen_Create_Views_Fct_Proc_DDL.sql
+-- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/GenoWangen_Create_Views_Fct_Proc_DDL.sql
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin

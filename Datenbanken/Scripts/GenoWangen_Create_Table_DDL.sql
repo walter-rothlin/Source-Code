@@ -1,6 +1,6 @@
 -- ---------------------------------------------------------------------------------------------
--- Filename: GenoWangen_Creat_Table_DDL.sql.sql
--- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/GenoWangen_Creat_Table_DDL.sql
+-- Filename: GenoWangen_Create_Table_DDL.sql
+-- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/GenoWangen_Create_Table_DDL.sql
 -- ---------------------------------------------------------------------------------------------
 --
 -- Autor: Walter Rothlin
