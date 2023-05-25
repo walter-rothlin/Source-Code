@@ -9,6 +9,7 @@
 -- History:
 -- 21-Apr-2023   Walter Rothlin      Initial Version, Reveresed Enginiering
 -- 11-May-2023   Walter Rothlin      Connect to Excel, add more Names and extend view
+-- 25-May-2023   Walter Rothlin      Create view
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
