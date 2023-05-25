@@ -389,18 +389,24 @@ def execute_important_sql_queries(db_connection, verbal=False):
 
 def initial_load_pachtland(filename, db_connection, verbal=False):
     print('initial_load_pachtland...reading', pachlandzuteilung_fn)
+    myCursor = db_connection.cursor()
+
+    # sql = """TRUNCATE `landteile`;"""
+    sql = """DELETE FROM `landteile`;"""
+    myCursor.execute(sql)
+    db_connection.commit()
 
     info_tabellen_landwirte = openpyxl.load_workbook(filename, data_only=True)
     paechter_sheets = [x for x in info_tabellen_landwirte.sheetnames if "_" in x]
-
-    print('paechter_sheets:', paechter_sheets)
+    # print('paechter_sheets:', paechter_sheets)
 
     for aPaechter_sheet_name in paechter_sheets:
         aPaechter_sheet = info_tabellen_landwirte[aPaechter_sheet_name]
         paechter_name = aPaechter_sheet["L3"].value
         Paechter_id = aPaechter_sheet["M3"].value
-        print(' --> ', aPaechter_sheet_name, Paechter_id, paechter_name)
+        print('Processing ', aPaechter_sheet_name, Paechter_id, paechter_name, end='')
         row_index = 11
+        landteil_count = 0
         while True:
             flurname = aPaechter_sheet["B"+str(row_index)].value
             if flurname is None:
@@ -409,33 +415,54 @@ def initial_load_pachtland(filename, db_connection, verbal=False):
                 row_index += 1
                 continue
             else:
+                landteil_count += 1
                 gis_id = aPaechter_sheet["A" + str(row_index)].value
                 geno_id = aPaechter_sheet["C" + str(row_index)].value
+                flaeche_in_aren = 0
                 flaeche_geno = aPaechter_sheet["D" + str(row_index)].value
                 if flaeche_geno is None:
-                    flaeche_geno = '0'
-                flaeche_bürger = aPaechter_sheet["E" + str(row_index)].value
-                if flaeche_bürger is None:
-                    flaeche_bürger = '0'
+                    flaeche_bürger = aPaechter_sheet["E" + str(row_index)].value
+                    if flaeche_bürger is None:
+                        flaeche_in_aren = '0'
+                    else:
+                        flaeche_in_aren = flaeche_bürger
+                else:
+                    flaeche_in_aren = flaeche_geno
                 bemerkungen = aPaechter_sheet["F" + str(row_index)].value
                 zins_pro_are = aPaechter_sheet["G" + str(row_index)].value
                 zins_total_genossame = aPaechter_sheet["H" + str(row_index)].value
                 verpächter_id = aPaechter_sheet["I" + str(row_index)].value
 
-                print(gis_id, flurname, geno_id, flaeche_geno, flaeche_bürger, bemerkungen, zins_pro_are, zins_total_genossame, verpächter_id)
-
+                # if geno_id == '313.100.1':
+                #     print(gis_id, flurname, geno_id, flaeche_in_aren, bemerkungen, zins_pro_are, zins_total_genossame, verpächter_id)
+                sql = """INSERT INTO landteile (AV_Parzellen_Nr, GENO_Parzellen_Nr, Flur_Bezeichnung, Flaeche_In_Aren, Pachtzins_Pro_Are, Fix_Pachtzins, Paechter_ID, Verpaechter_ID) 
+                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+                val = (gis_id, geno_id, flurname, flaeche_in_aren, zins_pro_are, zins_total_genossame, Paechter_id, verpächter_id)
+                myCursor.execute(sql, val)
+                db_connection.commit()
 
             row_index += 1
-        break
+        print('   -> ', landteil_count)
+        # break
 
 
 
 if __name__ == '__main__':
-    stammdaten_schema = db_connect(host='localhost',
-                                   schema='genossame_wangen',
-                                   user="App_User_Stammdaten",
-                                   password="1234ABCD12abcd",
-                                   trace=True)
+
+    connect_to_prod = False
+    if connect_to_prod:
+        stammdaten_schema = db_connect(host='192.168.253.24:3310',
+                                       schema='genossame_wangen',
+                                       user="root",
+                                       password="Gen_88-mysql",
+                                       trace=True)
+    else:
+        stammdaten_schema = db_connect(host='localhost',
+                                       schema='genossame_wangen',
+                                       user="App_User_Stammdaten",
+                                       password="1234ABCD12abcd",
+                                       trace=True)
+
 
 
     data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Wangen_2023_05_20.xlsx'

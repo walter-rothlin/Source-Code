@@ -78,16 +78,16 @@ CREATE TABLE IF NOT EXISTS Orte (
 DROP TABLE IF EXISTS Adressen;
 CREATE TABLE IF NOT EXISTS Adressen (
   `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Strasse`              VARCHAR(45) NULL,
-  `Hausnummer`           VARCHAR(15) NULL,
-  `Postfachnummer`       VARCHAR(5) NULL,
-  `Adresszusatz`         VARCHAR(20) NULL,
-  `Wohnung`              VARCHAR(10) NULL,
-  `Kataster_Nr`          VARCHAR(10) NULL,
-  `x_CH1903`             VARCHAR(10)  NULL,
-  `y_CH1903`             VARCHAR(10)  NULL,
-  `Politisch_Wangen`     INT UNSIGNED NULL DEFAULT 0,
-  `Orte_ID`              INT UNSIGNED NULL,
+  `Strasse`              VARCHAR(45)   NULL,
+  `Hausnummer`           VARCHAR(15)   NULL,
+  `Postfachnummer`       VARCHAR(5)    NULL,
+  `Adresszusatz`         VARCHAR(20)   NULL,
+  `Wohnung`              VARCHAR(10)   NULL,
+  `Kataster_Nr`          VARCHAR(10)   NULL,
+  `x_CH1903`             VARCHAR(10)   NULL,
+  `y_CH1903`             VARCHAR(10)   NULL,
+  `Politisch_Wangen`     INT UNSIGNED  NULL DEFAULT 0,
+  `Orte_ID`              INT UNSIGNED  NULL,
   `last_update`          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       
   -- PK-Constraints
@@ -381,6 +381,8 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
   `Buergerlandteil`      ENUM('16a','35a','Geno') DEFAULT NULL,
   `Qualitaet`            ENUM('Futter','Streu','Verbuscht','Wald') DEFAULT NULL,
   `Polygone_Flaeche`     VARCHAR(300) NULL,
+  `x_CH1903`             VARCHAR(10)  NULL,
+  `y_CH1903`             VARCHAR(10)  NULL,
   
   `Pachtbeginn_Am`      DATE NULL,
   `Rueckgabe_Am`        DATE NULL,
@@ -388,9 +390,9 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
   `Pachtende_Am`        DATE NULL,
 
   `Paechter_ID`                  INT UNSIGNED NULL,
-  `Verpaechter_ID`               INT UNSIGNED NOT NULL,
+  `Verpaechter_ID`               INT UNSIGNED NULL,
   `Vorheriger_Paechter_ID`       INT UNSIGNED NULL,
-  `Vorheriger_Verpaechter_ID`    INT UNSIGNED NOT NULL,
+  `Vorheriger_Verpaechter_ID`    INT UNSIGNED NULL,
 
   `last_update`          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         
@@ -403,7 +405,8 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
   INDEX `fk_Landteil_Pre_Paechter_Adresse_idx`    (`Vorheriger_Paechter_ID`    ASC)    VISIBLE,
   INDEX `fk_Landteil_Pre_Verpaechter_Adresse_idx` (`Vorheriger_Verpaechter_ID` ASC)    VISIBLE,
   INDEX `fk_Landteil_Gemeindegebiet_idx`          (`Gemeindegebiet_ID`         ASC)    VISIBLE,
-
+  UNIQUE INDEX `GENO_Parzellen_Nr_UNIQUE`         (`GENO_Parzellen_Nr` ASC)            VISIBLE,
+  
   -- FK-Constraints
   CONSTRAINT `fk_Paechter_ID`
     FOREIGN KEY (`Paechter_ID`)
@@ -431,8 +434,7 @@ CREATE TABLE IF NOT EXISTS `Landteil` (
     REFERENCES `Orte` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-    
-    
+
    
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

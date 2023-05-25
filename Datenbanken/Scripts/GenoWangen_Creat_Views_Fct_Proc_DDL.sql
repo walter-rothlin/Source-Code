@@ -569,24 +569,24 @@ BEGIN
     	RETURN CONCAT(p_strasse, ' ', p_hausnummer, ' / Postfach:', p_postfach);
     END IF;
     
-    IF (strasse = '') THEN
-         IF (postfach = '' OR postfach = NULL) THEN
+    IF (p_strasse = '') THEN
+         IF (p_postfach = '' OR p_postfach = NULL) THEN
 			RETURN '';
 		 ELSE
-            RETURN CONCAT('Postfach ', postfach);
+            RETURN CONCAT('Postfach ', p_postfach);
          END IF;
     ELSE
-       IF (hausnummer = '') THEN
-          IF (postfach = '') THEN
-               RETURN CONCAT('', strasse);
+       IF (p_hausnummer = '') THEN
+          IF (p_postfach = '') THEN
+               RETURN CONCAT('', p_strasse);
 		  ELSE
-               RETURN CONCAT(strasse, ' / Postfach:', postfach);
+               RETURN CONCAT(p_strasse, ' / Postfach:', p_postfach);
 		  END IF;
 	   ELSE
-		  IF (postfach = '') THEN
-		       RETURN CONCAT(strasse, ' ', hausnummer);
+		  IF (p_postfach = '') THEN
+		       RETURN CONCAT(p_strasse, ' ', p_hausnummer);
 		  ELSE
-               RETURN CONCAT(strasse, ' ', hausnummer, ' / Postfach:', postfach);
+               RETURN CONCAT(p_strasse, ' ', p_hausnummer, ' / Postfach:', p_postfach);
 		  END IF;
        END IF;
     END IF;
@@ -781,6 +781,7 @@ CREATE VIEW Telnr_Liste_Sorted AS
     ORDER BY Familien_Name;
 
 -- --------------------------------------------------------------------------------
+/*
 DROP VIEW IF EXISTS Telnr_Liste_Alle_TelNr; 
 CREATE VIEW Telnr_Liste_Alle_TelNr AS
 	   SELECT
@@ -805,7 +806,7 @@ CREATE VIEW Telnr_Liste_Alle_TelNr AS
 	   FROM Telnr_Liste_Sorted AS T
        GROUP BY Pers_ID
 	   ORDER BY Familien_Name;
-
+*/
 -- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS Telnr_Liste_Prio_0; 
 CREATE VIEW Telnr_Liste_Prio_0 AS
