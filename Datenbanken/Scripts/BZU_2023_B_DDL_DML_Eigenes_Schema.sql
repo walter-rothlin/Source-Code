@@ -21,7 +21,7 @@ DROP SCHEMA IF EXISTS  `BZU_2023_B`;
 CREATE SCHEMA IF NOT EXISTS `BZU_2023_B` DEFAULT CHARACTER SET utf8 ;
 
 SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
-USE `bzu_2023_b` ;
+USE `BZU_2023_B` ;
 
 
 -- -----------------------------------------------------
@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS `Orte` (
 
 
 -- -----------------------------------------------------
--- Table `Adressen`
+-- Table `Personen`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `Adressen`;
-CREATE TABLE IF NOT EXISTS `Adressen` (
+DROP TABLE IF EXISTS `Personen`;
+CREATE TABLE IF NOT EXISTS `Personen` (
   `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Vorname`    VARCHAR(45) NULL,
   `Nachname`   VARCHAR(45) NOT NULL,
@@ -62,27 +62,32 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- Views
 -- =====
-CREATE VIEW Adressen_Liste AS
+DROP VIEW IF EXISTS `Adressen`;
+CREATE VIEW `Adressen` AS
 	SELECT
-		 adr.id           AS id,
-		 adr.Vorname      AS Vorname,
-		 adr.Nachname     AS Nachname,
-		 adr.Strasse      AS Strasse,
-		 adr.Hausnummer   AS Hausnummer,
+		 pers.id           AS id,
+		 pers.Vorname      AS Vorname,
+		 pers.Nachname     AS Nachname,
+		 CONCAT(pers.Strasse,' ', pers.Hausnummer)     AS Strasse,
+		 -- pers.Hausnummer   AS Hausnummer,
 		 -- adr.Orte_id      AS Orte_ID,
 		 ort.plz          AS PLZ,
 		 ort.Ortsname     AS Ortsname
-	FROM Adressen AS adr
-	INNER JOIN Orte AS ort ON adr.Orte_id = ort.id;
+	FROM Personen AS pers
+	INNER JOIN Orte AS ort ON pers.Orte_id = ort.id;
 
 -- DML 2023-Apr-21
 -- ===============
-INSERT INTO `orte` (`ID`, `PLZ`, `Ortsname`) VALUES 
+INSERT INTO `Orte` (`ID`, `PLZ`, `Ortsname`) VALUES 
    (1,'8855', 'Wangen'),
    (2,'8854', 'Siebnen');
+   
+INSERT INTO `Orte`  (`PLZ`, `Ortsname`) VALUES 
+   ('8855', 'Nuolen'),
+   ('8853', 'Lachen');
            
            
-INSERT INTO `adressen` (`id`, `Vorname`, `Nachname`, `Strasse`, `Hausnummer`, `Orte_id`) VALUES 
+INSERT INTO `Personen` (`ID`, `Vorname`, `Nachname`, `Strasse`, `Hausnummer`, `Orte_id`) VALUES 
    ('1', 'Walter', 'Rothlin', 'Peterliwiese',  '33', '1'),
    ('2', 'Tobias', 'Rothlin', 'Peterliwiese',  '33', '1'),
    ('3', 'Max',    'Meier',   'Nördlingerhof', '1d', '2');
