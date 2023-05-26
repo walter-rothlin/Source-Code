@@ -8,7 +8,7 @@
 --
 -- History:
 -- 22-Apr-2023   Walter Rothlin      Initial Version, Reveresed Enginiering
--- 25-May-2023   Walter Rothlin      Create view
+-- 26-May-2023   Walter Rothlin      Create view and function
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -60,6 +60,18 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+-- Functions
+-- =========
+DROP FUNCTION IF EXISTS get_strasse_nr;
+DELIMITER //
+CREATE FUNCTION  get_strasse_nr(p_strasse VARCHAR(50), p_plz VARCHAR(10)) RETURNS VARCHAR(65)
+BEGIN
+  RETURN  CONCAT(p_strasse, ' ', p_plz);
+END//
+DELIMITER ;
+
 -- Views
 -- =====
 DROP VIEW IF EXISTS `Adressen`;
@@ -68,11 +80,12 @@ CREATE VIEW `Adressen` AS
 		 pers.id           AS id,
 		 pers.Vorname      AS Vorname,
 		 pers.Nachname     AS Nachname,
-		 CONCAT(pers.Strasse,' ', pers.Hausnummer)     AS Strasse,
+		 get_strasse_nr(pers.Strasse, pers.Hausnummer)     AS Strasse,
 		 -- pers.Hausnummer   AS Hausnummer,
 		 -- adr.Orte_id      AS Orte_ID,
 		 ort.plz          AS PLZ,
-		 ort.Ortsname     AS Ortsname
+		 ort.Ortsname     AS Ortsname,
+         CONCAT('Sehr geehrter Herr ',pers.Nachname ) AS Anrede
 	FROM Personen AS pers
 	INNER JOIN Orte AS ort ON pers.Orte_id = ort.id;
 
@@ -80,15 +93,13 @@ CREATE VIEW `Adressen` AS
 -- ===============
 INSERT INTO `Orte` (`ID`, `PLZ`, `Ortsname`) VALUES 
    (1,'8855', 'Wangen'),
-   (2,'8854', 'Siebnen');
-   
-INSERT INTO `Orte`  (`PLZ`, `Ortsname`) VALUES 
-   ('8855', 'Nuolen'),
-   ('8853', 'Lachen');
+   (2,'8854', 'Siebnen'),
+   (3,'8855', 'Nuolen'),
+   (4,'8853', 'Lachen');
            
            
 INSERT INTO `Personen` (`ID`, `Vorname`, `Nachname`, `Strasse`, `Hausnummer`, `Orte_id`) VALUES 
    ('1', 'Walter', 'Rothlin', 'Peterliwiese',  '33', '1'),
    ('2', 'Tobias', 'Rothlin', 'Peterliwiese',  '33', '1'),
-   ('3', 'Max',    'Meier',   'Nördlingerhof', '1d', '2');
-
+   ('3', 'Max',    'Meier',   'Nördlingerhof', '1d', '2'),
+   ('4', 'Claudia', 'Collet', 'Peterliwiese',  '33', '1');
