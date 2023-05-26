@@ -7,7 +7,8 @@
 -- Description: Kreiert Functions, Views and Procedures for Genossame Wangen
 --
 -- History:
--- 13-May_2023   Walter Rothlin      Splitted file in DDL Tables / Fct, Views, Proc
+-- 13-May-2023   Walter Rothlin      Splitted file in DDL Tables / Fct, Views, Proc
+-- 25-May-2023   Walter Rothlin      Added Landteilviews
 -- ---------------------------------------------------------------------------------------------
 
 -- To-Does
@@ -638,6 +639,10 @@ CREATE VIEW PD_Row_Counts AS
 	SELECT
 		'Personen_has_telefonnummern'                          AS `Table Name`,
 		(SELECT count(*) FROM `Personen_has_telefonnummern`)   AS `Row Count`
+	UNION
+	SELECT
+		'Landteile'                                            AS `Table Name`,
+		(SELECT count(*) FROM `Landteile`)                     AS `Row Count`
 	;
 
 /*	SELECT 
@@ -874,6 +879,7 @@ CREATE VIEW EMail_Liste_Sorted AS
     ORDER BY Familien_Name;
 
 -- --------------------------------------------------------------------------------
+/*
 DROP VIEW IF EXISTS EMail_Liste_Alle_EMail; 
 CREATE VIEW EMail_Liste_Alle_EMail AS
 	   SELECT
@@ -898,7 +904,7 @@ CREATE VIEW EMail_Liste_Alle_EMail AS
 	   FROM EMail_Liste_Sorted AS T
 	   GROUP BY Pers_ID
 	   ORDER BY Familien_Name;
-
+*/
 -- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS EMail_Liste_Prio_0; 
 CREATE VIEW EMail_Liste_Prio_0 AS
@@ -985,6 +991,7 @@ CREATE VIEW IBAN_Liste_Sorted AS
     ORDER BY Familien_Name;
 
 -- -----------------------------------------------------
+/*
 DROP VIEW IF EXISTS IBAN_Liste_Alle_IBAN; 
 CREATE VIEW IBAN_Liste_Alle_IBAN AS
 	   SELECT
@@ -1009,6 +1016,7 @@ CREATE VIEW IBAN_Liste_Alle_IBAN AS
 	   FROM IBAN_Liste_Sorted AS T
 	   GROUP BY Pers_ID
 	   ORDER BY Familien_Name;
+*/
        
 -- --------------------------------------------------------------------------------
 DROP VIEW IF EXISTS IBAN_Liste_Prio_0; 
@@ -1365,8 +1373,8 @@ CREATE VIEW Verpächter AS
           `ID` IN (261,93,281,369,97,85,293,114,85,259,244,279,182,192,383,119,97,93,281,95,144)
 	ORDER BY `ID`;
     
-SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Donner%' AND Such_Begriff LIKE BINARY '%Meinrad%';
-SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Lüönd%';
+-- SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Donner%' AND Such_Begriff LIKE BINARY '%Meinrad%';
+-- SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Lüönd%';
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS PD_Tel_Email_IBAN; 
 CREATE VIEW PD_Tel_Email_IBAN AS
@@ -1441,45 +1449,69 @@ CREATE VIEW PD_Tel_Email_IBAN AS
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
 CREATE VIEW Pachtlandzuteilung AS
 	SELECT
+		  -- Landteil Details
+          -- ----------------
 		  L.ID                                       AS ID,
           L.AV_Parzellen_Nr                          AS AV_Parzelle,
           L.GENO_Parzellen_Nr                        AS GENO_Parzelle,
-          L.Flur_Bezeichnung                         AS FLur_Bezeichnung,
+          L.Flur_Bezeichnung                         AS Flur_Bezeichnung,
           L.Flaeche_In_Aren                          AS Flaeche,
-          L.Pachtzins_Pro_Are                        AS Pachtzins_pro_Are,
-          calc_yearly_pachtfee(L.Flaeche_In_Aren,
-                               L.Pachtzins_Pro_Are)  AS Pachtzins_pro_Jahr,
-	      L.Fix_Pachtzins                            AS FixPachtPreis,
-          L.Vertragsart                              AS Vertragsart,
+          ROUND(L.Pachtzins_Pro_Are, 2)              AS Pachtzins_pro_Are,
+          ROUND(calc_yearly_pachtfee(L.Flaeche_In_Aren,
+                               L.Pachtzins_Pro_Are), 2)  AS Pachtzins_pro_Jahr,
+		  ROUND(L.Fix_Pachtzins, 2)                  AS FixPachtPreis,
+	      
           L.Buergerlandteil                          AS Buergerteil,
-          L.Polygone_Flaeche                         AS Polygone,
+          -- L.Polygone_Flaeche                         AS Polygone,
+          -- L.x_CH1903                                 AS x_zentrum,
+          -- L.y_CH1903                                 AS y_zentrum,
           
+		  -- Pächter Daten
+          -- -------------          
+		  -- L.Vorheriger_Paechter_ID                   AS Vorheriger_Paechter_ID,
+          L.Paechter_ID                              AS Paechter_ID,
+		  Paechter_Adr.Betriebs_Nr                   AS Pachter_Betriebs_Nr,
+          Paechter_Adr.Kategorien                    AS Paechter_Kategorien,
+          Paechter_Adr.Zivilstand                    AS Paechter_Zivilstand,
+          Paechter_Adr.Geschlecht                    AS Paechter_Geschlecht,
+          -- Paechter_Adr.Firma                         AS Pachter_Firma,
+		  Paechter_Adr.Vorname_Initial               AS Paechter_Vorname,
+          Paechter_Adr.Familien_Name                 AS Paechter_Name,
+
+          Paechter_Adr.Private_Strassen_Adresse      AS Paechter_Strasse,
+          -- Paechter_Adr.Private_Hausnummer            AS Paechter_Hausnummer,
+          Paechter_Adr.Private_PLZ_Ort               AS Paechter_PLZ_Ort,
+          Paechter_Adr.Tel_Nr                        AS Paechter_Tel_Nr,
+          Paechter_Adr.eMail                         AS Paechter_eMail,
+          Paechter_Adr.Geburtsjahr                   AS Paechter_Geburtsjahr,
+          -- Paechter_Adr.Private_Ort                   AS Paechter_Ort,
+
+		  -- Verpächtere Daten
+          -- -----------------
+          -- L.Vorheriger_Verpaechter_ID                AS Vorheriger_Verpaechter_ID,
+          L.Verpaechter_ID                           AS Verpaechter_ID,
+          Verpaechter_Adr.Kategorien                 AS Verpaechter_Kategorien,
+          Verpaechter_Adr.Zivilstand                 AS Verpaechter_Zivilstand,
+          Verpaechter_Adr.Geschlecht                 AS Verpaechter_Geschlecht,
+		  Verpaechter_Adr.Firma                      AS Verpaechter_Firma,
+		  Verpaechter_Adr.Vorname_Initial            AS Verpaechter_Vorname,
+          Verpaechter_Adr.Familien_Name              AS Verpaechter_Name,
+          Verpaechter_Adr.Private_Strassen_Adresse   AS Verpaechter_Strasse,
+          -- Verpaechter_Adr.Private_Hausnummer         AS Verpaechter_Hausnummer,
+          Verpaechter_Adr.Private_PLZ_Ort            AS Verpaechter_PLZ_Ort,
+          Verpaechter_Adr.Tel_Nr                     AS Verpaechter_Tel_Nr,
+          Verpaechter_Adr.eMail                      AS Verpaechter_eMail,
+          Verpaechter_Adr.Geburtsjahr                AS Verpaechter_Geburtsjahr,
+          -- Verpaechter_Adr.Private_Ort                AS Verpaechter_Ort,
+          
+		  -- Vertragliche Daten
+          -- ------------------
+          L.Vertragsart                              AS Vertragsart,
           L.Pachtbeginn_Am                           AS Pachtbeginn,
           L.Rueckgabe_Am                             AS Rueckgabe,
           L.Vertragsende_Am                          AS Vertragsende,
-          L.Pachtende_Am                             AS Pachtende,
-          
-          L.Vorheriger_Paechter_ID                   AS Vorheriger_Paechter_ID,
-          L.Paechter_ID                              AS Paechter_ID,
-          Paechter_Adr.Betriebs_Nr                   AS Pachter_Betriebs_Nr,
-          Paechter_Adr.Firma                         AS Pachter_Firma,
-          Paechter_Adr.Familien_Name                  AS Paechter_Name,
-          Paechter_Adr.Vorname                       AS Paechter_Vorname,
-          Paechter_Adr.Private_Strasse               AS Paechter_Strasse,
-          Paechter_Adr.Private_Hausnummer            AS Paechter_Hausnummer,
-          Paechter_Adr.Private_PLZ                   AS Paechter_PLZ,
-          Paechter_Adr.Private_Ort                   AS Paechter_Ort,
-
-          L.Vorheriger_Verpaechter_ID                AS Vorheriger_Verpaechter_ID,
-          L.Verpaechter_ID                           AS Verpaechter_ID,
-		  Verpaechter_Adr.Firma                      AS Verpaechter_Firma,
-          Verpaechter_Adr.Familien_Name              AS Verpaechter_Name,
-          Verpaechter_Adr.Vorname                    AS Verpaechter_Vorname,
-          Verpaechter_Adr.Private_Strasse            AS Verpaechter_Strasse,
-          Verpaechter_Adr.Private_Hausnummer         AS Verpaechter_Hausnummer,
-          Verpaechter_Adr.Private_PLZ                AS Verpaechter_PLZ,
-          Verpaechter_Adr.Private_Ort                AS Verpaechter_Ort
-	FROM Landteil AS L
+          L.Pachtende_Am                             AS Pachtende
+	FROM Landteile AS L
     LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_ID     = Paechter_Adr.ID
 	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_ID  = Verpaechter_Adr.ID;
 
@@ -2033,6 +2065,13 @@ BEGIN
 			 ID IN (SELECT ID FROM `Temp_Table`);
 
 	DROP TABLE IF EXISTS Temp_Table;
+    
+    -- Landteile
+    -- ---------
+    UPDATE Landteile SET Buergerlandteil = 'Geno' WHERE Verpaechter_ID  = 625; 
+    UPDATE Landteile SET Buergerlandteil = '16a'  WHERE Flaeche_In_Aren = 16;
+    UPDATE Landteile SET Buergerlandteil = '35a'  WHERE Flaeche_In_Aren = 35; 
+
 
 END$$
 DELIMITER ;

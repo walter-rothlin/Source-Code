@@ -23,11 +23,12 @@ from waltisLibrary import *
 ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
 ifIntEmpty = lambda x: True if (x == '' or x == 'TRUE') else False
 
-def db_connect(host='localhost', schema='stammdaten', user=None, password=None, trace=False):
+def db_connect(host='localhost', port=3306, schema='stammdaten', user=None, password=None, trace=False):
     if trace:
         print("Connecting to " + schema + "@" + host + "....", end="", flush=True)
     db_connection = mysql.connector.connect(
           host        = host,
+          port        = port,
           user        = user,
           password    = password,
           database    = schema,
@@ -451,7 +452,8 @@ if __name__ == '__main__':
 
     connect_to_prod = False
     if connect_to_prod:
-        stammdaten_schema = db_connect(host='192.168.253.24:3310',
+        stammdaten_schema = db_connect(host='192.168.253.24',
+                                       port=3310,
                                        schema='genossame_wangen',
                                        user="root",
                                        password="Gen_88-mysql",
@@ -465,8 +467,7 @@ if __name__ == '__main__':
 
 
 
-    data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Wangen_2023_05_20.xlsx'
-    data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Wangen_2023_05_21.xlsx'
+    data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Geno_Daten_From_PTA.xlsx'
     data_update_fn = r'V:\Genossame_Wangen_Daten.xlsx'
 
     pachlandzuteilung_fn = r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_05_22.xlsx'
