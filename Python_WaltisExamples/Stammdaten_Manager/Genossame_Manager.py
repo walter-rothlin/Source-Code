@@ -376,7 +376,7 @@ def update_from_excel(filename, sheet_name, attribut, db_connection, verbal=Fals
                     args = (pers_ID, iban, 'x')
                     if verbal:
                         print('    addIBAN', str(args), sep='')
-                    result_args = myCursor.callproc('addTelNr', args)
+                    result_args = myCursor.callproc('addIBAN', args)
 
     print('    .. ', insert_count, 'reord(s) processed!')
     return insert_count
@@ -431,14 +431,24 @@ def initial_load_pachtland(filename, db_connection, verbal=False):
                     flaeche_in_aren = flaeche_geno
                 bemerkungen = aPaechter_sheet["F" + str(row_index)].value
                 zins_pro_are = aPaechter_sheet["G" + str(row_index)].value
-                zins_total_genossame = aPaechter_sheet["H" + str(row_index)].value
+                if zins_pro_are is None:
+                    zins_pro_are = 0
+                fix_pacht_zins = aPaechter_sheet["H" + str(row_index)].value
+                if zins_pro_are > 0:
+                    fix_pacht_zins = 0
+
+
                 verpächter_id = aPaechter_sheet["I" + str(row_index)].value
+                if verpächter_id is None:
+                    verpächter_name = (aPaechter_sheet["J" + str(row_index)].value).replace(' ', '')
+                    verpächter_vorname = (aPaechter_sheet["K" + str(row_index)].value)
+                    verpächter_id = get_personen_id(db_connection, such_kriterien=[verpächter_name, verpächter_vorname], verbal=False)
 
                 # if geno_id == '313.100.1':
                 #     print(gis_id, flurname, geno_id, flaeche_in_aren, bemerkungen, zins_pro_are, zins_total_genossame, verpächter_id)
                 sql = """INSERT INTO landteile (AV_Parzellen_Nr, GENO_Parzellen_Nr, Flur_Bezeichnung, Flaeche_In_Aren, Pachtzins_Pro_Are, Fix_Pachtzins, Paechter_ID, Verpaechter_ID) 
                          VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
-                val = (gis_id, geno_id, flurname, flaeche_in_aren, zins_pro_are, zins_total_genossame, Paechter_id, verpächter_id)
+                val = (gis_id, geno_id, flurname, flaeche_in_aren, zins_pro_are, fix_pacht_zins, Paechter_id, verpächter_id)
                 myCursor.execute(sql, val)
                 db_connection.commit()
 
@@ -447,6 +457,44 @@ def initial_load_pachtland(filename, db_connection, verbal=False):
         # break
 
 
+def get_personen_id(db_connection, such_kriterien, verbal=False):
+    verbal = True
+    myCursor = db_connection.cursor()
+    if verbal:
+        print('get_personen_id', str(such_kriterien), '    ',end='')
+
+    where_clauses = []
+    for a_such_kriterium in such_kriterien:
+        a_such_kriterium.replace(' - ', '-')
+        split_liste = a_such_kriterium.split('-')
+        if len(split_liste) == 1:
+            where_clauses.append(f"""Such_Begriff LIKE Binary '%{a_such_kriterium}%'""")
+        else:
+            where_clauses.append(f"""Such_Begriff LIKE Binary '%{split_liste[0]}%'""")
+            where_clauses.append(f"""Such_Begriff LIKE Binary '%{split_liste[1]}%'""")
+
+    where_clause_str = ' AND \n'.join(where_clauses)
+    if False:
+        print(where_clause_str)
+
+    select_person = f"""
+            SELECT ID, Vorname_Initial, Familien_Name, 
+                   Private_Strassen_Adresse, Private_PLZ_Ort
+              FROM personen_daten 
+              WHERE {where_clause_str};
+    """
+    if False:
+        print(select_person)
+
+    verpächter_id = None
+    myCursor.execute(select_person)
+    myresult = myCursor.fetchall()
+    if True:
+        print("Records found:", len(myresult), myresult, '\n')
+    if myresult == 1:
+        verpächter_id = myresult[0][0]
+
+    return verpächter_id
 
 if __name__ == '__main__':
 
@@ -468,6 +516,8 @@ if __name__ == '__main__':
 
 
     data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Geno_Daten_From_PTA.xlsx'
+    data_update_fn = r'V:\Genossame_Wangen_Daten_Kopie.xlsx'
+    data_import_fn = r'V:\Genossame_Wangen_Daten.xlsx'
     data_update_fn = r'V:\Genossame_Wangen_Daten.xlsx'
 
     pachlandzuteilung_fn = r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_05_22.xlsx'

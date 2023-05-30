@@ -1366,14 +1366,18 @@ CREATE VIEW Verpächter AS
         Bemerkungen
 	FROM Personen_Daten
     WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
-          FIND_IN_SET('Hat_35a',        Kategorien) >  0 OR
+          FIND_IN_SET('Hat_35a',        Kategorien) >  0 /* OR
           `ID` IN (625,416,411,341,340,86,371,226,268,298,100,125) OR
           `ID` IN (121,84,88,244,303,258,438,350,165,438,119,63,73,94,72) OR
           `ID` IN (135,88,175,224,326,368,322,437,359)  OR
-          `ID` IN (261,93,281,369,97,85,293,114,85,259,244,279,182,192,383,119,97,93,281,95,144)
+          `ID` IN (261,93,281,369,97,85,293,114,85,259,244,279,182,192,383,119,97,93,281,95,144) */
 	ORDER BY `ID`;
     
--- SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Donner%' AND Such_Begriff LIKE BINARY '%Meinrad%';
+/*
+SELECT ID, Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Private_PLZ_Ort
+      FROM personen_daten 
+      WHERE Such_Begriff LIKE BINARY '%Guntlin%' AND Such_Begriff LIKE BINARY '%Karl%';
+*/
 -- SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Lüönd%';
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS PD_Tel_Email_IBAN; 
@@ -1457,9 +1461,16 @@ CREATE VIEW Pachtlandzuteilung AS
           L.Flur_Bezeichnung                         AS Flur_Bezeichnung,
           L.Flaeche_In_Aren                          AS Flaeche,
           ROUND(L.Pachtzins_Pro_Are, 2)              AS Pachtzins_pro_Are,
-          ROUND(calc_yearly_pachtfee(L.Flaeche_In_Aren,
-                               L.Pachtzins_Pro_Are), 2)  AS Pachtzins_pro_Jahr,
 		  ROUND(L.Fix_Pachtzins, 2)                  AS FixPachtPreis,
+          
+          IF (L.Verpaechter_ID = 625,
+              IF (L.Pachtzins_Pro_Are > 0, 
+				  ROUND(calc_yearly_pachtfee(
+									   L.Flaeche_In_Aren,
+									   L.Pachtzins_Pro_Are), 0),
+				  ROUND(L.Fix_Pachtzins, 0)),
+			  '')     AS Geno_Pachtzins_pro_Jahr,
+
 	      
           L.Buergerlandteil                          AS Buergerteil,
           -- L.Polygone_Flaeche                         AS Polygone,
@@ -1681,7 +1692,7 @@ BEGIN
          WHERE IBAN.Personen_ID = pers_id AND
                IBAN.Nummer = iban_nummer  AND
                IBAN.Prio = 0) = 0) THEN
-					INSERT INTO IBAN (`ID`, `Nummer`, `prio`) VALUES (pers_id, iban_nummer, 0);
+					INSERT INTO IBAN (`Personen_ID`, `Nummer`, `prio`) VALUES (pers_id, iban_nummer, 0);
 					COMMIT;
     END IF;
     SELECT ID 
@@ -1697,12 +1708,12 @@ DELIMITER ;
     FROM IBAN 
     WHERE IBAN.Personen_ID = 990 AND
 		  IBAN.Nummer      = 'CH46 0077 7002 5458 0007 8';
-          
+         
 -- Tests
 set @id = 0;
-call addIBAN(990, 'CH46 0077 7002 5458 0007 8', @id);
+call addIBAN(527, 'CH15 0077 7000 0324 3489 7', @id);
 select @id;
-*/
+*/ 
 
 -- ------------------------------------------------------
 -- Land
@@ -2072,11 +2083,21 @@ BEGIN
     UPDATE Landteile SET Buergerlandteil = '16a'  WHERE Flaeche_In_Aren = 16;
     UPDATE Landteile SET Buergerlandteil = '35a'  WHERE Flaeche_In_Aren = 35; 
 
+	UPDATE Personen SET Kategorien = addSetValue(Kategorien, 'Hat_16a')  
+	WHERE ID in (SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = '16a' AND Verpaechter_ID IS NOT NULL);
+
+	UPDATE Personen SET Kategorien = addSetValue(Kategorien, 'Hat_35a')  
+	WHERE ID in (SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = '35a' AND Verpaechter_ID IS NOT NULL);
+
+	-- SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = 'Geno' AND Verpaechter_ID IS NOT NULL;
 
 END$$
 DELIMITER ;
 
-call important_updates()
+call important_updates();
+
+
+
 
 -- ------------------------------------------------------
 -- Hilfreiche Abfragen
