@@ -312,7 +312,7 @@ def inital_load_fromExcel(doit=False):
         initial_load(data_import_fn, ['IBAN'], stammdaten_schema)
         initial_load(data_import_fn, ['EMail', 'Person_Has_EMail'], stammdaten_schema)
         initial_load(data_import_fn, ['Telefon', 'Person_Has_Telefonnummer'], stammdaten_schema)
-def update_from_excel(filename, sheet_name, attribut, db_connection, verbal=False):
+def inserts_from_excel(filename, sheet_name, attribut, db_connection, verbal=False):
 
     myCursor = db_connection.cursor()
     insert_count = 0
@@ -380,6 +380,37 @@ def update_from_excel(filename, sheet_name, attribut, db_connection, verbal=Fals
 
     print('    .. ', insert_count, 'reord(s) processed!')
     return insert_count
+
+
+def updates_from_excel(filename, sheet_name, db_connection, verbal=False):
+    update_count = 0
+    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
+    print('Updateing eMail, Tel_Nr, IBAN..   ', end='')
+    if verbal:
+        print()
+    df = pd.DataFrame(sheet_data, columns=['ID', 'eMail_ID', 'eMail', 'Tel_Nr_ID', 'Tel_Nr', 'IBAN_ID', 'IBAN'])
+    rec_updated = 0
+    for index, row in df.iterrows():
+        # print()
+        # print(index, row)
+        pers_ID = str(row[0]).replace('.0', '')
+        email_ID = str(row[1]).replace('.0', '')
+        email = str(row[2])
+        if email_ID != 'nan' and email != 'nan':
+            update_count += update_if_neccessary(db_connection, 'email_adressen', email_ID, 'eMail', email, verbal=True)
+
+        tel_nr_ID = str(row[3]).replace('.0', '')
+        tel_nr = str(row[4]).replace(' ', '')
+        if tel_nr_ID != 'nan' and tel_nr != 'nan':
+            update_count += update_if_neccessary(db_connection, 'telefonnummern', tel_nr_ID, 'nummer', tel_nr, verbal=True)
+
+        iban_ID = str(row[5]).replace('.0', '')
+        iban = str(row[6]).replace(' ', '')
+        if iban_ID != 'nan' and iban != 'nan':
+            # print(pers_ID, IBAN_ID, IBAN)
+            update_count += update_if_neccessary(db_connection, 'iban', iban_ID, 'nummer', iban, verbal=True)
+
+    return update_count
 
 def execute_important_sql_queries(db_connection, verbal=False):
     myCursor = db_connection.cursor()
@@ -456,12 +487,49 @@ def initial_load_pachtland(filename, db_connection, verbal=False):
         print(f'   -> {landteil_count:5d}', )
         # break
 
+def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, verbal=False):
+    verbal = False
+    myCursor = db_connection.cursor()
+    records_changed = 0
+    if verbal:
+        print(tbl_name, id, field_name, field_value)
+
+    if tbl_name == 'email_adressen':
+        sql_select = f'SELECT {field_name} FROM {tbl_name} WHERE id={id}'
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        if field_value != myresult[0][0]:
+            records_changed = 1
+            print(tbl_name, '::  old: ', myresult[0][0], '   new:', field_value)
+            sql_update = f"UPDATE {tbl_name} SET {field_name} = '{field_value}' WHERE id={id}"
+            print(sql_update, end='\n\n')
+            myCursor.execute(sql_update)
+            db_connection.commit()
+    if tbl_name == 'telefonnummern':
+        sql_select = f'SELECT vorwahl,{field_name} FROM {tbl_name} WHERE id={id}'
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        old_nummer = myresult[0][1]
+        old_nummervorwahl = myresult[0][0]
+        if old_nummervorwahl + old_nummer != field_value:
+            records_changed = 1
+            print(tbl_name, '::  old: ', old_nummervorwahl + old_nummer, '   new:', field_value)
+            sql_update = f"UPDATE {tbl_name} SET Vorwahl = '{field_value[0:3]}', Nummer = '{field_value[3:]}' WHERE id={id}"
+            print(sql_update, end='\n\n')
+            myCursor.execute(sql_update)
+            db_connection.commit()
+    if tbl_name == 'iban':
+        sql_select = f'SELECT {field_name} FROM {tbl_name} WHERE id={id}'
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        print(myresult[0][0].replace(' ', ''))
+    return records_changed
 
 def get_personen_id(db_connection, such_kriterien, verbal=False):
     verbal = True
     myCursor = db_connection.cursor()
     if verbal:
-        print('get_personen_id', str(such_kriterien), '    ',end='')
+        print('get_personen_id', str(such_kriterien), '    ', end='')
 
     where_clauses = []
     for a_such_kriterium in such_kriterien:
@@ -501,7 +569,7 @@ if __name__ == '__main__':
     connect_to_prod = False
     if connect_to_prod:
         stammdaten_schema = db_connect(host='192.168.253.24',
-                                       port=3310,
+                                       port=3311,
                                        schema='genossame_wangen',
                                        user="root",
                                        password="Gen_88-mysql",
@@ -519,6 +587,8 @@ if __name__ == '__main__':
     data_update_fn = r'V:\Genossame_Wangen_Daten_Kopie.xlsx'
     data_import_fn = r'V:\Genossame_Wangen_Daten.xlsx'
     data_update_fn = r'V:\Genossame_Wangen_Daten.xlsx'
+    data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Alt\Genossame_Wangen_Daten_IBAN_EMAIL_TELNR_2023_05_27.xlsx'
+
 
     pachlandzuteilung_fn = r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_05_22.xlsx'
 
@@ -526,12 +596,12 @@ if __name__ == '__main__':
     if do_initial_load:
         inital_load_fromExcel(doit=True)
 
-    do_update_from_reco = False
-    if do_update_from_reco:
+    do_inserts_from_reco = False
+    if do_inserts_from_reco:
         rc = 0
-        rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
-        rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
-        rc += update_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'IBAN',  stammdaten_schema, verbal=True)
+        rc += inserts_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
+        rc += inserts_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
+        rc += inserts_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'IBAN', stammdaten_schema, verbal=True)
 
         execute_important_sql_queries(stammdaten_schema)
 
@@ -541,6 +611,13 @@ if __name__ == '__main__':
             print('\n\n===> No changes found in', data_update_fn)
 
 
-    do_initial_load_pachtland = True
+    do_updates_from_reco = True
+    if do_updates_from_reco:
+        rc = 0
+        rc += updates_from_excel(data_update_fn, 'Updates_email_telnr_iban', stammdaten_schema, verbal=True)
+
+
+
+    do_initial_load_pachtland = False
     if do_initial_load_pachtland:
         initial_load_pachtland(pachlandzuteilung_fn, stammdaten_schema, verbal=True)

@@ -1285,12 +1285,14 @@ CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
 DROP VIEW IF EXISTS Unbereinigt_Email_TelNr_IBAN; 
 CREATE VIEW Unbereinigt_Email_TelNr_IBAN AS
     SELECT
-        *, 
-        '' AS Geaender 
+        *
     FROM Bürger_Lebend
-    WHERE eMail  IS NULL OR
-          Tel_Nr IS NULL OR
-          IBAN   IS NULL
+	-- WHERE eMail  IS NULL OR eMail  = '' OR
+    --       Tel_Nr IS NULL OR Tel_Nr = '' OR
+    --       IBAN   IS NULL OR IBAN   = ''
+    WHERE eMail_ID  IS NULL OR
+          Tel_Nr_ID IS NULL OR
+          IBAN_ID   IS NULL
     ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------    
