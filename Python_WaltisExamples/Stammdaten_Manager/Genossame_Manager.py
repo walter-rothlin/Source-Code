@@ -494,13 +494,14 @@ def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, v
     if verbal:
         print(tbl_name, id, field_name, field_value)
 
-    if tbl_name == 'email_adressen':
+    if tbl_name == 'email_adressen' or tbl_name == 'iban':
         sql_select = f'SELECT {field_name} FROM {tbl_name} WHERE id={id}'
         myCursor.execute(sql_select)
         myresult = myCursor.fetchall()
-        if field_value != myresult[0][0]:
+        old_value = myresult[0][0].replace(' ', '')
+        if field_value != old_value:
             records_changed = 1
-            print(tbl_name, '::  old: ', myresult[0][0], '   new:', field_value)
+            print(tbl_name, '::  old: ', old_value, '   new:', field_value, '  id:', id)
             sql_update = f"UPDATE {tbl_name} SET {field_name} = '{field_value}' WHERE id={id}"
             print(sql_update, end='\n\n')
             myCursor.execute(sql_update)
@@ -518,11 +519,6 @@ def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, v
             print(sql_update, end='\n\n')
             myCursor.execute(sql_update)
             db_connection.commit()
-    if tbl_name == 'iban':
-        sql_select = f'SELECT {field_name} FROM {tbl_name} WHERE id={id}'
-        myCursor.execute(sql_select)
-        myresult = myCursor.fetchall()
-        print(myresult[0][0].replace(' ', ''))
     return records_changed
 
 def get_personen_id(db_connection, such_kriterien, verbal=False):
@@ -606,16 +602,20 @@ if __name__ == '__main__':
         execute_important_sql_queries(stammdaten_schema)
 
         if rc > 0:
-            print('\n\n---> Update All in', data_update_fn)
+            print('\n\n---> All insert in', data_update_fn)
         else:
-            print('\n\n===> No changes found in', data_update_fn)
+            print('\n\n===> No inserts found in', data_update_fn)
 
 
-    do_updates_from_reco = True
+    do_updates_from_reco = False
     if do_updates_from_reco:
         rc = 0
         rc += updates_from_excel(data_update_fn, 'Updates_email_telnr_iban', stammdaten_schema, verbal=True)
 
+        if rc > 0:
+            print('\n\n---> All updates in', data_update_fn)
+        else:
+            print('\n\n===> No updates found in', data_update_fn)
 
 
     do_initial_load_pachtland = False
