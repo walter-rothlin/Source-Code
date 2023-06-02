@@ -11,6 +11,7 @@
 -- 11-May-2023   Walter Rothlin      Connect to Excel, add more Names and extend view
 -- 25-May-2023   Walter Rothlin      Create view
 -- 01-Jun-2023   Walter Rothlin      Added Anrede (Rohdaten + Fct)
+-- 08-Jun_2023   Walter Rothlin      Ländercode und CH-8855 Wangen hinzufügen
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
