@@ -9,7 +9,7 @@
 -- History:
 -- 22-Apr-2023   Walter Rothlin      Initial Version, Reveresed Enginiering
 -- 26-May-2023   Walter Rothlin      Create view and function
--- 02-Jun-2023   Walter Rothlin      Added Anrede (Rohdaten + Fct)
+-- 02-Jun-2023   Walter Rothlin      Added Anrede (Rohdaten + Fct) 
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
