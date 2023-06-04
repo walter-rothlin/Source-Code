@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Everything with class= is Bootstrap stuff, so it looks nice  -->
+<!-- Copied from Corey Schafer https://www.youtube.com/@coreyms -->
+    <div class="content-section">
+        <!-- novalidate is needed because validation is done with below code -->
+        <form method="POST" action="" novalidate>
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Log In</legend>
+                <!-- Email Field and validation -->
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    <!-- If the form does not validate correctly, display the error(s) below the field -->
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    <!-- If the form validates correctly, show the field without error(s)-->
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <!-- Password Field and validation -->
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label") }}
+                    <!-- If the form does not validate correctly, display the error(s) below the field -->
+                    {% if form.password.errors %}
+                        {{ form.password(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    <!-- If the form validates correctly, show the field without error(s)-->
+                    {% else %}
+                        {{ form.password(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <!-- Submit Button -->
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

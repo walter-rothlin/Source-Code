@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+    <h1>Login</h1>
+
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+
+    <form method="POST" action="/login">
+        <label for="email">E-Mail:</label>
+        <input type="text" id="email" name="email" required value="{{ email }}"><br><br>
+
+        <label for="password">Passwort:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <input type="submit" value="Einloggen">
+    </form>
+{% endblock %}

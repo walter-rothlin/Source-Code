@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+   <div class="container">
+        <h3>Möchten Sie sich definitiv abmelden?</h3>
+        <form method="POST" action="{{ url_for('logout') }}">
+            <input type="submit" class="btn btn-primary" name="action" value="logout">
+            <input type="submit" class="btn btn-secondary" name="action" value="Angemeldet bleiben">
+        </form>
+    </div>
+{% endblock %}

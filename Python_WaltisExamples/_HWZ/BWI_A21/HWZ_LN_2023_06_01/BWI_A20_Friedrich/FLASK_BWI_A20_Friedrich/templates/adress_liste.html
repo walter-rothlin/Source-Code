@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Adress Liste{% endblock %}
+
+{% block content %}
+  <h1>Adress Liste</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Street</th>
+        <th>City</th>
+        <th>Post Code</th>
+        <th>Country</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>123 Main St</td>
+        <td>Cityville</td>
+        <td>12345</td>
+        <td>Country A</td>
+      </tr>
+      <tr>
+        <td>456 Elm St</td>
+        <td>Townsville</td>
+        <td>67890</td>
+        <td>Country B</td>
+      </tr>
+    </tbody>
+  </table>
+{% endblock %}

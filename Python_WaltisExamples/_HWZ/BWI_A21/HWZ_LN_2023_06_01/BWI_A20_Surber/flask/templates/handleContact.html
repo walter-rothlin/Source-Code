@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h3>The user named "{{user_name}}" </h3>
+    <p>The user email is "{{user_email}}"</p>
+    <p>The user email is "{{user_message}}"</p>
+{% endblock %}
+
+
+{% block nav %}
+    <ul class="menu">
+        <li class="menu__item"><a class="menu__item-link" href="/">Home</a></li>
+        <li class="menu__item"><a class="menu__item-link active" href="kontakt">Kontakt</a></li>
+        <li class="menu__item"><a class="menu__item-link" href="login">Login</a></li>
+    </ul>
+{% endblock %}

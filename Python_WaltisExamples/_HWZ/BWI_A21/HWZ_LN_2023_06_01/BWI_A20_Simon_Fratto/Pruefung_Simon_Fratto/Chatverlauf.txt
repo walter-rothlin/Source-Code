@@ -1,0 +1,31 @@
+[18:08] Fratto Simon (BWI-A20)
+Hallo Walti, 
+Logout-Anforderung: "und es erscheint wieder die Login Möglichkeit." --> Heisst das, dass der Menupunkt <Login> nach dem Anmelden ausgeblendet werden muss? Oder soll man nach dem Logout auf den Login Screen weiterleiten?
+
+[18:15] Rothlin Walter (HWZ-Doz)
+Nach dem Login wird der Menupunkt auf Logout gewechselt und nach dem Logout verschwindet die logout Möglichkeit und es erscheint wieder der Login Punkt!
+
+[18:16] Fratto Simon (BWI-A20)
+Okay, 
+Ws muss erfüllt sein, damit die Seite für dich als Responsive gilt? Hat ja viel zu wenig Inhalt um da gross was anzupassen.
+
+[18:17] Rothlin Walter (HWZ-Doz)
+Das Menu sollte je nach Bildschirmauflösung sich anpassen.
+
+[18:18] Fratto Simon (BWI-A20)
+und wenn mein menu Vertikal ist und nicht horizontal?
+
+[18:19] Rothlin Walter (HWZ-Doz)
+Auch dann könnte es sinnvoll sein, das Menu durch einen Menu-Knopf zu ersetzen.
+
+[18:20] Fratto Simon (BWI-A20)
+okay
+
+[19:47] Fratto Simon (BWI-A20)
+Ist das mit dem Mail versenden in Zusatzaufgabe 4 eine ernst gemeinte Aufgabenstellung? Wir haben ja keinen Mailserver und Meine Private Mailadresse will ich nicht nutzen.
+
+[19:51] Rothlin Walter (HWZ-Doz)
+Verstehe ich, kannst aber auch ein Mock-Up machen.
+
+[19:51] Fratto Simon (BWI-A20)
+okay

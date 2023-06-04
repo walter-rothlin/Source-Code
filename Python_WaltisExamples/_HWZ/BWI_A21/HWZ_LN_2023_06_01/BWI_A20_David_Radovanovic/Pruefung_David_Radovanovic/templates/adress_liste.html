@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+<body>
+    <form method="POST" style="margin-top: 20px;">
+        <input type="text" name="lastName" placeholder="Nachname" required style="display: block; margin-bottom: 10px;">
+        <input type="text" name="firstName" placeholder="Vorname" required style="display: block; margin-bottom: 10px;">
+        <input type="text" name="adresse" placeholder="Adresse" required style="display: block; margin-bottom: 10px;">
+        <input type="number" name="nummer" placeholder="Nummer" required style="display: block; margin-bottom: 10px;">
+        <input type="submit" value="Hinzufügen">
+    </form>
+    <ul style="margin-top: 20px;">
+        <h1>{{ data.Uberschrift}}</h1>
+        {% for entry in data['adress_data'] %}
+            <li>{{ entry['key'] }} - {{ entry['lastName'] }}, {{ entry['firstName'] }}, {{ entry['adresse'] }}, {{ entry['nummer'] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Registrieren</h1>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+    <form method="post" action="{{ url_for('register') }}">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required><br>
+        <label for="password">Passwort:</label>
+        <input type="password" id="password" name="password" required><br>
+        <input type="submit" value="Registrieren">
+    </form>
+{% endblock %}

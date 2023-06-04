@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>base</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</head>
+<body>
+    <div>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <div class="dropdown">
+                <button class="dropbtn">Weitere Seiten</button>
+                <div class="dropdown-content">
+                    <a href="/kontakt">Kontakt</a>
+                    {% if username %}
+                    <a href="/adress_liste">Adress Liste</a>
+                    <a href="/logout">Logout</a>
+                    {% else %}
+                    <a href="/login">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if username %}
+            <a class="username">Hello {{ username }}</a>
+            {% endif %}
+        </nav>
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

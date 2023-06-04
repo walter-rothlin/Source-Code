@@ -1,0 +1,22 @@
+body {
+    background-color: #FFE9D6;
+    font-family:arial, "lucida console", sans-serif;
+}
+
+hr {
+    border-style: none;
+    border-top-style: dotted;
+    border-color: #7b607b;
+    border-width: 7px;
+    width: 5%;
+}
+
+h1 {
+    color:#de8971;
+    font-family:arial, "lucida console", sans-serif;
+}
+
+h2 {
+    color:#7b6079;
+    font-family:arial, "lucida console", sans-serif;
+}

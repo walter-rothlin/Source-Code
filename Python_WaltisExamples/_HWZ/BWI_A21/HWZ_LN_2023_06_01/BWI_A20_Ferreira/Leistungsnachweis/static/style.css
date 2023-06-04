@@ -1,0 +1,29 @@
+/* style.css */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+
+.navbar a {
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.username {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+    padding: 5px;
+}
