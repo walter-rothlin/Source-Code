@@ -306,12 +306,12 @@ def initial_load(inport_excel_fn, tables_to_load, db_connection):
                                    db_tbl_name='personen_has_telefonnummern')
             print(resultat)
 
-def inital_load_fromExcel(doit=False):
+def inital_load_fromExcel(input_fn, db_connection, doit=False):
     if doit:
-        initial_load(data_import_fn, ['Länder', 'Orte', 'Adressen', 'Personen'], stammdaten_schema)
-        initial_load(data_import_fn, ['IBAN'], stammdaten_schema)
-        initial_load(data_import_fn, ['EMail', 'Person_Has_EMail'], stammdaten_schema)
-        initial_load(data_import_fn, ['Telefon', 'Person_Has_Telefonnummer'], stammdaten_schema)
+        initial_load(input_fn, ['Länder', 'Orte', 'Adressen', 'Personen'], db_connection)
+        initial_load(input_fn, ['IBAN'], db_connection)
+        initial_load(input_fn, ['EMail', 'Person_Has_EMail'], db_connection)
+        initial_load(input_fn, ['Telefon', 'Person_Has_Telefonnummer'], db_connection)
 def inserts_from_excel(filename, sheet_name, attribut, db_connection, verbal=False):
 
     myCursor = db_connection.cursor()
@@ -562,7 +562,7 @@ def get_personen_id(db_connection, such_kriterien, verbal=False):
 
 if __name__ == '__main__':
 
-    connect_to_prod = False
+    connect_to_prod = True
     if connect_to_prod:
         stammdaten_schema = db_connect(host='192.168.253.24',
                                        port=3311,
@@ -579,45 +579,49 @@ if __name__ == '__main__':
 
 
 
-    data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Geno_Daten_From_PTA.xlsx'
-    data_update_fn = r'V:\Genossame_Wangen_Daten_Kopie.xlsx'
-    data_import_fn = r'V:\Genossame_Wangen_Daten.xlsx'
-    data_update_fn = r'V:\Genossame_Wangen_Daten.xlsx'
-    data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Alt\Genossame_Wangen_Daten_IBAN_EMAIL_TELNR_2023_05_27.xlsx'
-
-
+    # data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Geno_Daten_From_PTA.xlsx'
+    # data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Alt\Genossame_Wangen_Daten_IBAN_EMAIL_TELNR_2023_05_27.xlsx'
+    # data_update_fn = r'V:\Genossame_Wangen_Daten_Kopie.xlsx'
+    initial_data_fn = r'V:\Geno_Wangen_Daten.xlsx'
+    reco_data_fn = r'V:\PTA_Geno_Wangen_Daten.xlsx'
     pachlandzuteilung_fn = r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_05_22.xlsx'
 
-    do_initial_load = False
-    if do_initial_load:
-        inital_load_fromExcel(doit=True)
+    # Initial Load
+    # ============
+    do_initial_load_buerger = True
+    if do_initial_load_buerger:
+        inital_load_fromExcel(initial_data_fn, stammdaten_schema, doit=True)
 
+    do_initial_load_pachtland = True
+    if do_initial_load_pachtland:
+        initial_load_pachtland(pachlandzuteilung_fn, stammdaten_schema, verbal=True)
+
+
+    # Updates and inserts from Reco
+    # =============================
     do_inserts_from_reco = False
     if do_inserts_from_reco:
         rc = 0
-        rc += inserts_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
-        rc += inserts_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
-        rc += inserts_from_excel(data_update_fn, 'Unbereinigt_email_telnr_iban', 'IBAN', stammdaten_schema, verbal=True)
-
-        execute_important_sql_queries(stammdaten_schema)
+        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
+        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
+        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'IBAN', stammdaten_schema, verbal=True)
 
         if rc > 0:
-            print('\n\n---> All insert in', data_update_fn)
+            print('\n\n---> All insert in', reco_data_fn)
         else:
-            print('\n\n===> No inserts found in', data_update_fn)
-
+            print('\n\n===> No inserts found in', reco_data_fn)
 
     do_updates_from_reco = False
     if do_updates_from_reco:
         rc = 0
-        rc += updates_from_excel(data_update_fn, 'Updates_email_telnr_iban', stammdaten_schema, verbal=True)
+        rc += updates_from_excel(reco_data_fn, 'Updates_email_telnr_iban', stammdaten_schema, verbal=True)
 
         if rc > 0:
-            print('\n\n---> All updates in', data_update_fn)
+            print('\n\n---> All updates in', reco_data_fn)
         else:
-            print('\n\n===> No updates found in', data_update_fn)
+            print('\n\n===> No updates found in', reco_data_fn)
 
+    # Cleanup Date
+    # ============
+    execute_important_sql_queries(stammdaten_schema)
 
-    do_initial_load_pachtland = False
-    if do_initial_load_pachtland:
-        initial_load_pachtland(pachlandzuteilung_fn, stammdaten_schema, verbal=True)
