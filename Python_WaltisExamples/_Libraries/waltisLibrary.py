@@ -240,6 +240,8 @@ def readInt_00(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mu
 
 def convert_str_to_int(int_str, default_value=None):
     try:
+        int_str = int_str.replace(' ', '')
+        int_str = int_str.replace("'", '')
         ret_value = math.floor(float(int_str))
     except Exception:
         ret_value = default_value
@@ -250,6 +252,9 @@ def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must b
     while error:
         try:
             userInputStr = input(prompt)
+            userInputStr = userInputStr.replace(',', '.')
+            userInputStr = userInputStr.replace(' ', '')
+            userInputStr = userInputStr.replace("'", '')
             userInputFloat = float(userInputStr)
             error = False
         except ValueError:
@@ -261,6 +266,9 @@ def readFloat_00(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must 
     error = True
     while error:
         userInputStr = input(prompt)
+        userInputStr = userInputStr.replace(',', '.')
+        userInputStr = userInputStr.replace(' ', '')
+        userInputStr = userInputStr.replace("'", '')
         if re.fullmatch(regEx_Float_Or_Int, userInputStr):
             userInputFloat = float(userInputStr)
             error = False
@@ -279,6 +287,9 @@ def readFloat_1(prompt="Input [Float]:",
     while error:
         try:
             userInputStr = input(prompt)
+            userInputStr = userInputStr.replace(',', '.')
+            userInputStr = userInputStr.replace(' ', '')
+            userInputStr = userInputStr.replace("'", '')
             userInputZahl = float(userInputStr)
             error = False
             if (min is None) and (max is None):
@@ -308,6 +319,9 @@ def readInt_1(prompt="Input [Int]:",
     while error:
         try:
             userInputStr = input(prompt)
+            userInputStr = userInputStr.replace(',', '.')
+            userInputStr = userInputStr.replace(' ', '')
+            userInputStr = userInputStr.replace("'", '')
             userInputZahl = int(userInputStr)
             error = False
             if (min is None) and (max is None):
