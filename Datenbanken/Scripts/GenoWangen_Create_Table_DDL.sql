@@ -368,8 +368,8 @@ CREATE TABLE IF NOT EXISTS `Waermebezueger` (
 DROP TABLE IF EXISTS `Landteile`;
 CREATE TABLE IF NOT EXISTS `Landteile` (
   `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `AV_Parzellen_Nr`      VARCHAR(20) NOT NULL,
-  `GENO_Parzellen_Nr`    VARCHAR(20) NOT NULL,
+  `AV_Parzellen_Nr`      VARCHAR(40) NOT NULL,
+  `GENO_Parzellen_Nr`    VARCHAR(40) NOT NULL,
   `Flur_Bezeichnung`     VARCHAR(20) NULL,
   `Gemeindegebiet_ID`    INT UNSIGNED NULL,
   

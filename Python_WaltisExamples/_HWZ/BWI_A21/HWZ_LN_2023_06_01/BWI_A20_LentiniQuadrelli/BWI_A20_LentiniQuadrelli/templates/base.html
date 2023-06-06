@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <script>
+      // Chatgpt
+      function validateForm(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        var passwordInput = document.getElementById('password-input');
+        var passwordError = document.getElementById('password-error');
+
+        if (passwordInput.value.length < 6) {
+          passwordError.style.display = 'block';
+        } else {
+          passwordError.style.display = 'none';
+          event.target.submit(); // Manually submit the form
+        }
+      }
+</script>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+<nav class="navbar">
+    <ul class="nav-list">
+        <li><a class="nav-link" href="/">🏠 Home</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="#">🔽 andere Seiten 🔽</a>
+            <ul class="dropdown-menu">
+                <li><a href="/kontakt">Kontakt</a></li>
+                {% if username is none %}
+                <li><a href="#" id="myBtn">Login</a></li>
+                {% elif username is not none %}
+                <li><a href="/adress_liste">Adress-Liste</a></li>
+                <li><a href="#" id="logoutBtn">Logout</a></li>
+                {% endif %}
+            </ul>
+        </li>
+
+        {% if username is not none %}
+        <li>🧑‍🚀 Hello {{ username}}!</li>
+        {% else %}
+        <li>👽 Hello Stranger!</li>
+        {% endif %}
+    </ul>
+</nav>
+
+<!-- The Modal https://www.w3schools.com/howto/howto_css_modals.asp -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Login</h2>
+        <form action="/login" method="POST" class="login-form" onsubmit="return validateForm(event)">
+            <input placeholder="Email" type="email" autocomplete="off" name="username">
+            <input placeholder="Passwort" type="password" autocomplete="off" name="password" id="password-input">
+            <span id="password-error" style="color: red; display: none;">Passwort muss länger als 5 sein!</span>
+            <input type="submit" value="Login">
+        </form>
+        <p>Passwort vergessen?</p>
+        <p><a href="reset_password">Passwort zurücksetzen</a></p>
+        <hr>
+        <p>Neu auf unserer Website?</p>
+        <p><a href="registration">Registrieren</a></p>
+    </div>
+
+</div>
+
+
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementById("closeModal")[0];
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
+</script>
+
+
+<div id="LogoutModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" id="closeLogout">&times;</span>
+        <h2>Logout?</h2>
+        <p>Möchtest du dich wirklich ausloggen?</p>
+        <p><a href="/logout">Ja, logge mich aus!</a></p>
+        <p><a href="/" >Nein, ich möchte bleiben!</a></p>
+    </div>
+
+</div>
+
+<script>
+    // Get the logout-modal
+    var modal2 = document.getElementById("LogoutModal");
+
+    // Get the button that opens the modal
+    var btn2 = document.getElementById("logoutBtn");
+
+    // Get the <span> element that closes the modal
+    var span2 = document.getElementById("closeLogout")[0];
+
+    // When the user clicks the button, open the modal
+    btn2.onclick = function () {
+        modal2.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span2.onclick = function () {
+        modal2.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal2) {
+            modal2.style.display = "none";
+        }
+    }
+</script>
+
+{% block body%}
+{% endblock %}
+</body>
+</html>

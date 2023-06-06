@@ -9,6 +9,8 @@
 -- History:
 -- 22-Apr-2023   Walter Rothlin      Initial Version, Reveresed Enginiering
 -- 26-May-2023   Walter Rothlin      Create view and function
+-- 02-Jun-2023   Walter Rothlin      Added Anrede (Rohdaten + Fct) 
+-- 09-Jun_2023   Walter Rothlin      Ländercode und CH-8855 Wangen hinzufügen
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -41,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `Orte` (
 DROP TABLE IF EXISTS `Personen`;
 CREATE TABLE IF NOT EXISTS `Personen` (
   `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Gender`     VARCHAR(10) NULL,
   `Vorname`    VARCHAR(45) NULL,
   `Nachname`   VARCHAR(45) NOT NULL,
   `Strasse`    VARCHAR(45) NULL,
@@ -72,12 +75,25 @@ BEGIN
 END//
 DELIMITER ;
 
+DROP FUNCTION IF EXISTS get_anrede;
+DELIMITER //
+CREATE FUNCTION  get_anrede(p_gender VARCHAR(10), p_name VARCHAR(45)) RETURNS VARCHAR(65)
+BEGIN
+  IF (p_gender = 'Herr') THEN
+	    RETURN  CONCAT('Sehr geehrter ', p_gender, ' ', p_name);
+  ELSE
+	    RETURN  CONCAT('Sehr geehrte ', p_gender, ' ', p_name);
+  END IF;
+END//
+DELIMITER ;
+
 -- Views
 -- =====
 DROP VIEW IF EXISTS `Adressen`;
 CREATE VIEW `Adressen` AS
 	SELECT
 		 pers.id           AS id,
+         pers.Gender       AS Gender,
 		 pers.Vorname      AS Vorname,
 		 pers.Nachname     AS Nachname,
 		 get_strasse_nr(pers.Strasse, pers.Hausnummer)     AS Strasse,
@@ -85,7 +101,10 @@ CREATE VIEW `Adressen` AS
 		 -- adr.Orte_id      AS Orte_ID,
 		 ort.plz          AS PLZ,
 		 ort.Ortsname     AS Ortsname,
-         CONCAT('Sehr geehrter Herr ',pers.Nachname ) AS Anrede
+         -- IF (pers.Gender='Herr',
+         --    CONCAT('Sehr geehrter Herr ',pers.Nachname ),
+         --    CONCAT('Sehr geehrte Frau ',pers.Nachname ))    AS Anrede_old,
+         get_anrede(pers.Gender, pers.Nachname) AS Anrede
 	FROM Personen AS pers
 	INNER JOIN Orte AS ort ON pers.Orte_id = ort.id;
 
@@ -98,8 +117,8 @@ INSERT INTO `Orte` (`ID`, `PLZ`, `Ortsname`) VALUES
    (4,'8853', 'Lachen');
            
            
-INSERT INTO `Personen` (`ID`, `Vorname`, `Nachname`, `Strasse`, `Hausnummer`, `Orte_id`) VALUES 
-   ('1', 'Walter', 'Rothlin', 'Peterliwiese',  '33', '1'),
-   ('2', 'Tobias', 'Rothlin', 'Peterliwiese',  '33', '1'),
-   ('3', 'Max',    'Meier',   'Nördlingerhof', '1d', '2'),
-   ('4', 'Claudia', 'Collet', 'Peterliwiese',  '33', '1');
+INSERT INTO `Personen` (`ID`, `Gender`, `Vorname`, `Nachname`, `Strasse`, `Hausnummer`, `Orte_id`) VALUES 
+   ('1', 'Herr', 'Walter', 'Rothlin', 'Peterliwiese',  '33', '1'),
+   ('2', 'Herr', 'Tobias', 'Rothlin', 'Peterliwiese',  '33', '1'),
+   ('3', 'Herr', 'Max',    'Meier',   'Nördlingerhof', '1d', '2'),
+   ('4', 'Frau', 'Claudia', 'Collet', 'Peterliwiese',  '33', '1');

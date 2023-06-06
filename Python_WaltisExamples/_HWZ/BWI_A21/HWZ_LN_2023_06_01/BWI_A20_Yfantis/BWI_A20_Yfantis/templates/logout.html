@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Logout</h1>
+    <p>Are you sure you want to log out?</p>
+    <form method="POST" action="{{ url_for('logout') }}">
+        <button type="submit" class="logout-button">Logout</button>
+        <a href="{{ url_for('index') }}">Stay logged in</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- The title tag is defined as a block so it can be overridden in templates that extend this one. -->
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- The stylesheet is located in the static directory, and its URL is generated using Flask's url_for function. -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <!-- This is the navigation bar of the website. -->
+    <div class="navbar">
+        <ul>
+            <!-- If the current route is 'index', the Home link gets the 'active' class. -->
+            <li class="{{ 'active' if request.endpoint == 'index' }}"><a href="{{ url_for('index') }}">Home</a></li>
+
+            <!-- This block of code is rendered if a username is provided (i.e., the user is logged in). -->
+            {% if username %}
+                <!-- This is a dropdown menu for other pages. -->
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Other Pages</a>
+                    <div class="dropdown-content">
+                        <!-- These links become 'active' if the current route matches their endpoint. -->
+                        <a class="{{ 'active' if request.endpoint == 'contact' }}" href="{{ url_for('contact') }}">Contact</a>
+                        <a class="{{ 'active' if request.endpoint == 'adress_liste' }}" href="{{ url_for('adress_liste') }}">Adress-Liste</a>
+                    </div>
+                </li>
+                <!-- Logout link, becomes 'active' if the current route is 'logout'. -->
+                <li class="{{ 'active' if request.endpoint == 'logout' }}"><a href="{{ url_for('logout') }}">Logout</a></li>
+                <!-- This displays a welcome message with the username. -->
+                <li class="user"><span>Welcome, {{ username }}</span></li>
+
+            <!-- This block of code is rendered if no username is provided (i.e., the user is not logged in). -->
+            {% else %}
+                <!-- These links become 'active' if the current route matches their endpoint. -->
+                <li class="{{ 'active' if request.endpoint == 'contact' }}"><a href="{{ url_for('contact') }}">Contact</a></li>
+                <li class="{{ 'active' if request.endpoint == 'login' }}"><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    
+    <!-- This is the main container for the page content. -->
+    <div class="container">
+        <!-- Content is defined as a block so it can be overridden in templates that extend this one. -->
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+/* ============= Navbar ============= */
+/* ChatGPT generated and adjusted */
+
+.navbar {
+  background-color: #828db8;
+  padding: 10px;
+  color: #fff;
+}
+
+.nav-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  top: 100%;
+  padding: 10px;
+  top: 100%;
+  left: ;
+  white-space: nowrap;
+  /* ChatGPT to align dropdown to center */
+  left: 50%; /* Center the dropdown menu horizontally */
+  transform: translateX(-50%); /* Center the dropdown menu horizontally */
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu li {
+  list-style-type: none;
+  margin-bottom: 5px;
+}
+
+.dropdown-menu a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ============= MODAL ============= */
+/* Basic: https://www.w3schools.com/howto/howto_css_modals.asp */
+/* Adjusted with ChatGPT */
+
+/* The Modal (background) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 0 auto; /* Center the modal */
+  margin-top: 10%;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px; /* Limit the width on larger screens */
+  text-align: center; /* Center the content horizontally */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.login-form input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+#password-error {
+  color: red;
+  display: none;
+  margin-top: 5px;
+}
+
+.login-form input[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.login-form input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.modal-content p {
+  margin-top: 20px;
+}
+
+.modal-content p a {
+  color: #428bca;
+}
+
+.modal-content hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

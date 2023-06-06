@@ -1,0 +1,38 @@
+/* Add these media queries at the end of your existing CSS code */
+
+/* Small devices (up to 576px) */
+
+  h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+@media (max-width: 576px) {
+  table {
+    font-size: 14px;
+    width: 100%; /* Make the table full width */
+    margin: 0; /* Remove the default margin */
+  }
+}
+
+/* Medium devices (between 576px and 768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+  table {
+    font-size: 16px;
+    width: 100%; /* Make the table full width */
+    margin: 0; /* Remove the default margin */
+  }
+}
+
+/* Large devices (above 768px) */
+@media (min-width: 768px) {
+
+  /* Set the table width to match the width of a 768px device */
+  table {
+    font-size: 18px;
+    width: 768px;
+    margin: 0 auto; /* Center the table horizontally */
+  }
+}
+
+/* Adjust the above values as per your design requirements */

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Kontakt</h1>
+    <hr>
+    <h2>Bei Fragen oder Anliegen steht dir das Rosenberg Team gerne zur Verfügung:</h2>
+    <ul>
+        <li>Telefon: +41 41 345 67 89 </li>
+        <li>E-Mail: kontakt@rosenberg.com</li>
+        <li>Adresse: Bachstrasse 123, 12345 Musterhausen</li>
+    </ul>
+
+    <h2>oder nimm über das Kontaktformular mit uns Kontakt auf:</h2>
+    <form action="mailto:info.rosenberg@outlook.com" method="post" enctype="text/plain">
+        <label>Dein Name:</label>
+        <input type="text" name="deinName" value=""><br>
+        <label>Deine E-Mail:</label>
+        <input type="email" name="deineEmail" value=""><br>
+        <label>Deine Nachricht:</label><br>
+        <textarea name="deineNachricht" rows="10" cols="30"></textarea><br>
+        <input type="submit" name=""><br>
+    </form>
+{% endblock %}

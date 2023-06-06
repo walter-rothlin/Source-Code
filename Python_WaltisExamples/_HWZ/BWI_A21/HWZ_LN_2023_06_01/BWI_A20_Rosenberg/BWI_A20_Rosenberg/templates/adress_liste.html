@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Adressliste{% endblock %}
+
+{% block content %}
+    <h1>Adress-Liste</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Adresse</th>
+                <th>Telefon</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Hans Mustermann</td>
+                <td>Musterweg 7, 12345 Musterstadt</td>
+                <td>1234</td>
+            </tr>
+            <tr>
+                <td>Erika Musterfrau</td>
+                <td>Musterpfad 3, 12345 Musterstadt</td>
+                <td>1234</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
