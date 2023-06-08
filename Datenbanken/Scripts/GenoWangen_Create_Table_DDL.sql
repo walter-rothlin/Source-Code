@@ -9,6 +9,7 @@
 --
 -- History:
 -- 13-May_2023   Walter Rothlin      Splitted file in DDL Tables / Fct, Views, Proc
+-- 08-Jun-2023   Walter Rothlin		 Added fields for Neubürger
 -- ---------------------------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------------------------
@@ -125,34 +126,46 @@ CREATE TABLE IF NOT EXISTS Personen (
   `AHV_Nr`                   VARCHAR(45) NULL,
   `Betriebs_Nr`              VARCHAR(45) NULL,
 
-  `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt','Geschieden','Verwitwet','Wiederverheiratet','Gestorben','Bevormundet','Partnerschaft') DEFAULT NULL,
-  `Kategorien`  SET('Bürger', 'Nutzungsberechtigt', 'Hat_16a', 'Hat_35a', 'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'LWK', 'Forst_Komm', 'Grauer Panter', 
-					'Bewirtschafter', 'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
-                    'Betriebsgemeinschaft', 'Generationengemeinschaft') DEFAULT NULL,
+  `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt',
+                      'Geschieden','Verwitwet','Wiederverheiratet','Gestorben',
+                      'Bevormundet','Partnerschaft') 
+                      DEFAULT NULL,
+
+  `Kategorien`  SET('Bürger', 'Nutzungsberechtigt', 'Hat_16a', 'Hat_35a',
+                    'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat',
+                    'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
+                    'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
+                    'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
+                    'Betriebsgemeinschaft', 'Generationengemeinschaft') 
+                    DEFAULT NULL,
   
   -- Datumsangaben
-  `Geburtstag`                   DATE NULL,
-  `Todestag`                     DATE NULL,
-  `Nach_Wangen_Gezogen`          DATE NULL,
-  `Von_Wangen_Weggezogen`        DATE NULL,
-  `Baulandgesuch_Eingereicht_Am` DATE NULL,
-  `Bauland_Gekauft_Am`           DATE NULL,
-  `Baulandgesuch_Details`        VARCHAR(500) NULL,
-  `Angemeldet_Am`                DATE NULL,
-  `Aufgenommen_Am`               DATE NULL,
-  `Neubürgertag_gemacht_Am`      DATE NULL,
-  `Funktion_Uebernommen_Am`      DATE NULL,
-  `Funktion_Abgegeben_Am`        DATE NULL,
-  `Chronik_Bezogen_Am`           DATE NULL,
+  `Geburtstag`                          DATE NULL,
+  `Todestag`                            DATE NULL,
+  `Nach_Wangen_Gezogen`                 DATE NULL,
+  `Von_Wangen_Weggezogen`               DATE NULL,
+  `Baulandgesuch_Eingereicht_Am`        DATE NULL,
+  `Bauland_Gekauft_Am`                  DATE NULL,
+  `Baulandgesuch_Details`               VARCHAR(500) NULL,
+  `Angemeldet_Am`                       DATE NULL,
+  `Bezahlt_Aufnahme_Gebühr`             FLOAT UNSIGNED NULL,
+  `Aufgenommen_Am`                      DATE NULL,
+  `Sich_Für_Bürgertag_Angemeldet_Am`    DATE NULL,
+  `Neubürgertag_gemacht_Am`             DATE NULL,
+  `Ausbezahlter_Bürgertaglohn`          FLOAT UNSIGNED NULL,
+  `Funktion_Uebernommen_Am`             DATE NULL,
+  `Funktion_Abgegeben_Am`               DATE NULL,
+  `Chronik_Bezogen_Am`                  DATE NULL,
+  `Newsletter_Abonniert_Am`             DATE NULL,
   
    -- FK: Verwandschaft
-  `Partner_ID` 		            INT NULL,
-  `Vater_ID`         		    INT NULL,
-  `Mutter_ID`				    INT NULL,
+  `Partner_ID` 		                   INT NULL,
+  `Vater_ID`         		           INT NULL,
+  `Mutter_ID`				           INT NULL,
   
   -- FK: Adressen
-  `Privat_Adressen_ID`          INT UNSIGNED NULL,
-  `Geschaefts_Adressen_ID`      INT UNSIGNED NULL,
+  `Privat_Adressen_ID`                 INT UNSIGNED NULL,
+  `Geschaefts_Adressen_ID`             INT UNSIGNED NULL,
   
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   -- PK-Constraints

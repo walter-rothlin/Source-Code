@@ -225,10 +225,15 @@ def initial_load(inport_excel_fn, tables_to_load, db_connection):
                                                        'Bauland_Gekauft_Am': {'db_table_attribute_name': 'Bauland_Gekauft_Am'},
                                                        'Baulandgesuch_Details': {'db_table_attribute_name': 'Baulandgesuch_Details'},
                                                        'Angemeldet_Am': {'db_table_attribute_name': 'Angemeldet_Am'},
+                                                       'Bezahlt_Aufnahme_Gebühr': {'db_table_attribute_name': 'Bezahlt_Aufnahme_Gebühr'},
                                                        'Aufgenommen_Am': {'db_table_attribute_name': 'Aufgenommen_Am'},
+                                                       'Sich_Für_Bürgertag_Angemeldet_Am': {'db_table_attribute_name': 'Sich_Für_Bürgertag_Angemeldet_Am'},
+                                                       'Neubürgertag_gemacht_Am': {'db_table_attribute_name': 'Neubürgertag_gemacht_Am'},
+                                                       'Ausbezahlter_Bürgertaglohn': {'db_table_attribute_name': 'Ausbezahlter_Bürgertaglohn'},
                                                        'Funktion_Uebernommen_Am': {'db_table_attribute_name': 'Funktion_Uebernommen_Am'},
                                                        'Funktion_Abgegeben_Am': {'db_table_attribute_name': 'Funktion_Abgegeben_Am'},
                                                        'Chronik_Bezogen_Am': {'db_table_attribute_name': 'Chronik_Bezogen_Am'},
+                                                       'Newsletter_Abonniert_Am': {'db_table_attribute_name': 'Newsletter_Abonniert_Am'},
                                                        'Privat_Adressen_ID': {'db_table_attribute_name': 'Privat_Adressen_ID'},
                                                        'Geschaefts_Adressen_ID': {'db_table_attribute_name': 'Geschaefts_Adressen_ID'},
                                                        'last_update': {'db_table_attribute_name': 'last_update'}
@@ -583,8 +588,8 @@ if __name__ == '__main__':
     # data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Alt\Genossame_Wangen_Daten_IBAN_EMAIL_TELNR_2023_05_27.xlsx'
     # data_update_fn = r'V:\Genossame_Wangen_Daten_Kopie.xlsx'
     initial_data_fn = r'V:\Geno_Wangen_Daten.xlsx'
-    reco_data_fn = r'V:\PTA_Geno_Wangen_Daten.xlsx'
-    pachlandzuteilung_fn = r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_05_22.xlsx'
+    reco_data_fn = r'V:\Geno_Wangen_Daten.xlsx'
+    pachlandzuteilung_fn = r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_06_07.xlsx'
 
     # Initial Load
     # ============

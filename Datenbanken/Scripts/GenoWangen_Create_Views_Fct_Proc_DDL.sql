@@ -9,6 +9,7 @@
 -- History:
 -- 13-May-2023   Walter Rothlin      Splitted file in DDL Tables / Fct, Views, Proc
 -- 25-May-2023   Walter Rothlin      Added Landteilviews
+-- 08-Jun_2023   Walter Rothlin      Added Neubürger
 -- ---------------------------------------------------------------------------------------------
 
 -- To-Does
@@ -601,62 +602,6 @@ DELIMITER ;
 -- ===============================================================================================
 -- == Create Views                                                                              ==
 -- ===============================================================================================
-
-DROP VIEW IF EXISTS PD_Row_Counts; 
-CREATE VIEW PD_Row_Counts AS
-	SELECT
-		'Land'                          AS `Table Name`,
-		(SELECT count(*) FROM `Land`)   AS `Row Count`
-	UNION
-	SELECT
-		'Orte'                          AS `Table Name`,
-		(SELECT count(*) FROM `Orte`)   AS `Row Count`
-	UNION
-	SELECT
-		'Adressen'                          AS `Table Name`,
-		(SELECT count(*) FROM `Adressen`)   AS `Row Count`
-	UNION
-	SELECT
-		'Personen'                          AS `Table Name`,
-		(SELECT count(*) FROM `Personen`)   AS `Row Count`
-	UNION
-	SELECT
-		'IBAN'                          AS `Table Name`,
-		(SELECT count(*) FROM `IBAN`)   AS `Row Count`
-	UNION
-	SELECT
-		'email_adressen'                          AS `Table Name`,
-		(SELECT count(*) FROM `email_adressen`)   AS `Row Count`
-	UNION
-	SELECT
-		'Personen_has_email_adressen'                          AS `Table Name`,
-		(SELECT count(*) FROM `Personen_has_email_adressen`)   AS `Row Count`
-	UNION
-	SELECT
-		'telefonnummern'                          AS `Table Name`,
-		(SELECT count(*) FROM `telefonnummern`)   AS `Row Count`
-	UNION
-	SELECT
-		'Personen_has_telefonnummern'                          AS `Table Name`,
-		(SELECT count(*) FROM `Personen_has_telefonnummern`)   AS `Row Count`
-	UNION
-	SELECT
-		'Landteile'                                            AS `Table Name`,
-		(SELECT count(*) FROM `Landteile`)                     AS `Row Count`
-	;
-
-/*	SELECT 
-		(select COUNT(*) FROM land) rc_land,
-		(select COUNT(*) FROM orte) rc_orte,
-		(select COUNT(*) FROM adressen) rc_adressen,
-		(select COUNT(*) FROM personen) rc_personen,
-		(select COUNT(*) FROM iban) rc_iban,
-		(select COUNT(*) FROM email_adressen) rc_email_adressen,
-		(select COUNT(*) FROM personen_has_email_adressen) rc_personen_has_email_adressen,
-		(select COUNT(*) FROM telefonnummern) rc_telefonnummern,
-		(select COUNT(*) FROM personen_has_telefonnummern) rc_personen_has_telefonnummern;
-*/
--- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Länder; 
 CREATE VIEW Länder AS
 	SELECT
@@ -1105,14 +1050,23 @@ CREATE VIEW Personen_Daten AS
           
           DATE_FORMAT(P.Nach_Wangen_Gezogen,'%d.%m.%Y')                        AS Nach_Wangen_Gezogen,
           DATE_FORMAT(P.Von_Wangen_Weggezogen,'%d.%m.%Y')                      AS Von_Wangen_Weggezogen,
+          
+		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                              AS Angemeldet_Am,
+          DATE_FORMAT(P.Angemeldet_Am,'%Y')                                    AS Angemeldet_Am_Jahr,
+          Bezahlt_Aufnahme_Gebühr                                             AS Bezahlte_Aufnahme_Gebühr,
+          DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                             AS Aufgenommen_Am,
+          DATE_FORMAT(P.Aufgenommen_Am,'%Y')                                   AS Aufgenommen_Am_Jahr,
+          DATE_FORMAT(P.`Sich_Für_Bürgertag_Angemeldet_Am`,'%d.%m.%Y')         AS `Sich_Für_Bürgertag_Angemeldet_Am`,
+          DATE_FORMAT(P.`Neubürgertag_gemacht_Am`,'%d.%m.%Y')                  AS `Neubürgertag_gemacht_Am`,
+          Ausbezahlter_Bürgertaglohn                                           AS Ausbezahlter_Bürgertaglohn,
+          
           DATE_FORMAT(P.Baulandgesuch_Eingereicht_Am,'%d.%m.%Y')               AS Baulandgesuch_Eingereicht_Am,
           DATE_FORMAT(P.Bauland_Gekauft_Am,'%d.%m.%Y')                         AS Bauland_Gekauft_Am,
-          DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                              AS Angemeldet_Am,
-          DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                             AS Aufgenommen_Am,
-          DATE_FORMAT(P.`Neubürgertag_gemacht_Am`,'%d.%m.%Y')                  AS `Neubürgertag_gemacht_Am`,
+
           DATE_FORMAT(P.Funktion_Uebernommen_Am,'%d.%m.%Y')                    AS Funktion_Uebernommen_Am,
           DATE_FORMAT(P.Funktion_Abgegeben_Am,'%d.%m.%Y')                      AS Funktion_Abgegeben_Am,
           DATE_FORMAT(P.Chronik_Bezogen_Am,'%d.%m.%Y')                         AS Chronik_Bezogen_Am,
+          DATE_FORMAT(P.Newsletter_Abonniert_Am,'%d.%m.%Y')                    AS Newsletter_Abonniert_Am,
           
 		  pAdr.Strasse                                 AS Private_Strasse,
 		  pAdr.Hausnummer                              AS Private_Hausnummer,
@@ -1244,7 +1198,8 @@ CREATE VIEW Personen_Daten AS
     ORDER BY Familien_Name, Vorname_Initial;
 
 -- SELECT * FROM Personen_Daten;
-
+-- -----------------------------------------------------
+-- SELECT * FROM Personen_Daten ;
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Personen_Daten_Lebend; 
 CREATE VIEW Personen_Daten_Lebend AS
@@ -1368,8 +1323,8 @@ CREATE VIEW Verpächter AS
         Bemerkungen
 	FROM Personen_Daten
     WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
-          FIND_IN_SET('Hat_35a',        Kategorien) >  0 /* OR
-          `ID` IN (625,416,411,341,340,86,371,226,268,298,100,125) OR
+          FIND_IN_SET('Hat_35a',        Kategorien) >  0 OR
+          `ID` IN (625)   /*,416,411,341,340,86,371,226,268,298,100,125) OR
           `ID` IN (121,84,88,244,303,258,438,350,165,438,119,63,73,94,72) OR
           `ID` IN (135,88,175,224,326,368,322,437,359)  OR
           `ID` IN (261,93,281,369,97,85,293,114,85,259,244,279,182,192,383,119,97,93,281,95,144) */
@@ -1448,8 +1403,32 @@ CREATE VIEW PD_Tel_Email_IBAN AS
 	FROM Personen_Daten AS P
     WHERE Todestag IS NULL;
     -- ORDER BY LastName, Vorname;
-
--- SELECT * FROM Personen_Daten;
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Neubürger_Vorjahr; 
+CREATE VIEW Neubürger_Vorjahr AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  IBAN,
+	  Geburtstag,
+	  `Alter`,
+	  Angemeldet_Am,
+	  Bezahlte_Aufnahme_Gebühr,
+	  Aufgenommen_Am,
+	  Sich_Für_Bürgertag_Angemeldet_Am,
+	  Neubürgertag_gemacht_Am,
+	  Ausbezahlter_Bürgertaglohn,
+	  Partner_ID,
+	  Mutter_ID,
+	  Vater_ID
+	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = '2022';
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
@@ -1528,6 +1507,112 @@ CREATE VIEW Pachtlandzuteilung AS
     LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_ID     = Paechter_Adr.ID
 	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_ID  = Verpaechter_Adr.ID;
 
+-- --------------------------------------------------------------------------------    
+DROP VIEW IF EXISTS PD_Row_Counts; 
+CREATE VIEW PD_Row_Counts AS
+	SELECT
+		'Land'                          AS `Table Name`,
+		(SELECT count(*) FROM `Land`)   AS `Row Count`
+	UNION
+	SELECT
+		'Orte'                          AS `Table Name`,
+		(SELECT count(*) FROM `Orte`)   AS `Row Count`
+	UNION
+	SELECT
+		'Adressen'                          AS `Table Name`,
+		(SELECT count(*) FROM `Adressen`)   AS `Row Count`
+	UNION
+	SELECT
+		'Personen'                          AS `Table Name`,
+		(SELECT count(*) FROM `Personen`)   AS `Row Count`
+	UNION
+	SELECT
+		'IBAN'                          AS `Table Name`,
+		(SELECT count(*) FROM `IBAN`)   AS `Row Count`
+	UNION
+	SELECT
+		'email_adressen'                          AS `Table Name`,
+		(SELECT count(*) FROM `email_adressen`)   AS `Row Count`
+	UNION
+	SELECT
+		'Personen_has_email_adressen'                          AS `Table Name`,
+		(SELECT count(*) FROM `Personen_has_email_adressen`)   AS `Row Count`
+	UNION
+	SELECT
+		'Telefonnummern'                          AS `Table Name`,
+		(SELECT count(*) FROM `telefonnummern`)   AS `Row Count`
+	UNION
+	SELECT
+		'Personen_has_telefonnummern'                          AS `Table Name`,
+		(SELECT count(*) FROM `Personen_has_telefonnummern`)   AS `Row Count`
+	UNION
+	SELECT
+		'-----------------------------'                         AS `Table Name`,
+		'---------------'                                       AS `Row Count`
+	UNION
+	SELECT
+		'Landteile Total'                                      AS `Table Name`,
+		(SELECT count(*) FROM `Landteile`)                     AS `Row Count`
+	UNION
+	SELECT
+		'Landteile Genossame'                                  AS `Table Name`,
+		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID = 625)                     AS `Row Count`
+	UNION
+	SELECT
+		'Landteile'                                            AS `Table Name`,
+		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625)                     AS `Row Count`
+	UNION
+	SELECT
+		'------------------------------'                         AS `Table Name`,
+		'----------------'                                       AS `Row Count`
+	UNION
+	SELECT
+		'Verpächter mit 16a Teilen'                            AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0)         AS `Row Count`
+	UNION
+	SELECT
+		'Verpächter mit 35a Teilen'                            AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a',        Kategorien) >  0)         AS `Row Count`
+	UNION
+	SELECT
+		'Verpächter mit 16a und 35a Teilen'                            AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 AND  
+                                               FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
+	UNION
+	SELECT
+		'-------------------------------'                         AS `Table Name`,
+		'-----------------'                                       AS `Row Count`
+	UNION
+	SELECT
+		'Pächter'                                              AS `Table Name`,
+		(SELECT count(*) FROM Pächter )                        AS `Row Count`
+	UNION
+	SELECT
+		'--------------------------------'                   AS `Table Name`,
+		'------------------'                                 AS `Row Count`
+	UNION
+	SELECT
+		'Bezogene Chroniken'                            AS `Table Name`,
+		(SELECT count(*) FROM Personen WHERE Chronik_Bezogen_Am IS NOT NULL)  AS `Row Count`
+	UNION
+	SELECT
+		'Abos Newsletter'                            AS `Table Name`,
+		(SELECT count(*) FROM Personen WHERE Newsletter_Abonniert_Am IS NOT NULL)  AS `Row Count`
+	;
+
+
+/*	SELECT 
+		(select COUNT(*) FROM land) rc_land,
+		(select COUNT(*) FROM orte) rc_orte,
+		(select COUNT(*) FROM adressen) rc_adressen,
+		(select COUNT(*) FROM personen) rc_personen,
+		(select COUNT(*) FROM iban) rc_iban,
+		(select COUNT(*) FROM email_adressen) rc_email_adressen,
+		(select COUNT(*) FROM personen_has_email_adressen) rc_personen_has_email_adressen,
+		(select COUNT(*) FROM telefonnummern) rc_telefonnummern,
+		(select COUNT(*) FROM personen_has_telefonnummern) rc_personen_has_telefonnummern;
+*/
+-- --------------------------------------------------------------------------------    
 -- ===============================================================================================
 -- == Create stored procedures for business (external) write access                             ==
 -- ===============================================================================================
