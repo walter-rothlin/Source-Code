@@ -10,6 +10,7 @@
 -- 13-May-2023   Walter Rothlin      Splitted file in DDL Tables / Fct, Views, Proc
 -- 25-May-2023   Walter Rothlin      Added Landteilviews
 -- 08-Jun_2023   Walter Rothlin      Added Neubürger
+-- 09-Jun_2023   Walter Rothlin      Added Paechterstatistik
 -- ---------------------------------------------------------------------------------------------
 
 -- To-Does
@@ -1219,6 +1220,15 @@ CREATE VIEW Bürger_Lebend AS
     ORDER BY Familien_Name, Vorname;
     
 -- -----------------------------------------------------
+DROP VIEW IF EXISTS Genossenrat; 
+CREATE VIEW Genossenrat AS
+    SELECT
+        *
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0
+    ORDER BY Familien_Name, Vorname;
+    
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Bürger_Nutzungsberechtigt; 
 CREATE VIEW Bürger_Nutzungsberechtigt AS
     SELECT
@@ -1403,6 +1413,7 @@ CREATE VIEW PD_Tel_Email_IBAN AS
 	FROM Personen_Daten AS P
     WHERE Todestag IS NULL;
     -- ORDER BY LastName, Vorname;
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Neubürger_Vorjahr; 
 CREATE VIEW Neubürger_Vorjahr AS
@@ -1430,6 +1441,24 @@ CREATE VIEW Neubürger_Vorjahr AS
 	  Vater_ID
 	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = '2022';
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Newsletter_Abo; 
+CREATE VIEW Newsletter_Abo AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  Geburtstag,
+	  `Alter`,
+      Newsletter_Abonniert_Am
+	FROM Personen_Daten WHERE Newsletter_Abonniert_Am IS NOT NULL;
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
 CREATE VIEW Pachtlandzuteilung AS
@@ -1476,6 +1505,10 @@ CREATE VIEW Pachtlandzuteilung AS
           Paechter_Adr.Tel_Nr                        AS Paechter_Tel_Nr,
           Paechter_Adr.eMail                         AS Paechter_eMail,
           Paechter_Adr.Geburtsjahr                   AS Paechter_Geburtsjahr,
+          Paechter_Adr.Geburtstag                    AS Paechter_Geburtstag,
+          Paechter_Adr.Todestag                      AS Paechter_Todestag,
+          Paechter_Adr.Todesjahr                     AS Paechter_Todesjahr,
+          Paechter_Adr.`Alter`                       AS Paechter_Alter,
           -- Paechter_Adr.Private_Ort                   AS Paechter_Ort,
 
 		  -- Verpächtere Daten
@@ -1493,7 +1526,11 @@ CREATE VIEW Pachtlandzuteilung AS
           Verpaechter_Adr.Private_PLZ_Ort            AS Verpaechter_PLZ_Ort,
           Verpaechter_Adr.Tel_Nr                     AS Verpaechter_Tel_Nr,
           Verpaechter_Adr.eMail                      AS Verpaechter_eMail,
-          Verpaechter_Adr.Geburtsjahr                AS Verpaechter_Geburtsjahr,
+		  Verpaechter_Adr.Geburtsjahr                AS Verpaechter_Geburtsjahr,
+          Verpaechter_Adr.Geburtstag                 AS Verpaechter_Geburtstag,
+          Verpaechter_Adr.Todestag                   AS Verpaechter_Todestag,
+          Verpaechter_Adr.Todesjahr                  AS Verpaechter_Todesjahr,
+          Verpaechter_Adr.`Alter`                    AS Verpaechter_Alter,
           -- Verpaechter_Adr.Private_Ort                AS Verpaechter_Ort,
           
 		  -- Vertragliche Daten
@@ -1506,6 +1543,62 @@ CREATE VIEW Pachtlandzuteilung AS
 	FROM Landteile AS L
     LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_ID     = Paechter_Adr.ID
 	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_ID  = Verpaechter_Adr.ID;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Paechterstatistik; 
+CREATE VIEW Paechterstatistik AS
+	SELECT Paechter_ID,
+		   Paechter_Geschlecht,
+		   Paechter_Vorname,
+		   Paechter_Name,
+		   Paechter_Strasse,
+		   Paechter_PLZ_Ort,
+           Paechter_Alter,
+		   ROUND(SUM(Flaeche),2)                  AS Geno_Flaeche,
+		   SUM(Geno_Pachtzins_pro_Jahr)  AS Geno_Pachtzins
+	FROM Pachtlandzuteilung
+	WHERE Verpaechter_ID = 625
+	GROUP BY Paechter_ID
+	ORDER BY Paechter_Name;
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Buergerteile; 
+CREATE VIEW Buergerteile AS
+	SELECT Verpaechter_ID,
+		   Verpaechter_Geschlecht,
+		   Verpaechter_Vorname,
+		   Verpaechter_Name,
+		   Verpaechter_Strasse,
+		   Verpaechter_PLZ_Ort,
+           Verpaechter_Geburtstag,
+	       Verpaechter_Todestag,
+           Verpaechter_Alter,
+           Verpaechter_Kategorien,
+           ID                     AS ID,
+           AV_Parzelle,
+           GENO_Parzelle,
+           Flur_Bezeichnung,
+		   Flaeche                AS Flaeche,
+           Paechter_ID,
+		   Paechter_Geschlecht,
+		   Paechter_Vorname,
+		   Paechter_Name,
+		   Paechter_Strasse,
+		   Paechter_PLZ_Ort,
+           Paechter_Kategorien
+	FROM Pachtlandzuteilung
+	WHERE Verpaechter_ID != 625
+    ORDER BY Verpaechter_Name, Verpaechter_Vorname;
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Buergerteile_Speziell; 
+CREATE VIEW Buergerteile_Speziell AS
+	SELECT *
+	FROM Buergerteile
+	WHERE Verpaechter_Todestag != '' OR
+          FIND_IN_SET('Nutzungsberechtigt', Verpaechter_Kategorien) =  0 OR
+          FIND_IN_SET('Bürger',             Verpaechter_Kategorien) =  0
+    ORDER BY Verpaechter_Name, Verpaechter_Vorname;
 
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS PD_Row_Counts; 

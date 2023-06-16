@@ -14,6 +14,7 @@ from Adress_Data import ADRESS_DATA
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from flask_session import Session
 
+
 #Benötigte Parameter für Session
 app = Flask(__name__)
 app.config["SECRET_KEY"] = secrets.token_hex(16)

@@ -526,39 +526,58 @@ def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, v
             db_connection.commit()
     return records_changed
 
-def get_personen_id(db_connection, such_kriterien, verbal=False):
-    verbal = True
+def get_personen_ids(db_connection, such_kriterien, verbal=False, db_table='personen_daten', search_attr='Such_Begriff', select_attributes=['ID', 'Vorname_Initial', 'Familien_Name', 'Private_Strassen_Adresse', 'Private_PLZ_Ort']):
+    verbal = False
     myCursor = db_connection.cursor()
-    if verbal:
-        print('get_personen_id', str(such_kriterien), '    ', end='')
 
-    where_clauses = []
+    prep_such_kriterien = []
     for a_such_kriterium in such_kriterien:
         a_such_kriterium.replace(' - ', '-')
         split_liste = a_such_kriterium.split('-')
-        if len(split_liste) == 1:
-            where_clauses.append(f"""Such_Begriff LIKE Binary '%{a_such_kriterium}%'""")
-        else:
-            where_clauses.append(f"""Such_Begriff LIKE Binary '%{split_liste[0]}%'""")
-            where_clauses.append(f"""Such_Begriff LIKE Binary '%{split_liste[1]}%'""")
+        for an_item in split_liste:
+            prep_such_kriterien.append(an_item)
 
-    where_clause_str = ' AND \n'.join(where_clauses)
+    if verbal:
+        print('get_personen_id', str(prep_such_kriterien))
+
+    where_clauses = []
+    for a_such_kriterium in prep_such_kriterien:
+        where_clauses.append(f"{search_attr} LIKE Binary '%{a_such_kriterium}%'")
+
+    where_clause_str = ' AND\n                  '.join(where_clauses)
     if False:
         print(where_clause_str)
 
     select_person = f"""
-            SELECT ID, Vorname_Initial, Familien_Name, 
-                   Private_Strassen_Adresse, Private_PLZ_Ort
-              FROM personen_daten 
-              WHERE {where_clause_str};
+            SELECT 
+               {','.join(select_attributes)}
+            FROM {db_table} 
+            WHERE {where_clause_str};
     """
-    if False:
+    if verbal:
         print(select_person)
 
-    verpächter_id = None
     myCursor.execute(select_person)
-    myresult = myCursor.fetchall()
-    if True:
+    result_set = myCursor.fetchall()
+    if verbal:
+        print(result_set)
+
+    if len(result_set) == 0 and len(such_kriterien) > 2:
+        # input('recorsive search?')
+        result_set = get_personen_ids(db_connection, such_kriterien[:-1], verbal=verbal, db_table=db_table, search_attr=search_attr, select_attributes=select_attributes)
+
+
+    if len(result_set) > 1:
+        print('Multiple found')
+        # input('weiter?')
+
+    return result_set
+
+def get_personen_id(db_connection, such_kriterien, verbal=False):
+    myresult = get_personen_ids(db_connection, such_kriterien, verbal=verbal)
+
+    verpächter_id = None
+    if verbal:
         print("Records found:", len(myresult), myresult, '\n')
     if myresult == 1:
         verpächter_id = myresult[0][0]
@@ -593,40 +612,113 @@ if __name__ == '__main__':
 
     # Initial Load
     # ============
-    do_initial_load_buerger = True
-    if do_initial_load_buerger:
-        inital_load_fromExcel(initial_data_fn, stammdaten_schema, doit=True)
+    do_intial_load = False
+    if do_intial_load:
+        do_initial_load_buerger = True
+        if do_initial_load_buerger:
+            inital_load_fromExcel(initial_data_fn, stammdaten_schema, doit=True)
 
-    do_initial_load_pachtland = True
-    if do_initial_load_pachtland:
-        initial_load_pachtland(pachlandzuteilung_fn, stammdaten_schema, verbal=True)
+        do_initial_load_pachtland = True
+        if do_initial_load_pachtland:
+            initial_load_pachtland(pachlandzuteilung_fn, stammdaten_schema, verbal=True)
 
 
     # Updates and inserts from Reco
     # =============================
-    do_inserts_from_reco = False
-    if do_inserts_from_reco:
-        rc = 0
-        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
-        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
-        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'IBAN', stammdaten_schema, verbal=True)
+    do_reco = False
+    if do_reco:
+        do_inserts_from_reco = True
+        if do_inserts_from_reco:
+            rc = 0
+            rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=True)
+            rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=True)
+            rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'IBAN', stammdaten_schema, verbal=True)
 
-        if rc > 0:
-            print('\n\n---> All insert in', reco_data_fn)
-        else:
-            print('\n\n===> No inserts found in', reco_data_fn)
+            if rc > 0:
+                print('\n\n---> All insert in', reco_data_fn)
+            else:
+                print('\n\n===> No inserts found in', reco_data_fn)
 
-    do_updates_from_reco = False
-    if do_updates_from_reco:
-        rc = 0
-        rc += updates_from_excel(reco_data_fn, 'Updates_email_telnr_iban', stammdaten_schema, verbal=True)
+        do_updates_from_reco = True
+        if do_updates_from_reco:
+            rc = 0
+            rc += updates_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', stammdaten_schema, verbal=True)
 
-        if rc > 0:
-            print('\n\n---> All updates in', reco_data_fn)
-        else:
-            print('\n\n===> No updates found in', reco_data_fn)
+            if rc > 0:
+                print('\n\n---> All updates in', reco_data_fn)
+            else:
+                print('\n\n===> No updates found in', reco_data_fn)
+
+    # Newsletter Daten migrieren
+    do_reco_Newsletter_set_id = True
+    if do_reco_Newsletter_set_id:
+        print('\n\n\n======> Newsletter Daten migrieren')
+        excel_file = r"V:\EDV\Newsletter\MailadressenGenossenbürger.xlsx"
+        excel_sheet = 'Mailadressen aktuell'
+        workbook = openpyxl.load_workbook(excel_file, data_only=True)
+        worksheet_sheet = workbook[excel_sheet]
+
+        row = 2
+        while worksheet_sheet["B"+str(row)].value is not None:
+            if (worksheet_sheet["A"+str(row)].value is None) or (worksheet_sheet["A" + str(row)].value == '?') or (',' in str(worksheet_sheet["A" + str(row)].value)):
+                such_kriterien = []
+                such_kriterien.append(worksheet_sheet["B"+str(row)].value)
+                such_kriterien.append(worksheet_sheet["D" + str(row)].value)
+                if worksheet_sheet["C" + str(row)].value is not None:
+                    such_kriterien.append(worksheet_sheet["C" + str(row)].value)
+                elif worksheet_sheet["E" + str(row)].value is not None:
+                    strasse = worksheet_sheet["E" + str(row)].value
+                    strasse = strasse.replace('strasse', 'str.')
+                    such_kriterien.append(strasse)
+                # print(get_personen_id(stammdaten_schema, such_kriterien, verbal=False))
+                people_found = get_personen_ids(stammdaten_schema, such_kriterien, verbal=False)
+
+                ids = []
+                for aRec in people_found:
+                    ids.append(str(aRec[0]))
+                ids_str = ','.join(ids)
+                if len(ids) == 1:
+                    worksheet_sheet["A" + str(row)] = str(ids[0])
+
+                elif len(ids) == 0:
+                    print('--> ', str(such_kriterien))
+                    worksheet_sheet["A" + str(row)] = '?'
+
+                else:
+                    worksheet_sheet["A" + str(row)] = ids_str
+                    print('==> ', str(such_kriterien))
+                    worksheet_sheet["J" + str(row)] = str(people_found)
+                    print('people_found (', len(people_found), '):', people_found,  end='\n\n\n')
+
+            row += 1
+        workbook.save(excel_file)
+        workbook.close()
+
+        # do compare and take over
+        print('\n\n\n======> Compare and take over Data')
+        workbook = openpyxl.load_workbook(excel_file, data_only=True)
+        worksheet_sheet = workbook[excel_sheet]
+        row = 2
+        while worksheet_sheet["B"+str(row)].value is not None:
+            pers_id = worksheet_sheet["A" + str(row)].value
+            if (pers_id is not None) and (pers_id != '?') and (',' not in str(pers_id)):
+                    geb_datum = worksheet_sheet["F" + str(row)].value
+                    eMail_adr = worksheet_sheet["G" + str(row)].value
+                    Natel_Nr = worksheet_sheet["H" + str(row)].value
+                    bemerkungen = worksheet_sheet["I" + str(row)].value
+                    print('+++++', pers_id, geb_datum, eMail_adr, Natel_Nr, bemerkungen)
+                    if geb_datum is not None:
+
+                    input('weiter_2')
+
+            row += 1
+        workbook.save(excel_file)
+        workbook.close()
+
+
+
 
     # Cleanup Date
     # ============
-    execute_important_sql_queries(stammdaten_schema)
+    # execute_important_sql_queries(stammdaten_schema)
 

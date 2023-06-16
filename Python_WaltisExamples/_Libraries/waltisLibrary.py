@@ -1072,50 +1072,63 @@ def getPrevPrimzahl(zahl):
             aZahl = aZahl - 2
     return aZahl
 
-
-def getPrimezahlenListe(start, end, sep=";"):
-    retStr = ""
+def getPrimezahlenListeAsListe(start, end):
+    ret_list = []
     for i in range(start, end + 1):
         if (isPrimzahl(i)):
-            retStr = retStr + sep + str(i)
-    retStr = retStr[-(len(retStr) - len(sep)):]
-    return retStr
+            ret_list.append(i)
+    return ret_list
+
+def getPrimezahlenListeAsString(start, end, sep=";"):
+    string_list = [str(num) for num in getPrimezahlenListeAsListe(start, end)]
+    return sep.join(string_list)
+
+def getPrimezahlenListe(start, end, sep=";"):
+    return getPrimezahlenListeAsString(start, end, sep=";")
 
 
-def getPrimfactors(zahl, sep=";"):
-    retStr = ""
+def getPrimfactorsAsList(zahl):
+    ret_list = []
     aZahl = abs(zahl)
     aDivisor = 2
-    if (zahl == 1):
-        retStr = "1"
+    if zahl == 1 or zahl == 2:
+        ret_list = [zahl]
     else:
-        if (zahl == 2):
-            retStr = "2"
-        else:
-            while (isPrimzahl(aZahl) == False):
-                if ((aZahl % aDivisor) == 0):
-                    if (aZahl > 1):
-                        retStr = retStr + sep + str(aDivisor)
-                    aZahl = int(aZahl / aDivisor)  # Ganzzahlige division
-                else:
-                    aDivisor = getNextPrimzahl(aDivisor)
-            if (aZahl > 1):
-                retStr = retStr + sep + str(aZahl)
-            retStr = retStr[-(len(retStr) - len(sep)):]
-    return retStr
+        while (isPrimzahl(aZahl) == False):
+            if ((aZahl % aDivisor) == 0):
+                if aZahl > 1:
+                    ret_list.append(aDivisor)
+                aZahl = int(aZahl / aDivisor)  # Ganzzahlige division
+            else:
+                aDivisor = getNextPrimzahl(aDivisor)
+        if aZahl > 1:
+            ret_list.append(aZahl)
+    return ret_list
+
+def getPrimfactorsAsString(zahl, sep=";"):
+    string_list = [str(num) for num in getPrimfactorsAsList(zahl)]
+    return sep.join(string_list)
+
+def getPrimfactors(zahl, sep=";"):
+    return getPrimfactorsAsString(zahl, sep=";")
 
 
-def getDivisors(zahl, sep=";"):
-    retStr = ""
+def getDivisorsAsList(zahl):
+    ret_list = []
     aZahl = abs(zahl)
     aDivisor = 2
     while (aDivisor < aZahl):
         if ((aZahl % aDivisor) == 0):
-            retStr = retStr + sep + str(aDivisor)
+            ret_list.append(aDivisor)
         aDivisor = aDivisor + 1
+    return ret_list
 
-    retStr = retStr[-(len(retStr) - len(sep)):]
-    return retStr
+def getDivisorsAsString(zahl, sep=";"):
+    string_list = [str(num) for num in getDivisorsAsList(zahl)]
+    return sep.join(string_list)
+
+def getDivisors(zahl, sep=";"):
+    return getDivisorsAsString(zahl, sep=";")
 
 
 # Test der Functions primezahlen

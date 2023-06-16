@@ -1,0 +1,1048 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns:xsd=http://www.w3.org/2001/XMLSchema xmlns:xsi=http://www.w3.org/2001/XMLSchema-instance xmlns=http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd>
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>WWIT2-1-6601-230418-16405953-299</MsgId>
+      <CreDtTm>2023-04-18T16:40:59.5489166+02:00</CreDtTm>
+      <NbOfTxs>29</NbOfTxs>
+      <CtrlSum>58577.80</CtrlSum>
+      <InitgPty>
+        <Nm>Genossame Wangen</Nm>
+        <CtctDtls>
+          <Nm>ImmoTop2/W&amp;W IMMO INFORMATIK AG, 8910 Affoltern am Albis</Nm>
+          <Othr>Version 2.6.28.4</Othr>
+        </CtctDtls>
+      </InitgPty>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>LNR001-NR258-ZLS529</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <BtchBookg>true</BtchBookg>
+      <NbOfTxs>29</NbOfTxs>
+      <CtrlSum>58577.80</CtrlSum>
+      <ReqdExctnDt>2023-04-21</ReqdExctnDt>
+      <Dbtr>
+        <Nm>Genossame Wangen</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <IBAN>CH7908731001896322016</IBAN>
+        </Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <ClrSysMmbId>
+            <ClrSysId>
+              <Cd>CHBCC</Cd>
+            </ClrSysId>
+            <MmbId>8731</MmbId>
+          </ClrSysMmbId>
+        </FinInstnId>
+      </DbtrAgt>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR001-ZLS529-ZPS8126</InstrId>
+          <EndToEndId>1/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">301.80</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>AS Aufzüge AG</Nm>
+          <PstlAdr>
+            <StrtNm>Erlistrasse</StrtNm>
+            <BldgNb>3</BldgNb>
+            <PstCd>6403</PstCd>
+            <TwnNm>Küssnacht am Rigi</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH7930781011035057902</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>302010000191626004839218331</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR002-ZLS529-ZPS8102</InstrId>
+          <EndToEndId>2/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">408.00</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>D. Vogt Holzbau GmbH Zimmermann</Nm>
+          <PstlAdr>
+            <StrtNm>Allmeindstrasse</StrtNm>
+            <BldgNb>27</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH5180808005846872163</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Ustrd>23-509</Ustrd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR003-ZLS529-ZPS8099</InstrId>
+          <EndToEndId>3/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">38862.90</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Genossame Wangen</Nm>
+          <PstlAdr>
+            <AdrLine>8855 Wangen SZ</AdrLine>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH5100777001561771945</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Ustrd>05.01.2023</Ustrd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR004-ZLS529-ZPS8103</InstrId>
+          <EndToEndId>4/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">430.80</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Kälin Wärmetechnik AG</Nm>
+          <PstlAdr>
+            <StrtNm>Breitenstrasse</StrtNm>
+            <BldgNb>21</BldgNb>
+            <PstCd>8852</PstCd>
+            <TwnNm>Altendorf</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH3930162001268032017</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>800896000050430000462021005</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR005-ZLS529-ZPS8120</InstrId>
+          <EndToEndId>5/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">27.40</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011541411002</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR006-ZLS529-ZPS8115</InstrId>
+          <EndToEndId>6/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">27.55</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011513021006</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR007-ZLS529-ZPS8119</InstrId>
+          <EndToEndId>7/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">201.95</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011534511009</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR008-ZLS529-ZPS8108</InstrId>
+          <EndToEndId>8/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">253.85</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011524321005</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR009-ZLS529-ZPS8116</InstrId>
+          <EndToEndId>9/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">715.05</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011523601002</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR010-ZLS529-ZPS8109</InstrId>
+          <EndToEndId>10/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">785.90</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011524331006</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR011-ZLS529-ZPS8118</InstrId>
+          <EndToEndId>11/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">809.00</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+           <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+             </Tp>
+              <Ref>000000000015070011519771002</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR012-ZLS529-ZPS8117</InstrId>
+          <EndToEndId>12/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">812.90</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011523611005</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR013-ZLS529-ZPS8110</InstrId>
+          <EndToEndId>13/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">925.95</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011524341009</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR014-ZLS529-ZPS8113</InstrId>
+          <EndToEndId>14/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1024.50</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011530771003</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR015-ZLS529-ZPS8111</InstrId>
+          <EndToEndId>15/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1131.70</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011524351003</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR016-ZLS529-ZPS8107</InstrId>
+          <EndToEndId>16/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1146.80</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011530791004</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR017-ZLS529-ZPS8114</InstrId>
+          <EndToEndId>17/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1805.25</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011524361007</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR018-ZLS529-ZPS8112</InstrId>
+          <EndToEndId>18/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1810.15</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Elektrizitätswerk Wangen</Nm>
+          <PstlAdr>
+            <StrtNm>Seestrasse</StrtNm>
+            <BldgNb>2</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6430000002800115479</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000015070011524371004</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR019-ZLS529-ZPS8105</InstrId>
+          <EndToEndId>19/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1851.55</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Energie Zürichsee Linth AG</Nm>
+          <PstlAdr>
+            <StrtNm>Buechstrasse</StrtNm>
+            <BldgNb>32</BldgNb>
+            <PstCd>8645</PstCd>
+            <TwnNm>Jona</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH6030000001900011326</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000161490004517991008</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR020-ZLS529-ZPS8104</InstrId>
+          <EndToEndId>20/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">37.70</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Diethelm Aufzüge AG</Nm>
+          <PstlAdr>
+            <StrtNm>Glärnischstrasse</StrtNm>
+            <BldgNb>9</BldgNb>
+            <PstCd>8853</PstCd>
+            <TwnNm>Lachen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH4131000170502331000</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000000000000230422207</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR021-ZLS529-ZPS8125</InstrId>
+          <EndToEndId>21/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">457.75</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Hirt Metallbau</Nm>
+          <PstlAdr>
+            <StrtNm>Oberrütelistrasse</StrtNm>
+            <BldgNb>11</BldgNb>
+            <PstCd>8753</PstCd>
+            <TwnNm>Mollis</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH5500700111500212776</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Ustrd>23-1041</Ustrd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR022-ZLS529-ZPS8101</InstrId>
+          <EndToEndId>22/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">15.90</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>BV Landi March Genossenschaft</Nm>
+          <PstlAdr>
+            <StrtNm>Hämmerli</StrtNm>
+            <BldgNb>15</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH0730000002800160834</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000001246660100713143</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR023-ZLS529-ZPS8124</InstrId>
+          <EndToEndId>23/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">782.65</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Storenplus GmbH</Nm>
+          <PstlAdr>
+            <StrtNm>Leuholz</StrtNm>
+            <BldgNb>15</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH243000525010069501C</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000000000000000000303</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR024-ZLS529-ZPS8121</InstrId>
+          <EndToEndId>24/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">369.65</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Krieg Haustechnik GmbH</Nm>
+          <PstlAdr>
+            <StrtNm>Hämmerli</StrtNm>
+            <BldgNb>2f</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH2030777008224581455</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000000000000202312602</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR025-ZLS529-ZPS8122</InstrId>
+          <EndToEndId>25/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">436.70</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Krieg Haustechnik GmbH</Nm>
+          <PstlAdr>
+            <StrtNm>Hämmerli</StrtNm>
+            <BldgNb>2f</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH2030777008224581455</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000000000000202312639</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR026-ZLS529-ZPS8123</InstrId>
+          <EndToEndId>26/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1144.05</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Krieg Haustechnik GmbH</Nm>
+          <PstlAdr>
+            <StrtNm>Hämmerli</StrtNm>
+            <BldgNb>2f</BldgNb>
+            <PstCd>8855</PstCd>
+            <TwnNm>Wangen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH2030777008224581455</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000000000000202313070</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR027-ZLS529-ZPS8106</InstrId>
+          <EndToEndId>27/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">253.30</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>ZAM - Zweckverband Abfallentsorgung March</Nm>
+          <PstlAdr>
+            <StrtNm>Alter Schulhausplatz</StrtNm>
+            <BldgNb>1</BldgNb>
+            <PstCd>8853</PstCd>
+            <TwnNm>Lachen SZ</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+       <CdtrAcct>
+          <Id>
+            <IBAN>CH6530000001870411880</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000000000000000025835</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR028-ZLS529-ZPS8127</InstrId>
+          <EndToEndId>28/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">293.15</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Gemeinde Schübelbach</Nm>
+          <PstlAdr>
+            <StrtNm>Grünhaldenstrasse</StrtNm>
+            <BldgNb>3</BldgNb>
+            <PstCd>8862</PstCd>
+            <TwnNm>Schübelbach</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH7030000001800054877</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Strd>
+            <CdtrRefInf>
+              <Tp>
+                <CdOrPrtry>
+                  <Prtry>QRR</Prtry>
+                </CdOrPrtry>
+              </Tp>
+              <Ref>000000000135230006774921007</Ref>
+            </CdtrRefInf>
+          </Strd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <InstrId>LNR029-ZLS529-ZPS8100</InstrId>
+          <EndToEndId>29/Genossame Wangen</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="CHF">1453.95</InstdAmt>
+        </Amt>
+        <Cdtr>
+          <Nm>Züger André GmbH</Nm>
+          <PstlAdr>
+            <StrtNm>Talstrasse</StrtNm>
+            <BldgNb>75</BldgNb>
+            <PstCd>8852</PstCd>
+            <TwnNm>Altendorf</TwnNm>
+            <Ctry>CH</Ctry>
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <IBAN>CH0200777004377650429</IBAN>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Ustrd>54116</Ustrd>
+        </RmtInf>
+      </CdtTrfTxInf>
+    </PmtInf>
+  </CstmrCdtTrfInitn>
+</Document>

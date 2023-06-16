@@ -11,6 +11,8 @@
 -- 26-May-2023   Walter Rothlin      Create view and function
 -- 02-Jun-2023   Walter Rothlin      Added Anrede (Rohdaten + Fct) 
 -- 09-Jun_2023   Walter Rothlin      Ländercode und CH-8855 Wangen hinzufügen
+-- 16-Jun-2023   Walter Rothlin      Add Telnr
+-- ---------------------------------------------------------------------------------------------
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -57,6 +59,40 @@ CREATE TABLE IF NOT EXISTS `Adressen` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+-- -----------------------------------------------------
+-- Table `Telnr`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Telnr`;
+CREATE TABLE IF NOT EXISTS `Telnr` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `int_vorwahl` VARCHAR(6)  NULL,
+  `vorwahl`     VARCHAR(4)  NOT NULL,
+  `telnr`       VARCHAR(10) NOT NULL,
+  `endgeraet`   VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+
+-- -----------------------------------------------------
+-- Table `adressen_has_Telnr`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `adressen_has_Telnr`;
+CREATE TABLE IF NOT EXISTS `adressen_has_Telnr` (
+  `adressen_id` INT UNSIGNED NOT NULL,
+  `Telnr_id`    INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`adressen_id`, `Telnr_id`),
+  INDEX `fk_adressen_has_Telnr_Telnr1_idx` (`Telnr_id` ASC) VISIBLE,
+  INDEX `fk_adressen_has_Telnr_adressen1_idx` (`adressen_id` ASC) VISIBLE,
+  CONSTRAINT `fk_adressen_has_Telnr_adressen1`
+    FOREIGN KEY (`adressen_id`)
+    REFERENCES `adressen` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_adressen_has_Telnr_Telnr1`
+    FOREIGN KEY (`Telnr_id`)
+    REFERENCES `Telnr` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
 
 -- DML für Test-Daten erfassen
 -- ---------------------------
@@ -79,6 +115,19 @@ VALUES (1, 'Herr', 'Rothlin', 'Walter', 'Peterliwiese', '33', 1),
 	   (3, 'Frau', 'Collet', 'Claudia', 'Blumenweg', '8', 5),
 	   (4, 'Frau', 'Dupont', 'Claudia', 'Rue du ferre', '88', 6);
        
+INSERT INTO `telnr` (`id`, `int_vorwahl`, `vorwahl`, `telnr`, `endgeraet`) 
+VALUES ('1', '+41', '055', '460 14 40', 'Hausanschluss'),
+	   ('2', '+41', '079', '368 66 88', 'Mobile Private'),
+       ('3', '+41', '055', '440 21 71', 'Hausanschluss'),
+       ('4', '+41', '055', '442 13 18', 'Hausanschluss');
+
+INSERT INTO `adressen_has_telnr` (`adressen_id`, `Telnr_id`) 
+VALUES ('1', '1'),
+       ('1', '2'),
+       ('2', '1'),
+       ('3', '3'),
+       ('4', '4');
+
 -- Functions
 -- ---------
 SET GLOBAL log_bin_trust_function_creators = 1;
@@ -144,6 +193,37 @@ CREATE VIEW `Adress_Daten` AS
        get_anrede(`a`.`Gender`,`a`.`Name`)   AS `Anrede`
 	   FROM `Adressen`    AS `a`
 	   INNER JOIN `Orte` AS `o` ON `a`.`orte_id` = `o`.`id`;
+
+DROP VIEW IF EXISTS `Telnr_Liste`; 
+CREATE VIEW `Telnr_Liste` AS
+	SELECT
+		 adr_tel.adressen_id       AS adr_id,
+		 adr.Gender                AS Gender,
+		 adr.`Name`                AS Lastname,
+		 adr.Vorname               AS Firstname,
+		 get_strasse_nr(adr.Strasse, 
+						adr.Hausnummer)          AS Strasse_Nr,
+		 -- adr.Strasse               AS Strasse,
+		 -- adr.Hausnummer            AS Hausnummer,
+		 
+		 -- adr.orte_id               AS orte_id,
+		 get_plz_ort(`ort`.`Land_code`,
+					 `ort`.`PLZ`,
+					 `ort`.`Name`)   AS `PLZ_Ort`,
+		 -- ort.PLZ                   AS PLZ,
+		 -- ort.`Name`                AS `Name`,
+		 -- ort.Land_code             AS land_Code,
+		 
+		 -- adr_tel.telnr_id          AS tel_id,
+		 tel.int_vorwahl           AS Int_Vorwahl,
+		 tel.vorwahl               AS Vorwahl,
+		 tel.telnr                 AS Telnr,
+		 tel.endgeraet             AS Endgeraet
+	FROM adressen_has_telnr AS adr_tel
+	INNER JOIN adressen AS adr ON adr_tel.adressen_id = adr.id
+	INNER JOIN telnr    AS tel ON adr_tel.telnr_id    = tel.id
+	INNER JOIN orte     AS ort ON adr.orte_id         = ort.id;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

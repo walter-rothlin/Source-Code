@@ -1,0 +1,20 @@
+
+.table-striped tbody tr:nth-of-type(odd) {
+      background-color: #f1f1f1;
+
+}
+
+body {background-color: white;}
+
+
+#contact table{
+            width: 100%;
+            border-collapse: collapse;
+
+}
+
+#contact  th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
