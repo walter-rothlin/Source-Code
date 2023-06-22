@@ -1,7 +1,0 @@
-# <Name> 04a_log_file.csv </Name> <Datum> 2023-01-02 11:29:47 </Datum>
-Zeitpunkt|Log Level|Ort|Land|Koordinaten|Temperatur|Druck|Feuchtigkeit|Wetterbedingungen|Windstärke|Windrichtung
-2023-01-02 11:31:47|INFO|Uster|CH|8.7209/47.3471|9.92|1020|77|Ein paar Wolken|2.57|140
-2023-01-02 11:31:48|INFO|Uster|CH|8.7209/47.3471|9.92|1020|77|Ein paar Wolken|2.57|140
-2023-01-02 11:31:50|INFO|Uster|CH|8.7209/47.3471|9.92|1020|77|Ein paar Wolken|2.57|140
-2023-01-02 11:31:51|INFO|Uster|CH|8.7209/47.3471|9.92|1020|77|Ein paar Wolken|2.57|140
-2023-01-02 11:31:52|INFO|Uster|CH|8.7209/47.3471|9.92|1020|77|Ein paar Wolken|2.57|140
