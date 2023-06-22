@@ -10,44 +10,10 @@
 #
 # History:
 # 01-Jan-2023   Walter Rothlin      Initial Version
+# 21-Jun-2023   Walter Rothlin      Added Commen_Defs
+#
 # ------------------------------------------------------------------
-import mysql.connector
-import sqlparse
-import csv
-import json
-import pandas as pd
-import openpyxl
-from waltisLibrary import *
-
-# Lambda function to check if a x is from WAHR / FALSCH.
-ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
-ifIntEmpty = lambda x: True if (x == '' or x == 'TRUE') else False
-
-def db_connect(host='localhost', port=3306, schema='stammdaten', user=None, password=None, trace=False):
-    if trace:
-        print("Connecting to " + schema + "@" + host + "....", end="", flush=True)
-    db_connection = mysql.connector.connect(
-          host        = host,
-          port        = port,
-          user        = user,
-          password    = password,
-          database    = schema,
-          auth_plugin = 'mysql_native_password'
-    )
-    if trace:
-        print("completed!")
-    return db_connection
-
-
-def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
-    sql_insert = f'SELECT count(*) FROM {db_tbl_name} '
-    mycursor = db.cursor()
-    mycursor.execute(sql_insert)
-    myresult = mycursor.fetchall()
-    if retValueWithTblName:
-        return {'rows_in_db   (' + db_tbl_name + '):': myresult[0][0]}
-    else:
-        return myresult[0][0]
+from Genossame_Common_Defs import *
 
 
 def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None, db_tbl_name=None, verbal=False, ingnore_sql_error=False):
@@ -417,13 +383,6 @@ def updates_from_excel(filename, sheet_name, db_connection, verbal=False):
 
     return update_count
 
-def execute_important_sql_queries(db_connection, verbal=False):
-    myCursor = db_connection.cursor()
-    print('Calling important updates...', end='')
-    args = ()
-    result_args = myCursor.callproc('important_updates', args)
-    print('done')
-
 def initial_load_pachtland(filename, db_connection, verbal=False):
     print('initial_load_pachtland...reading', pachlandzuteilung_fn)
     myCursor = db_connection.cursor()
@@ -526,82 +485,90 @@ def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, v
             db_connection.commit()
     return records_changed
 
-def get_personen_ids(db_connection, such_kriterien, verbal=False, db_table='personen_daten', search_attr='Such_Begriff', select_attributes=['ID', 'Vorname_Initial', 'Familien_Name', 'Private_Strassen_Adresse', 'Private_PLZ_Ort']):
-    verbal = False
+
+def update_or_insert_value(db_connection, pers_id, attribute_name, value, verbal=False):
+    count_of_inserts = 0
+    count_of_updates = 0
+    count_of_matches = 0
     myCursor = db_connection.cursor()
+    if attribute_name == 'eMai_adressen':
+        sql_select = f'SELECT eMail_adresse, Type, Prio FROM email_liste WHERE Pers_ID={pers_id}'
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        for a_email_adr in myresult:
+            if a_email_adr[0].lower() == value['eMail'].lower():
+                if verbal:
+                    print('Matches: ', a_email_adr[0], value['eMail'])
+                count_of_matches += 1
+                break
+            else:
+                print(f'{pers_id:4s}   DB:', a_email_adr[0])
+                print('New_Value:', value['eMail'], '\n')
+                if verbal:
+                    input('weiter_2')
 
-    prep_such_kriterien = []
-    for a_such_kriterium in such_kriterien:
-        a_such_kriterium.replace(' - ', '-')
-        split_liste = a_such_kriterium.split('-')
-        for an_item in split_liste:
-            prep_such_kriterien.append(an_item)
+    if attribute_name == 'telefon_nummer':
+        sql_select = f'SELECT Tel_Nr, Type, Endgeraet, Prio FROM Telnr_liste WHERE Pers_ID={pers_id}'
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        for a_telnr in myresult:
+            if verbal:
+                print('FromDB  :', a_telnr)
+                print('FromParm:', value)
+            if a_telnr[0].replace(' ', '') == value['tel_nr'].replace(' ', ''):
+                if verbal:
+                    print('Matches: ', a_telnr[0], value['tel_nr'])
+                count_of_matches += 1
+                break
+            else:
+                print(f'{pers_id:4s}   DB:', a_telnr[0])
+                print('New_Value:', value['tel_nr'], '\n')
+                if verbal:
+                    input('weiter_3')
 
-    if verbal:
-        print('get_personen_id', str(prep_such_kriterien))
+    if attribute_name == 'Geburtstag' or attribute_name == 'Newsletter_Abonniert_Am':
+        a_date = str(value['Date'])
+        # print('a_date         :', a_date)
+        dd = a_date[8:10]
+        mm = a_date[5:7]
+        yyyy = a_date[:4]
+        a_date = dd + '.' + mm + '.' + yyyy
+        # print('a_date         :', a_date, '\n\n')
 
-    where_clauses = []
-    for a_such_kriterium in prep_such_kriterien:
-        where_clauses.append(f"{search_attr} LIKE Binary '%{a_such_kriterium}%'")
+        sql_select = f"SELECT DATE_FORMAT({attribute_name},'%d.%m.%Y') FROM Personen WHERE ID={pers_id}"
+        # print(sql_select)
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        # print(myresult)
+        a_date_from_db = myresult[0][0]
+        if verbal:
+            print('FromDB  :', a_date_from_db)
+            print('FromParm:', a_date)
+        if myresult[0][0] == a_date:
+            if verbal:
+                print('Match Date: ', a_date_from_db, a_date)
+            count_of_matches += 1
+        else:
+            sql_update = f"Update Personen SET {attribute_name} = STR_TO_DATE('{a_date}','%d.%m.%Y') WHERE ID={pers_id}"
+            myCursor.execute(sql_update)
+            count_of_updates += myCursor.rowcount
+            db_connection.commit()
+            if verbal:
+                print(f'{pers_id:4s}   DB:', a_date_from_db)
+                print('New_Value:', a_date, '\n')
+                print('sql_select:', sql_update)
+                input('weiter_4')
 
-    where_clause_str = ' AND\n                  '.join(where_clauses)
-    if False:
-        print(where_clause_str)
+    return {'count_of_inserts': count_of_inserts,
+            'count_of_updates': count_of_updates,
+            'count_of_matches': count_of_matches}
 
-    select_person = f"""
-            SELECT 
-               {','.join(select_attributes)}
-            FROM {db_table} 
-            WHERE {where_clause_str};
-    """
-    if verbal:
-        print(select_person)
-
-    myCursor.execute(select_person)
-    result_set = myCursor.fetchall()
-    if verbal:
-        print(result_set)
-
-    if len(result_set) == 0 and len(such_kriterien) > 2:
-        # input('recorsive search?')
-        result_set = get_personen_ids(db_connection, such_kriterien[:-1], verbal=verbal, db_table=db_table, search_attr=search_attr, select_attributes=select_attributes)
-
-
-    if len(result_set) > 1:
-        print('Multiple found')
-        # input('weiter?')
-
-    return result_set
-
-def get_personen_id(db_connection, such_kriterien, verbal=False):
-    myresult = get_personen_ids(db_connection, such_kriterien, verbal=verbal)
-
-    verpächter_id = None
-    if verbal:
-        print("Records found:", len(myresult), myresult, '\n')
-    if myresult == 1:
-        verpächter_id = myresult[0][0]
-
-    return verpächter_id
-
+# -------------------------------------------
+# ++++++++++++ Main Main Main +++++++++++++++
+# -------------------------------------------
 if __name__ == '__main__':
 
-    connect_to_prod = True
-    if connect_to_prod:
-        stammdaten_schema = db_connect(host='192.168.253.24',
-                                       port=3311,
-                                       schema='genossame_wangen',
-                                       user="root",
-                                       password="Gen_88-mysql",
-                                       trace=True)
-    else:
-        stammdaten_schema = db_connect(host='localhost',
-                                       schema='genossame_wangen',
-                                       user="App_User_Stammdaten",
-                                       password="1234ABCD12abcd",
-                                       trace=True)
-
-
+    stammdaten_schema = db_connect(connect_to_prod=True, trace=True)
 
     # data_import_fn = r'C:\Users\Landwirtschaft\Desktop\Geno_Daten_From_PTA.xlsx'
     # data_update_fn = r'C:\Users\Landwirtschaft\Desktop\Genossame_Alt\Genossame_Wangen_Daten_IBAN_EMAIL_TELNR_2023_05_27.xlsx'
@@ -706,10 +673,30 @@ if __name__ == '__main__':
                     eMail_adr = worksheet_sheet["G" + str(row)].value
                     Natel_Nr = worksheet_sheet["H" + str(row)].value
                     bemerkungen = worksheet_sheet["I" + str(row)].value
-                    print('+++++', pers_id, geb_datum, eMail_adr, Natel_Nr, bemerkungen)
-                    if geb_datum is not None:
+                    ## print('+++++', pers_id, geb_datum, eMail_adr, Natel_Nr, bemerkungen)
+                    if geb_datum is None and eMail_adr is None and Natel_Nr  is None and bemerkungen is None:
+                        worksheet_sheet["B" + str(row)].value = ''
+                        worksheet_sheet["C" + str(row)].value = ''
+                        worksheet_sheet["D" + str(row)].value = ''
+                        worksheet_sheet["E" + str(row)].value = ''
 
-                    input('weiter_2')
+                    if eMail_adr is not None and eMail_adr != '':
+                        up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'eMai_adressen', {'eMail': eMail_adr, 'Type': 'Sonstige', 'Prio': 0})
+                        if up_ins_count['count_of_matches'] == 1:
+                            worksheet_sheet["G" + str(row)].value = ''
+                        # print('eMai_adressen', up_ins_count)
+                    if Natel_Nr is not None and Natel_Nr != '':
+                        up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'telefon_nummer', {'tel_nr': Natel_Nr, 'Type': 'Private', 'Endgeraet': 'Mobile', 'Prio': 0})
+                        if up_ins_count['count_of_matches'] == 1:
+                            worksheet_sheet["H" + str(row)].value = ''
+                        # print('telefon_nummer', up_ins_count)
+                    if geb_datum is not None and geb_datum != '':
+                        up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'Geburtstag', {'Date': geb_datum})
+                        if up_ins_count['count_of_matches'] == 1:
+                            worksheet_sheet["F" + str(row)].value = ''
+                        # print('Geburtstag', up_ins_count)
+                    up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'Newsletter_Abonniert_Am', {'Date': '2023.06.20'})
+                    # print('Newsletter_Abonniert_Am', up_ins_count)
 
             row += 1
         workbook.save(excel_file)

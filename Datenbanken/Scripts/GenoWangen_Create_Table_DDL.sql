@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS Personen (
                       DEFAULT NULL,
 
   `Kategorien`  SET('Bürger', 'Nutzungsberechtigt', 'Hat_16a', 'Hat_35a',
-                    'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat',
+                    'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
                     'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
                     'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
                     'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Neubürgertag_gemacht_Am`             DATE NULL,
   `Ausbezahlter_Bürgertaglohn`          FLOAT UNSIGNED NULL,
   `Funktion_Uebernommen_Am`             DATE NULL,
+  `Funktion`                            VARCHAR(45) NULL,
   `Funktion_Abgegeben_Am`               DATE NULL,
   `Chronik_Bezogen_Am`                  DATE NULL,
   `Newsletter_Abonniert_Am`             DATE NULL,
