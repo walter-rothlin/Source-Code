@@ -26,15 +26,15 @@ ifIntEmpty = lambda x: True if (x == '' or x == 'TRUE') else False
 
 # Common DB-Functions
 # ===================
-def do_db_connect(host='localhost', port=3306, schema='stammdaten', user=None, password=None, trace=False):
+def do_db_connect(db_host='localhost', port=3306, db_schema='stammdaten', db_user_name=None, password=None, trace=False):
     if trace:
-        print("Connecting to " + schema + "@" + host + "....", end="", flush=True)
+        print(f"Connecting to '{db_schema:s}@{db_host:s}' with user '{db_user_name:s}'....", end="", flush=True)
     db_connection = mysql.connector.connect(
-          host        = host,
+          host        = db_host,
           port        = port,
-          user        = user,
+          user        = db_user_name,
           password    = password,
-          database    = schema,
+          database    = db_schema,
           auth_plugin = 'mysql_native_password'
     )
     if trace:
@@ -44,16 +44,16 @@ def do_db_connect(host='localhost', port=3306, schema='stammdaten', user=None, p
 
 def db_connect(connect_to_prod=True, trace=False):
     if connect_to_prod:
-        stammdaten_schema = do_db_connect(host='192.168.253.24',
+        stammdaten_schema = do_db_connect(db_host='192.168.253.24',
                                        port=3311,
-                                       schema='genossame_wangen',
-                                       user="root",
+                                       db_schema='genossame_wangen',
+                                       db_user_name="root",
                                        password="Gen_88-mysql",
                                        trace=trace)
     else:
-        stammdaten_schema = do_db_connect(host='localhost',
-                                       schema='genossame_wangen',
-                                       user="App_User_Stammdaten",
+        stammdaten_schema = do_db_connect(db_host='localhost',
+                                       db_schema='genossame_wangen',
+                                       db_user_name="App_User_Stammdaten",
                                        password="1234ABCD12abcd",
                                        trace=trace)
     return stammdaten_schema
@@ -166,6 +166,23 @@ def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
         return {'rows_in_db   (' + db_tbl_name + '):': myresult[0][0]}
     else:
         return myresult[0][0]
+
+def get_email_ids_for_persid(db, pers_id, verbal=False):
+    ret_list = []
+    sql_insert = f'SELECT EMail_adressen_ID FROM personen_has_email_adressen WHERE Personen_ID = {pers_id} '
+    mycursor = db.cursor()
+    mycursor.execute(sql_insert)
+    for aId in mycursor.fetchall():
+        ret_list.append(str(aId[0]))
+    return ret_list
+
+def get_email_details_for_ids(db, email_ids, verbal=False):
+    email_ids_where_clause = ', '.join(email_ids)
+    sql_insert = f'SELECT * FROM email_adressen WHERE ID in ({email_ids_where_clause}) '
+    mycursor = db.cursor()
+    mycursor.execute(sql_insert)
+    return mycursor.fetchall()
+
 # -------------------------------------------
 # ++++++++++++ Main Main Main +++++++++++++++
 # -------------------------------------------

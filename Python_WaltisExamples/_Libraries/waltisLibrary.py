@@ -43,6 +43,7 @@
 # 26-Sep-2022   Walter Rothlin      halt() returns string
 # 31-Dec-2022   Walter Rothlin      Added generateQRInvoiceData
 # 06-Apr-2022   Walter Rothlin      Added readFloat_00() guard with regex
+# 22-Jun-2023   Walter Rothlin      Added read_boolean
 # ------------------------------------------------------------------
 
 
@@ -145,6 +146,16 @@ def TEST_printProgressBar(verbal=False):
 
 # Readln functions
 # ================
+def read_boolean(prompt="Boolean[Y/*N]:", true_val_liste=['Y', 'J', 'T'], default_value=False, verbal=False):
+    ret_val = input(prompt).upper()
+    if ret_val == '':
+        ret_val = default_value
+    elif ret_val[0] in true_val_liste:
+        ret_val = True
+    else:
+        ret_val = default_value
+    return ret_val
+
 def TEST_readln(verbal=False):
     print("Test readInt:", end="")
     i1 = readInt("   readInt=")

@@ -491,40 +491,72 @@ def update_or_insert_value(db_connection, pers_id, attribute_name, value, verbal
     count_of_updates = 0
     count_of_matches = 0
     myCursor = db_connection.cursor()
+    if verbal:
+        print(f"update_or_insert_value({pers_id}, {attribute_name}, {value}, {verbal})")
     if attribute_name == 'eMai_adressen':
         sql_select = f'SELECT eMail_adresse, Type, Prio FROM email_liste WHERE Pers_ID={pers_id}'
         myCursor.execute(sql_select)
         myresult = myCursor.fetchall()
-        for a_email_adr in myresult:
-            if a_email_adr[0].lower() == value['eMail'].lower():
-                if verbal:
-                    print('Matches: ', a_email_adr[0], value['eMail'])
-                count_of_matches += 1
-                break
-            else:
-                print(f'{pers_id:4s}   DB:', a_email_adr[0])
-                print('New_Value:', value['eMail'], '\n')
-                if verbal:
-                    input('weiter_2')
+        if len(myresult) == 0:
+            print(f"add_email({pers_id}, {value['eMail'].lower()})")
+            args = (pers_id, value['eMail'].lower(), 'Sonstige', 0, 'x')  # 'x' in the Tuple will be replaced by OUT-Value
+            if verbal:
+                print('    addEmailAdr', str(args), sep='')
+            result_args = myCursor.callproc('addEmailAdr', args)
+            count_of_inserts += 1
+        else:
+            for a_email_adr in myresult:
+                if a_email_adr[0].lower() == value['eMail'].lower():
+                    if verbal:
+                        print('Matches: ', a_email_adr[0], value['eMail'])
+                    count_of_matches += 1
+                    break
+                else:
+                    print(f'{pers_id:4s}   DB:', a_email_adr[0])
+                    print('New_Value:', value['eMail'], '\n')
+                    current_emails = get_email_ids_for_persid(db_connection, pers_id)
+                    if len(current_emails) == 1:
+                        old_email_details = get_email_details_for_ids(db_connection, current_emails)[0]
+                        sql_del = f'DELETE FROM personen_has_email_adressen WHERE Personen_ID={pers_id} AND EMail_adressen_ID={old_email_details[0]}'
+                        print(old_email_details)
+                        print('sql_del:', sql_del)
+                        myCursor = db_connection.cursor()
+                        myCursor.execute(sql_del)
+                        db_connection.commit()
 
     if attribute_name == 'telefon_nummer':
         sql_select = f'SELECT Tel_Nr, Type, Endgeraet, Prio FROM Telnr_liste WHERE Pers_ID={pers_id}'
         myCursor.execute(sql_select)
         myresult = myCursor.fetchall()
-        for a_telnr in myresult:
-            if verbal:
-                print('FromDB  :', a_telnr)
-                print('FromParm:', value)
-            if a_telnr[0].replace(' ', '') == value['tel_nr'].replace(' ', ''):
-                if verbal:
-                    print('Matches: ', a_telnr[0], value['tel_nr'])
-                count_of_matches += 1
-                break
+        value['tel_nr'] = value['tel_nr'].replace(' ', '')
+        if len(myresult) == 0:
+            print(f"addTelNr({pers_id}, {value['tel_nr']})")
+            vorwahl = value['tel_nr'][0:3]
+            telnr = value['tel_nr'][3:]
+            if vorwahl == '055':
+                endgeraet = 'Festnetz'
             else:
-                print(f'{pers_id:4s}   DB:', a_telnr[0])
-                print('New_Value:', value['tel_nr'], '\n')
+                endgeraet = 'Mobile'
+            args = (pers_id, '0041', vorwahl, telnr, 'Sonstige', endgeraet, 0, 'x')
+            if verbal:
+                print('    addTelNr', str(args), sep='')
+            result_args = myCursor.callproc('addTelNr', args)
+            count_of_inserts += 1
+        else:
+            for a_telnr in myresult:
                 if verbal:
-                    input('weiter_3')
+                    print('FromDB  :', a_telnr)
+                    print('FromParm:', value)
+                if a_telnr[0].replace(' ', '') == value['tel_nr'].replace(' ', ''):
+                    if verbal:
+                        print('Matches: ', a_telnr[0], value['tel_nr'])
+                    count_of_matches += 1
+                    break
+                else:
+                    print(f'{pers_id:4s}   DB:', a_telnr[0])
+                    print('New_Value:', value['tel_nr'], '\n')
+                    if verbal:
+                        input('weiter_3')
 
     if attribute_name == 'Geburtstag' or attribute_name == 'Newsletter_Abonniert_Am':
         a_date = str(value['Date'])
@@ -668,9 +700,11 @@ if __name__ == '__main__':
         row = 2
         while worksheet_sheet["B"+str(row)].value is not None:
             pers_id = worksheet_sheet["A" + str(row)].value
-            if (pers_id is not None) and (pers_id != '?') and (',' not in str(pers_id)):
+            if (pers_id is not None) and (pers_id != '?') and (pers_id != 'F') and (pers_id != 'H') and (',' not in str(pers_id)):
                     geb_datum = worksheet_sheet["F" + str(row)].value
                     eMail_adr = worksheet_sheet["G" + str(row)].value
+                    if eMail_adr is not None:
+                        eMail_adr = str(eMail_adr).replace('mailto:', '')
                     Natel_Nr = worksheet_sheet["H" + str(row)].value
                     bemerkungen = worksheet_sheet["I" + str(row)].value
                     ## print('+++++', pers_id, geb_datum, eMail_adr, Natel_Nr, bemerkungen)
@@ -681,12 +715,18 @@ if __name__ == '__main__':
                         worksheet_sheet["E" + str(row)].value = ''
 
                     if eMail_adr is not None and eMail_adr != '':
-                        up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'eMai_adressen', {'eMail': eMail_adr, 'Type': 'Sonstige', 'Prio': 0})
+                        # print(f"update_or_insert_value({pers_id}, 'eMai_adressen', '{eMail_adr}')")
+                        up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'eMai_adressen', {'eMail': eMail_adr, 'Type': 'Sonstige', 'Prio': 0}, verbal=True)
                         if up_ins_count['count_of_matches'] == 1:
                             worksheet_sheet["G" + str(row)].value = ''
+
+                        print('email count_of_inserts:', up_ins_count['count_of_inserts'])
+                        print('email count_of_updates:', up_ins_count['count_of_updates'])
+                        print('email count_of_matches:', up_ins_count['count_of_matches'])
+                        # halt('Weiter_06:')
                         # print('eMai_adressen', up_ins_count)
                     if Natel_Nr is not None and Natel_Nr != '':
-                        up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'telefon_nummer', {'tel_nr': Natel_Nr, 'Type': 'Private', 'Endgeraet': 'Mobile', 'Prio': 0})
+                        up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'telefon_nummer', {'tel_nr': Natel_Nr, 'Type': 'Private', 'Endgeraet': 'Mobile', 'Prio': 0}, verbal=True)
                         if up_ins_count['count_of_matches'] == 1:
                             worksheet_sheet["H" + str(row)].value = ''
                         # print('telefon_nummer', up_ins_count)
@@ -697,7 +737,53 @@ if __name__ == '__main__':
                         # print('Geburtstag', up_ins_count)
                     up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'Newsletter_Abonniert_Am', {'Date': '2023.06.20'})
                     # print('Newsletter_Abonniert_Am', up_ins_count)
+            elif pers_id == 'F' or pers_id == 'H':
+                if pers_id == 'F':
+                    sex = 'Frau'
+                else:
+                    sex = 'Herr'
+                Nachname = worksheet_sheet["B" + str(row)].value
+                Nachname_2 = worksheet_sheet["C" + str(row)].value
+                Vorname = worksheet_sheet["D" + str(row)].value
+                geb_datum = str(worksheet_sheet["F" + str(row)].value)
+                print('geb_datum:', geb_datum, ':', sep='')
+                if geb_datum != 'None':
+                    geb_datum = geb_datum[8:10] + '.' + geb_datum[5:7] + '.' + geb_datum[0:4]
+                else:
+                    geb_datum = ''
+                print('geb_datum:', geb_datum, ':', sep='')
+                eMail_adr = worksheet_sheet["G" + str(row)].value
+                str_hNr_Ort = worksheet_sheet["E" + str(row)].value
+                str_hNr_Ort = str_hNr_Ort.replace('  ', ' ')
+                # print('str_hNr_Ort:', str_hNr_Ort)
+                if ', ' in str_hNr_Ort:
+                    str_nr, plz_ort = str_hNr_Ort.split(', ')
+                else:
+                    str_nr = str_hNr_Ort.replace('  ', ' ')
+                    plz_ort = '8855 Wangen'
 
+                # print('str_nr:', str_nr, ':', sep='')
+                str_hsNr_parts = []
+                str_hsNr_parts = str_nr.split(' ')
+                strasse = ' '.join(str_hsNr_parts[:-1])
+                hausnr = str_hsNr_parts[-1]
+                print('strasse:', strasse, ':', sep='')
+                print('hausnr:' + hausnr, ':', sep='')
+
+
+                print('eMail_adr:', eMail_adr, ':', sep='')
+                # print('plz_ort:', plz_ort, ':', sep='')
+                plz, ort = plz_ort.split(' ')
+                print('plz:', plz, ':', sep='')
+                print('ort:', ort, ':', sep='', end='\n\n')
+
+                args = ('Loader_1', sex, '', Vorname, Nachname_2, Nachname, False, strasse, hausnr, plz, ort, 'x')
+                print('    getPersonenId', str(args), sep='')
+                myCursor = stammdaten_schema.cursor()
+                result_args = myCursor.callproc('getPersonenId', args)
+                print(result_args[-1])
+                worksheet_sheet["A" + str(row)].value = str(result_args[-1])
+                halt('Insert?')
             row += 1
         workbook.save(excel_file)
         workbook.close()

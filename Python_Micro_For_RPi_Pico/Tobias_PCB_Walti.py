@@ -11,9 +11,10 @@
 # 03-Jun-2023   Walter Rothlin      Removed Hard-Coded IP from docs
 #                                   Added Timer-Event
 # 04-Jun-2023   Walter Rothlin      Set RTC via REST Service
+# 30-Jun-2023   Walter Rothlin      Var clock_is_set_text added
 # ------------------------------------------------------------------
 pgm_name = 'SBB-Uhr'
-version = '2.0.0.1'
+version = '2.0.0.2'
 from machine import Pin, UART, Timer, RTC
 from time import sleep
 import socket
@@ -41,12 +42,14 @@ def watch_dog_cb_fct(event):
 
 def set_rtc_time(rtc):
     # rtc.datetime((2020, 1, 21, None, 10, 32, 36, 0))
+    clock_is_set = True
     try:
         r = urequests.get("http://worldtimeapi.org/api/timezone/Europe/Zurich")
         json_res = json.loads(r.text)
     except ValueError as e:
         print('WARNING: Time not read from REST!!!!')
         json_res = {'datetime': '2023-06-04T14:17:43.914520+02:00'}
+        clock_is_set = False
 
     # print(json_res['datetime'])
     yyyy = int(json_res['datetime'][:4])
@@ -61,6 +64,7 @@ def set_rtc_time(rtc):
     now_time = (yyyy, mm, dd, None, hh, min, sec, 0)
     # print('now_time:', now_time)
     rtc.datetime(now_time)
+    return clock_is_set
 
 
 # Echtzeituhr im Mikrocontroller initialisieren
@@ -78,21 +82,24 @@ status_warning.off()
 status_wifi = Pin(8, Pin.OUT)
 status_wifi.off()
 
+# try to connect to WIFI
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect('WalterRothlin_2', 'waltiClaudia007')
 
 while not wlan.isconnected() and wlan.status() >= 0:
-    status_warning.toggle()
+    status_wifi.toggle()
+    print('WARNING: Not connected to WIFI!!!!')
     sleep(0.5)
 
 ip_adr = ''
+clock_is_set = False
 if wlan.isconnected():
     status_wifi.on()
     status_warning.off()
     netConfig = wlan.ifconfig()
     ip_adr = str(netConfig[0])
-    set_rtc_time(rtc)
+    clock_is_set = set_rtc_time(rtc)
 
 addr = socket.getaddrinfo(netConfig[0], 80)[0][-1]
 server = socket.socket()
@@ -100,9 +107,13 @@ server.bind(addr)
 server.listen(1)
 status_ok.on()
 
+clock_is_set_text = 'Clock NOT syncronized'
+if clock_is_set:
+    clock_is_set_text = 'Clock is syncronized'
+
 print(pgm_name, 'Version:', version)
 print('Actual IP:', ip_adr, end='\n')
-print('Date/Time now: ', get_string_from_date_time(rtc.datetime()), end='\n\n')
+print('Date/Time now: ', get_string_from_date_time(rtc.datetime()), clock_is_set_text, end='\n\n')
 
 watchdog_timer = Timer()
 watchdog_timer.init(period=2000, mode=Timer.PERIODIC, callback=watch_dog_cb_fct)
@@ -197,7 +208,13 @@ while True:
             <HTML>
                <BODY>
                <H1>{pgm_name}</H1>
-               Firmeware Version:{version}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date/Time (RTC):{get_string_from_date_time(rtc.datetime())}</BR>
+               Firmeware Version:{version}</BR>
+               Date/Time (RTC):{get_string_from_date_time(rtc.datetime())} {clock_is_set_text}</BR>
+               <center>
+               <img src='https://www.watson.ch/imgdb/f3e1/Qx,A,0,0,500,500,208,208,83,83;Ani/6271968486555948'><BR/>
+               <A href='https://blog.nationalmuseum.ch/2022/09/die-teure-schweizer-bahnhofsuhr/'>Die Uhr</A>
+               </center>
+               </BR>
                </BR>
                </BR>
                Folgende Endpoints sind vorhanden:

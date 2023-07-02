@@ -976,6 +976,7 @@ CREATE VIEW Personen_Daten AS
 		  P.ID                                         AS ID,
           P.Zivilstand                                 AS Zivilstand,
           P.Kategorien                                 AS Kategorien,
+		  P.Funktion                                   AS Funktion,
           P.Sex                                        AS Geschlecht,       -- Herr | Frau
 
 		  getName_With_Initial(P.Vorname, 
@@ -1225,9 +1226,28 @@ CREATE VIEW Genossenrat AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0
-    ORDER BY Familien_Name, Vorname;
+    WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0 OR
+          FIND_IN_SET('GPK', Kategorien) >  0
+    ORDER BY Funktion, Familien_Name, Vorname;
     
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Mitarbeiter; 
+CREATE VIEW Mitarbeiter AS
+    SELECT
+        *
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Angestellter', Kategorien) >  0
+    ORDER BY Funktion, Familien_Name, Vorname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Graue_Panter; 
+CREATE VIEW Graue_Panter AS
+    SELECT
+        *
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Grauer Panter', Kategorien) >  0
+    ORDER BY Funktion, Familien_Name, Vorname;
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Bürger_Nutzungsberechtigt; 
 CREATE VIEW Bürger_Nutzungsberechtigt AS
@@ -1236,7 +1256,23 @@ CREATE VIEW Bürger_Nutzungsberechtigt AS
     FROM Personen_Daten
     WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
     ORDER BY Familien_Name, Vorname;
+
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_eMailing; 
+CREATE VIEW Bürger_eMailing AS
+    SELECT
+        *
+    FROM Bürger_Nutzungsberechtigt
+    WHERE eMail is Not Null and eMail != '';
     
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Mailing; 
+CREATE VIEW Bürger_Mailing AS
+    SELECT
+        *
+    FROM Bürger_Nutzungsberechtigt
+    WHERE eMail is Null or eMail = '';   
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Bürger_Nicht_Nutzungsberechtigt; 
 CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
@@ -1415,6 +1451,33 @@ CREATE VIEW PD_Tel_Email_IBAN AS
     -- ORDER BY LastName, Vorname;
 
 -- -----------------------------------------------------
+DROP VIEW IF EXISTS Neubürger_Vorvorjahr; 
+CREATE VIEW Neubürger_Vorvorjahr AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  IBAN,
+	  Geburtstag,
+	  `Alter`,
+	  Angemeldet_Am,
+	  Bezahlte_Aufnahme_Gebühr,
+	  Aufgenommen_Am,
+	  Sich_Für_Bürgertag_Angemeldet_Am,
+	  Neubürgertag_gemacht_Am,
+	  Ausbezahlter_Bürgertaglohn,
+	  Partner_ID,
+	  Mutter_ID,
+	  Vater_ID
+	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now() - INTERVAL 2 YEAR,'%Y');
+    
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Neubürger_Vorjahr; 
 CREATE VIEW Neubürger_Vorjahr AS
 	SELECT 
@@ -1439,8 +1502,36 @@ CREATE VIEW Neubürger_Vorjahr AS
 	  Partner_ID,
 	  Mutter_ID,
 	  Vater_ID
-	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = '2022';
+	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now() - INTERVAL 1 YEAR,'%Y');
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Neubürger_Dieses_Jahr; 
+CREATE VIEW Neubürger_Dieses_Jahr AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  IBAN,
+	  Geburtstag,
+	  `Alter`,
+	  Angemeldet_Am,
+	  Bezahlte_Aufnahme_Gebühr,
+	  Aufgenommen_Am,
+	  Sich_Für_Bürgertag_Angemeldet_Am,
+	  Neubürgertag_gemacht_Am,
+	  Ausbezahlter_Bürgertaglohn,
+	  Partner_ID,
+	  Mutter_ID,
+	  Vater_ID
+	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now(),'%Y');
 
+-- SELECT  DATE_FORMAT(now() - INTERVAL 1 YEAR,'%Y');
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Newsletter_Abo; 
 CREATE VIEW Newsletter_Abo AS
@@ -1640,8 +1731,44 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Personen_has_telefonnummern`)   AS `Row Count`
 	UNION
 	SELECT
+		'------------------------------'                         AS `Table Name`,
+		'--------------- '                                       AS `Row Count`
+	UNION
+    SELECT
+		'Nutzungsberechtigte Bürger'                          AS `Table Name`,
+		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
+	UNION
+        SELECT
+		'Bürger mit eMail'                                    AS `Table Name`,
+		(SELECT count(*) FROM `bürger_eMailing`)              AS `Row Count`
+	UNION
+        SELECT
+		'Bürger ohne eMail'                                   AS `Table Name`,
+		(SELECT count(*) FROM `bürger_mailing`)               AS `Row Count`
+	UNION
+        SELECT
+		'Nutzungsberechtigte Bürger'                          AS `Table Name`,
+		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
+	UNION
+	SELECT
 		'-----------------------------'                         AS `Table Name`,
 		'---------------'                                       AS `Row Count`
+	UNION
+        SELECT
+		'Neubürger Vorvorjahr'                                AS `Table Name`,
+		(SELECT count(*) FROM `Neubürger_Vorvorjahr`)         AS `Row Count`
+	UNION
+        SELECT
+		'Neubürger Vorjahr'                                   AS `Table Name`,
+		(SELECT count(*) FROM `Neubürger_Vorjahr`)            AS `Row Count`
+	UNION
+        SELECT
+		'Neubürger Dieses Jahr'                               AS `Table Name`,
+		(SELECT count(*) FROM `Neubürger_dieses_Jahr`)        AS `Row Count`
+	UNION
+	SELECT
+		'------------------------------'                         AS `Table Name`,
+		'----------------'                                       AS `Row Count`
 	UNION
 	SELECT
 		'Landteile Total'                                      AS `Table Name`,
@@ -2214,7 +2341,7 @@ BEGIN
 	UPDATE Land SET Landesvorwahl = CONCAT('000',Landesvorwahl)         WHERE LENGTH(Landesvorwahl) = 1;
 	UPDATE Land SET Landesvorwahl = CONCAT('00',Landesvorwahl)          WHERE LENGTH(Landesvorwahl) = 2;
 	UPDATE Land SET Landesvorwahl = CONCAT('0',Landesvorwahl)           WHERE LENGTH(Landesvorwahl) = 3;
-
+    
 	/* -- NUR bei inital load ab Stammdaten
 	UPDATE Adressen SET Orte_ID=(SELECT ID FROM Orte WHERE `Name` = 'Nuolen') 
 		   WHERE ID IN (SELECT Privat_Adressen_ID FROM Personen 
@@ -2233,14 +2360,41 @@ BEGIN
 	UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
 	UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Bürger')  WHERE  Todestag IS NOT NULL;
 	DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
-	DELETE FROM email_adressen WHERE ID IN (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben')); 
-	DELETE FROM personen_has_email_adressen WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'); 
-	DELETE FROM telefonnummern WHERE ID IN (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'));
-	DELETE FROM personen_has_telefonnummern WHERE Personen_ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben'); 
-
+    
+	/* 
+    DELETE 
+    FROM email_adressen 
+    WHERE ID IN (SELECT EMail_Adressen_ID 
+                 FROM personen_has_email_adressen 
+                 WHERE Personen_ID IN (SELECT ID 
+                                       FROM Personen 
+                                       WHERE Zivilstand = 'Gestorben'));
+                                  
+	DELETE 
+    FROM personen_has_email_adressen 
+    WHERE Personen_ID IN (SELECT ID 
+                          FROM Personen 
+                          WHERE Zivilstand = 'Gestorben');
+    
+    
+	DELETE
+    FROM telefonnummern 
+    WHERE ID IN (SELECT Telefonnummern_ID 
+                 FROM personen_has_telefonnummern 
+                 WHERE Personen_ID IN (SELECT ID 
+                                       FROM Personen 
+                                       WHERE Zivilstand = 'Gestorben'));
+	DELETE 
+    FROM personen_has_telefonnummern 
+    WHERE Personen_ID IN (SELECT ID 
+                          FROM Personen 
+                          WHERE Zivilstand = 'Gestorben'); 
+    */
+    
 	-- Bürger / Nutzungberechtigt (wer Bürger ist und in der politschen Gemeinde Wangen lebt ist Nutzungsberechtigt)
 	-- --------------------------
-	DROP TABLE IF EXISTS Temp_Table;
+	/*
+    DROP TABLE IF EXISTS Temp_Table;
 	CREATE TABLE IF NOT EXISTS Temp_Table (
 	  `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	  `last_update`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -2256,9 +2410,11 @@ BEGIN
 			 ID IN (SELECT ID FROM `Temp_Table`);
 
 	DROP TABLE IF EXISTS Temp_Table;
+    */
     
     -- Landteile
     -- ---------
+    /*
     UPDATE Landteile SET Buergerlandteil = 'Geno' WHERE Verpaechter_ID  = 625; 
     UPDATE Landteile SET Buergerlandteil = '16a'  WHERE Flaeche_In_Aren = 16;
     UPDATE Landteile SET Buergerlandteil = '35a'  WHERE Flaeche_In_Aren = 35; 
@@ -2268,7 +2424,7 @@ BEGIN
 
 	UPDATE Personen SET Kategorien = addSetValue(Kategorien, 'Hat_35a')  
 	WHERE ID in (SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = '35a' AND Verpaechter_ID IS NOT NULL);
-
+    */
 	-- SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = 'Geno' AND Verpaechter_ID IS NOT NULL;
 
 END$$

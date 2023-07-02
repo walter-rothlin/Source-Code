@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Meine Webseite</title>
+
+	  <!-- andere Header-Elemente -->
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<!-- Button, der das Pop-up-Fenster öffnet -->
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_pop_up">
+	  Login
+	</button>
+
+	<!-- Das Pop-up-Fenster -->
+	<div class="modal fade" id="login_pop_up" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <!-- Pop-up-Fenster-Header -->
+		  <div class="modal-header">
+			<h4 class="modal-title" id="myModalLabel">Login</h4>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		  </div>
+		  <!-- Pop-up-Fenster-Body mit Login-Formular -->
+		  <div class="modal-body">
+			<form id="loginForm">
+			  <div class="form-group">
+				<label for="username">E-Mail Adresse:</label>
+				<input type="text" class="form-control" id="username" placeholder="Geben Sie Ihren Benutzernamen ein">
+			  </div>
+			  <div class="form-group">
+				<label for="password">Passwort:</label>
+				<input type="password" class="form-control" id="password" placeholder="Geben Sie Ihr Passwort ein">
+			  </div>
+			</form>
+		  </div>
+		  <!-- Pop-up-Fenster-Footer mit Login-Button -->
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+			<button type="button" class="btn btn-primary" onclick="submitLoginForm()">Einloggen</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+
+
+	<!-- Der Rest der Webseite -->
+</body>
+</html>
