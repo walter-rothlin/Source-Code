@@ -20,21 +20,24 @@ dbSchema = "sakila"
 userName = "testUserApp"
 password = "walti"
 
-try:
-    print(f"Connecting to '{dbSchema:s}' with user '{userName:s}'....", end="", flush=True)
-    # https://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
-    mydb = mc.connect(
-        host=dbServer,
-        database=dbSchema,
-        user=userName,
-        password=password,
-        auth_plugin = 'mysql_native_password'
-    )
-    print("completed!")
+connected = False
+while not connected:
+    try:
+        print(f"Connecting to '{dbSchema:s}' with user '{userName:s}'....", end="", flush=True)
+        # https://dev.mysql.com/doc/connector-python/en/connector-python-connectargs.html
+        mydb = mc.connect(
+            host=dbServer,
+            database=dbSchema,
+            user=userName,
+            password=password,
+            auth_plugin='mysql_native_password'
+        )
+        print("completed!")
+        connected = True
 
-except mc.Error as e:
-    print("\nError {errNo:d}: {errTxt:s}".format(errNo=e.args[0], errTxt=e.args[1]))
-    sys.exit(1)
+    except mc.Error as e:
+        print("\nError {errNo:d}: {errTxt:s}".format(errNo=e.args[0], errTxt=e.args[1]))
+        sys.exit(1)
 
 
 stm_selectCities = """

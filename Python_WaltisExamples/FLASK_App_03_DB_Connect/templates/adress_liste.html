@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Personen</h1>
+    <div class="form">
+        <form action="{{ url_for('adress_liste') }}" method="POST">
+            <input type="text" name="search_criteria" id="search_criteria" value="{{ search_criterium }}">
+            <input type="submit" value="suchen"> ({{ rec_found }})
+        </form>
+        <br/>
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Anrede</th>
+            <th scope="col">Vorname</th>
+            <th scope="col">Familienname</th>
+            <th scope="col">Strasse</th>
+            <th scope="col">Ort</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for addr in result_liste %}
+        <tr>
+            <td><a href="{{ url_for('personen_details') }}?pid={{ addr.ID }}">{{ addr.ID }}</a></td>
+            <td>{{ addr.Geschlecht }}</td>
+            <td>{{ addr.Vorname_Initial }}</td>
+            <td>{{ addr.Familien_Name }}</td>
+            <td>{{ addr.Private_Strassen_Adresse }}</td>
+            <td>{{ addr.Private_PLZ_Ort }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

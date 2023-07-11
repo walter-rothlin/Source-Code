@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Meine Webseite</title>
+	<style>
+		/* Stilregeln für das Menü */
+		header {
+		  display: flex;
+		  align-items: center;
+		}
+
+		.logo {
+		  margin-right: auto;
+		}
+		nav {
+			background-color: #333; /* Hintergrundfarbe */
+			color: #fff; /* Textfarbe */
+			font-size: 16px; /* Schriftgröße */
+			font-weight: bold; /* Schriftstärke */
+			padding: 10px; /* Innenabstand */
+		}
+		nav ul {
+			list-style: none; /* Entfernen der Aufzählungspunkte */
+			margin: 0; /* Entfernen des Außenabstands */
+			padding: 0; /* Entfernen des Innenabstands */
+			display: flex; /* Aktivieren von Flexbox */
+			justify-content: flex-start; /* Elemente am rechten Rand ausrichten */
+		}
+		nav li {
+			margin: 0 10px; /* Abstand zwischen den Elementen */
+			position: relative; /* Aktivieren der relativen Positionierung */
+		}
+		nav a {
+			color: #fff; /* Textfarbe */
+			text-decoration: none; /* Entfernen von Unterstreichungen */
+			padding: 5px 10px; /* Innenabstand */
+			border-radius: 5px; /* Abgerundete Ecken */
+			transition: background-color 0.3s ease; /* Flüssiger Übergang */
+			display: block; /* Aktivieren der Blockanzeige */
+		}
+		nav a:hover {
+			background-color: #555; /* Hintergrundfarbe bei Hover */
+		}
+		nav ul ul {
+			display: none; /* Untermenüs standardmäßig ausblenden */
+			position: absolute; /* Aktivieren der absoluten Positionierung */
+			top: 100%; /* Untermenüs unter dem Hauptmenü anzeigen */
+			left: 0; /* Untermenüs links ausrichten */
+			background-color: #333; /* Hintergrundfarbe */
+			padding: 0; /* Entfernen des Innenabstands */
+			z-index: 1; /* Sicherstellen, dass die Untermenüs über allem anderen liegen */
+		}
+		nav ul li:hover > ul {
+			display: flex; /* Aktivieren von Flexbox beim Hover */
+			flex-direction: column; /* Untermenüs in einer Spalte ausrichten */
+		}
+	</style>
+</head>
+<body>
+	<header>
+	  <div class="logo">
+		<img src="path/to/logo.png" alt="Logo">
+	  </div>
+	  <nav>
+		<ul>
+		  <li><a href="#">Menüpunkt 1</a></li>
+		  <li>
+			<a href="#">Menüpunkt 2</a>
+			<ul>
+			  <li><a href="#">Untermenüpunkt 1</a></li>
+			  <li><a href="#">Untermenüpunkt 2</a></li>
+			  <li><a href="#">Untermenüpunkt 3</a></li>
+			</ul>
+		  </li>
+		  <li><a href="#">Menüpunkt 3</a></li>
+		  <li><a href="#">Menüpunkt 4</a></li>
+		</ul>
+	  </nav>
+	</header>
+
+	<!-- Der Rest der Webseite -->
+</body>
+</html>

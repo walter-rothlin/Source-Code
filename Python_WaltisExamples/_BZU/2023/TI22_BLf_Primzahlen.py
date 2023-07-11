@@ -11,7 +11,6 @@
 # History:
 # 01-Jun-2023   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
-
 # Siehe Flussdiagramm: https://www.technik-unterrichten.de/Robotik/Elemente/Aufgaben/E25.php
 
 def ist_es_eine_primzahl(n):

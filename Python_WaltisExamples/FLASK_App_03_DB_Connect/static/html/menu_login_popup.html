@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Meine Webseite</title>
+
+	  <!-- andere Header-Elemente -->
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+    <!-- Menubar -->
+	<header class="navbar navbar-expand-lg navbar-light bg-light">
+	  <a class="navbar-brand" href="https://www.genossame-wangen.ch">
+		<img src="https://www.peterliwiese.ch/img/Logo_Genossame.png" alt="Logo">
+	  </a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	  </button>
+
+	  <div class="collapse navbar-collapse" id="navbarNav">
+		<ul class="navbar-nav mr-auto">
+		  <li class="nav-item active">
+			<a class="nav-link" href="#">Menüpunkt 1</a>
+		  </li>
+		  <li class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Menüpunkt 2
+			</a>
+			<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+			  <a class="dropdown-item" href="#">Untermenüpunkt 1</a>
+			  <a class="dropdown-item" href="#">Untermenüpunkt 2</a>
+			  <a class="dropdown-item" href="#">Untermenüpunkt 3</a>
+			</div>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#">Menüpunkt 3</a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="#">Menüpunkt 4</a>
+		  </li>
+		</ul>
+		<form class="form-inline my-2 my-lg-0">
+		  <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Einloggen</button> -->
+			<button type="button" class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" data-target="#login_pop_up">Einloggen</button>
+		  <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login_pop_up">Login</button> -->
+		</form>
+
+
+	  </div>
+	</header>
+
+	<!-- Das Pop-up-Fenster -->
+	<div class="modal fade" id="login_pop_up" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <!-- Pop-up-Fenster-Header -->
+		  <div class="modal-header">
+			<h4 class="modal-title" id="myModalLabel">Login</h4>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		  </div>
+		  <!-- Pop-up-Fenster-Body mit Login-Formular -->
+		  <div class="modal-body">
+			<form id="loginForm">
+			  <div class="form-group">
+				<label for="username">User-Name:</label>
+				<input type="text" class="form-control" id="username" placeholder="Geben Sie Ihre E-Mail Adresse ein">
+			  </div>
+			  <div class="form-group">
+				<label for="password">Passwort:</label>
+				<input type="password" class="form-control" id="password" placeholder="Geben Sie Ihr Passwort ein">
+			  </div>
+			</form>
+		  </div>
+		  <!-- Pop-up-Fenster-Footer mit Login-Button -->
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+			<button type="button" class="btn btn-primary" onclick="submitLoginForm()">Einloggen</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	<!-- Der Rest der Webseite -->
+</body>
+</html>
