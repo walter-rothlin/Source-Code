@@ -342,6 +342,7 @@ def inserts_from_excel(filename, sheet_name, attribut, db_connection, verbal=Fal
                 pers_ID = str(row[0]).replace('.0', '')
                 iban_ID = str(row[1]).replace('.0', '')
                 iban = str(row[2])    # .replace(' ', '')
+                # print(pers_ID, iban_ID, iban)
                 if iban_ID == 'nan' and iban != 'nan':
                     insert_count += 1
                     args = (pers_ID, iban, 'x')
@@ -624,7 +625,7 @@ if __name__ == '__main__':
 
     # Updates and inserts from Reco
     # =============================
-    do_reco = False
+    do_reco = True
     if do_reco:
         do_inserts_from_reco = True
         if do_inserts_from_reco:
@@ -649,7 +650,7 @@ if __name__ == '__main__':
                 print('\n\n===> No updates found in', reco_data_fn)
 
     # Newsletter Daten migrieren
-    do_reco_Newsletter_set_id = True
+    do_reco_Newsletter_set_id = False
     if do_reco_Newsletter_set_id:
         print('\n\n\n======> Newsletter Daten migrieren')
         excel_file = r"V:\EDV\Newsletter\MailadressenGenossenbürger.xlsx"

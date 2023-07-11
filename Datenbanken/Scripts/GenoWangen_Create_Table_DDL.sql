@@ -1,7 +1,7 @@
--- ---------------------------------------------------------------------------------------------
+-- -----------------------------------------
 -- Filename: GenoWangen_Create_Table_DDL.sql
 -- Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/Scripts/GenoWangen_Create_Table_DDL.sql
--- ---------------------------------------------------------------------------------------------
+-- -----------------------------------------
 --
 -- Autor: Walter Rothlin
 -- Description: Kreiert alle Rohdaten-Tabellen for Genossame Wangen
@@ -10,17 +10,19 @@
 -- History:
 -- 13-May_2023   Walter Rothlin      Splitted file in DDL Tables / Fct, Views, Proc
 -- 08-Jun-2023   Walter Rothlin		 Added fields for Neubürger
--- ---------------------------------------------------------------------------------------------
+-- 05-Jul-2023   Walter Rothlin      Removed Waermebezueger and replaced by Wärmeanschlüsse
+-- 07-Jul-2023   Walter Rothlin      Detail definition Wärmebezüger mit Remo und Adrian
+-- -----------------------------------------
 
--- ---------------------------------------------------------------------------------------------
+-- -----------------------------------------
 SET NAMES utf8mb4;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- ===============================================================================================
--- == Schema Stammdaten kreieren                                                                ==
--- ===============================================================================================
+-- =========================================
+-- == Schema Stammdaten kreieren          ==
+-- =========================================
 DROP SCHEMA IF EXISTS genossame_wangen;
 CREATE SCHEMA IF NOT EXISTS genossame_wangen  DEFAULT CHARACTER SET utf8 ;
 
@@ -29,13 +31,13 @@ SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
 USE genossame_wangen;
 
 
--- ===============================================================================================
--- == Create Tables                                                                             ==
--- ===============================================================================================
+-- =========================================
+-- == Create Tables                       ==
+-- =========================================
 
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `Land`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS Land;
 CREATE TABLE IF NOT EXISTS Land (
   `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -47,9 +49,9 @@ CREATE TABLE IF NOT EXISTS Land (
   -- PK-Constraints
   PRIMARY KEY (`ID`));
 
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `Orte`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS Orte;
 CREATE TABLE IF NOT EXISTS Orte (
   `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -73,9 +75,9 @@ CREATE TABLE IF NOT EXISTS Orte (
     ON UPDATE NO ACTION);
 
 
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `Adressen`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS Adressen;
 CREATE TABLE IF NOT EXISTS Adressen (
   `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -106,9 +108,9 @@ CREATE TABLE IF NOT EXISTS Adressen (
 
     
     
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `Personen` 
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS Personen;
 CREATE TABLE IF NOT EXISTS Personen (
   `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -207,9 +209,9 @@ CREATE TABLE IF NOT EXISTS Personen (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `EMail_Adressen`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS EMail_Adressen;
 CREATE TABLE IF NOT EXISTS EMail_Adressen (
   `ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -221,10 +223,9 @@ CREATE TABLE IF NOT EXISTS EMail_Adressen (
   -- PK-Constraints
   PRIMARY KEY (`ID`));
 
-
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `Personen_has_EMail_Adressen`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS Personen_has_EMail_Adressen;
 CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
   -- `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -253,9 +254,9 @@ CREATE TABLE IF NOT EXISTS Personen_has_EMail_Adressen (
     ON UPDATE NO ACTION);
 
 
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `Telefonnummern`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS `Telefonnummern` ;
 CREATE TABLE IF NOT EXISTS `Telefonnummern` (
   `ID`           INT UNSIGNED                                 NOT NULL AUTO_INCREMENT,
@@ -271,9 +272,9 @@ CREATE TABLE IF NOT EXISTS `Telefonnummern` (
   PRIMARY KEY (`ID`));
 
 
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `Personen_has_Telefonnummern`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS `Personen_has_Telefonnummern`;
 CREATE TABLE IF NOT EXISTS `Personen_has_Telefonnummern` (
   -- `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -301,9 +302,9 @@ CREATE TABLE IF NOT EXISTS `Personen_has_Telefonnummern` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
--- -----------------------------------------------------
+-- -----------------------------------------
 -- Table `IBAN`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS `IBAN` ;
 CREATE TABLE IF NOT EXISTS `IBAN` (
   `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -330,14 +331,16 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
 
 -- ALTER TABLE `iban` 
 -- ADD UNIQUE INDEX `Nummer_UNIQUE` (`Nummer` ASC) VISIBLE;
--- -----------------------------------------------------
+
+-- -----------------------------------------
 -- Table `Waermebezueger`
--- -----------------------------------------------------
+-- -----------------------------------------
+/*
 DROP TABLE IF EXISTS `Waermebezueger`;
 CREATE TABLE IF NOT EXISTS `Waermebezueger` (
   `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `kW_Leistung`          INT UNSIGNED NULL,
-  `ZaehlerNr`            VARCHAR(20) NULL,
+  `Zaehler_Nr`           VARCHAR(20) NULL,
   `Vertragsende`         DATE NULL,
   `Objekt_Adresse`       INT UNSIGNED NOT NULL,
   `Objekt_Owner`         INT UNSIGNED NOT NULL,
@@ -375,10 +378,101 @@ CREATE TABLE IF NOT EXISTS `Waermebezueger` (
     REFERENCES `Personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+*/
 
--- -----------------------------------------------------
+-- -----------------------------------------
+-- Table `Wärmeanschlüsse`
+-- -----------------------------------------
+-- DROP TABLE IF EXISTS `Waermebezueger`;
+DROP TABLE IF EXISTS `Wärmeanschlüsse`;
+CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
+  `ID`                               INT NOT NULL,
+  `Parzellen_Nummer`                 VARCHAR(45) NULL,  -- Wohnung, Kataster_Nr, x,y sind in Adressen
+  `Korrenspondenz`                   VARCHAR(500) NULL,
+  `Gebietsbezeichnung`               VARCHAR(45) NULL,
+  `Anschluss_Type`                   ENUM('Vollanschluss', 
+                                          'Teilanschluss_Grundstück', 
+                                          'Teilanschluss_Gebäude') DEFAULT NULL,
+  `Anschluss_Gebühr`                 FLOAT UNSIGNED NULL,
+  `Vertrag_unterzeichnet_Am`                   DATE NULL,
+  `Teilanschluss_Vereinbarung_Endet_Am`        DATE NULL,
+  `Verrechnet_Am`                              DATE NULL,
+  `Bezahlt_Am`                                 DATE NULL,
+  
+  `kW_Leistung`                      INT UNSIGNED NULL,
+  `Stations_Type`                    ENUM('AmStat T0', 
+                                          'AmStat T1', 
+                                          'AmStat T2', 
+                                          'AmStat T3', 
+                                          'AmStat T3+', 
+                                          'AmStat Spez') DEFAULT NULL,
+  `Fabrikations_Nr`                  VARCHAR(20) NULL,   -- 1424-202213065
+  `Steuerungs_Type`                  ENUM('Saia', 'TA') DEFAULT NULL,
+  `Zähler_Nr`                        VARCHAR(8) NULL,   -- W123 
+  `Baujahr_Station`                  DATE NULL,
+  
+  `Inbetrieb_genommen_Am`            DATE NULL,
+  `Letzte_Kontrolle_Am`              DATE NULL,
+  `Sieb_Primär_gereinigt_Am`         DATE NULL,
+  `Sieb_Sekundär_gereinigt_Am`       DATE NULL,
+  `SBS_Baterrien_gewechselt_Am`      DATE NULL,
+  
+  `Parameter`                              VARCHAR(500) NULL,
+  `Durchleitungsvertrag_unterzeichnet_Am` DATE NULL,
+  `Durchleitungsvertrag_endet_Am`         DATE NULL,
+  `Bezahlte_Durchleitungs_Gebühr`         FLOAT UNSIGNED NULL,   -- NULL kein DL-Recht     0..xxx DL-Recht gegeben
+  `Bemerkungen`                           VARCHAR(500) NULL,
+  
+  `Standort_Adresse_ID`              INT UNSIGNED NULL,
+  `Eigentümer_ID`                    INT UNSIGNED NULL,
+  `Kontakt_ID`                       INT UNSIGNED NULL,
+  `Rechnungs_Adresse_ID`             INT UNSIGNED NULL,
+  `Heizungs_Installateur_ID`         INT UNSIGNED NULL,
+  `Elektro_Installateur_ID`          INT UNSIGNED NULL,
+
+  `last_update`                      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`),
+  UNIQUE INDEX `Fabrikations_Nr_UNIQUE`    (`Fabrikations_Nr`          ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_adressen1_idx` (`Standort_Adresse_ID`      ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen1_idx` (`Eigentümer_ID`            ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen2_idx` (`Kontakt_ID`               ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen3_idx` (`Heizungs_Installateur_ID` ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen4_idx` (`Elektro_Installateur_ID`  ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen5_idx` (`Rechnungs_Adresse_ID`     ASC) VISIBLE,
+  CONSTRAINT `fk_Wärmeanschlüsse_adressen1`
+    FOREIGN KEY (`Standort_Adresse_ID`)
+    REFERENCES `adressen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Wärmeanschlüsse_personen1`
+    FOREIGN KEY (`Eigentümer_ID`)
+    REFERENCES `personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Wärmeanschlüsse_personen2`
+    FOREIGN KEY (`Kontakt_ID`)
+    REFERENCES `personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Wärmeanschlüsse_personen3`
+    FOREIGN KEY (`Heizungs_Installateur_ID`)
+    REFERENCES `personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Wärmeanschlüsse_personen5`
+    FOREIGN KEY (`Rechnungs_Adresse_ID`)
+    REFERENCES `personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Wärmeanschlüsse_personen4`
+    FOREIGN KEY (`Elektro_Installateur_ID`)
+    REFERENCES `personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+-- -----------------------------------------
 -- Table `Landteil`
--- -----------------------------------------------------
+-- -----------------------------------------
 DROP TABLE IF EXISTS `Landteile`;
 CREATE TABLE IF NOT EXISTS `Landteile` (
   `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,

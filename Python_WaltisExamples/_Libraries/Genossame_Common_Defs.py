@@ -47,8 +47,8 @@ def db_connect(connect_to_prod=True, trace=False):
         stammdaten_schema = do_db_connect(db_host='192.168.253.24',
                                        port=3311,
                                        db_schema='genossame_wangen',
-                                       db_user_name="root",
-                                       password="Gen_88-mysql",
+                                       db_user_name="Web_App_User",
+                                       password="Geno_8855!",
                                        trace=trace)
     else:
         stammdaten_schema = do_db_connect(db_host='localhost',
@@ -117,35 +117,43 @@ def get_personen_id(db_connection, such_kriterien, verbal=False):
     return pers_id
 
 
-def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*']):
-    fieldStr = (',\n            ').join(attr_list)
+class Stammdaten:
+    def __init__(self):
+        self.__db_connection = db_connect(connect_to_prod=True, trace=True)
 
-    if id is None:
-        if search_criterium is None:
-            sql = """
-                SELECT
-                    """ + fieldStr + """
-                FROM Personen_Daten
-                Limit 0,20;
-            """
+
+    def get_version(self):
+        return("V1.0.0.0")
+
+    def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*']):
+        fieldStr = (',\n            ').join(attr_list)
+
+        if id is None:
+            if search_criterium is None:
+                sql = """
+                    SELECT
+                        """ + fieldStr + """
+                    FROM Personen_Daten
+                    Limit 0,20;
+                """
+            else:
+                sql = """
+                    SELECT
+                        """ + fieldStr + """
+                    FROM Personen_Daten
+                    WHERE Such_Begriff LIKE '%""" + search_criterium + """%';
+                """
         else:
             sql = """
-                SELECT
-                    """ + fieldStr + """
-                FROM Personen_Daten
-                WHERE Such_Begriff LIKE '%""" + search_criterium + """%';
+            SELECT
+                """ + fieldStr + """
+            FROM Personen_Daten 
+            WHERE ID = """ + str(id) + """;
             """
-    else:
-        sql = """
-        SELECT
-            """ + fieldStr + """
-        FROM Personen_Daten 
-        WHERE ID = """ + str(id) + """;
-        """
-    print(sql)
-    mycursor = self.__db_connection.cursor(dictionary=True)
-    mycursor.execute(sql)
-    return mycursor.fetchall()
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        mycursor.execute(sql)
+        return mycursor.fetchall()
 
 
 def execute_important_sql_queries(db_connection, verbal=False):

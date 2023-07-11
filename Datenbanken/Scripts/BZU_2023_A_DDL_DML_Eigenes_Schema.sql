@@ -109,11 +109,11 @@ VALUES (1, 8855, 'Wangen', 'CH'),
 -- DELETE FROM `Orte` WHERE id = 1;
 -- DELETE FROM `Orte` WHERE id = 5;
 
-INSERT INTO `Adressen` (`ID`, `Gender`, `Name`, `Vorname`, `Strasse`, `Hausnummer`, `Orte_id`) 
-VALUES (1, 'Herr', 'Rothlin', 'Walter', 'Peterliwiese', '33', 1),
-	   (2, 'Herr', 'Rothlin', 'Tobias', 'Peterliwiese', '33', 1),
-	   (3, 'Frau', 'Collet', 'Claudia', 'Blumenweg', '8', 5),
-	   (4, 'Frau', 'Dupont', 'Claudia', 'Rue du ferre', '88', 6);
+INSERT INTO `Adressen` (`ID`, `Gender`, `Name`, `Vorname`, `Strasse`, `Orte_id`) 
+VALUES (1, 'Herr', 'Rothlin', 'Walter', 'Peterliwiese 33', 1),
+	   (2, 'Herr', 'Rothlin', 'Tobias', 'Peterliwiese 33', 1),
+	   (3, 'Frau', 'Collet', 'Claudia', 'Blumenweg 8', 5),
+	   (4, 'Frau', 'Dupont', 'Claudia', 'Rue du ferre 88', 6);
     
 INSERT INTO `tel_nummern_has_adressen` (`Tel_Nummern_ID`, `adressen_id`) 
 VALUES ('1', '1'),

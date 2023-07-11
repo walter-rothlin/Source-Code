@@ -15,8 +15,9 @@
 #
 # ------------------------------------------------------------------
 # from flask import Flask, redirect, url_for, render_template
-from flask import Flask, render_template, request, redirect, url_for, session
+from Genossame_Common_Defs import *
 
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = 'geheimnis'
@@ -34,11 +35,35 @@ def profile():
     print('profile() called!!!')
     return render_template("contact.html")
 
-@app.route("/adress_liste")
+@app.route("/adress_liste", methods=['GET', 'POST'])
 def adress_liste():
     print('adress_liste() called!!!')
     if session is not None and 'username' in session and session['username'] is not None:
-        return render_template("adress_liste.html")
+        if request.method == 'POST':
+            s_criteria = request.form.get("search_criteria")
+        else:
+            s_criteria = request.args.get("search_criteria")
+        s_criteria = s_criteria.replace("'", "")
+        rs = genossame.get_person_details_from_DB_by_ID(search_criterium=s_criteria)
+        print(rs)
+        rec_found = len(rs)
+        print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
+        return render_template("adress_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
+    else:
+        return render_template("index.html")
+
+@app.route("/personen_details", methods=['GET', 'POST'])
+def personen_details():
+    print('personen_details() called!!!')
+    if session is not None and 'username' in session and session['username'] is not None:
+        if request.method == 'POST':
+            pid = request.form.get("pid")
+        else:
+            pid = request.args.get("pid")
+        rs = genossame.get_person_details_from_DB_by_ID(id=pid)
+        print(rs)
+        print('pid:', pid, '    Anz Rec found: ', len(rs))
+        return render_template("person_details.html", details=rs[0])
     else:
         return render_template("index.html")
 
@@ -120,5 +145,6 @@ def logout():
     return render_template("index.html")
 
 if __name__ == "__main__":
+    genossame = Stammdaten()
     app.run(debug=True, port=5001)
 

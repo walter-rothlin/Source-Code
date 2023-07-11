@@ -21,14 +21,6 @@ from flask import Flask, render_template, request, url_for, request, redirect
 ### from flask_sqlalchemy import SQLAlchemy
 
 
-class Stammdaten:
-    def __init__(self):
-        self.__db_connection = db_connect(connect_to_prod=True, trace=True)
-
-
-    def get_version(self):
-        return("V1.0.0.0")
-
 # ----------------------------------------------------------------------------
 # Web End-Points
 # ----------------------------------------------------------------------------
@@ -55,4 +47,4 @@ def adresslist(search_criterium):
 if __name__ == '__main__':
     genossame = Stammdaten()
 
-    app.run(debug=True, host='127.0.0.1', port=5001)
+    app.run(debug=True, host='127.0.0.1', port=5002)

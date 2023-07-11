@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Details {{ details.ID }}</h1>
+    {{ details.Anrede_Long_Long }}  {{ details.Geburtstag }}{% if details.Todestag != None %} -  {{ details.Todestag }}{% endif %} ({{ details.Alter }})<BR/>
+    {{ details.Private_Strassen_Adresse }}<BR/>
+    {{ details.Private_PLZ_International }} {{ details.Private_Ort }}<BR/><BR/>
+
+    Zivilstand: <B>{{ details.Zivilstand }}</B><BR/>
+    Kategorien: <B>{{ details.Kategorien }}</B><BR/>
+    {% if details.Funktion != None %}Funktion: <B>{{ details.Funktion }}</B><BR/>{% endif %}
+    TelNr: <B>{{ details.Tel_Nr }}</B><BR/>
+    eMail: <B>{{ details.eMail }}</B><BR/>
+    IBAN: <B>{{ details.IBAN }}</B><BR/>
+
+
+</div>
+{% endblock %}
