@@ -12,6 +12,7 @@
 -- 08-Jun-2023   Walter Rothlin		 Added fields for Neubürger
 -- 05-Jul-2023   Walter Rothlin      Removed Waermebezueger and replaced by Wärmeanschlüsse
 -- 07-Jul-2023   Walter Rothlin      Detail definition Wärmebezüger mit Remo und Adrian
+-- 11-Jul-2023   Walter Rothlin      Added 'Fehlermeldung' zu email
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -216,7 +217,7 @@ DROP TABLE IF EXISTS EMail_Adressen;
 CREATE TABLE IF NOT EXISTS EMail_Adressen (
   `ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `eMail`        VARCHAR(45)  NOT NULL,
-  `Type`         ENUM('Privat', 'Geschaeft', 'Sonstige')  NULL,
+  `Type`         ENUM('Privat', 'Geschaeft', 'Sonstige', 'Fehlermeldung')  NULL,
   `Prio`         TINYINT      NOT NULL DEFAULT 0, 
   `last_update`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
