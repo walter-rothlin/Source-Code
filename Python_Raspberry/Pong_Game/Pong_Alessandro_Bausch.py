@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# Filename: Pong_Alessandro_Bausch.py
+# Source  : https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Raspberry/Pong_Game/Pong_Alessandro_Bausch.py
+
 # Imports
 #----------------------
 from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
