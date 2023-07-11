@@ -87,9 +87,9 @@ def waltisPythonLib_Version():
 # Regular-Expressions
 # ===================
 regEx_email = r'([\w\.-]+)@([\w\.-]+)'
-regEx_Float = '[+-]?\d*\.[0-9]+'
-regEx_Int = '[+-]?[0-9]'
-regEx_Float_Or_Int = '[+-]?\d*\.?\d+'
+regEx_Float = r'[+-]?\d*\.[0-9]+'
+regEx_Int = r'[+-]?[0-9]'
+regEx_Float_Or_Int = r'[+-]?\d*\.?\d+'
 
 
 

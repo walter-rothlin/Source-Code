@@ -24,7 +24,10 @@ def onRequest(clientIP, state, params):
         setLED(2)
     elif state == "/off":
         setLED(0)
-startHTTPServer(onRequest) 
+
+
+startHTTPServer(onRequest)
+
 while not button_escape.was_pressed():
     delay(100)
 exit()
