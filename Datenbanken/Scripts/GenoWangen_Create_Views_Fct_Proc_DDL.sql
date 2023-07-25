@@ -1370,42 +1370,47 @@ SELECT ID, Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Private_PLZ
       WHERE Such_Begriff LIKE BINARY '%Guntlin%' AND Such_Begriff LIKE BINARY '%Karl%';
 */
 -- SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Lüönd%';
+
 -- -----------------------------------------------------
-/* TBD 2023-07_10
-DROP VIEW IF EXISTS PD_Tel_Email_IBAN; 
-CREATE VIEW PD_Tel_Email_IBAN AS
+DROP VIEW IF EXISTS Personen_Daten_Raw; 
+CREATE VIEW Personen_Daten_Raw AS
 	SELECT
 		  ID,
+          Zivilstand,
 		  Kategorien,
-		  Zivilstand,
+          Funktion,
 		  Geschlecht,               -- Herr | Frau
-		  -- Vorname,
-          -- Vorname_2,
-          Vorname_Initial,          -- Walter M.
-          -- Ledig_Name,
-          -- Partner_Name,
-		  -- Partner_Name_Angenommen,
-		  -- LastName,                 -- Rothlin
-          Familien_Name,            -- Rothlin-Collet
-          		  
-		  -- Private_Strasse,
-		  -- Private_Hausnummer,
-          -- Private_Postfachnummer,
-          Private_Strassen_Adresse,
-		  -- Private_PLZ,
-          Private_PLZ_International,
+		  Vorname,
+          Vorname_2,
+          Ledig_Name,
+          Partner_Name,
+		  Partner_Name_Angenommen,
+          
+          Private_Adressen_ID,		  
+		  Private_Strasse,
+		  Private_Hausnummer,
+          Private_Postfachnummer,
+          Private_Ort_ID,
+		  Private_PLZ,
 		  Private_Ort,
+          Private_Land_ID,
 		  Private_Land,
           
           AHV_Nr,
 		  Betriebs_Nr,
 
-          IBAN,
-          eMail,
-          Tel_Nr,
+          Tel_Nr_Detail_Long,
+          Tel_Nr_1_Detail_Long,
+          Tel_Nr_2_Detail_Long,
 
+          eMail_Detail_Long,
+          eMail_1_Detail_Long,
+          eMail_2_Detail_Long,
+          
+          IBAN_Detail_Long,
+          
           Geburtstag,
-          `Alter`,
+          Todestag,
           
           Nach_Wangen_Gezogen,
           Von_Wangen_Weggezogen,
@@ -1417,28 +1422,18 @@ CREATE VIEW PD_Tel_Email_IBAN AS
           Funktion_Abgegeben_Am,
           Chronik_Bezogen_Am,
           
-		  -- Geschaeft_Strasse,
-		  -- Geschaeft_Hausnummer,
-          -- Geschaeft_Postfachnummer,
-          Geschaeft_Strassen_Adresse,
-		  -- Geschaeft_PLZ,
-          Geschaeft_PLZ_International,    -- CH-8855
+		  Geschaeft_Adressen_ID,		  
+		  Geschaeft_Strasse,
+		  Geschaeft_Hausnummer,
+          Geschaeft_Postfachnummer,
+          Geschaeft_Ort_ID,
+		  Geschaeft_PLZ,
 		  Geschaeft_Ort,
-		  Geschaeft_Land,
-          
-		  Anrede_Short_Short,		-- Herr W.Rothlin
-		  Anrede_Long_Short,		-- Herr Walter Rothlin
-		  Anrede_Short_Long,		-- Herr W.Rothlin-Collet
-		  Anrede_Long_Long,		    -- Herr Walter Rothlin-Collet
-          Brief_Anrede,             -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen, Sehr geehrte Herren
-		  Brief_Anrede_Long,        -- Sehr geehrter Herr Rothlin-Collet | Sehr geehrte Frau Collet Rothlin | Sehr geehrte Damen, Sehr geehrte Herren    
-          Brief_Anrede_PerDu,       -- Lieber Walter | Liebe Claudia
-
-          last_update
-	FROM Personen_Daten AS P
-    WHERE Todestag IS NULL;
-    -- ORDER BY LastName, Vorname;
-*/
+          Geschaeft_Land_ID,
+		  Geschaeft_Land
+	FROM Personen_Daten
+    WHERE Todestag IS NULL
+    ORDER BY ID;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Neubürger_Vorvorjahr; 
@@ -1726,6 +1721,14 @@ CREATE VIEW Wärmeanschlüsse_View AS
        eigentümer.Tel_Nr                           AS Eigentümer_Tel_Nr,
        eigentümer.eMail                            AS Eigentümer_eMail,
        
+       -- eigentümer_2.ID                               AS Eigentümer_2_ID,
+	   eigentümer_2.Vorname_Initial                  AS Eigentümer_2_Vorname,
+       eigentümer_2.Familien_Name                    AS Eigentümer_2_Familienname,
+       eigentümer_2.Private_Strassen_Adresse         AS Eigentümer_2_Adresse,
+       eigentümer_2.Private_PLZ_Ort                  AS Eigentümer_2_PLZ_Ort,
+       eigentümer_2.Tel_Nr                           AS Eigentümer_2_Tel_Nr,
+       eigentümer_2.eMail                            AS Eigentümer_2_eMail,
+       
 	   -- kontakt.ID                                  AS Kontakt_ID,
        kontakt.Vorname_Initial                     AS Kontakt_Vorname,
        kontakt.Familien_Name                       AS Kontakt_Familienname,
@@ -1759,12 +1762,13 @@ CREATE VIEW Wärmeanschlüsse_View AS
        elektriker.eMail                               AS Elektriker_eMail
        
 	FROM Wärmeanschlüsse AS anschluss
-    LEFT OUTER JOIN Adress_Daten   AS standort   ON standort.ID   = anschluss.Standort_Adresse_ID
-    LEFT OUTER JOIN Personen_Daten AS eigentümer ON eigentümer.ID = anschluss.Eigentümer_ID
-    LEFT OUTER JOIN Personen_Daten AS kontakt    ON kontakt.ID    = anschluss.Kontakt_ID
-    LEFT OUTER JOIN Personen_Daten AS rechAdr    ON rechAdr.ID    = anschluss.Rechnungs_Adresse_ID
-    LEFT OUTER JOIN Personen_Daten AS heiziger   ON heiziger.ID   = anschluss.Heizungs_Installateur_ID
-    LEFT OUTER JOIN Personen_Daten AS elektriker ON elektriker.ID = anschluss.Elektro_Installateur_ID;
+    LEFT OUTER JOIN Adress_Daten   AS standort     ON standort.ID     = anschluss.Standort_Adresse_ID
+    LEFT OUTER JOIN Personen_Daten AS eigentümer   ON eigentümer.ID   = anschluss.Eigentümer_ID
+    LEFT OUTER JOIN Personen_Daten AS eigentümer_2 ON eigentümer_2.ID = anschluss.Eigentümer_2_ID
+    LEFT OUTER JOIN Personen_Daten AS kontakt      ON kontakt.ID      = anschluss.Kontakt_ID
+    LEFT OUTER JOIN Personen_Daten AS rechAdr      ON rechAdr.ID      = anschluss.Rechnungs_Adresse_ID
+    LEFT OUTER JOIN Personen_Daten AS heiziger     ON heiziger.ID     = anschluss.Heizungs_Installateur_ID
+    LEFT OUTER JOIN Personen_Daten AS elektriker   ON elektriker.ID   = anschluss.Elektro_Installateur_ID;
 
 -- -----------------------------------------------------
 /*

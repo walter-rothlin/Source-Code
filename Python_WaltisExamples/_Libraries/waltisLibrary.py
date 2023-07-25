@@ -44,6 +44,7 @@
 # 31-Dec-2022   Walter Rothlin      Added generateQRInvoiceData
 # 06-Apr-2022   Walter Rothlin      Added readFloat_00() guard with regex
 # 22-Jun-2023   Walter Rothlin      Added read_boolean
+# 13-Jul-2023   Walter Rothlin      Added split_adress_street_nr()
 # ------------------------------------------------------------------
 
 
@@ -1155,6 +1156,25 @@ def TEST_Primzahlen():
 
 # String Functions
 # ================
+def split_adress_street_nr(street_nr_string, verbal=False):
+    parts = street_nr_string.split(' ')
+    if verbal:
+        print(parts)
+        print('strasse:', parts[0:-1], '   nr:', parts[-1])
+
+    if len(parts) == 1:
+        return {'Street': parts[0], 'No': ''}
+    else:
+        return {'Street': ' '.join(parts[0:-1]), 'No': parts[-1]}
+
+def AUTO_TEST__split_adress_street_nr():
+    test_cases = ['Etzelstrasse 7',
+                  'Rue de solei 788ab',
+                  "hans' house 76",
+                  'Bahnhostrasse']
+    for a_test_case in test_cases:
+        strasse_nr = split_adress_street_nr(a_test_case, verbal=False)
+        print('Strasse:', strasse_nr['Street'], '  Nr:', strasse_nr['No'])
 def howManyDigitsAreInString_Classic(aString, trace=False):
     count = 0
     for c in aString:
@@ -2653,6 +2673,8 @@ def dictify(context, names):
 # ===========================================================
 
 if __name__ == '__main__':
+    AUTO_TEST__split_adress_street_nr()
+
     autoTest = True
 
     if not autoTest:
