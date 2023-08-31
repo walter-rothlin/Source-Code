@@ -17,6 +17,12 @@
 -- 10-Jul-2023   Walter Rothlin      Added ENUM and SET values view
 -- 11-Jul-2023   Walter Rothlin      Added IBAN/EMAIL-Details to EMAIL_liste/IBAN_liste and Personen_daten
 -- 12-Jul-2023   Walter Rothlin      Cleanup script (removed unused fct, views)
+-- 26-Aug-2023   Walter Rothlin      Mod getTelefonnummerId added all attributes
+--                                   Mod getEmailAdrId      added all attributes
+--                                   Mod getIBANId          added all attributes
+-- 29-Aug-2023   Walter Rothlin      Added Nutzen-Listen und Nutzen-Statistik (Nutzenauszahlung;Nutzenstatistik;Nutzensumme)
+--                                   Added Einladungsliste_Geno_Gemeinde
+--                                   Added  Wegzüger_Dieses_Jahr;Rückkehrer_Dieses_Jahr
 -- -----------------------------------------
 
 -- To-Does
@@ -689,6 +695,70 @@ DELIMITER ;
 -- SELECT getStrassenAdresse('Peterliwiese', '33a', '');      -- --> Peterliwiese 33
 -- SELECT getStrassenAdresse('Peterliwiese', '33a', '243' );  -- --> Peterliwiese 33 / Postfach:243
 
+-- -----------------------------------------
+
+-- =========================================
+--          Nutzen                        --
+-- =========================================
+--  Berechnet Genossennutzen anhand der Kategorie
+DROP FUNCTION IF EXISTS calc_nutzen_by_katset;
+DELIMITER //
+CREATE FUNCTION calc_nutzen_by_katset(p_kategorien SET('Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
+                    'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
+                    'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
+                    'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
+                    'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
+                    'Betriebsgemeinschaft', 'Generationengemeinschaft')) RETURNS FLOAT
+BEGIN
+   DECLARE ret_val FLOAT DEFAULT 0;
+   IF (FIND_IN_SET('Nutzungsberechtigt', p_kategorien) > 0) THEN 
+        SET ret_val = (SELECT `Value` FROM properties WHERE `Name` = 'Grundnutzen');
+
+		IF (FIND_IN_SET('Hat_16a', p_kategorien) = 0) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_16a_Teil');
+		END IF;
+        
+		IF (FIND_IN_SET('Hat_35a', p_kategorien) = 0) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_35a_Teil');
+		END IF;
+   END IF;
+   RETURN  ret_val;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- select calc_nutzen_by_katset('Nutzungsberechtigt')                  AS `Expected_2000.00`;
+-- select calc_nutzen_by_katset('Nutzungsberechtigt,Hat_16a')          AS `Expected_1870.00`;
+-- select calc_nutzen_by_katset('Nutzungsberechtigt,Hat_35a')          AS `Expected_1780.00`;
+-- select calc_nutzen_by_katset('Nutzungsberechtigt,Hat_16a,Hat_35a')  AS `Expected_2000.00`;
+
+DROP FUNCTION IF EXISTS calc_nutzen;
+DELIMITER //
+CREATE FUNCTION calc_nutzen(p_is_nutzungsberechtigt Boolean, p_has_16a_Teil Boolean, p_has_35a_Teil Boolean) RETURNS FLOAT
+BEGIN
+   DECLARE ret_val FLOAT DEFAULT 0;
+   IF (p_is_nutzungsberechtigt = true) THEN 
+        SET ret_val = (SELECT `Value` FROM properties WHERE `Name` = 'Grundnutzen');
+
+		IF (p_has_16a_Teil = false) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_16a_Teil');
+		END IF;
+        
+		IF (p_has_35a_Teil = false) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_35a_Teil');
+		END IF;
+   END IF;
+   RETURN  ret_val;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- select calc_nutzen(false, true, true);   -- --> 0
+-- select calc_nutzen(true, true, true);    -- --> 1650.00
+-- select calc_nutzen(true, false, true);   -- --> 1780.00
+-- select calc_nutzen(true, true, false);   -- --> 1870.00
+-- select calc_nutzen(true, false, false);  -- --> 2000.00
+
 -- ===============================================================================================
 -- == Create Views                                                                              ==
 -- ===============================================================================================
@@ -1135,6 +1205,11 @@ CREATE VIEW Personen_Daten AS
 			  WHEN FIND_IN_SET('Bürger', P.Kategorien) > 0   THEN 'Ja'
 			  ELSE ''
 			END AS Ist_Bürger,
+            			
+			CASE 
+			WHEN FIND_IN_SET('Verwaltungsberechtigt', P.Kategorien) > 0   THEN 'Ja'
+			  ELSE ''
+			END AS Ist_Verwaltungsberechtigt,
             
 			CASE 
 			  WHEN FIND_IN_SET('Nutzungsberechtigt', P.Kategorien) > 0   THEN 'Ja'
@@ -1189,7 +1264,14 @@ CREATE VIEW Personen_Daten AS
 
 -- SELECT * FROM Personen_Daten;
 -- -----------------------------------------------------
--- SELECT * FROM Personen_Daten ;
+DROP VIEW IF EXISTS Firmen_Institutionen; 
+CREATE VIEW Firmen_Institutionen AS
+    SELECT
+	    *
+    FROM Personen_Daten
+    WHERE Geschlecht != 'Herr' AND Geschlecht != 'Frau'
+    ORDER BY Familien_Name, Vorname;
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Personen_Daten_Lebend; 
 CREATE VIEW Personen_Daten_Lebend AS
@@ -1245,6 +1327,39 @@ CREATE VIEW Bürger_Nutzungsberechtigt AS
     WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
     ORDER BY Familien_Name, Vorname;
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt; 
+CREATE VIEW Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt AS
+    SELECT
+        *
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND FIND_IN_SET('Verwaltungsberechtigt', Kategorien) =  0
+    ORDER BY Familien_Name, Vorname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Einladungsliste_Geno_Gemeinde; 
+CREATE VIEW Einladungsliste_Geno_Gemeinde AS
+    SELECT
+        -- *
+        ID,
+        Zivilstand,
+        Geschlecht,
+        Vorname_Initial,
+        Familien_Name,
+        Private_Strassen_Adresse   AS Strasse,
+        Private_PLZ_Ort            AS PLZ_Ort,
+        Anrede_1_Short_Short,
+        Anrede_Short_Short,
+        Anrede_Long_Short,
+        Anrede_Short_Long,
+        Anrede_Long_Long,
+        Brief_Anrede,
+        Brief_Anrede_Long,
+        Brief_Anrede_Text,
+        Brief_Anrede_PerDu
+    FROM Personen_Daten
+    WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
+    ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Bürger_eMailing; 
@@ -1274,11 +1389,18 @@ CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
 DROP VIEW IF EXISTS Unbereinigt_Email_TelNr_IBAN; 
 CREATE VIEW Unbereinigt_Email_TelNr_IBAN AS
     SELECT
-        *
+        -- *
+        ID,
+        Ist_Nutzungsberechtigt AS Nutzen,
+        Geschlecht,
+        Vorname_Initial,
+        Familien_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_ORT,
+        Tel_Nr_Detail_Long,
+        IBAN_Detail_Long,
+        eMail_Detail_Long
     FROM Bürger_Lebend
-	-- WHERE eMail  IS NULL OR eMail  = '' OR
-    --       Tel_Nr IS NULL OR Tel_Nr = '' OR
-    --       IBAN   IS NULL OR IBAN   = ''
     WHERE eMail_ID  IS NULL OR
           Tel_Nr_ID IS NULL OR
           IBAN_ID   IS NULL
@@ -1299,6 +1421,8 @@ CREATE VIEW Bürger_Gestorben AS
         Todesjahr,
         IF (Todesjahr = DATE_FORMAT(now(),'%Y'), 'Ja', '') AS `Dieses Jahr gestorben`,
         `Alter`,
+        Hat_16a_Teil,
+        Hat_35a_Teil,
         last_update
     FROM Personen_Daten 
     WHERE Todestag IS NOT NULL AND FIND_IN_SET('Bürger', Kategorien) >  0
@@ -1514,9 +1638,53 @@ CREATE VIEW Neubürger_Dieses_Jahr AS
 	  Partner_ID,
 	  Mutter_ID,
 	  Vater_ID
-	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now(),'%Y');
+	FROM Personen_Daten 
+    WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now(),'%Y');
 
 -- SELECT  DATE_FORMAT(now() - INTERVAL 1 YEAR,'%Y');
+
+
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Rückkehrer_Dieses_Jahr;
+CREATE VIEW Rückkehrer_Dieses_Jahr AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  IBAN,
+	  Geburtstag,
+	  `Alter`
+	FROM Personen_Daten 
+    WHERE (FIND_IN_SET('Bürger', Kategorien) >  0) AND 
+          (DATE_FORMAT(STR_TO_DATE(Nach_Wangen_Gezogen, '%d.%m.%Y'),'%Y')  = DATE_FORMAT(now(),'%Y'));
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Wegzüger_Dieses_Jahr;
+CREATE VIEW Wegzüger_Dieses_Jahr AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  IBAN,
+	  Geburtstag,
+	  `Alter`
+	FROM Personen_Daten 
+    WHERE (FIND_IN_SET('Bürger', Kategorien) >  0) AND 
+          (DATE_FORMAT(STR_TO_DATE(Von_Wangen_Weggezogen, '%d.%m.%Y'),'%Y')  = DATE_FORMAT(now(),'%Y'));
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Newsletter_Abo; 
 CREATE VIEW Newsletter_Abo AS
@@ -1535,6 +1703,59 @@ CREATE VIEW Newsletter_Abo AS
       Newsletter_Abonniert_Am
 	FROM Personen_Daten WHERE Newsletter_Abonniert_Am IS NOT NULL;
     
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzenauszahlung;
+CREATE VIEW Nutzenauszahlung AS
+	SELECT 
+	  ID, 
+	  -- Kategorien,
+	  CASE 
+		  WHEN Hat_16a_Teil  = 'Ja'  AND Hat_35a_Teil != 'Ja'   THEN 'Nur 16a_Teil'
+		  WHEN Hat_16a_Teil != 'Ja'  AND Hat_35a_Teil  = 'Ja'   THEN 'Nur 35a_Teil'
+          WHEN Hat_16a_Teil  = 'Ja'  AND Hat_35a_Teil  = 'Ja'   THEN 'Beide Landteile'
+		  ELSE 'Keine Landteile'
+	  END AS Bürger_Teile,
+      Ist_Bürger,
+      Ist_Verwaltungsberechtigt,
+      Ist_Nutzungsberechtigt,
+      Hat_16a_Teil,
+      Hat_35a_Teil,
+      Hat_Bürger_Teil,
+	  Geschlecht, 
+	  Vorname_Initial                               AS Vorname, 
+	  Familien_Name                                 AS Familienname, 
+	  Private_Strassen_Adresse                      AS Strasse,
+	  Private_PLZ_Ort                               AS PLZ_Ort,
+      ROUND(calc_nutzen_by_katset(Kategorien),2)    AS Nutzen,
+      IBAN
+	  -- Tel_Nr,
+	  -- eMail,
+	  -- Geburtstag,
+	  -- `Alter`
+      
+	FROM Personen_Daten 
+    WHERE FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
+    ORDER BY Bürger_Teile, Familienname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzenstatistik;
+CREATE VIEW Nutzenstatistik AS    
+	SELECT 
+		Bürger_Teile            AS Bürgerteile,
+		Count(Nutzen)           AS Anzahl,
+		ROUND(Sum(Nutzen),2)    AS Nutzen_Betrag
+	FROM Nutzenauszahlung 
+	GROUP BY Bürger_Teile
+	ORDER BY Nutzen_Betrag;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzensumme; 
+CREATE VIEW Nutzensumme AS     
+SELECT
+	sum(Anzahl)         AS `Anzahl Auszahlungen`,
+    sum(Nutzen_Betrag)  AS `Anzahlungs Summe`
+FROM Nutzenstatistik;
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
 CREATE VIEW Pachtlandzuteilung AS
@@ -1630,10 +1851,10 @@ CREATE VIEW Paechterstatistik AS
 		   Paechter_Strasse,
 		   Paechter_PLZ_Ort,
            Paechter_Alter,
-		   ROUND(SUM(Flaeche),2)                  AS Geno_Flaeche,
+		   ROUND(SUM(Flaeche),2)         AS Geno_Flaeche,
 		   SUM(Geno_Pachtzins_pro_Jahr)  AS Geno_Pachtzins
 	FROM Pachtlandzuteilung
-	WHERE Verpaechter_ID = 625
+	WHERE Verpaechter_ID = 625   -- Geno
 	GROUP BY Paechter_ID
 	ORDER BY Paechter_Name;
     
@@ -1870,6 +2091,10 @@ CREATE VIEW PD_Row_Counts AS
 		'Nutzungsberechtigte Bürger'                          AS `Table Name`,
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
 	UNION
+	SELECT
+		'Nutzungsberechtigte aber nicht Verwaltungsberechtigte Bürger'                 AS `Table Name`,
+		(SELECT count(*) FROM `bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt`) AS `Row Count`
+	UNION
         SELECT
 		'Bürger mit eMail'                                    AS `Table Name`,
 		(SELECT count(*) FROM `bürger_eMailing`)              AS `Row Count`
@@ -1881,6 +2106,10 @@ CREATE VIEW PD_Row_Counts AS
         SELECT
 		'Nutzungsberechtigte Bürger'                          AS `Table Name`,
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
+	UNION
+	SELECT
+		'Einladungen für Genossen-Gemeinde'                       AS `Table Name`,
+		(SELECT count(*) FROM `Einladungsliste_Geno_Gemeinde`)    AS `Row Count`
 	UNION
 	SELECT
 		'+++----------------------------+'                        AS `Table Name`,
@@ -1907,11 +2136,11 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Landteile`)                     AS `Row Count`
 	UNION
 	SELECT
-		'Landteile Genossame'                                  AS `Table Name`,
+		'Landteile Genossame'                                                             AS `Table Name`,
 		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID = 625)                     AS `Row Count`
 	UNION
 	SELECT
-		'Landteile'                                            AS `Table Name`,
+		'Landteile'                                                                        AS `Table Name`,
 		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625)                     AS `Row Count`
 	UNION
 	SELECT
@@ -1919,15 +2148,15 @@ CREATE VIEW PD_Row_Counts AS
 		'+++++-----------+'                                       AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 16a Teilen'                            AS `Table Name`,
+		'Verpächter mit 16a Teilen'                                                                    AS `Table Name`,
 		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0)         AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 35a Teilen'                            AS `Table Name`,
+		'Verpächter mit 35a Teilen'                                                                    AS `Table Name`,
 		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a',        Kategorien) >  0)         AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 16a und 35a Teilen'                            AS `Table Name`,
+		'Verpächter mit 16a und 35a Teilen'                                                           AS `Table Name`,
 		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 AND  
                                                FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
 	UNION
@@ -1944,11 +2173,11 @@ CREATE VIEW PD_Row_Counts AS
 		'+-------------+++'                                       AS `Row Count`
 	UNION
 	SELECT
-		'Bezogene Chroniken'                            AS `Table Name`,
+		'Bezogene Chroniken'                                                  AS `Table Name`,
 		(SELECT count(*) FROM Personen WHERE Chronik_Bezogen_Am IS NOT NULL)  AS `Row Count`
 	UNION
 	SELECT
-		'Abos Newsletter'                            AS `Table Name`,
+		'Abos Newsletter'                                                          AS `Table Name`,
 		(SELECT count(*) FROM Personen WHERE Newsletter_Abonniert_Am IS NOT NULL)  AS `Row Count`
 	UNION
 	SELECT
@@ -1957,7 +2186,7 @@ CREATE VIEW PD_Row_Counts AS
 	UNION
 	SELECT
 		'Wärmeverbund Vollanschlüsse'                        AS `Table Name`,
-		(SELECT count(*) FROM Wärmeanschlüsse_View)  AS `Row Count`
+		(SELECT count(*) FROM Wärmeanschlüsse_View)          AS `Row Count`
 	;
 
 
@@ -2021,11 +2250,19 @@ CREATE PROCEDURE getEmailAdrId(IN  email_addr VARCHAR(45),
                                IN  Prio       TINYINT, 
                                OUT email_id   SMALLINT(5))
 BEGIN
-    IF ((SELECT count(*) FROM email_adressen WHERE eMail=email_addr) = 0) THEN
+    IF ((SELECT count(*) 
+         FROM email_adressen 
+         WHERE `eMail` = email_addr    AND
+               `Type`  = email_type    AND
+               `Prio`    = Prio)       = 0) THEN
         INSERT INTO email_adressen (`eMail`,`Type`,`Prio`) VALUES (email_addr, email_type, Prio);
         COMMIT;
     END IF;
-    SELECT id FROM email_adressen WHERE eMail=email_addr AND Type=email_type INTO email_id;
+    SELECT id 
+    FROM email_adressen 
+    WHERE `eMail`  = email_addr AND 
+          `Type`   = email_type AND
+		  `Prio`   = Prio INTO email_id;
 END$$
 DELIMITER ;
 
@@ -2080,12 +2317,22 @@ BEGIN
     IF ((SELECT count(*) 
          FROM Telefonnummern 
          WHERE Telefonnummern.Laendercode = Laendercode AND 
-               Telefonnummern.Vorwahl     = Vorwahl AND 
-               Telefonnummern.Nummer=Nummer) = 0) THEN
+               Telefonnummern.Vorwahl     = Vorwahl     AND 
+               Telefonnummern.Nummer      = Nummer      AND
+               Telefonnummern.Type        = TEL_Type    AND
+               Telefonnummern.Endgeraet   = Endgeraet   AND 
+               Telefonnummern.Prio        = Prio)              = 0) THEN
 					INSERT INTO Telefonnummern (`Laendercode`,`Vorwahl`,`Nummer`,`Type`,`Endgeraet`,`Prio`) VALUES (Laendercode, Vorwahl, Nummer, TEL_Type, Endgeraet, Prio);
 					COMMIT;
     END IF;
-    SELECT id FROM Telefonnummern WHERE Telefonnummern.Laendercode=Laendercode AND Telefonnummern.Vorwahl=Vorwahl AND Telefonnummern.Nummer=Nummer INTO tel_id;
+    SELECT id 
+    FROM Telefonnummern 
+    WHERE Telefonnummern.Laendercode = Laendercode AND 
+          Telefonnummern.Vorwahl     = Vorwahl     AND 
+          Telefonnummern.Nummer      = Nummer      AND
+          Telefonnummern.Type        = TEL_Type    AND
+		  Telefonnummern.Endgeraet   = Endgeraet   AND 
+		  Telefonnummern.Prio        = Prio INTO tel_id;
 END$$
 DELIMITER ;
 
@@ -2141,8 +2388,8 @@ BEGIN
     IF ((SELECT count(*) 
          FROM IBAN 
          WHERE IBAN.Personen_ID = pers_id AND
-               IBAN.Nummer = iban_nummer  AND
-               IBAN.Prio = 0) = 0) THEN
+               IBAN.Nummer      = iban_nummer  AND
+               IBAN.Prio        = 0) = 0) THEN
 					INSERT INTO IBAN (`ID`, `Nummer`, `prio`) VALUES (pers_id, iban_nummer, 0);
 					COMMIT;
     END IF;
@@ -2474,6 +2721,9 @@ DELIMITER ;
 -- ------------------------------------------------------
 -- Zwingende Data updates
 -- ------------------------------------------------------
+-- SELECT * FROM Personen_Daten WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND ID=644;
+-- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Verwaltungsberechtigt') WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0;
+
 DROP PROCEDURE IF EXISTS important_updates;
 DELIMITER $$
 CREATE PROCEDURE important_updates()

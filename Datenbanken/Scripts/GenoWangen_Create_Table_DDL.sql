@@ -14,6 +14,7 @@
 -- 07-Jul-2023   Walter Rothlin      Detail definition Wärmebezüger mit Remo und Adrian
 -- 11-Jul-2023   Walter Rothlin      Added 'Fehlermeldung' zu email
 -- 12-Jul-2023   Walter Rothlin      Added  `Projekt_Nr` Eigentümer_2_ID to Wärmeanschlüsse
+-- 29-Aug-2023   Walter Rothlin      Added  'Verwaltungsberechtigt' zu Kategorien
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -37,6 +38,24 @@ USE genossame_wangen;
 -- == Create Tables                       ==
 -- =========================================
 
+-- -----------------------------------------
+-- Table `Properties`
+-- -----------------------------------------
+DROP TABLE IF EXISTS Properties;
+CREATE TABLE IF NOT EXISTS Properties (
+  `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Name`          VARCHAR(25) NOT NULL,
+  `Value`         VARCHAR(25) NULL,
+  `last_update`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  -- PK-Constraints
+  PRIMARY KEY (`ID`));
+  
+INSERT INTO `properties` (`Name`, `Value`) VALUES 
+       ('Grundnutzen', '1650.00'),
+       ('Nutzen_16a_Teil', '130.00'),
+       ('Nutzen_35a_Teil', '220.00');
+ 
 -- -----------------------------------------
 -- Table `Land`
 -- -----------------------------------------
@@ -135,7 +154,7 @@ CREATE TABLE IF NOT EXISTS Personen (
                       'Bevormundet','Partnerschaft') 
                       DEFAULT NULL,
 
-  `Kategorien`  SET('Bürger', 'Nutzungsberechtigt', 'Hat_16a', 'Hat_35a',
+  `Kategorien`  SET('Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
                     'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
                     'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
                     'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 

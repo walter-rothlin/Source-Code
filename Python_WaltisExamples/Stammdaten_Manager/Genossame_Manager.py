@@ -283,106 +283,7 @@ def inital_load_fromExcel(input_fn, db_connection, doit=False):
         initial_load(input_fn, ['IBAN'], db_connection)
         initial_load(input_fn, ['EMail', 'Person_Has_EMail'], db_connection)
         initial_load(input_fn, ['Telefon', 'Person_Has_Telefonnummer'], db_connection)
-def inserts_from_excel(filename, sheet_name, attribut, db_connection, verbal=False):
 
-    myCursor = db_connection.cursor()
-    insert_count = 0
-    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
-    if attribut == 'EMAIL':
-        print('Adding eMail adresses ..   ', end='')
-        if verbal:
-            print()
-        if sheet_name == 'Unbereinigt_email_telnr_iban':
-            df = pd.DataFrame(sheet_data, columns=['ID', 'eMail_ID', 'eMail'])
-            for index, row in df.iterrows():
-                # print()
-                # print(index, row)
-                pers_ID = str(row[0]).replace('.0', '')
-                email_ID = str(row[1]).replace('.0', '')
-                email = str(row[2])
-                if email_ID == 'nan' and email != 'nan':
-                    insert_count += 1
-                    args = (pers_ID, email, 'Sonstige', 0, 'x')  # 'x' in the Tuple will be replaced by OUT-Value
-                    if verbal:
-                        print('    addEmailAdr', str(args), sep='')
-                    result_args = myCursor.callproc('addEmailAdr', args)
-
-    if attribut == 'TELNR':
-        insert_count = 0
-        print('Adding TelNrs ..   ', end='')
-        if verbal:
-            print()
-        if sheet_name == 'Unbereinigt_email_telnr_iban':
-            df = pd.DataFrame(sheet_data, columns=['ID', 'Tel_Nr_ID', 'Tel_Nr'])
-            for index, row in df.iterrows():
-                pers_ID = str(row[0]).replace('.0', '')
-                telnr_ID = str(row[1]).replace('.0', '')
-                telnr = str(row[2]).replace(' ', '')
-                if telnr_ID == 'nan' and telnr != 'nan':
-                    insert_count += 1
-                    vorwahl = telnr[0:3]
-                    telnr   = telnr[3:]
-                    if vorwahl == '055':
-                        endgeraet = 'Festnetz'
-                    else:
-                        endgeraet = 'Mobile'
-                    args = (pers_ID, '0041', vorwahl, telnr, 'Sonstige', endgeraet, 0, 'x')  # 'x' in the Tuple will be replaced by OUT-Value
-                    if verbal:
-                        print('    addTelNr', str(args), sep='')
-                    result_args = myCursor.callproc('addTelNr', args)
-
-    if attribut == 'IBAN':
-        insert_count = 0
-        print('Adding IBAN ..   ', end='')
-        if verbal:
-            print()
-        if sheet_name == 'Unbereinigt_email_telnr_iban':
-            df = pd.DataFrame(sheet_data, columns=['ID', 'IBAN_ID', 'IBAN'])
-            for index, row in df.iterrows():
-                pers_ID = str(row[0]).replace('.0', '')
-                iban_ID = str(row[1]).replace('.0', '')
-                iban = str(row[2])    # .replace(' ', '')
-                # print(pers_ID, iban_ID, iban)
-                if iban_ID == 'nan' and iban != 'nan':
-                    insert_count += 1
-                    args = (pers_ID, iban, 'x')
-                    if verbal:
-                        print('    addIBAN', str(args), sep='')
-                    result_args = myCursor.callproc('addIBAN', args)
-
-    print('    .. ', insert_count, 'reord(s) processed!')
-    return insert_count
-
-
-def updates_from_excel(filename, sheet_name, db_connection, verbal=False):
-    update_count = 0
-    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
-    print('Updateing eMail, Tel_Nr, IBAN..   ', end='')
-    if verbal:
-        print()
-    df = pd.DataFrame(sheet_data, columns=['ID', 'eMail_ID', 'eMail', 'Tel_Nr_ID', 'Tel_Nr', 'IBAN_ID', 'IBAN'])
-    rec_updated = 0
-    for index, row in df.iterrows():
-        # print()
-        # print(index, row)
-        pers_ID = str(row[0]).replace('.0', '')
-        email_ID = str(row[1]).replace('.0', '')
-        email = str(row[2])
-        if email_ID != 'nan' and email != 'nan':
-            update_count += update_if_neccessary(db_connection, 'email_adressen', email_ID, 'eMail', email, verbal=True)
-
-        tel_nr_ID = str(row[3]).replace('.0', '')
-        tel_nr = str(row[4]).replace(' ', '')
-        if tel_nr_ID != 'nan' and tel_nr != 'nan':
-            update_count += update_if_neccessary(db_connection, 'telefonnummern', tel_nr_ID, 'nummer', tel_nr, verbal=True)
-
-        iban_ID = str(row[5]).replace('.0', '')
-        iban = str(row[6]).replace(' ', '')
-        if iban_ID != 'nan' and iban != 'nan':
-            # print(pers_ID, IBAN_ID, IBAN)
-            update_count += update_if_neccessary(db_connection, 'iban', iban_ID, 'nummer', iban, verbal=True)
-
-    return update_count
 
 def initial_load_pachtland(db_connection, filename,  verbal=False):
     print('initial_load_pachtland...reading', filename)
@@ -453,173 +354,6 @@ def initial_load_pachtland(db_connection, filename,  verbal=False):
         # break
 
 
-
-
-
-
-
-def email_telnr_IBAN_migrieren(stammdaten_schema, reco_data_fn, verbal=False):
-    do_inserts_from_reco = True
-    if do_inserts_from_reco:
-        rc = 0
-        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'EMAIL', stammdaten_schema, verbal=verbal)
-        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'TELNR', stammdaten_schema, verbal=verbal)
-        rc += inserts_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', 'IBAN', stammdaten_schema, verbal=verbal)
-
-        if rc > 0:
-            print('\n\n---> All insert in', reco_data_fn)
-        else:
-            print('\n\n===> No inserts found in', reco_data_fn)
-
-    do_updates_from_reco = True
-    if do_updates_from_reco:
-        rc = 0
-        rc += updates_from_excel(reco_data_fn, 'Unbereinigt_email_telnr_iban', stammdaten_schema, verbal=verbal)
-
-        if rc > 0:
-            print('\n\n---> All updates in', reco_data_fn)
-        else:
-            print('\n\n===> No updates found in', reco_data_fn)
-
-def news_letter_daten_migrieren(stammdaten_schema, excel_file, verbal=False):
-    # Newsletter Daten migrieren
-    do_reco_Newsletter_set_id = False
-    if do_reco_Newsletter_set_id:
-        print('\n\n\n======> Newsletter Daten migrieren')
-        excel_sheet = 'Mailadressen aktuell'
-        workbook = openpyxl.load_workbook(excel_file, data_only=True)
-        worksheet_sheet = workbook[excel_sheet]
-
-        row = 2
-        while worksheet_sheet["B" + str(row)].value is not None:
-            if (worksheet_sheet["A" + str(row)].value is None) or (worksheet_sheet["A" + str(row)].value == '?') or (',' in str(worksheet_sheet["A" + str(row)].value)):
-                such_kriterien = []
-                such_kriterien.append(worksheet_sheet["B" + str(row)].value)
-                such_kriterien.append(worksheet_sheet["D" + str(row)].value)
-                if worksheet_sheet["C" + str(row)].value is not None:
-                    such_kriterien.append(worksheet_sheet["C" + str(row)].value)
-                elif worksheet_sheet["E" + str(row)].value is not None:
-                    strasse = worksheet_sheet["E" + str(row)].value
-                    strasse = strasse.replace('strasse', 'str.')
-                    such_kriterien.append(strasse)
-                # print(get_personen_id(stammdaten_schema, such_kriterien, verbal=False))
-                people_found = get_personen_ids(stammdaten_schema, such_kriterien, verbal=verbal)
-
-                ids = []
-                for aRec in people_found:
-                    ids.append(str(aRec[0]))
-                ids_str = ','.join(ids)
-                if len(ids) == 1:
-                    worksheet_sheet["A" + str(row)] = str(ids[0])
-
-                elif len(ids) == 0:
-                    print('--> ', str(such_kriterien))
-                    worksheet_sheet["A" + str(row)] = '?'
-
-                else:
-                    worksheet_sheet["A" + str(row)] = ids_str
-                    print('==> ', str(such_kriterien))
-                    worksheet_sheet["J" + str(row)] = str(people_found)
-                    print('people_found (', len(people_found), '):', people_found, end='\n\n\n')
-
-            row += 1
-        workbook.save(excel_file)
-        workbook.close()
-
-    # do compare and take over
-    print('\n\n\n======> Compare and take over Data')
-    workbook = openpyxl.load_workbook(excel_file, data_only=True)
-    worksheet_sheet = workbook[excel_sheet]
-    row = 2
-    while worksheet_sheet["B" + str(row)].value is not None:
-        pers_id = worksheet_sheet["A" + str(row)].value
-        if (pers_id is not None) and (pers_id != '?') and (pers_id != 'F') and (pers_id != 'H') and (',' not in str(pers_id)):
-            geb_datum = worksheet_sheet["F" + str(row)].value
-            eMail_adr = worksheet_sheet["G" + str(row)].value
-            if eMail_adr is not None:
-                eMail_adr = str(eMail_adr).replace('mailto:', '')
-            Natel_Nr = worksheet_sheet["H" + str(row)].value
-            bemerkungen = worksheet_sheet["I" + str(row)].value
-            ## print('+++++', pers_id, geb_datum, eMail_adr, Natel_Nr, bemerkungen)
-            if geb_datum is None and eMail_adr is None and Natel_Nr is None and bemerkungen is None:
-                worksheet_sheet["B" + str(row)].value = ''
-                worksheet_sheet["C" + str(row)].value = ''
-                worksheet_sheet["D" + str(row)].value = ''
-                worksheet_sheet["E" + str(row)].value = ''
-
-            if eMail_adr is not None and eMail_adr != '':
-                # print(f"update_or_insert_value({pers_id}, 'eMai_adressen', '{eMail_adr}')")
-                up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'eMai_adressen', {'eMail': eMail_adr, 'Type': 'Sonstige', 'Prio': 0}, verbal=verbal)
-                if up_ins_count['count_of_matches'] == 1:
-                    worksheet_sheet["G" + str(row)].value = ''
-
-                print('email count_of_inserts:', up_ins_count['count_of_inserts'])
-                print('email count_of_updates:', up_ins_count['count_of_updates'])
-                print('email count_of_matches:', up_ins_count['count_of_matches'])
-                # halt('Weiter_06:')
-                # print('eMai_adressen', up_ins_count)
-            if Natel_Nr is not None and Natel_Nr != '':
-                up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'telefon_nummer', {'tel_nr': Natel_Nr, 'Type': 'Private', 'Endgeraet': 'Mobile', 'Prio': 0}, verbal=verbal)
-                if up_ins_count['count_of_matches'] == 1:
-                    worksheet_sheet["H" + str(row)].value = ''
-                # print('telefon_nummer', up_ins_count)
-            if geb_datum is not None and geb_datum != '':
-                up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'Geburtstag', {'Date': geb_datum})
-                if up_ins_count['count_of_matches'] == 1:
-                    worksheet_sheet["F" + str(row)].value = ''
-                # print('Geburtstag', up_ins_count)
-            up_ins_count = update_or_insert_value(stammdaten_schema, pers_id, 'Newsletter_Abonniert_Am', {'Date': '2023.06.20'})
-            # print('Newsletter_Abonniert_Am', up_ins_count)
-        elif pers_id == 'F' or pers_id == 'H':
-            if pers_id == 'F':
-                sex = 'Frau'
-            else:
-                sex = 'Herr'
-            Nachname = worksheet_sheet["B" + str(row)].value
-            Nachname_2 = worksheet_sheet["C" + str(row)].value
-            Vorname = worksheet_sheet["D" + str(row)].value
-            geb_datum = str(worksheet_sheet["F" + str(row)].value)
-            print('geb_datum:', geb_datum, ':', sep='')
-            if geb_datum != 'None':
-                geb_datum = geb_datum[8:10] + '.' + geb_datum[5:7] + '.' + geb_datum[0:4]
-            else:
-                geb_datum = ''
-            print('geb_datum:', geb_datum, ':', sep='')
-            eMail_adr = worksheet_sheet["G" + str(row)].value
-            str_hNr_Ort = worksheet_sheet["E" + str(row)].value
-            str_hNr_Ort = str_hNr_Ort.replace('  ', ' ')
-            # print('str_hNr_Ort:', str_hNr_Ort)
-            if ', ' in str_hNr_Ort:
-                str_nr, plz_ort = str_hNr_Ort.split(', ')
-            else:
-                str_nr = str_hNr_Ort.replace('  ', ' ')
-                plz_ort = '8855 Wangen'
-
-            # print('str_nr:', str_nr, ':', sep='')
-            str_hsNr_parts = []
-            str_hsNr_parts = str_nr.split(' ')
-            strasse = ' '.join(str_hsNr_parts[:-1])
-            hausnr = str_hsNr_parts[-1]
-            print('strasse:', strasse, ':', sep='')
-            print('hausnr:' + hausnr, ':', sep='')
-
-            print('eMail_adr:', eMail_adr, ':', sep='')
-            # print('plz_ort:', plz_ort, ':', sep='')
-            plz, ort = plz_ort.split(' ')
-            print('plz:', plz, ':', sep='')
-            print('ort:', ort, ':', sep='', end='\n\n')
-
-            args = ('Loader_1', sex, '', Vorname, Nachname_2, Nachname, False, strasse, hausnr, plz, ort, 'x')
-            print('    getPersonenId', str(args), sep='')
-            myCursor = stammdaten_schema.cursor()
-            result_args = myCursor.callproc('getPersonenId', args)
-            print(result_args[-1])
-            worksheet_sheet["A" + str(row)].value = str(result_args[-1])
-            halt('Insert?')
-        row += 1
-    workbook.save(excel_file)
-    workbook.close()
-
 def initial_load_buerger(stammdaten_schema, excel_file, verbal=False):
     inital_load_fromExcel(excel_file, stammdaten_schema, doit=True)
 
@@ -637,15 +371,20 @@ if __name__ == '__main__':
     # initial_load_pachtland(geno_schema, r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte_2023_06_07.xlsx', verbal=True)
 
 
-    # Inserts and Updates
-    # ===================
-    # email_telnr_IBAN_migrieren(geno_schema, r'V:\Geno_Wangen_Daten.xlsx', verbal=True)
-    # news_letter_daten_migrieren(geno_schema, r"V:\EDV\Newsletter\MailadressenGenossenbürger.xlsx", verbal=True)
+    # Inserts and Updates von fehlenden eMail_telNr_IBAN
+    # ==================================================
+    email_telnr_IBAN_migrieren(geno_schema, reco_data_fn=r'V:\Geno_Wangen_Daten.xlsx', reco_sheetname='Reco_Fehlende_eMail_telNr_IBAN', verbal=True, take_action=True)
 
+
+
+
+    # news_letter_daten_migrieren(geno_schema, r"V:\EDV\Newsletter\MailadressenGenossenbürger.xlsx", verbal=True)
+    '''
     TEST_update_or_insert_value(geno_schema)
     print('\n\n')
     print(get_email_details_persid(geno_schema, 644, verbal=False))
     fix_email_details_persid(geno_schema, 644, verbal=False)
+    '''
 
     # Cleanup Date
     # ============
