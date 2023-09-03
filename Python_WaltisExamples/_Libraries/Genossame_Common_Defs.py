@@ -448,6 +448,233 @@ def inserts_from_excel(filename, sheet_name, attribut, db_connection, verbal=Tru
     return insert_count
 
 
+
+# ---------------------------------------------
+# Functions for Common use
+# ---------------------------------------------
+def addPersonen_to_db_by_hash(db, arguments, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling addPersonen_to_db_by_hash(db,
+                                    arguments               = {arguments}, 
+                                    take_action             = {take_action},
+                                    verbal                  = {verbal})''')
+    pers_id = None
+    if take_action:
+        pers_id = addPersonen_to_db(db,
+                                 arguments['Source'],
+                                 arguments['Vorname'],
+                                 arguments['Ledig_Name'],
+                                 arguments['Partner_Name'],
+                                 arguments['Partner_Name_Angenommen'],
+                                 arguments['Private_Adressen_ID'],
+                                 take_action=take_action,
+                                 verbal=verbal)
+    return pers_id
+
+
+def addPersonen_to_db(db, source, vorname, ledig_name, partner_name, partner_name_angenommen, privat_adressen_id, take_action=False, verbal=False):
+    try:
+        if verbal:
+            print(f'''
+               --> Calling addPersonen_to_db(db,
+                                        source                  = {source}, 
+                                        vorname                 = {vorname},
+                                        ledig_name              = {ledig_name},
+                                        partner_name            = {partner_name},
+                                        partner_name_angenommen = {partner_name_angenommen},
+                                        privat_adressen_id      = {privat_adressen_id},
+                                        take_action             = {take_action},
+                                        verbal                  = {verbal})''')
+
+        pers_id = None
+
+        if take_action:
+            myCursor = db.cursor()
+            args = (source, vorname, ledig_name, partner_name, partner_name_angenommen, privat_adressen_id, 'x')
+            result_args = myCursor.callproc('addPersonen', args)
+            db.commit()
+            if verbal:
+                print(f'callproc:addPersonen{args}')
+                print(f'        :return value{result_args}')
+            pers_id = result_args[-1]
+
+        return pers_id
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
+
+
+def get_cell_values_by_column_titles(ws, title_row=1, row=1, column_names=[], do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_cell_values_by_column_titles(ws,
+                                    title_row        = {title_row}, 
+                                    row              = {row},
+                                    column_name      = {column_names},
+                                    do_reset_cell    = {do_reset_cell},
+                                    reset_cell_value = {reset_cell_value},
+                                    take_action      = {take_action},
+                                    verbal           = {verbal})''')
+
+    ret_values = {}
+    for column_name in column_names:
+        value = get_cell_value_by_column_title(ws, title_row=title_row, row=row, column_name=column_name, do_reset_cell=do_reset_cell, reset_cell_value=reset_cell_value, take_action=take_action, verbal=verbal)[column_name]
+        ret_values[column_name] = value
+    return ret_values
+
+def get_cell_value_by_column_title(ws, title_row=1, row=1, column_name='ID', do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_cell_value_by_column_title(ws,
+                                    title_row        = {title_row}, 
+                                    row              = {row},
+                                    column_name      = {column_name},
+                                    do_reset_cell    = {do_reset_cell},
+                                    reset_cell_value = {reset_cell_value},
+                                    take_action      = {take_action},
+                                    verbal           = {verbal})''')
+
+    column_title_to_index = {cell.value: cell.column for cell in ws[title_row]}
+    if False:
+        print('column_title_to_index:', column_title_to_index)
+    column_letter = openpyxl.utils.get_column_letter(column_title_to_index[column_name])
+    cell_value = ws[column_letter + str(row)].value
+    if verbal:
+        print(f"{column_name}  --> ws['{column_letter}{str(row)}'].value = {cell_value}")
+
+    if do_reset_cell:
+        ws[column_letter + str(row)].value = reset_cell_value
+        return {column_name: cell_value,
+                'cell_column': column_letter,
+                'cell_row': row,
+                f'ws["{column_letter}{str(row)}"].value': cell_value,
+                'cell_value_reseted_to': reset_cell_value}
+    else:
+        return {column_name: cell_value,
+                'cell_column': column_letter,
+                'cell_row': row,
+                f'ws["{column_letter}{str(row)}"].value': cell_value}
+
+def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, column_name='ID', take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling set_cell_value_by_column_title({new_cell_value},
+                                    ws,
+                                    title_row={title_row}, 
+                                    row={row},
+                                    column_name={column_name},
+                                    verbal={verbal})''')
+
+    column_title_to_index = {cell.value: cell.column for cell in ws[title_row]}
+    column_letter = openpyxl.utils.get_column_letter(column_title_to_index[column_name])
+    old_cell_value = ws[column_letter + str(row)].value
+    if verbal:
+        print(f"""
+             Old value of {column_name} --> ws['{column_letter}{str(row)}'].value = {old_cell_value}
+             New value of {column_name} --> ws['{column_letter}{str(row)}'].value = {new_cell_value}
+             """)
+    if old_cell_value is None and new_cell_value is not None:
+        action = 'create'
+    elif old_cell_value != new_cell_value:
+        action = 'update'
+    elif new_cell_value is None and old_cell_value is not None:
+        action = 'deleted'
+    else:
+        action = 'no change'
+
+    if take_action and action != 'no change':
+        ws[column_letter + str(row)].value = new_cell_value
+    return {'Old value:' + column_name: old_cell_value,
+            'New value:' + column_name: new_cell_value,
+            'action': action,
+            'cell_col': column_letter,
+            'cell_row': row,
+            f'ws["{column_letter}{str(row)}"].value': new_cell_value}
+
+
+def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, take_action=False):
+    if verbal:
+        print(f'''
+           --> Calling process_CUD(stammdaten_schema,
+                                    {reco_data_fn}, 
+                                    {reco_sheetname}, 
+                                    verbal={verbal}, 
+                                    take_action={take_action})''')
+
+        print(f'Open Excel:{reco_data_fn} [{reco_sheetname}]')
+
+    # Open and read the Excel
+    # -----------------------
+    workbook = openpyxl.load_workbook(reco_data_fn, data_only=True)
+    worksheet_sheet = workbook[reco_sheetname]
+
+    verbal_while_insert = False
+    verbal_while_update = verbal
+    count_of_new_records = 0
+    count_of_updated_records = 0
+    count_of_updated_attributs = 0
+    count_of_total_lines = 0
+
+
+    title_row = 1
+    first_value_row = 2
+    row = first_value_row
+    while worksheet_sheet["A" + str(row)].value is not None:
+        count_of_total_lines += 1
+        pers_id = get_cell_value_by_column_title(worksheet_sheet, title_row=title_row, row=row, column_name='ID', verbal=False)['ID']
+
+        if pers_id == '?':
+            verbal = False
+            print('--> A New Person')
+            count_of_new_records += 1
+            values = get_cell_values_by_column_titles(
+                             worksheet_sheet,
+                             title_row        = title_row,
+                             row              = row,
+                             column_names     = ['Vorname', 'Ledig_Name', 'Partner_Name', 'Partner_Name_Angenommen', 'Private_Adressen_ID'],
+                             do_reset_cell    = take_action,
+                             reset_cell_value = None,
+                             take_action      = take_action,
+                             verbal           = verbal_while_insert)
+            values['Source'] = 'Loader_1'
+            ret_val   = addPersonen_to_db_by_hash(stammdaten_schema, values, take_action=take_action, verbal=verbal_while_insert)
+            ret_val_1 = set_cell_value_by_column_title(ret_val, worksheet_sheet, title_row=1, row=row, column_name='ID', take_action=take_action, verbal=verbal_while_insert)
+            if verbal:
+                print(ret_val, ret_val_1)
+
+        else:
+            if verbal_while_update:
+                print('-->', pers_id, 'Update Person details')
+                count_of_updated_records += 1
+        row += 1
+
+    # Save the Excel
+    # --------------
+    if take_action:
+        if verbal:
+            print(f'Close Excel:{reco_data_fn} [{reco_sheetname}]')
+        workbook.save(reco_data_fn)
+        workbook.close()
+
+
+    print(f'''
+    # Statistics
+    # ==========
+    Changes Found in File: {count_of_total_lines:4d}
+          Inserted Reords: {count_of_new_records:4d}
+          Updated Records: {count_of_updated_records:4d}
+      
+        Updated Attributs: {count_of_updated_attributs:4d}
+    ''')
+# ---------------------------------------------
+# END: Functions for Common use
+# ---------------------------------------------
+
 def updates_from_excel(filename, sheet_name, db_connection, verbal=True, take_action=False):
 
     if verbal:
@@ -502,7 +729,7 @@ def email_telnr_IBAN_migrieren(stammdaten_schema, reco_data_fn, reco_sheetname, 
         rc = 0
         # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'EMAIL', stammdaten_schema, verbal=verbal, take_action=take_action)
         # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'TELNR', stammdaten_schema, verbal=verbal, take_action=take_action)
-        rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'IBAN' , stammdaten_schema, verbal=verbal, take_action=take_action)
+        # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'IBAN' , stammdaten_schema, verbal=verbal, take_action=take_action)
 
         if rc > 0:
             print(f"""

@@ -23,6 +23,7 @@
 -- 29-Aug-2023   Walter Rothlin      Added Nutzen-Listen und Nutzen-Statistik (Nutzenauszahlung;Nutzenstatistik;Nutzensumme)
 --                                   Added Einladungsliste_Geno_Gemeinde
 --                                   Added  Wegzüger_Dieses_Jahr;Rückkehrer_Dieses_Jahr
+-- 02-Sep-2023   Walter Rothlin      Added addPersonen()
 -- -----------------------------------------
 
 -- To-Does
@@ -2614,6 +2615,39 @@ DELIMITER ;
 -- ------------------------------------------------------
 -- Personen
 -- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS addPersonen;
+DELIMITER $$
+CREATE PROCEDURE addPersonen(IN  `source`                  ENUM('Initial_1', 'Loader_1', 'BuergerDB', 'ImmoTop'),
+							 IN  `vorname`                 VARCHAR(45),
+                             IN  `ledig_name`              VARCHAR(45),
+                             IN  `partner_name`            VARCHAR(45),
+                             IN  `partner_name_angenommen` BOOLEAN,
+							 IN  `privat_adressen_id`      VARCHAR(45),  
+                             OUT `personen_id`             SMALLINT(5))
+BEGIN
+	INSERT INTO personen (`source`, `vorname`, `ledig_name`, `partner_name`, `partner_name_angenommen`, `privat_adressen_id`) 
+             VALUES (`source`, `vorname`, `ledig_name`, `partner_name`, `partner_name_angenommen`, `privat_adressen_id`);
+	COMMIT;
+    SELECT id 
+    FROM personen 
+    WHERE personen.`source`                 = `source`                AND
+		  personen.vorname                  = vorname                 AND 
+          personen.ledig_name               = ledig_name              AND
+          personen.partner_name             = partner_name            AND
+          personen.partner_name_angenommen  = partner_name_angenommen AND 
+          personen.privat_adressen_id       = privat_adressen_id
+	ORDER by last_update DESC LIMIT 1
+	INTO personen_id;
+END$$
+DELIMITER ;
+
+
+-- Tests
+set @personen_id = 0;
+call addPersonen('Loader_1', 'Claudia', 'Collet', 'Rothlin', False, '438', @personen_id);
+select @personen_id;
+
+
 DROP PROCEDURE IF EXISTS getPersonenId;
 DELIMITER $$
 CREATE PROCEDURE getPersonenId(IN source ENUM('Initial_1', 'Loader_1', 'BuergerDB', 'ImmoTop'),
