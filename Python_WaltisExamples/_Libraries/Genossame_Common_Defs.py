@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# --------------------------------
+# ------------------------------------------------------------------------------------------------
 # Name  : Genossame_Common_Defs.py
 # Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Genossame_Manager/Genossame_Common_Defs
 #
@@ -10,7 +10,8 @@
 #
 # History:
 # 21-Jun-2023   Walter Rothlin      Initial Version
-# --------------------------------
+# 03-Sep-2023   Walter Rothlin      Reorganized library
+# ------------------------------------------------------------------------------------------------
 from waltisLibrary import *
 import mysql.connector
 import sqlparse
@@ -24,38 +25,65 @@ ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
 ifIntEmpty = lambda x: True if (x == '' or x == 'TRUE') else False
 
 
-# Common DB-Functions
-# ===================
-def do_db_connect(db_host='localhost', port=3306, db_schema='stammdaten', db_user_name=None, password=None, trace=False):
-    if trace:
-        print(f"Connecting to '{db_schema:s}@{db_host:s}' with user '{db_user_name:s}'....", end="", flush=True)
-    db_connection = mysql.connector.connect(
-          host        = db_host,
-          port        = port,
-          user        = db_user_name,
-          password    = password,
-          database    = db_schema,
-          auth_plugin = 'mysql_native_password'
-    )
-    if trace:
-        print("completed!")
-    return db_connection
+# =================
+# Class Stammdaten
+# =================
+class Stammdaten:
+    def __init__(self):
+        self.__db_connection = db_connect(connect_to_prod=True, trace=True)
 
 
+    def get_version(self):
+        return("V1.0.0.0")
+
+    def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*']):
+        fieldStr = (',\n            ').join(attr_list)
+
+        if id is None:
+            if search_criterium is None:
+                sql = """
+                    SELECT
+                        """ + fieldStr + """
+                    FROM Personen_Daten
+                    Limit 0,20;
+                """
+            else:
+                sql = """
+                    SELECT
+                        """ + fieldStr + """
+                    FROM Personen_Daten
+                    WHERE Such_Begriff LIKE '%""" + search_criterium + """%';
+                """
+        else:
+            sql = """
+            SELECT
+                """ + fieldStr + """
+            FROM Personen_Daten 
+            WHERE ID = """ + str(id) + """;
+            """
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        mycursor.execute(sql)
+        return mycursor.fetchall()
+
+
+# =================
+# Geno DB-Functions
+# =================
 def db_connect(connect_to_prod=True, trace=False):
     if connect_to_prod:
-        stammdaten_schema = do_db_connect(db_host='192.168.253.24',
-                                       port=3311,
-                                       db_schema='genossame_wangen',
-                                       db_user_name="Web_App_User",
-                                       password="Geno_8855!",
-                                       trace=trace)
+        stammdaten_schema = mysql_db_connect(db_host='192.168.253.24',
+                                             port=3311,
+                                             db_schema='genossame_wangen',
+                                             db_user_name="Web_App_User",
+                                             password="Geno_8855!",
+                                             trace=trace)
     else:
-        stammdaten_schema = do_db_connect(db_host='localhost',
-                                       db_schema='genossame_wangen',
-                                       db_user_name="App_User_Stammdaten",
-                                       password="1234ABCD12abcd",
-                                       trace=trace)
+        stammdaten_schema = mysql_db_connect(db_host='localhost',
+                                             db_schema='genossame_wangen',
+                                             db_user_name="App_User_Stammdaten",
+                                             password="1234ABCD12abcd",
+                                             trace=trace)
     return stammdaten_schema
 
 
@@ -117,47 +145,6 @@ def get_personen_id(db_connection, such_kriterien, verbal=False):
     return pers_id
 
 
-class Stammdaten:
-    def __init__(self):
-        self.__db_connection = db_connect(connect_to_prod=True, trace=True)
-
-
-    def get_version(self):
-        return("V1.0.0.0")
-
-    def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*']):
-        fieldStr = (',\n            ').join(attr_list)
-
-        if id is None:
-            if search_criterium is None:
-                sql = """
-                    SELECT
-                        """ + fieldStr + """
-                    FROM Personen_Daten
-                    Limit 0,20;
-                """
-            else:
-                sql = """
-                    SELECT
-                        """ + fieldStr + """
-                    FROM Personen_Daten
-                    WHERE Such_Begriff LIKE '%""" + search_criterium + """%';
-                """
-        else:
-            sql = """
-            SELECT
-                """ + fieldStr + """
-            FROM Personen_Daten 
-            WHERE ID = """ + str(id) + """;
-            """
-        print(sql)
-        mycursor = self.__db_connection.cursor(dictionary=True)
-        mycursor.execute(sql)
-        return mycursor.fetchall()
-
-
-# Static DB-Functions
-# ===================
 def execute_important_sql_queries(db, verbal=False):
     myCursor = db.cursor()
     if verbal:
@@ -167,15 +154,84 @@ def execute_important_sql_queries(db, verbal=False):
     if verbal:
         print('done')
 
-def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
-    sql_insert = f'SELECT count(*) FROM {db_tbl_name} '
+def addPersonen_to_db_by_hash(db, arguments, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling addPersonen_to_db_by_hash(db,
+                                    arguments               = {arguments}, 
+                                    take_action             = {take_action},
+                                    verbal                  = {verbal})''')
+    pers_id = None
+    if take_action:
+        pers_id = addPersonen_to_db(db,
+                                 arguments['Source'],
+                                 arguments['Vorname'],
+                                 arguments['Ledig_Name'],
+                                 arguments['Partner_Name'],
+                                 arguments['Partner_Name_Angenommen'],
+                                 arguments['Private_Adressen_ID'],
+                                 take_action=take_action,
+                                 verbal=verbal)
+    return pers_id
+
+
+def addPersonen_to_db(db, source, vorname, ledig_name, partner_name, partner_name_angenommen, privat_adressen_id, take_action=False, verbal=False):
+    try:
+        if verbal:
+            print(f'''
+               --> Calling addPersonen_to_db(db,
+                                        source                  = {source}, 
+                                        vorname                 = {vorname},
+                                        ledig_name              = {ledig_name},
+                                        partner_name            = {partner_name},
+                                        partner_name_angenommen = {partner_name_angenommen},
+                                        privat_adressen_id      = {privat_adressen_id},
+                                        take_action             = {take_action},
+                                        verbal                  = {verbal})''')
+
+        pers_id = None
+
+        if take_action:
+            myCursor = db.cursor()
+            args = (source, vorname, ledig_name, partner_name, partner_name_angenommen, privat_adressen_id, 'x')
+            result_args = myCursor.callproc('addPersonen', args)
+            db.commit()
+            if verbal:
+                print(f'callproc:addPersonen{args}')
+                print(f'        :return value{result_args}')
+            pers_id = result_args[-1]
+
+        return pers_id
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
+
+def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_db_attr_type(db,
+                                    table                  = {table}, 
+                                    attribute              = {attribute},
+                                    take_action            = {take_action},
+                                    verbal                 = {verbal})''')
+
+    sql_insert = f"SELECT Attr_Type,Enum_Set_Values FROM Table_Meta_data WHERE `Table` = '{table}' AND `Attribute` = '{attribute}'"
+    if verbal:
+        print(sql_insert)
     mycursor = db.cursor()
     mycursor.execute(sql_insert)
-    myresult = mycursor.fetchall()
-    if retValueWithTblName:
-        return {'rows_in_db   (' + db_tbl_name + '):': myresult[0][0]}
-    else:
-        return myresult[0][0]
+    ret_val = {}
+    for aRec in mycursor.fetchall():
+        ret_val = {
+            'type' : aRec[0].decode('ascii'),
+            'enums': ''  # aRec[1]    # .decode('ascii')
+        }
+    return ret_val
+
 
 # email functions
 # ---------------
@@ -355,9 +411,282 @@ def TEST_update_or_insert_value(db_connection):
 
 
 
+
+
+# ---------------------------------------------
+# Functions for Common use
+# ---------------------------------------------
+def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, take_action=False):
+    if verbal:
+        print(f'''
+           --> Calling process_CUD(stammdaten_schema,
+                                    {reco_data_fn}, 
+                                    {reco_sheetname}, 
+                                    verbal={verbal}, 
+                                    take_action={take_action})''')
+
+        print(f'Open Excel:{reco_data_fn} [{reco_sheetname}]')
+
+    # Open and read the Excel
+    # -----------------------
+    workbook = openpyxl.load_workbook(reco_data_fn, data_only=True)
+    worksheet_sheet = workbook[reco_sheetname]
+
+    verbal_while_insert = False
+    verbal_while_update = verbal
+    count_of_new_records = 0
+    count_of_updated_records = 0
+    count_of_updated_attributs = 0
+    count_of_total_lines = 0
+
+    db_attr_excel_column_mapping = [
+        {'db': 'Zivilstand',
+         'excel': 'Zivilstand'},
+        {'db': 'Kategorien',
+         'excel': 'Kategorien'},
+        {'db': 'Funktion',
+         'excel': 'Funktion'},
+        {'db': 'Sex',
+         'excel': 'Geschlecht'},
+        {'db': 'AHV_Nr',
+         'excel': 'AHV_Nr'},
+        {'db': 'Betriebs_Nr',
+         'excel': 'Betriebs_Nr'},
+    ]
+
+    title_row = 1
+    first_value_row = 2
+    row = first_value_row
+    while worksheet_sheet["A" + str(row)].value is not None:
+        count_of_total_lines += 1
+        pers_id = get_cell_value_by_column_title(worksheet_sheet, title_row=title_row, row=row, column_name='ID', verbal=False)['ID']
+
+        if pers_id == '?':
+            verbal = False
+            print('--> A New Person')
+            count_of_new_records += 1
+            values = get_cell_values_by_column_titles(
+                             worksheet_sheet,
+                             title_row        = title_row,
+                             row              = row,
+                             column_names     = ['Vorname', 'Ledig_Name', 'Partner_Name', 'Partner_Name_Angenommen', 'Private_Adressen_ID'],
+                             do_reset_cell    = take_action,
+                             reset_cell_value = '',
+                             take_action      = take_action,
+                             verbal           = verbal_while_insert)
+            values['Source'] = 'Loader_1'
+            ret_val   = addPersonen_to_db_by_hash(stammdaten_schema, values, take_action=take_action, verbal=verbal_while_insert)
+            ret_val_1 = set_cell_value_by_column_title(ret_val, worksheet_sheet, title_row=1, row=row, column_name='ID', take_action=take_action, verbal=verbal_while_insert)
+            if verbal:
+                print(ret_val, ret_val_1)
+
+        else:
+            if verbal_while_update:
+
+
+                if pers_id == 1172:
+                    print('-->', pers_id, 'Update Person details')
+
+                    db_table_name     = 'Personen'
+                    for a_mapping in db_attr_excel_column_mapping:
+                        db_attr_name      = a_mapping['db']
+                        excel_column_name = a_mapping['excel']
+
+                        values = get_cell_values_by_column_titles(
+                            worksheet_sheet,
+                            title_row=title_row,
+                            row=row,
+                            column_names=[excel_column_name],
+                            do_reset_cell=take_action,
+                            reset_cell_value='',
+                            take_action=take_action,
+                            verbal=verbal_while_update)
+                        new_value_from_excel = values[excel_column_name]
+                        if new_value_from_excel is None or new_value_from_excel == '':
+                            if verbal_while_update:
+                                print(pers_id, 'No update for', excel_column_name)
+                        else:
+                            attr_type = get_db_attr_type(stammdaten_schema, table=db_table_name, attribute=db_attr_name, take_action=take_action, verbal=verbal_while_update)
+                            count_of_updated_attributs += update_db_attribute(stammdaten_schema,
+                                    db_tbl_name=db_table_name, db_attr_name=db_attr_name, db_attr_type=attr_type['type'], db_attr_set_enum_values=attr_type['enums'],
+                                    id_attr_name='ID', id=pers_id,
+                                    new_value=new_value_from_excel, new_value_format=None,
+                                    take_action=take_action, verbal=verbal_while_update)
+                count_of_updated_records += 1
+        row += 1
+
+    # Save the Excel
+    # --------------
+    if take_action:
+        if verbal:
+            print(f'Close Excel:{reco_data_fn} [{reco_sheetname}]')
+        workbook.save(reco_data_fn)
+        workbook.close()
+
+
+    print(f'''
+    # Statistics
+    # ==========
+    Changes Found in File: {count_of_total_lines:4d}
+          Inserted Reords: {count_of_new_records:4d}
+          Updated Records: {count_of_updated_records:4d}
+      
+        Updated Attributs: {count_of_updated_attributs:4d}
+    ''')
+# ---------------------------------------------
+# END: Functions for Common use
+# ---------------------------------------------
+
+
+
+def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, verbal=True, take_action=False):
+
+    if verbal:
+        print(f'''
+           --> Calling update_if_neccessary(db_connection,
+                                                  {tbl_name}, 
+                                                  {id},
+                                                  {field_name},
+                                                  verbal={verbal}, 
+                                                  take_action={take_action})''')
+    verbal = False
+    myCursor = db_connection.cursor()
+    records_changed = 0
+    if verbal:
+        print(tbl_name, id, field_name, field_value)
+
+    if tbl_name == 'email_adressen' or tbl_name == 'iban':
+        sql_select = f'SELECT {field_name} FROM {tbl_name} WHERE id={id}'
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        old_value = myresult[0][0].replace(' ', '')
+        if field_value != old_value:
+            records_changed = 1
+            print(tbl_name, '::  old: ', old_value, '   new:', field_value, '  id:', id)
+            sql_update = f"UPDATE {tbl_name} SET {field_name} = '{field_value}' WHERE id={id}"
+            print(sql_update, end='\n\n')
+            if take_action:
+                myCursor.execute(sql_update)
+                db_connection.commit()
+    if tbl_name == 'telefonnummern':
+        sql_select = f'SELECT vorwahl,{field_name} FROM {tbl_name} WHERE id={id}'
+        myCursor.execute(sql_select)
+        myresult = myCursor.fetchall()
+        old_nummer = myresult[0][1]
+        old_nummervorwahl = myresult[0][0]
+        if old_nummervorwahl + old_nummer != field_value:
+            records_changed = 1
+            print(tbl_name, '::  old: ', old_nummervorwahl + old_nummer, '   new:', field_value)
+            if field_value == 'keine':
+                sql_update = f"UPDATE {tbl_name} SET Vorwahl = '', Nummer = '{field_value}' WHERE id={id}"
+            else:
+                sql_update = f"UPDATE {tbl_name} SET Vorwahl = '{field_value[0:3]}', Nummer = '{field_value[3:]}' WHERE id={id}"
+            print(sql_update, end='\n\n')
+            if take_action:
+                myCursor.execute(sql_update)
+                db_connection.commit()
+    return records_changed
+
+
+
+# -------------------------------------------------------------------
+# ++++++++++++ Alte, nicht mehr gebrauchte Funktionen +++++++++++++++
+# -------------------------------------------------------------------
 # ---------------------------------------------
 # Functions für Reco email_telnr_IBAN migration
 # ---------------------------------------------
+
+def updates_from_excel(filename, sheet_name, db_connection, verbal=True, take_action=False):
+    if verbal:
+        print(f'''
+       --> Calling updates_from_excel({filename},
+                                      {sheet_name},
+                                      db_connection,
+                                      verbal={verbal},
+                                      take_action={take_action})''')
+
+    update_count = 0
+    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
+    print('Updateing eMail, Tel_Nr, IBAN..   ', end='')
+    if verbal:
+        print()
+    df = pd.DataFrame(sheet_data, columns=['ID', 'eMail_ID', 'eMail', 'Tel_Nr_ID', 'Tel_Nr', 'IBAN_ID', 'IBAN'])
+    rec_updated = 0
+    for index, row in df.iterrows():
+        # print()
+        # print(index, row)
+        pers_ID = str(row[0]).replace('.0', '')
+        email_ID = str(row[1]).replace('.0', '')
+        email = str(row[2])
+        if email_ID != 'nan' and email != 'nan':
+            update_count += update_if_neccessary(db_connection, 'email_adressen', email_ID, 'eMail', email, verbal=True, take_action=take_action)
+
+        tel_nr_ID = str(row[3]).replace('.0', '')
+        tel_nr = str(row[4]).replace(' ', '')
+        if tel_nr_ID != 'nan' and tel_nr != 'nan':
+            update_count += update_if_neccessary(db_connection, 'telefonnummern', tel_nr_ID, 'nummer', tel_nr, verbal=True, take_action=take_action)
+
+        iban_ID = str(row[5]).replace('.0', '')
+        iban = str(row[6]).replace(' ', '')
+        if iban_ID != 'nan' and iban != 'nan':
+            # print(pers_ID, IBAN_ID, IBAN)
+            update_count += update_if_neccessary(db_connection, 'iban', iban_ID, 'nummer', iban, verbal=True, take_action=take_action)
+
+    return update_count
+
+
+def email_telnr_IBAN_migrieren(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, take_action=False):
+    if verbal:
+        print(f'''
+           --> Calling email_telnr_IBAN_migrieren(stammdaten_schema,
+                                                  {reco_data_fn}, 
+                                                  {reco_sheetname}, 
+                                                  verbal={verbal}, 
+                                                  take_action={take_action})''')
+    do_inserts_from_reco = True
+    if do_inserts_from_reco:
+        rc = 0
+        # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'EMAIL', stammdaten_schema, verbal=verbal, take_action=take_action)
+        # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'TELNR', stammdaten_schema, verbal=verbal, take_action=take_action)
+        # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'IBAN' , stammdaten_schema, verbal=verbal, take_action=take_action)
+
+        if rc > 0:
+            print(f"""
+
+            ---> All ({rc}) insert processed from
+                    {reco_data_fn}
+                    {reco_sheetname}
+            """)
+        else:
+            print(f"""
+
+            ---> No inserts found in
+                    {reco_data_fn}
+                    {reco_sheetname}
+            """)
+
+    do_updates_from_reco = False
+    if do_updates_from_reco:
+        rc = 0
+        rc += updates_from_excel(reco_data_fn, reco_sheetname, stammdaten_schema, verbal=verbal, take_action=take_action)
+
+        if rc > 0:
+            print(f"""
+
+            ---> All ({rc}) updates processed from
+                    {reco_data_fn}
+                    {reco_sheetname}
+            """)
+        else:
+            print(f"""
+
+            ---> No updates found in
+                    {reco_data_fn}
+                    {reco_sheetname}
+            """)
+
+
+
 def inserts_from_excel(filename, sheet_name, attribut, db_connection, verbal=True, take_action=False):
 
     if verbal:
@@ -449,377 +778,8 @@ def inserts_from_excel(filename, sheet_name, attribut, db_connection, verbal=Tru
 
 
 
-# ---------------------------------------------
-# Functions for Common use
-# ---------------------------------------------
-def addPersonen_to_db_by_hash(db, arguments, take_action=False, verbal=False):
-    if verbal:
-        print(f'''
-           --> Calling addPersonen_to_db_by_hash(db,
-                                    arguments               = {arguments}, 
-                                    take_action             = {take_action},
-                                    verbal                  = {verbal})''')
-    pers_id = None
-    if take_action:
-        pers_id = addPersonen_to_db(db,
-                                 arguments['Source'],
-                                 arguments['Vorname'],
-                                 arguments['Ledig_Name'],
-                                 arguments['Partner_Name'],
-                                 arguments['Partner_Name_Angenommen'],
-                                 arguments['Private_Adressen_ID'],
-                                 take_action=take_action,
-                                 verbal=verbal)
-    return pers_id
 
 
-def addPersonen_to_db(db, source, vorname, ledig_name, partner_name, partner_name_angenommen, privat_adressen_id, take_action=False, verbal=False):
-    try:
-        if verbal:
-            print(f'''
-               --> Calling addPersonen_to_db(db,
-                                        source                  = {source}, 
-                                        vorname                 = {vorname},
-                                        ledig_name              = {ledig_name},
-                                        partner_name            = {partner_name},
-                                        partner_name_angenommen = {partner_name_angenommen},
-                                        privat_adressen_id      = {privat_adressen_id},
-                                        take_action             = {take_action},
-                                        verbal                  = {verbal})''')
-
-        pers_id = None
-
-        if take_action:
-            myCursor = db.cursor()
-            args = (source, vorname, ledig_name, partner_name, partner_name_angenommen, privat_adressen_id, 'x')
-            result_args = myCursor.callproc('addPersonen', args)
-            db.commit()
-            if verbal:
-                print(f'callproc:addPersonen{args}')
-                print(f'        :return value{result_args}')
-            pers_id = result_args[-1]
-
-        return pers_id
-
-    except mysql.connector.Error as err:
-        print(f"Error: {err}")
-        return None
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None
-
-
-def get_cell_values_by_column_titles(ws, title_row=1, row=1, column_names=[], do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
-    if verbal:
-        print(f'''
-           --> Calling get_cell_values_by_column_titles(ws,
-                                    title_row        = {title_row}, 
-                                    row              = {row},
-                                    column_name      = {column_names},
-                                    do_reset_cell    = {do_reset_cell},
-                                    reset_cell_value = {reset_cell_value},
-                                    take_action      = {take_action},
-                                    verbal           = {verbal})''')
-
-    ret_values = {}
-    for column_name in column_names:
-        value = get_cell_value_by_column_title(ws, title_row=title_row, row=row, column_name=column_name, do_reset_cell=do_reset_cell, reset_cell_value=reset_cell_value, take_action=take_action, verbal=verbal)[column_name]
-        ret_values[column_name] = value
-    return ret_values
-
-def get_cell_value_by_column_title(ws, title_row=1, row=1, column_name='ID', do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
-    if verbal:
-        print(f'''
-           --> Calling get_cell_value_by_column_title(ws,
-                                    title_row        = {title_row}, 
-                                    row              = {row},
-                                    column_name      = {column_name},
-                                    do_reset_cell    = {do_reset_cell},
-                                    reset_cell_value = {reset_cell_value},
-                                    take_action      = {take_action},
-                                    verbal           = {verbal})''')
-
-    column_title_to_index = {cell.value: cell.column for cell in ws[title_row]}
-    if False:
-        print('column_title_to_index:', column_title_to_index)
-    column_letter = openpyxl.utils.get_column_letter(column_title_to_index[column_name])
-    cell_value = ws[column_letter + str(row)].value
-    if verbal:
-        print(f"{column_name}  --> ws['{column_letter}{str(row)}'].value = {cell_value}")
-
-    if do_reset_cell:
-        ws[column_letter + str(row)].value = reset_cell_value
-        return {column_name: cell_value,
-                'cell_column': column_letter,
-                'cell_row': row,
-                f'ws["{column_letter}{str(row)}"].value': cell_value,
-                'cell_value_reseted_to': reset_cell_value}
-    else:
-        return {column_name: cell_value,
-                'cell_column': column_letter,
-                'cell_row': row,
-                f'ws["{column_letter}{str(row)}"].value': cell_value}
-
-def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, column_name='ID', take_action=False, verbal=False):
-    if verbal:
-        print(f'''
-           --> Calling set_cell_value_by_column_title({new_cell_value},
-                                    ws,
-                                    title_row={title_row}, 
-                                    row={row},
-                                    column_name={column_name},
-                                    verbal={verbal})''')
-
-    column_title_to_index = {cell.value: cell.column for cell in ws[title_row]}
-    column_letter = openpyxl.utils.get_column_letter(column_title_to_index[column_name])
-    old_cell_value = ws[column_letter + str(row)].value
-    if verbal:
-        print(f"""
-             Old value of {column_name} --> ws['{column_letter}{str(row)}'].value = {old_cell_value}
-             New value of {column_name} --> ws['{column_letter}{str(row)}'].value = {new_cell_value}
-             """)
-    if old_cell_value is None and new_cell_value is not None:
-        action = 'create'
-    elif old_cell_value != new_cell_value:
-        action = 'update'
-    elif new_cell_value is None and old_cell_value is not None:
-        action = 'deleted'
-    else:
-        action = 'no change'
-
-    if take_action and action != 'no change':
-        ws[column_letter + str(row)].value = new_cell_value
-    return {'Old value:' + column_name: old_cell_value,
-            'New value:' + column_name: new_cell_value,
-            'action': action,
-            'cell_col': column_letter,
-            'cell_row': row,
-            f'ws["{column_letter}{str(row)}"].value': new_cell_value}
-
-
-def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, take_action=False):
-    if verbal:
-        print(f'''
-           --> Calling process_CUD(stammdaten_schema,
-                                    {reco_data_fn}, 
-                                    {reco_sheetname}, 
-                                    verbal={verbal}, 
-                                    take_action={take_action})''')
-
-        print(f'Open Excel:{reco_data_fn} [{reco_sheetname}]')
-
-    # Open and read the Excel
-    # -----------------------
-    workbook = openpyxl.load_workbook(reco_data_fn, data_only=True)
-    worksheet_sheet = workbook[reco_sheetname]
-
-    verbal_while_insert = False
-    verbal_while_update = verbal
-    count_of_new_records = 0
-    count_of_updated_records = 0
-    count_of_updated_attributs = 0
-    count_of_total_lines = 0
-
-
-    title_row = 1
-    first_value_row = 2
-    row = first_value_row
-    while worksheet_sheet["A" + str(row)].value is not None:
-        count_of_total_lines += 1
-        pers_id = get_cell_value_by_column_title(worksheet_sheet, title_row=title_row, row=row, column_name='ID', verbal=False)['ID']
-
-        if pers_id == '?':
-            verbal = False
-            print('--> A New Person')
-            count_of_new_records += 1
-            values = get_cell_values_by_column_titles(
-                             worksheet_sheet,
-                             title_row        = title_row,
-                             row              = row,
-                             column_names     = ['Vorname', 'Ledig_Name', 'Partner_Name', 'Partner_Name_Angenommen', 'Private_Adressen_ID'],
-                             do_reset_cell    = take_action,
-                             reset_cell_value = None,
-                             take_action      = take_action,
-                             verbal           = verbal_while_insert)
-            values['Source'] = 'Loader_1'
-            ret_val   = addPersonen_to_db_by_hash(stammdaten_schema, values, take_action=take_action, verbal=verbal_while_insert)
-            ret_val_1 = set_cell_value_by_column_title(ret_val, worksheet_sheet, title_row=1, row=row, column_name='ID', take_action=take_action, verbal=verbal_while_insert)
-            if verbal:
-                print(ret_val, ret_val_1)
-
-        else:
-            if verbal_while_update:
-                print('-->', pers_id, 'Update Person details')
-                count_of_updated_records += 1
-        row += 1
-
-    # Save the Excel
-    # --------------
-    if take_action:
-        if verbal:
-            print(f'Close Excel:{reco_data_fn} [{reco_sheetname}]')
-        workbook.save(reco_data_fn)
-        workbook.close()
-
-
-    print(f'''
-    # Statistics
-    # ==========
-    Changes Found in File: {count_of_total_lines:4d}
-          Inserted Reords: {count_of_new_records:4d}
-          Updated Records: {count_of_updated_records:4d}
-      
-        Updated Attributs: {count_of_updated_attributs:4d}
-    ''')
-# ---------------------------------------------
-# END: Functions for Common use
-# ---------------------------------------------
-
-def updates_from_excel(filename, sheet_name, db_connection, verbal=True, take_action=False):
-
-    if verbal:
-        print(f'''
-       --> Calling updates_from_excel({filename},
-                                      {sheet_name},
-                                      db_connection,
-                                      verbal={verbal},
-                                      take_action={take_action})''')
-
-    update_count = 0
-    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
-    print('Updateing eMail, Tel_Nr, IBAN..   ', end='')
-    if verbal:
-        print()
-    df = pd.DataFrame(sheet_data, columns=['ID', 'eMail_ID', 'eMail', 'Tel_Nr_ID', 'Tel_Nr', 'IBAN_ID', 'IBAN'])
-    rec_updated = 0
-    for index, row in df.iterrows():
-        # print()
-        # print(index, row)
-        pers_ID = str(row[0]).replace('.0', '')
-        email_ID = str(row[1]).replace('.0', '')
-        email = str(row[2])
-        if email_ID != 'nan' and email != 'nan':
-            update_count += update_if_neccessary(db_connection, 'email_adressen', email_ID, 'eMail', email, verbal=True, take_action=take_action)
-
-        tel_nr_ID = str(row[3]).replace('.0', '')
-        tel_nr = str(row[4]).replace(' ', '')
-        if tel_nr_ID != 'nan' and tel_nr != 'nan':
-            update_count += update_if_neccessary(db_connection, 'telefonnummern', tel_nr_ID, 'nummer', tel_nr, verbal=True, take_action=take_action)
-
-        iban_ID = str(row[5]).replace('.0', '')
-        iban = str(row[6]).replace(' ', '')
-        if iban_ID != 'nan' and iban != 'nan':
-            # print(pers_ID, IBAN_ID, IBAN)
-            update_count += update_if_neccessary(db_connection, 'iban', iban_ID, 'nummer', iban, verbal=True, take_action=take_action)
-
-    return update_count
-
-
-def email_telnr_IBAN_migrieren(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, take_action=False):
-
-    if verbal:
-        print(f'''
-           --> Calling email_telnr_IBAN_migrieren(stammdaten_schema,
-                                                  {reco_data_fn}, 
-                                                  {reco_sheetname}, 
-                                                  verbal={verbal}, 
-                                                  take_action={take_action})''')
-    do_inserts_from_reco = True
-    if do_inserts_from_reco:
-        rc = 0
-        # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'EMAIL', stammdaten_schema, verbal=verbal, take_action=take_action)
-        # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'TELNR', stammdaten_schema, verbal=verbal, take_action=take_action)
-        # rc += inserts_from_excel(reco_data_fn, reco_sheetname, 'IBAN' , stammdaten_schema, verbal=verbal, take_action=take_action)
-
-        if rc > 0:
-            print(f"""
-            
-            ---> All ({rc}) insert processed from
-                    {reco_data_fn}
-                    {reco_sheetname}
-            """)
-        else:
-            print(f"""
-
-            ---> No inserts found in
-                    {reco_data_fn}
-                    {reco_sheetname}
-            """)
-
-    do_updates_from_reco = False
-    if do_updates_from_reco:
-        rc = 0
-        rc += updates_from_excel(reco_data_fn, reco_sheetname, stammdaten_schema, verbal=verbal, take_action=take_action)
-
-        if rc > 0:
-            print(f"""
-
-            ---> All ({rc}) updates processed from
-                    {reco_data_fn}
-                    {reco_sheetname}
-            """)
-        else:
-            print(f"""
-
-            ---> No updates found in
-                    {reco_data_fn}
-                    {reco_sheetname}
-            """)
-
-
-def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, verbal=True, take_action=False):
-
-    if verbal:
-        print(f'''
-           --> Calling update_if_neccessary(db_connection,
-                                                  {tbl_name}, 
-                                                  {id},
-                                                  {field_name},
-                                                  verbal={verbal}, 
-                                                  take_action={take_action})''')
-    verbal = False
-    myCursor = db_connection.cursor()
-    records_changed = 0
-    if verbal:
-        print(tbl_name, id, field_name, field_value)
-
-    if tbl_name == 'email_adressen' or tbl_name == 'iban':
-        sql_select = f'SELECT {field_name} FROM {tbl_name} WHERE id={id}'
-        myCursor.execute(sql_select)
-        myresult = myCursor.fetchall()
-        old_value = myresult[0][0].replace(' ', '')
-        if field_value != old_value:
-            records_changed = 1
-            print(tbl_name, '::  old: ', old_value, '   new:', field_value, '  id:', id)
-            sql_update = f"UPDATE {tbl_name} SET {field_name} = '{field_value}' WHERE id={id}"
-            print(sql_update, end='\n\n')
-            if take_action:
-                myCursor.execute(sql_update)
-                db_connection.commit()
-    if tbl_name == 'telefonnummern':
-        sql_select = f'SELECT vorwahl,{field_name} FROM {tbl_name} WHERE id={id}'
-        myCursor.execute(sql_select)
-        myresult = myCursor.fetchall()
-        old_nummer = myresult[0][1]
-        old_nummervorwahl = myresult[0][0]
-        if old_nummervorwahl + old_nummer != field_value:
-            records_changed = 1
-            print(tbl_name, '::  old: ', old_nummervorwahl + old_nummer, '   new:', field_value)
-            if field_value == 'keine':
-                sql_update = f"UPDATE {tbl_name} SET Vorwahl = '', Nummer = '{field_value}' WHERE id={id}"
-            else:
-                sql_update = f"UPDATE {tbl_name} SET Vorwahl = '{field_value[0:3]}', Nummer = '{field_value[3:]}' WHERE id={id}"
-            print(sql_update, end='\n\n')
-            if take_action:
-                myCursor.execute(sql_update)
-                db_connection.commit()
-    return records_changed
-
-
-
-# -------------------------------------------------------------------
-# ++++++++++++ Alte, nicht mehr gebrauchte Funktionen +++++++++++++++
-# -------------------------------------------------------------------
 def news_letter_daten_migrieren(stammdaten_schema, excel_file, verbal=False):
     # Newsletter Daten migrieren
     do_reco_Newsletter_set_id = False

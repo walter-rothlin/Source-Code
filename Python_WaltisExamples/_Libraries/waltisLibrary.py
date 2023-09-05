@@ -45,6 +45,7 @@
 # 06-Apr-2022   Walter Rothlin      Added readFloat_00() guard with regex
 # 22-Jun-2023   Walter Rothlin      Added read_boolean
 # 13-Jul-2023   Walter Rothlin      Added split_adress_street_nr()
+# 03-Sep-2023   Walter Rothlin      Added Resuable DB und Excel Functions
 # ------------------------------------------------------------------
 
 
@@ -66,6 +67,8 @@ import json
 from lxml import etree
 import xml.etree.ElementTree as ET
 import urllib.parse
+import openpyxl
+import mysql.connector
 
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
@@ -1153,6 +1156,22 @@ def TEST_Primzahlen():
             print("{z:3d}: Primzahlen:{s:30s}      Teiler    :{s1:30s}".format(z=i, s=getPrimfactors(i),
                                                                                s1=getDivisors(i)))
 
+# csv- or set-functions
+# =====================
+def remove_set_value(set_values, value_to_remove, verbal=True):
+    if verbal:
+        print(f"Calling remove_set_value({set_values}, {value_to_remove})")
+
+    set_values.discard(value_to_remove)
+    set_values_str = ""
+    for a_set_value in set_values:
+        print("Value:", a_set_value)
+        set_values_str += "," + a_set_value
+    set_values_str = set_values_str[1:]
+    print('set_values_str:', set_values_str)
+
+    # set_values_str = 'Pächter,Hat_35a,Hat_16a,Bürger'
+    return set_values_str
 
 # String Functions
 # ================
@@ -2667,6 +2686,208 @@ def dictify(context, names):
                 rv.append(child_node.text)
     rv.append('__dictify_end_marker__')
     return rv
+
+# ---------------------
+# Reusable DB-Functions
+# ---------------------
+def mysql_db_connect(db_host='localhost', port=3306, db_schema='stammdaten', db_user_name=None, password=None, trace=False):
+    if trace:
+        print(f"Connecting to '{db_schema:s}@{db_host:s}' with user '{db_user_name:s}'....", end="", flush=True)
+    db_connection = mysql.connector.connect(
+          host        = db_host,
+          port        = port,
+          user        = db_user_name,
+          password    = password,
+          database    = db_schema,
+          auth_plugin = 'mysql_native_password'
+    )
+    if trace:
+        print("completed!")
+    return db_connection
+
+def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
+    sql_select = f'SELECT count(*) FROM {db_tbl_name} '
+    mycursor = db.cursor()
+    mycursor.execute(sql_select)
+    myresult = mycursor.fetchall()
+    if retValueWithTblName:
+        return {'rows_in_db   (' + db_tbl_name + '):': myresult[0][0]}
+    else:
+        return myresult[0][0]
+
+def update_db_attribute(db=None,
+                        db_tbl_name=None, db_attr_name=None, db_attr_type='varchar', db_attr_set_enum_values='',
+                        id_attr_name='ID', id=None,
+                        new_value=None, new_value_format=None,
+                        take_action=False, verbal=False):
+
+    if verbal:
+        print(f'''
+           --> Calling update_db_attribute(db,
+                          db_tbl_name                 = {db_tbl_name}, 
+                          db_attr_name                = {db_attr_name},
+                          db_attr_type                = {db_attr_type}, 
+                          db_attr_set_enum_values     = {db_attr_set_enum_values},
+                          
+                          id_attr_name     = {id_attr_name}, 
+                          id               = {id},
+                          
+                          new_value        = {new_value},
+                          new_value_format = {new_value_format}, 
+                          
+                          take_action      = {take_action},
+                          verbal           = {verbal})''')
+
+    update_count = 0
+    sql_select = f'SELECT {db_attr_name} FROM {db_tbl_name} WHERE {id_attr_name} = {id}'
+    if verbal:
+        print(sql_select)
+    mycursor = db.cursor()
+    mycursor.execute(sql_select)
+    myresult = mycursor.fetchall()
+    if len(myresult) == 1:
+        old_value = myresult[0][0]
+        if verbal:
+            print(old_value, '--->', new_value)
+
+        sql_update = None
+        if new_value == 'NULL' or new_value == 'None':
+            sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = NULL WHERE {id_attr_name} = {id}"
+        elif old_value != new_value:
+            if db_attr_type == 'varchar':
+                if new_value[0] == '+':
+                    sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = CONCAT({db_attr_name}, '{new_value}') WHERE {id_attr_name} = {id}"
+                else:
+                    sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value}' WHERE {id_attr_name} = {id}"
+
+            elif db_attr_type == 'enum':
+                sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value}' WHERE {id_attr_name} = {id}"
+
+            elif db_attr_type == 'set':
+                if new_value[0] == '+':
+                    new_value = new_value[1:]
+                    sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = addSetValue({db_attr_name}, '{new_value}') WHERE {id_attr_name} = {id}"
+                elif new_value[0] == '-':
+                    new_value = new_value[1:]
+                    new_value = remove_set_value(old_value, new_value)
+                    if new_value == '':
+                        sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = NULL WHERE {id_attr_name} = {id}"
+                    else:
+                        # sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = removeSetValue({db_attr_name}, '{new_value}') WHERE {id_attr_name} = {id}"
+                        sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value}' WHERE {id_attr_name} = {id}"
+                else:
+                    sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value}' WHERE {id_attr_name} = {id}"
+
+            else:
+                sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = {new_value} WHERE {id_attr_name} = {id}"
+
+
+        if verbal:
+            print('sql_update:', sql_update)
+
+        if take_action and sql_update is not None:
+            mycursor.execute(sql_update)
+            update_count += 1
+            db.commit()
+    else:
+        if verbal:
+            print(myresult)
+
+    return update_count
+# ------------------------
+# Reusable Excel-Functions
+# ------------------------
+def get_cell_values_by_column_titles(ws, title_row=1, row=1, column_names=[], do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_cell_values_by_column_titles(ws,
+                                    title_row        = {title_row}, 
+                                    row              = {row},
+                                    column_name      = {column_names},
+                                    do_reset_cell    = {do_reset_cell},
+                                    reset_cell_value = {reset_cell_value},
+                                    take_action      = {take_action},
+                                    verbal           = {verbal})''')
+
+    ret_values = {}
+    for column_name in column_names:
+        value = get_cell_value_by_column_title(ws, title_row=title_row, row=row, column_name=column_name, do_reset_cell=do_reset_cell, reset_cell_value=reset_cell_value, take_action=take_action, verbal=verbal)[column_name]
+        if value is None:
+            ret_values[column_name] = ''
+        else:
+            ret_values[column_name] = value
+    return ret_values
+
+def get_cell_value_by_column_title(ws, title_row=1, row=1, column_name='ID', do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_cell_value_by_column_title(ws,
+                                    title_row        = {title_row}, 
+                                    row              = {row},
+                                    column_name      = {column_name},
+                                    do_reset_cell    = {do_reset_cell},
+                                    reset_cell_value = {reset_cell_value},
+                                    take_action      = {take_action},
+                                    verbal           = {verbal})''')
+
+    column_title_to_index = {cell.value: cell.column for cell in ws[title_row]}
+    if False:
+        print('column_title_to_index:', column_title_to_index)
+    column_letter = openpyxl.utils.get_column_letter(column_title_to_index[column_name])
+    cell_value = ws[column_letter + str(row)].value
+    if verbal:
+        print(f"{column_name}  --> ws['{column_letter}{str(row)}'].value = {cell_value}")
+
+    if do_reset_cell:
+        ws[column_letter + str(row)].value = reset_cell_value
+        return {column_name: cell_value,
+                'cell_column': column_letter,
+                'cell_row': row,
+                f'ws["{column_letter}{str(row)}"].value': cell_value,
+                'cell_value_reseted_to': reset_cell_value}
+    else:
+        return {column_name: cell_value,
+                'cell_column': column_letter,
+                'cell_row': row,
+                f'ws["{column_letter}{str(row)}"].value': cell_value}
+
+def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, column_name='ID', take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling set_cell_value_by_column_title({new_cell_value},
+                                    ws,
+                                    title_row={title_row}, 
+                                    row={row},
+                                    column_name={column_name},
+                                    verbal={verbal})''')
+
+    column_title_to_index = {cell.value: cell.column for cell in ws[title_row]}
+    column_letter = openpyxl.utils.get_column_letter(column_title_to_index[column_name])
+    old_cell_value = ws[column_letter + str(row)].value
+    if verbal:
+        print(f"""
+             Old value of {column_name} --> ws['{column_letter}{str(row)}'].value = {old_cell_value}
+             New value of {column_name} --> ws['{column_letter}{str(row)}'].value = {new_cell_value}
+             """)
+    if old_cell_value is None and new_cell_value is not None:
+        action = 'create'
+    elif old_cell_value != new_cell_value:
+        action = 'update'
+    elif new_cell_value is None and old_cell_value is not None:
+        action = 'deleted'
+    else:
+        action = 'no change'
+
+    if take_action and action != 'no change':
+        ws[column_letter + str(row)].value = new_cell_value
+    return {'Old value:' + column_name: old_cell_value,
+            'New value:' + column_name: new_cell_value,
+            'action': action,
+            'cell_col': column_letter,
+            'cell_row': row,
+            f'ws["{column_letter}{str(row)}"].value': new_cell_value}
+
+
 
 # ===========================================================
 # MAIN

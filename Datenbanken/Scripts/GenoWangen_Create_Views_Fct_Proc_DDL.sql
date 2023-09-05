@@ -92,8 +92,41 @@ BEGIN
 END//
 DELIMITER ;
 
+DROP FUNCTION IF EXISTS removeSetValue_New;
+DELIMITER //
+CREATE FUNCTION removeSetValue_New(input_set VARCHAR(500), value_to_remove VARCHAR(100), delimiter CHAR(1)) RETURNS VARCHAR(500)
+BEGIN
+    DECLARE result VARCHAR(500) DEFAULT '';
+    DECLARE next_value VARCHAR(500);
+    DECLARE finished INT DEFAULT 0;
+    DECLARE currentIndex INT DEFAULT 1;
+
+    WHILE currentIndex <= LENGTH(input_set) AND NOT finished DO
+        IF (SUBSTRING(input_set, currentIndex, 1) = delimiter) THEN
+            IF next_value = value_to_remove THEN
+                SET next_value = '';
+            END IF;
+            SET currentIndex = currentIndex + 1;
+        ELSE
+            SET next_value = CONCAT(next_value, SUBSTRING(input_set, currentIndex, 1));
+            SET currentIndex = currentIndex + 1;
+        END IF;
+
+        IF currentIndex > LENGTH(input_set) THEN
+            IF next_value != value_to_remove THEN
+                SET result = CONCAT(result, next_value);
+            END IF;
+            SET finished = 1;
+        END IF;
+    END WHILE;
+
+    RETURN result;
+END//
+DELIMITER ;
+
 -- Test-Cases
--- UPDATE `personen` SET Kategorien = removeSetValue(Kategorien, 'Pächter') WHERE  id = 1112;
+SELECT Kategorien FROM Personen WHERE ID = 1172;
+UPDATE `personen` SET Kategorien = removeSetValue(Kategorien, 'Pächter', ',') WHERE  id = 1172;
 
 -- -----------------------------------------
 --  Fct 10.0) Gibt den aelteren Timestamp zurueck
@@ -1264,6 +1297,21 @@ CREATE VIEW Personen_Daten AS
     ORDER BY Familien_Name, Vorname_Initial;
 
 -- SELECT * FROM Personen_Daten;
+-- --------------------------------------------------------------------------------    
+DROP VIEW IF EXISTS Pers_Search_List; 
+CREATE VIEW Pers_Search_List AS
+	SELECT
+        ID,
+        CONCAT(Geschlecht,';',
+               Vorname_Initial,';',
+               Familien_Name,';',
+               Private_Strassen_Adresse,';',
+               Private_PLZ_Ort,';',
+               Tel_Nr_Detail_Long,';',
+               eMail_Detail_Long,';',
+			   IBAN_Detail_Long) AS Search_Field
+    FROM Personen_Daten ORDER BY ID;
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Firmen_Institutionen; 
 CREATE VIEW Firmen_Institutionen AS
@@ -2235,6 +2283,37 @@ CREATE VIEW ENUM_SET_Values AS
 						   `TABLE_TYPE`   = 'BASE TABLE') -- 'Personen'
 	ORDER BY `TABLE_SCHEMA` , `TABLE_NAME` , `COLUMN_NAME`;
     
+    
+    
+DROP VIEW IF EXISTS Table_Meta_Data; 
+CREATE VIEW Table_Meta_Data AS
+    SELECT
+		`TABLE_SCHEMA`   AS `Schema`,
+		`TABLE_NAME`     AS `Table`,
+		`COLUMN_NAME`    AS `Attribute`,
+		`DATA_TYPE`      AS `Attr_Type`,
+		`COLUMN_KEY`     AS `Is_key`,
+		`COLUMN_TYPE`    AS `Attr_Type_Values`,
+        
+		CASE 
+			  WHEN `DATA_TYPE` = 'set' or  `DATA_TYPE` = 'enum' THEN 
+              		REPLACE(
+			           REPLACE(
+				          REPLACE(
+				             REPLACE(`COLUMN_TYPE`,')',''),
+				            'enum(',''),
+			             'set(',''),
+		            '\'','') 
+			  ELSE ''
+		END AS `Enum_Set_Values`
+    FROM `INFORMATION_SCHEMA`.`COLUMNS`
+    WHERE `TABLE_SCHEMA` = 'genossame_wangen' AND
+		   `TABLE_NAME` IN (SELECT `TABLE_NAME` 
+					        FROM `INFORMATION_SCHEMA`.`TABLES`
+					        WHERE `TABLE_SCHEMA` = 'genossame_wangen' AND
+							      `TABLE_TYPE`   = 'BASE TABLE')
+    ORDER BY `TABLE_SCHEMA` , `TABLE_NAME` , `COLUMN_NAME`, `ORDINAL_POSITION`;
+    
 -- --------------------------------------------------------------------------------    
 -- ===============================================================================================
 -- == Create stored procedures for business (external) write access                             ==
@@ -2643,9 +2722,9 @@ DELIMITER ;
 
 
 -- Tests
-set @personen_id = 0;
-call addPersonen('Loader_1', 'Claudia', 'Collet', 'Rothlin', False, '438', @personen_id);
-select @personen_id;
+-- set @personen_id = 0;
+-- call addPersonen('Loader_1', 'Claudia', 'Collet', 'Rothlin', False, '438', @personen_id);
+-- select @personen_id;
 
 
 DROP PROCEDURE IF EXISTS getPersonenId;
