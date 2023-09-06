@@ -32,10 +32,10 @@ def input_float(prompt, max_tries=3, min_value=None, max_value=None):
             value = float(value_str)
             error = False
             if min_value is not None and value < min_value:
-                print('ERROR:', value,' < ', min_value)
+                print('ERROR:', value, ' < ', min_value)
                 error = True
             if max_value is not None and value > max_value:
-                print('ERROR:', value,' > ', max_value)
+                print('ERROR:', value, ' > ', max_value)
                 error = True
         else:
             print('ERROR:', value_str,'is not a float or integer')
