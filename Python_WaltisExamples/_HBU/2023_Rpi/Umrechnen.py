@@ -14,9 +14,9 @@
 # ------------------------------------------------------------------
 from waltisMegaLib import *
 
-# =============
+# =============   
 # Hauptprogramm
-# =============
+# =============  
 doLoop = True
 while doLoop:
     print('''
@@ -34,7 +34,7 @@ while doLoop:
     answer = input('\n  Wähle:')
 
     if answer == '1':
-        rad_value = grad2rad(input_float('Grad:'))
+        rad_value = grad2rad(input_float('Grad:', min_value=0, max_value=360))
         # print(f'{grad_value:4.2f}° --> {rad_value:4.3f}rad')
     elif answer == '2':
         grad_value = rad2grad(input_float(max_tries=5, prompt='Rad:'))
