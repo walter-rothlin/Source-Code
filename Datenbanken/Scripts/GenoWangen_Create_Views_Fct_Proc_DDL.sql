@@ -22,8 +22,9 @@
 --                                   Mod getIBANId          added all attributes
 -- 29-Aug-2023   Walter Rothlin      Added Nutzen-Listen und Nutzen-Statistik (Nutzenauszahlung;Nutzenstatistik;Nutzensumme)
 --                                   Added Einladungsliste_Geno_Gemeinde
---                                   Added  Wegzüger_Dieses_Jahr;Rückkehrer_Dieses_Jahr
+--                                   Added Wegzüger_Dieses_Jahr;Rückkehrer_Dieses_Jahr
 -- 02-Sep-2023   Walter Rothlin      Added addPersonen()
+-- 07-Sep-2023   Walter Rothlin      Added Geno_Reisend
 -- -----------------------------------------
 
 -- To-Does
@@ -125,8 +126,8 @@ END//
 DELIMITER ;
 
 -- Test-Cases
-SELECT Kategorien FROM Personen WHERE ID = 1172;
-UPDATE `personen` SET Kategorien = removeSetValue(Kategorien, 'Pächter', ',') WHERE  id = 1172;
+-- SELECT Kategorien FROM Personen WHERE ID = 1172;
+-- UPDATE `personen` SET Kategorien = removeSetValue(Kategorien, 'Pächter', ',') WHERE  id = 1172;
 
 -- -----------------------------------------
 --  Fct 10.0) Gibt den aelteren Timestamp zurueck
@@ -1132,7 +1133,7 @@ CREATE VIEW Personen_Daten AS
           
 		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                              AS Angemeldet_Am,
           DATE_FORMAT(P.Angemeldet_Am,'%Y')                                    AS Angemeldet_Am_Jahr,
-          Bezahlt_Aufnahme_Gebühr                                             AS Bezahlte_Aufnahme_Gebühr,
+          Bezahlte_Aufnahme_Gebühr                                             AS Bezahlte_Aufnahme_Gebühr,
           DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                             AS Aufgenommen_Am,
           DATE_FORMAT(P.Aufgenommen_Am,'%Y')                                   AS Aufgenommen_Am_Jahr,
           DATE_FORMAT(P.`Sich_Für_Bürgertag_Angemeldet_Am`,'%d.%m.%Y')         AS `Sich_Für_Bürgertag_Angemeldet_Am`,
@@ -1359,6 +1360,29 @@ CREATE VIEW Mitarbeiter AS
     ORDER BY Funktion, Familien_Name, Vorname;
 
 -- -----------------------------------------------------
+DROP VIEW IF EXISTS Geno_Reisende; 
+CREATE VIEW Geno_Reisende AS
+    SELECT
+        ID,
+        ''                          AS Anzahl_angemeldet,
+        Geschlecht,
+        Vorname_Initial             AS Vorname,
+        Familien_Name               AS `Name`,
+        Private_Strassen_Adresse    AS Strasse_Nr,
+        Private_PLZ_Ort             AS PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        Geburtstag,
+        Kategorien,
+        Brief_Anrede_PerDu
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0  OR
+          -- FIND_IN_SET('GPK', Kategorien) >  0          OR
+          FIND_IN_SET('Angestellter', Kategorien) >  0 OR
+          ID IN (488)
+    ORDER BY Familien_Name, Vorname;
+
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Graue_Panter; 
 CREATE VIEW Graue_Panter AS
     SELECT
@@ -1391,12 +1415,14 @@ CREATE VIEW Einladungsliste_Geno_Gemeinde AS
     SELECT
         -- *
         ID,
-        Zivilstand,
+        -- Zivilstand,
         Geschlecht,
         Vorname_Initial,
         Familien_Name,
         Private_Strassen_Adresse   AS Strasse,
-        Private_PLZ_Ort            AS PLZ_Ort,
+        Private_PLZ,
+        Private_Ort,
+        -- Private_PLZ_Ort            AS PLZ_Ort,
         Anrede_1_Short_Short,
         Anrede_Short_Short,
         Anrede_Long_Short,
@@ -1407,7 +1433,8 @@ CREATE VIEW Einladungsliste_Geno_Gemeinde AS
         Brief_Anrede_Text,
         Brief_Anrede_PerDu
     FROM Personen_Daten
-    WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
+    WHERE Todestag IS NULL AND -- FIND_IN_SET('Bürger', Kategorien) >  0 AND 
+                               FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
     ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------

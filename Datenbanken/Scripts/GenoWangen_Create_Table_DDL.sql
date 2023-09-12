@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Bauland_Gekauft_Am`                  DATE NULL,
   `Baulandgesuch_Details`               VARCHAR(500) NULL,
   `Angemeldet_Am`                       DATE NULL,
-  `Bezahlt_Aufnahme_Gebühr`             FLOAT UNSIGNED NULL,
+  `Bezahlte_Aufnahme_Gebühr`            FLOAT UNSIGNED NULL,
   `Aufgenommen_Am`                      DATE NULL,
   `Sich_Für_Bürgertag_Angemeldet_Am`    DATE NULL,
   `Neubürgertag_gemacht_Am`             DATE NULL,

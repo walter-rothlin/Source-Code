@@ -46,6 +46,7 @@
 # 22-Jun-2023   Walter Rothlin      Added read_boolean
 # 13-Jul-2023   Walter Rothlin      Added split_adress_street_nr()
 # 03-Sep-2023   Walter Rothlin      Added Resuable DB und Excel Functions
+# 12-Sep-2023   Walter Rothlin      Added is_US_Date, is_EU_Date
 # ------------------------------------------------------------------
 
 
@@ -95,8 +96,8 @@ regEx_email = r'([\w\.-]+)@([\w\.-]+)'
 regEx_Float = r'[+-]?\d*\.[0-9]+'
 regEx_Int = r'[+-]?[0-9]'
 regEx_Float_Or_Int = r'[+-]?\d*\.?\d+'
-
-
+regEx_Date_US = r'[0-9]{4}.[0-9]{2}.[0-9]{2}'   # 1964-11-29
+regEx_Date_EU = r'[0-9]{2}.[0-9]{2}.[0-9]{4}'   # 29.11.1964
 
 # Bildschirmsteuerung
 # ===================
@@ -1713,6 +1714,22 @@ def equalsWithinTolerance(ist, soll, abweichungProzent=0.001):
         else:
             return True
 
+def is_US_Date(date_str, reg_ex=regEx_Date_US, verbal=False):
+    if verbal:
+        print(f"is_US_Date('{date_str}', '{reg_ex}')")
+    if re.fullmatch(reg_ex, date_str):
+        return True
+    else:
+        return False
+
+
+def is_EU_Date(date_str, reg_ex=regEx_Date_EU, verbal=False):
+    if verbal:
+        print(f"is_EU_Date('{date_str}', '{reg_ex}')")
+    if re.fullmatch(reg_ex, date_str):
+        return True
+    else:
+        return False
 
 def isFloatEquals(ist, soll, roundDezimals=3):
     # Test-Cases
@@ -2777,6 +2794,18 @@ def update_db_attribute(db=None,
                         sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value}' WHERE {id_attr_name} = {id}"
                 else:
                     sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value}' WHERE {id_attr_name} = {id}"
+
+            elif db_attr_type == 'date':
+                new_value = str(new_value)[:10]
+                date_format_sql = ''
+                if is_US_Date(new_value):
+                    date_format_sql = '%Y-%m-%d'
+                    new_value = re.sub(r'\D+', '-', new_value)
+                elif is_EU_Date(new_value):
+                    date_format_sql = '%d.%m.%Y'
+                    new_value = re.sub(r'\D+', '.', new_value)
+
+                sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = STR_TO_DATE('{new_value}', '{date_format_sql}') WHERE {id_attr_name} = {id}"
 
             else:
                 sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = {new_value} WHERE {id_attr_name} = {id}"

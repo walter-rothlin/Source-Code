@@ -439,19 +439,104 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
     count_of_updated_attributs = 0
     count_of_total_lines = 0
 
+    """      
+       -- FK: Verwandschaft
+      `Partner_ID` 		                   INT NULL,
+      `Vater_ID`         		           INT NULL,
+      `Mutter_ID`				           INT NULL,
+      
+      -- FK: Adressen
+      `Privat_Adressen_ID`                 INT UNSIGNED NULL,
+      `Geschaefts_Adressen_ID`             INT UNSIGNED NULL,
+    """
+
+
+    """
+    Private_Adressen_ID	
+    Private_Strasse	
+    Private_Hausnummer	
+    Private_Postfachnummer	
+    Private_Ort_ID	
+    Private_PLZ	
+    Private_Ort	
+    Private_Land_ID	
+    Private_Land	
+
+    
+    Tel_Nr_Detail_Long	
+    Tel_Nr_1_Detail_Long	
+    Tel_Nr_2_Detail_Long	
+    	
+    eMail_1_Detail_Long	
+    eMail_2_Detail_Long	
+    IBAN_Detail_Long
+
+    
+    
+    Geschaeft_Adressen_ID	
+    Geschaeft_Strasse	
+    Geschaeft_Hausnummer	
+    Geschaeft_Postfachnummer	
+    Geschaeft_Ort_ID	
+    Geschaeft_PLZ	
+    Geschaeft_Ort	
+    Geschaeft_Land_ID	
+    Geschaeft_Land    
+    """
+
     db_attr_excel_column_mapping = [
-        {'db': 'Zivilstand',
-         'excel': 'Zivilstand'},
-        {'db': 'Kategorien',
-         'excel': 'Kategorien'},
-        {'db': 'Funktion',
-         'excel': 'Funktion'},
+        {'excel': 'Source'},
+        {'excel': 'History'},
+        {'excel': 'Bemerkungen'},
+        {'excel': 'Zivilstand'},
+        {'excel': 'Kategorien'},
+        {'excel': 'Funktion'},
+        {'excel': 'Firma'},
+
         {'db': 'Sex',
          'excel': 'Geschlecht'},
-        {'db': 'AHV_Nr',
-         'excel': 'AHV_Nr'},
-        {'db': 'Betriebs_Nr',
-         'excel': 'Betriebs_Nr'},
+        {'excel': 'Vorname'},
+        {'excel': 'Vorname_2'},
+        {'excel': 'Ledig_Name'},
+        {'excel': 'Partner_Name'},
+        {'excel': 'Partner_Name_Angenommen'},
+
+        {'excel': 'AHV_Nr'},
+        {'excel': 'Betriebs_Nr'},
+
+        {'excel': 'Baulandgesuch_Details'},
+        {'excel': 'Bezahlte_Aufnahme_Gebühr'},
+        {'excel': 'Ausbezahlter_Bürgertaglohn'},
+
+        # Verwandtschaft
+        # --------------
+        {'excel': 'Partner_ID'},
+        {'excel': 'Vater_ID'},
+        {'excel': 'Mutter_ID'},
+
+        # Dates
+        # -----
+        {'excel': 'Geburtstag'},
+        {'excel': 'Geburtstag'},
+        {'excel': 'Nach_Wangen_Gezogen'},
+        {'excel': 'Von_Wangen_Weggezogen'},
+        {'excel': 'Baulandgesuch_Eingereicht_Am'},
+        {'excel': 'Bauland_Gekauft_Am'},
+        {'excel': 'Angemeldet_Am'},
+        {'excel': 'Aufgenommen_Am'},
+        {'excel': 'Sich_Für_Bürgertag_Angemeldet_Am'},
+        {'excel': 'Neubürgertag_gemacht_Am'},
+        {'excel': 'Funktion_Uebernommen_Am'},
+        {'excel': 'Funktion_Abgegeben_Am'},
+        {'excel': 'Chronik_Bezogen_Am'},
+        {'excel': 'Newsletter_Abonniert_Am'},
+
+        {'excel': 'eMail_Detail_Long',
+         'db': 'Join'},
+        {'excel': 'eMail_1_Detail_Long',
+         'db': 'Join'},
+        {'excel': 'eMail_2_Detail_Long',
+         'db': 'Join'},
     ]
 
     title_row = 1
@@ -489,8 +574,17 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
 
                     db_table_name     = 'Personen'
                     for a_mapping in db_attr_excel_column_mapping:
-                        db_attr_name      = a_mapping['db']
-                        excel_column_name = a_mapping['excel']
+                        if a_mapping.get('db') is not None:
+                            db_attr_name = a_mapping['db']
+                        else:
+                            db_attr_name = a_mapping['excel']
+
+                        if a_mapping.get('excel') is not None:
+                            excel_column_name = a_mapping['excel']
+                        else:
+                            excel_column_name = a_mapping['db']
+                        # print('db_attr_name:', db_attr_name, '    excel_column_name:', excel_column_name)
+                        # halt()
 
                         values = get_cell_values_by_column_titles(
                             worksheet_sheet,
@@ -506,12 +600,16 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                             if verbal_while_update:
                                 print(pers_id, 'No update for', excel_column_name)
                         else:
-                            attr_type = get_db_attr_type(stammdaten_schema, table=db_table_name, attribute=db_attr_name, take_action=take_action, verbal=verbal_while_update)
-                            count_of_updated_attributs += update_db_attribute(stammdaten_schema,
-                                    db_tbl_name=db_table_name, db_attr_name=db_attr_name, db_attr_type=attr_type['type'], db_attr_set_enum_values=attr_type['enums'],
-                                    id_attr_name='ID', id=pers_id,
-                                    new_value=new_value_from_excel, new_value_format=None,
-                                    take_action=take_action, verbal=verbal_while_update)
+                            if (db_attr_name == 'Join'):
+                                print("JOIN    .... ", excel_column_name, new_value_from_excel)
+                                if
+                            else:
+                                attr_type = get_db_attr_type(stammdaten_schema, table=db_table_name, attribute=db_attr_name, take_action=take_action, verbal=verbal_while_update)
+                                count_of_updated_attributs += update_db_attribute(stammdaten_schema,
+                                        db_tbl_name=db_table_name, db_attr_name=db_attr_name, db_attr_type=attr_type['type'], db_attr_set_enum_values=attr_type['enums'],
+                                        id_attr_name='ID', id=pers_id,
+                                        new_value=new_value_from_excel, new_value_format=None,
+                                        take_action=take_action, verbal=verbal_while_update)
                 count_of_updated_records += 1
         row += 1
 
