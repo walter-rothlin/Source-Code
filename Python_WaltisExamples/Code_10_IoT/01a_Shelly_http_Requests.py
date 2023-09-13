@@ -63,7 +63,7 @@ http://192.168.1.133/rpc/Switch.GetStatus?id=0
 
 import requests
 import json
-defaultIp = '192.168.1.131'    # Testlampe Shelly 1 Blue
+defaultIp = '192.168.107.133'    # Testlampe Shelly 1 Blue
 
 def getShellyStatusDetail(respI, what):
     resp = json.loads(respI.text)
@@ -77,7 +77,7 @@ def getShellyStatusDetail(respI, what):
         return "Unknown"
 
 
-def getShellyStatus(ip = defaultIp):
+def getShellyStatus(ip=defaultIp):
     shelly1_req_status = 'http://{ip:s}/status'.format(ip=ip)
     print("Checking Shelly status:", shelly1_req_status)
     res = requests.get(shelly1_req_status)
@@ -93,16 +93,16 @@ def setShellyOn(ip = defaultIp, relay = 0):
     if res.status_code != 200:
         print("ERROR:", res.status_code)
         return ""
-    return getShellyStatusDetail(getShellyStatus(),'ison')
+    return getShellyStatusDetail(getShellyStatus(), 'ison')
 
 def setShellyOff(ip = defaultIp, relay = 0):
-    shelly1_req_off = 'http://{ip:s}/relay/{relay:d}?turn=off'.format(ip=ip,relay=relay)
+    shelly1_req_off = 'http://{ip:s}/relay/{relay:d}?turn=off'.format(ip=ip, relay=relay)
     print("Set Shelly off:", shelly1_req_off)
     res = requests.get(shelly1_req_off)
     if res.status_code != 200:
         print("ERROR:", res.status_code)
         return ""
-    return getShellyStatusDetail(getShellyStatus(),'ison')
+    return getShellyStatusDetail(getShellyStatus(), 'ison')
 
 
 response = getShellyStatus()
@@ -110,12 +110,12 @@ print(getShellyStatusDetail(response, 'ip'))
 print(getShellyStatusDetail(response, 'ssid'))
 if getShellyStatusDetail(response, 'ison'):
     if setShellyOff():
-        print("Lampe is now off!")
+        print("Lampe is now off (1)!")
     else:
-        print("Lampe is now on!")
+        print("Lampe is now off!!")
 else:
     print("Lampe is off! Switching it on...")
     if setShellyOn():
-        print("Lampe is now on!")
+        print("Lampe is now on!!")
     else:
-        print("Lampe is now on!")
+        print("Lampe is now off (4)!")

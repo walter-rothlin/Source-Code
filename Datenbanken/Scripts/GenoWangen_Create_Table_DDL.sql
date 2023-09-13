@@ -5,13 +5,16 @@
 --
 -- Autor: Walter Rothlin
 -- Description: Kreiert alle Rohdaten-Tabellen for Genossame Wangen
---              LOESCHT ALLE DATEN !!!!!!!
+--              !!!!!! LOESCHT ALLE DATEN !!!!!!!
 --
 -- History:
 -- 13-May_2023   Walter Rothlin      Splitted file in DDL Tables / Fct, Views, Proc
 -- 08-Jun-2023   Walter Rothlin		 Added fields for Neubürger
 -- 05-Jul-2023   Walter Rothlin      Removed Waermebezueger and replaced by Wärmeanschlüsse
 -- 07-Jul-2023   Walter Rothlin      Detail definition Wärmebezüger mit Remo und Adrian
+-- 11-Jul-2023   Walter Rothlin      Added 'Fehlermeldung' zu email
+-- 12-Jul-2023   Walter Rothlin      Added  `Projekt_Nr` Eigentümer_2_ID to Wärmeanschlüsse
+-- 29-Aug-2023   Walter Rothlin      Added  'Verwaltungsberechtigt' zu Kategorien
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -35,6 +38,24 @@ USE genossame_wangen;
 -- == Create Tables                       ==
 -- =========================================
 
+-- -----------------------------------------
+-- Table `Properties`
+-- -----------------------------------------
+DROP TABLE IF EXISTS Properties;
+CREATE TABLE IF NOT EXISTS Properties (
+  `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Name`          VARCHAR(25) NOT NULL,
+  `Value`         VARCHAR(25) NULL,
+  `last_update`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  -- PK-Constraints
+  PRIMARY KEY (`ID`));
+  
+INSERT INTO `properties` (`Name`, `Value`) VALUES 
+       ('Grundnutzen', '1650.00'),
+       ('Nutzen_16a_Teil', '130.00'),
+       ('Nutzen_35a_Teil', '220.00');
+ 
 -- -----------------------------------------
 -- Table `Land`
 -- -----------------------------------------
@@ -133,7 +154,7 @@ CREATE TABLE IF NOT EXISTS Personen (
                       'Bevormundet','Partnerschaft') 
                       DEFAULT NULL,
 
-  `Kategorien`  SET('Bürger', 'Nutzungsberechtigt', 'Hat_16a', 'Hat_35a',
+  `Kategorien`  SET('Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
                     'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
                     'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
                     'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
@@ -150,7 +171,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Bauland_Gekauft_Am`                  DATE NULL,
   `Baulandgesuch_Details`               VARCHAR(500) NULL,
   `Angemeldet_Am`                       DATE NULL,
-  `Bezahlt_Aufnahme_Gebühr`             FLOAT UNSIGNED NULL,
+  `Bezahlte_Aufnahme_Gebühr`            FLOAT UNSIGNED NULL,
   `Aufgenommen_Am`                      DATE NULL,
   `Sich_Für_Bürgertag_Angemeldet_Am`    DATE NULL,
   `Neubürgertag_gemacht_Am`             DATE NULL,
@@ -216,7 +237,7 @@ DROP TABLE IF EXISTS EMail_Adressen;
 CREATE TABLE IF NOT EXISTS EMail_Adressen (
   `ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `eMail`        VARCHAR(45)  NOT NULL,
-  `Type`         ENUM('Privat', 'Geschaeft', 'Sonstige')  NULL,
+  `Type`         ENUM('Privat', 'Geschaeft', 'Sonstige', 'Fehlermeldung')  NULL,
   `Prio`         TINYINT      NOT NULL DEFAULT 0, 
   `last_update`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -389,6 +410,7 @@ CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
   `ID`                               INT NOT NULL,
   `Parzellen_Nummer`                 VARCHAR(45) NULL,  -- Wohnung, Kataster_Nr, x,y sind in Adressen
   `Korrenspondenz`                   VARCHAR(500) NULL,
+  `Projekt_Nr`                       VARCHAR(10) NULL,
   `Gebietsbezeichnung`               VARCHAR(45) NULL,
   `Anschluss_Type`                   ENUM('Vollanschluss', 
                                           'Teilanschluss_Grundstück', 
@@ -425,6 +447,7 @@ CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
   
   `Standort_Adresse_ID`              INT UNSIGNED NULL,
   `Eigentümer_ID`                    INT UNSIGNED NULL,
+  `Eigentümer_2_ID`                  INT UNSIGNED NULL,
   `Kontakt_ID`                       INT UNSIGNED NULL,
   `Rechnungs_Adresse_ID`             INT UNSIGNED NULL,
   `Heizungs_Installateur_ID`         INT UNSIGNED NULL,
@@ -432,13 +455,14 @@ CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
 
   `last_update`                      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
-  UNIQUE INDEX `Fabrikations_Nr_UNIQUE`    (`Fabrikations_Nr`          ASC) VISIBLE,
-  INDEX `fk_Wärmeanschlüsse_adressen1_idx` (`Standort_Adresse_ID`      ASC) VISIBLE,
-  INDEX `fk_Wärmeanschlüsse_personen1_idx` (`Eigentümer_ID`            ASC) VISIBLE,
-  INDEX `fk_Wärmeanschlüsse_personen2_idx` (`Kontakt_ID`               ASC) VISIBLE,
-  INDEX `fk_Wärmeanschlüsse_personen3_idx` (`Heizungs_Installateur_ID` ASC) VISIBLE,
-  INDEX `fk_Wärmeanschlüsse_personen4_idx` (`Elektro_Installateur_ID`  ASC) VISIBLE,
-  INDEX `fk_Wärmeanschlüsse_personen5_idx` (`Rechnungs_Adresse_ID`     ASC) VISIBLE,
+  UNIQUE INDEX `Fabrikations_Nr_UNIQUE`     (`Fabrikations_Nr`          ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_adressen1_idx`  (`Standort_Adresse_ID`      ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen1_idx`  (`Eigentümer_ID`            ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen1a_idx` (`Eigentümer_2_ID`            ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen2_idx`  (`Kontakt_ID`               ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen3_idx`  (`Heizungs_Installateur_ID` ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen4_idx`  (`Elektro_Installateur_ID`  ASC) VISIBLE,
+  INDEX `fk_Wärmeanschlüsse_personen5_idx`  (`Rechnungs_Adresse_ID`     ASC) VISIBLE,
   CONSTRAINT `fk_Wärmeanschlüsse_adressen1`
     FOREIGN KEY (`Standort_Adresse_ID`)
     REFERENCES `adressen` (`ID`)
@@ -446,6 +470,11 @@ CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Wärmeanschlüsse_personen1`
     FOREIGN KEY (`Eigentümer_ID`)
+    REFERENCES `personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Wärmeanschlüsse_personen1a`
+    FOREIGN KEY (`Eigentümer_2_ID`)
     REFERENCES `personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -469,6 +498,9 @@ CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
     REFERENCES `personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+-- INSERT INTO `wärmeanschlüsse` (`ID`, `Projekt_Nr`, `Gebietsbezeichnung`, `Anschluss_Type`, `kW_Leistung`, `Standort_Adresse_ID`, `Eigentümer_ID`, `Kontakt_ID`, `Rechnungs_Adresse_ID`, `Heizungs_Installateur_ID`, `Elektro_Installateur_ID`) VALUES ('1', '16886', 'Knobelhof', 'Vollanschluss', '10', '132', '223', '223', '223', '523', '644');
+
 
 -- -----------------------------------------
 -- Table `Landteil`

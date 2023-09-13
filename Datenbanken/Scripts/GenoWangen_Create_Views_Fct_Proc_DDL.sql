@@ -15,6 +15,16 @@
 -- 07-Jul-2023   Walter Rothlin      Detail definition Wärmebezüger mit Remo und Adrian
 -- 10-Jul-2023   Walter Rothlin      Added Telnr-Details to Telnr_liste and Personen_daten
 -- 10-Jul-2023   Walter Rothlin      Added ENUM and SET values view
+-- 11-Jul-2023   Walter Rothlin      Added IBAN/EMAIL-Details to EMAIL_liste/IBAN_liste and Personen_daten
+-- 12-Jul-2023   Walter Rothlin      Cleanup script (removed unused fct, views)
+-- 26-Aug-2023   Walter Rothlin      Mod getTelefonnummerId added all attributes
+--                                   Mod getEmailAdrId      added all attributes
+--                                   Mod getIBANId          added all attributes
+-- 29-Aug-2023   Walter Rothlin      Added Nutzen-Listen und Nutzen-Statistik (Nutzenauszahlung;Nutzenstatistik;Nutzensumme)
+--                                   Added Einladungsliste_Geno_Gemeinde
+--                                   Added Wegzüger_Dieses_Jahr;Rückkehrer_Dieses_Jahr
+-- 02-Sep-2023   Walter Rothlin      Added addPersonen()
+-- 07-Sep-2023   Walter Rothlin      Added Geno_Reisend
 -- -----------------------------------------
 
 -- To-Does
@@ -83,8 +93,41 @@ BEGIN
 END//
 DELIMITER ;
 
+DROP FUNCTION IF EXISTS removeSetValue_New;
+DELIMITER //
+CREATE FUNCTION removeSetValue_New(input_set VARCHAR(500), value_to_remove VARCHAR(100), delimiter CHAR(1)) RETURNS VARCHAR(500)
+BEGIN
+    DECLARE result VARCHAR(500) DEFAULT '';
+    DECLARE next_value VARCHAR(500);
+    DECLARE finished INT DEFAULT 0;
+    DECLARE currentIndex INT DEFAULT 1;
+
+    WHILE currentIndex <= LENGTH(input_set) AND NOT finished DO
+        IF (SUBSTRING(input_set, currentIndex, 1) = delimiter) THEN
+            IF next_value = value_to_remove THEN
+                SET next_value = '';
+            END IF;
+            SET currentIndex = currentIndex + 1;
+        ELSE
+            SET next_value = CONCAT(next_value, SUBSTRING(input_set, currentIndex, 1));
+            SET currentIndex = currentIndex + 1;
+        END IF;
+
+        IF currentIndex > LENGTH(input_set) THEN
+            IF next_value != value_to_remove THEN
+                SET result = CONCAT(result, next_value);
+            END IF;
+            SET finished = 1;
+        END IF;
+    END WHILE;
+
+    RETURN result;
+END//
+DELIMITER ;
+
 -- Test-Cases
--- UPDATE `personen` SET Kategorien = removeSetValue(Kategorien, 'Pächter') WHERE  id = 1112;
+-- SELECT Kategorien FROM Personen WHERE ID = 1172;
+-- UPDATE `personen` SET Kategorien = removeSetValue(Kategorien, 'Pächter', ',') WHERE  id = 1172;
 
 -- -----------------------------------------
 --  Fct 10.0) Gibt den aelteren Timestamp zurueck
@@ -439,7 +482,9 @@ DELIMITER ;
 
 -- SELECT remove_leading_0('00401');
 
--- -----------------------------------------
+-- =========================================
+--                  telnr                 --
+-- =========================================
 DROP FUNCTION IF EXISTS format_telNr;
 DELIMITER //
 CREATE FUNCTION format_telNr(p_laender_code CHAR(20), p_vorwahl CHAR(20), p_nummer CHAR(20)) RETURNS CHAR(60)
@@ -458,17 +503,17 @@ DELIMITER ;
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS format_telNr_with_Detail;
 DELIMITER //
-CREATE FUNCTION format_telNr_with_Detail(p_laender_code CHAR(20), p_vorwahl CHAR(20), p_nummer CHAR(20), p_type CHAR(20), p_endgeraet CHAR(10), p_prio TINYINT, p_short BOOLEAN) RETURNS CHAR(80)
+CREATE FUNCTION format_telNr_with_Detail(p_laender_code CHAR(20), p_vorwahl CHAR(20), p_nummer CHAR(20), p_id INT UNSIGNED, p_type CHAR(20), p_endgeraet CHAR(10), p_prio TINYINT, p_short BOOLEAN) RETURNS CHAR(80)
 BEGIN
     IF p_short = TRUE THEN
-		RETURN CONCAT(format_telNr(p_laender_code, p_vorwahl, p_nummer), '  ::  ', p_prio, ':', LEFT(p_type, 1), LEFT(p_endgeraet,1));
+		RETURN CONCAT(format_telNr(p_laender_code, p_vorwahl, p_nummer), '  :',p_id,':  ', p_prio, ':', LEFT(p_type, 1), LEFT(p_endgeraet,1));
 	ELSE
-        RETURN CONCAT(format_telNr(p_laender_code, p_vorwahl, p_nummer), '  ::  ', p_prio, ':', p_type, ':', p_endgeraet);
+        RETURN CONCAT(format_telNr(p_laender_code, p_vorwahl, p_nummer), '  :',p_id,':  ', p_prio, ':', p_type, ':', p_endgeraet);
     END IF;
 END//
 DELIMITER ;
 
--- SELECT format_telNr_with_Detail('0041', '055', '4601440', 'Geschaeft', 'Mobile', '0'); 
+-- SELECT format_telNr_with_Detail('0041', '055', '4601440', 4711, 'Geschaeft', 'Mobile', '0', False); 
 
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS get_TelNr_With_Details;
@@ -520,40 +565,6 @@ SELECT
 */
 
 -- -----------------------------------------
-/* TBD 2023-07_10
-DROP FUNCTION IF EXISTS getPrio_0_TelNr;
-DELIMITER //
-CREATE FUNCTION getPrio_0_TelNr(p_id INT) RETURNS CHAR(100)
-BEGIN
-    RETURN (SELECT Tel_Nr FROM Telnr_Liste WHERE Pers_ID = p_id AND prio=0 LIMIT 1);
-END//
-DELIMITER ;
-
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_1_TelNr;
-DELIMITER //
-CREATE FUNCTION getPrio_1_TelNr(p_id INT) RETURNS CHAR(100)
-BEGIN
-    RETURN (SELECT Tel_Nr FROM Telnr_Liste WHERE Pers_ID = p_id AND prio=1 LIMIT 1);
-END//
-DELIMITER ;
-
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_2_TelNr;
-DELIMITER //
-CREATE FUNCTION getPrio_2_TelNr(p_id INT) RETURNS CHAR(100)
-BEGIN
-    RETURN (SELECT Tel_Nr FROM Telnr_Liste WHERE Pers_ID = p_id AND prio=2 LIMIT 1);
-END//
-DELIMITER ;
-
--- SELECT Laendercode FROM Telnr_Liste WHERE Pers_ID = 1103 AND prio=0 LIMIT 1;
--- SELECT Vorwahl     FROM Telnr_Liste WHERE Pers_ID = 1103 AND prio=0 LIMIT 1;
--- SELECT Nummer      FROM Telnr_Liste WHERE Pers_ID = 1103 AND prio=0 LIMIT 1;
--- Test-Cases
--- SELECT getPrio_0_TelNr(1103);  -- --> 0793315587
-*/
--- -----------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_TelNr_ID;
 DELIMITER //
 CREATE FUNCTION getPrio_0_TelNr_ID(p_id INT) RETURNS CHAR(100)
@@ -565,38 +576,49 @@ DELIMITER ;
 -- Test-Cases
 -- SELECT getPrio_0_TelNr_ID(4);  -- --> xxxxxx
 
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_0_EMail;
+-- =========================================
+--                    email               --
+-- =========================================
+DROP FUNCTION IF EXISTS format_eMail_with_Detail;
 DELIMITER //
-CREATE FUNCTION getPrio_0_EMail(p_id INT) RETURNS CHAR(100)
+CREATE FUNCTION format_eMail_with_Detail(p_email CHAR(45), p_id INT UNSIGNED, p_type CHAR(20), p_prio TINYINT, p_short BOOLEAN) RETURNS CHAR(80)
 BEGIN
-    -- RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
-    RETURN (SELECT eMail_Adresse FROM email_liste_prio_0 WHERE Pers_id = p_id AND prio=0 LIMIT 1);
+    IF p_short = TRUE THEN
+		RETURN CONCAT(p_email, '  :',p_id,':  ', p_prio, ':', LEFT(p_type, 1));
+	ELSE
+        RETURN CONCAT(p_email, '  :',p_id,':  ', p_prio, ':', p_type, ':');
+    END IF;
 END//
 DELIMITER ;
 
+-- SELECT format_eMail_with_Detail('walti@rothlin.ch', 4711, 'Geschaeft', '0', False);   -- walti@rothlin.ch  :4711:  0:Geschaeft:
+-- SELECT format_eMail_with_Detail('walti@rothlin.ch', 4711, 'Geschaeft', '0', True);    -- walti@rothlin.ch  :4711:  0:G
+
 -- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_1_EMail;
+DROP FUNCTION IF EXISTS get_Email_With_Details;
 DELIMITER //
-CREATE FUNCTION getPrio_1_EMail(p_id INT) RETURNS CHAR(100)
+CREATE FUNCTION get_Email_With_Details(p_id INT, p_prio TINYINT, p_short BOOLEAN, p_with_details BOOLEAN) RETURNS CHAR(100)
 BEGIN
-    -- RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
-    RETURN (SELECT eMail_Adresse FROM email_liste_prio_0 WHERE Pers_id = p_id AND prio=1 LIMIT 1);
+    DECLARE ret_val CHAR(100) DEFAULT '';
+    IF p_with_details = TRUE THEN
+		IF p_short = TRUE THEN
+			SET ret_val = (SELECT Email_Detailed        FROM email_liste WHERE Pers_ID = p_id AND Prio=p_prio LIMIT 1);
+		ELSE
+			SET ret_val = (SELECT Email_Detailed_Long   FROM email_liste WHERE Pers_ID = p_id AND Prio=p_prio LIMIT 1);
+		END IF;
+	ELSE
+		SET ret_val = (SELECT eMail_adresse   FROM email_liste WHERE Pers_ID = p_id AND Prio=p_prio LIMIT 1);
+    END IF;
+    IF ret_val is NULL THEN
+		SET ret_val = '';
+	END IF;
+    RETURN ret_val;
 END//
 DELIMITER ;
 
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_2_EMail;
-DELIMITER //
-CREATE FUNCTION getPrio_2_EMail(p_id INT) RETURNS CHAR(100)
-BEGIN
-    -- RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
-    RETURN (SELECT eMail_Adresse FROM email_liste_prio_0 WHERE Pers_id = p_id AND prio=2 LIMIT 1);
-END//
-DELIMITER ;
--- Test-Cases
--- SELECT getPrio_0_EMail(4);  -- --> abajschne@gmx.ch
-
+-- SELECT get_Email_With_Details(644, 0, FALSE,  FALSE)  AS Email;      -- walter@rothlin.com
+-- SELECT get_Email_With_Details(644, 0, FALSE,  TRUE)   AS Email;      -- walter@rothlin.com  :321:  0:Sonstige:
+-- SELECT get_Email_With_Details(644, 0, TRUE,   TRUE)   AS Email;      -- walter@rothlin.com  :321:  0:S
 
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_EMail_ID;
@@ -604,7 +626,7 @@ DELIMITER //
 CREATE FUNCTION getPrio_0_EMail_ID(p_id INT) RETURNS CHAR(100)
 BEGIN
     -- RETURN (SELECT eMail FROM email_adressen WHERE id = p_id AND prio=0 LIMIT 1);
-    RETURN (SELECT eMail_ID FROM email_liste_prio_0 WHERE Pers_id = p_id AND prio=0 LIMIT 1);
+    RETURN (SELECT eMail_ID FROM email_liste WHERE Pers_id = p_id AND prio=0 LIMIT 1);
 END//
 DELIMITER ;
 
@@ -612,71 +634,61 @@ DELIMITER ;
 -- Test-Cases
 -- SELECT getPrio_0_EMail_ID(4);  -- --> xxxxxxx
 
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getAll_emailAddrs;
+-- =========================================
+--                    IBAN                --
+-- =========================================
+DROP FUNCTION IF EXISTS format_IBAN_with_Detail;
 DELIMITER //
-CREATE FUNCTION getAll_emailAddrs(p_id INT) RETURNS CHAR(100)
+CREATE FUNCTION format_IBAN_with_Detail(p_nummer CHAR(26), p_id INT UNSIGNED, p_bezeichnung CHAR(20), p_bankname CHAR(45), p_bankort CHAR(45), p_prio TINYINT, p_short BOOLEAN) RETURNS CHAR(200)
 BEGIN
-    RETURN (SELECT eMail_Detailed_Alle FROM email_liste_alle_email WHERE Pers_ID = p_id);
+    IF p_short = TRUE THEN
+		RETURN CONCAT(p_nummer, '  :',p_id,':  ', p_prio, ':', p_bankname);
+	ELSE
+        RETURN CONCAT(p_nummer, '  :',p_id,':  ', p_prio, ':', CONCAT(p_bankname,':',p_bankort,':',p_bezeichnung), ':');
+    END IF;
 END//
 DELIMITER ;
 
--- Test-Cases
--- SELECT getAll_emailAddrs(919);  -- --> xxxxxx
+-- SELECT format_IBAN_with_Detail('CH05 0077 7003 5367 6115 8', 1, 'Bezeichnung', 'Credit-Suisse', 'Zürich', 0, False);   -- CH05 0077 7003 5367 6115 8  :1:  0:Credit-Suisse:Zürich:Bezeichnung:
+-- SELECT format_IBAN_with_Detail('CH05 0077 7003 5367 6115 8', 1, 'Bezeichnung', 'Credit-Suisse', 'Zürich', 1, True);    -- CH05 0077 7003 5367 6115 8  :1:  1:Credit-Suisse
 
 -- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_0_IBAN;
+DROP FUNCTION IF EXISTS get_IBAN_With_Details;
 DELIMITER //
-CREATE FUNCTION getPrio_0_IBAN(p_id INT) RETURNS CHAR(100)
+CREATE FUNCTION get_IBAN_With_Details(p_id INT, p_prio TINYINT, p_short BOOLEAN, p_with_details BOOLEAN) RETURNS CHAR(100)
 BEGIN
-    RETURN (SELECT IBAN_Nummer FROM iban_liste_prio_0 WHERE Pers_id = p_id AND prio=0 LIMIT 1);
+    DECLARE ret_val CHAR(100) DEFAULT '';
+    IF p_with_details = TRUE THEN
+		IF p_short = TRUE THEN
+			SET ret_val = (SELECT IBAN_Detailed        FROM IBAN_liste WHERE Pers_ID = p_id AND Prio=p_prio LIMIT 1);
+		ELSE
+			SET ret_val = (SELECT IBAN_Detailed_Long   FROM IBAN_liste WHERE Pers_ID = p_id AND Prio=p_prio LIMIT 1);
+		END IF;
+	ELSE
+		SET ret_val = (SELECT IBAN_Nummer   FROM IBAN_liste WHERE Pers_ID = p_id AND Prio=p_prio LIMIT 1);
+    END IF;
+    IF ret_val is NULL THEN
+		SET ret_val = '';
+	END IF;
+    RETURN ret_val;
 END//
 DELIMITER ;
 
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_1_IBAN;
-DELIMITER //
-CREATE FUNCTION getPrio_1_IBAN(p_id INT) RETURNS CHAR(100)
-BEGIN
-    RETURN (SELECT IBAN_Nummer FROM iban_liste_prio_0 WHERE Pers_id = p_id AND prio=1 LIMIT 1);
-END//
-DELIMITER ;
-
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getPrio_2_IBAN;
-DELIMITER //
-CREATE FUNCTION getPrio_2_IBAN(p_id INT) RETURNS CHAR(100)
-BEGIN
-    RETURN (SELECT IBAN_Nummer FROM iban_liste_prio_0 WHERE Pers_id = p_id AND prio=1 LIMIT 1);
-END//
-DELIMITER ;
-
--- Test-Cases
--- SELECT getPrio_0_IBAN(16);  -- --> abajschne@gmx.ch
+-- SELECT get_IBAN_With_Details(644, 0, FALSE,  FALSE)  AS IBAN;      -- CH95 8080 8006 9894 2234 3
+-- SELECT get_IBAN_With_Details(644, 0, FALSE,  TRUE)   AS IBAN;      -- CH95 8080 8006 9894 2234 3  :303:  0:Raiffeisen:Lachen:Waltis:
+-- SELECT get_IBAN_With_Details(644, 0, TRUE,   TRUE)   AS IBAN;      -- CH95 8080 8006 9894 2234 3  :303:  0:Raiffeisen
 
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_IBAN_ID;
 DELIMITER //
 CREATE FUNCTION getPrio_0_IBAN_ID(p_id INT) RETURNS CHAR(100)
 BEGIN
-    RETURN (SELECT IBAN_ID FROM iban_liste_prio_0 WHERE Pers_id = p_id AND prio=0 LIMIT 1);
+    RETURN (SELECT IBAN_ID FROM iban_liste WHERE Pers_id = p_id AND prio=0 LIMIT 1);
 END//
 DELIMITER ;
 
 -- Test-Cases
 -- SELECT getPrio_0_IBAN_ID(16);  -- --> xxxxxxxxx
-
--- -----------------------------------------
-DROP FUNCTION IF EXISTS getAll_IBANs;
-DELIMITER //
-CREATE FUNCTION getAll_IBANs(p_id INT) RETURNS CHAR(100)
-BEGIN
-    RETURN (SELECT IBAN_Detailed_Alle FROM IBAN_liste_alle_IBAN WHERE Pers_ID = p_id);
-END//
-DELIMITER ;
-
--- Test-Cases
--- SELECT getAll_IBANs(919);  -- --> xxxxxx
 
 -- -----------------------------------------
 --  Fct 10.12) Gibt Strasse mit Nr resp Postfach zurueck (siehe Testcases) 
@@ -715,8 +727,72 @@ END//
 DELIMITER ;
 
 -- Test-Cases
--- SELECT getStrassenAdresse('Peterliwiese', '33a', '');  -- --> Peterliwiese 33
+-- SELECT getStrassenAdresse('Peterliwiese', '33a', '');      -- --> Peterliwiese 33
 -- SELECT getStrassenAdresse('Peterliwiese', '33a', '243' );  -- --> Peterliwiese 33 / Postfach:243
+
+-- -----------------------------------------
+
+-- =========================================
+--          Nutzen                        --
+-- =========================================
+--  Berechnet Genossennutzen anhand der Kategorie
+DROP FUNCTION IF EXISTS calc_nutzen_by_katset;
+DELIMITER //
+CREATE FUNCTION calc_nutzen_by_katset(p_kategorien SET('Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
+                    'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
+                    'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
+                    'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
+                    'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
+                    'Betriebsgemeinschaft', 'Generationengemeinschaft')) RETURNS FLOAT
+BEGIN
+   DECLARE ret_val FLOAT DEFAULT 0;
+   IF (FIND_IN_SET('Nutzungsberechtigt', p_kategorien) > 0) THEN 
+        SET ret_val = (SELECT `Value` FROM properties WHERE `Name` = 'Grundnutzen');
+
+		IF (FIND_IN_SET('Hat_16a', p_kategorien) = 0) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_16a_Teil');
+		END IF;
+        
+		IF (FIND_IN_SET('Hat_35a', p_kategorien) = 0) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_35a_Teil');
+		END IF;
+   END IF;
+   RETURN  ret_val;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- select calc_nutzen_by_katset('Nutzungsberechtigt')                  AS `Expected_2000.00`;
+-- select calc_nutzen_by_katset('Nutzungsberechtigt,Hat_16a')          AS `Expected_1870.00`;
+-- select calc_nutzen_by_katset('Nutzungsberechtigt,Hat_35a')          AS `Expected_1780.00`;
+-- select calc_nutzen_by_katset('Nutzungsberechtigt,Hat_16a,Hat_35a')  AS `Expected_2000.00`;
+
+DROP FUNCTION IF EXISTS calc_nutzen;
+DELIMITER //
+CREATE FUNCTION calc_nutzen(p_is_nutzungsberechtigt Boolean, p_has_16a_Teil Boolean, p_has_35a_Teil Boolean) RETURNS FLOAT
+BEGIN
+   DECLARE ret_val FLOAT DEFAULT 0;
+   IF (p_is_nutzungsberechtigt = true) THEN 
+        SET ret_val = (SELECT `Value` FROM properties WHERE `Name` = 'Grundnutzen');
+
+		IF (p_has_16a_Teil = false) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_16a_Teil');
+		END IF;
+        
+		IF (p_has_35a_Teil = false) THEN
+			SET ret_val = ret_val + (SELECT `Value` FROM properties WHERE `Name` = 'Nutzen_35a_Teil');
+		END IF;
+   END IF;
+   RETURN  ret_val;
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- select calc_nutzen(false, true, true);   -- --> 0
+-- select calc_nutzen(true, true, true);    -- --> 1650.00
+-- select calc_nutzen(true, false, true);   -- --> 1780.00
+-- select calc_nutzen(true, true, false);   -- --> 1870.00
+-- select calc_nutzen(true, false, false);  -- --> 2000.00
 
 -- ===============================================================================================
 -- == Create Views                                                                              ==
@@ -791,7 +867,7 @@ CREATE VIEW Telnr_Liste AS
 	SELECT
         -- Allgemeine Daten
         pers.ID                                      AS Pers_ID,
-        'Nein'                                       AS 'Geändert',
+        'Nein'                                       AS `Geändert`,
         pers.Kategorien                              AS Kategorien,
         pers.Sex                                     AS Sex,
 		getName_With_Initial(pers.Vorname, 
@@ -816,6 +892,7 @@ CREATE VIEW Telnr_Liste AS
         format_telNr_with_Detail(tel.laendercode,
                 tel.vorwahl,
                 tel.Nummer,
+                tel.ID,
                 tel.`Type`,
                 tel.endgeraet,
                 tel.prio,
@@ -823,6 +900,7 @@ CREATE VIEW Telnr_Liste AS
 		format_telNr_with_Detail(tel.laendercode,
                 tel.vorwahl,
                 tel.Nummer,
+                tel.ID,
                 tel.`Type`,
                 tel.endgeraet,
                 tel.prio,
@@ -848,71 +926,12 @@ CREATE VIEW Telnr_Liste AS
     ORDER BY Familien_Name, Pers_ID, Prio;
 
 -- -----------------------------------------
-/* TBD 2023-07-10 
-DROP VIEW IF EXISTS Telnr_Liste_Sorted; 
-CREATE VIEW Telnr_Liste_Sorted AS
-	SELECT
-        *
-	FROM Telnr_Liste AS T
-    ORDER BY Familien_Name;
-
--- -----------------------------------------
-DROP VIEW IF EXISTS Telnr_Liste_Alle_TelNr; 
-CREATE VIEW Telnr_Liste_Alle_TelNr AS
-	   SELECT
-		Pers_ID,
-        Kategorien,
-        Sex,
-		Vorname_Initial,
-		Familien_Name,          -- Rothlin-Collet
-        GROUP_CONCAT(Tel_Nr_Detailed SEPARATOR ' ; ') AS Tel_Nr_Detailed_Alle,
-        
-        -- Personen Details
-	    Geburtstag,
-		`Alter`,
-        
-        -- Personen Grunddaten
-		Name_Angenommen,
-		Ledig_Name, 
-		Partner_Name,
-		Privat_Adressen_ID,
-        Geschaefts_Adressen_ID
-   
-	   FROM Telnr_Liste_Sorted AS T
-       GROUP BY Pers_ID
-	   ORDER BY Familien_Name;
-
--- -----------------------------------------
-DROP VIEW IF EXISTS Telnr_Liste_Prio_0; 
-CREATE VIEW Telnr_Liste_Prio_0 AS
-	SELECT
-		* 
-	FROM Telnr_Liste_Sorted 
-    WHERE Prio=0;
-
--- -----------------------------------------
-DROP VIEW IF EXISTS Telnr_Liste_Prio_1; 
-CREATE VIEW Telnr_Liste_Prio_1 AS
-	SELECT
-		* 
-	FROM Telnr_Liste_Sorted 
-    WHERE Prio=1;
-    
--- -----------------------------------------
-DROP VIEW IF EXISTS Telnr_Liste_Prio_2; 
-CREATE VIEW Telnr_Liste_Prio_2 AS
-	SELECT
-		* 
-	FROM Telnr_Liste_Sorted 
-    WHERE Prio=2;
-*/    
--- -----------------------------------------
 DROP VIEW IF EXISTS EMail_Liste; 
 CREATE VIEW EMail_Liste AS
 	SELECT
         -- Allgemeine Daten
         pers.ID                                      AS Pers_ID,
-        'Nein'                                       AS 'Geändert',
+        'Nein'                                       AS `Geändert`,
         pers.Kategorien                              AS Kategorien,
         pers.Sex                                     AS Sex,
 		getName_With_Initial(pers.Vorname, 
@@ -926,17 +945,17 @@ CREATE VIEW EMail_Liste AS
         -- Spezifische Daten
 		email.ID                                     AS Email_ID,
 		email.prio                                   AS Prio,
-        email.Type                                   AS Type,
+        email.`Type`                                 AS `Type`,
 		email.eMail                                  AS eMail_adresse,
-        ''                                           AS Email_Detailed,
-		/* CONCAT(email.ID,
-		       ':',
-               email.prio,
-               ':',
-               -- LEFT(email.`Type`, 4),
-               email.`Type`, 
-               ':',
-               email.eMail)                          AS Email_Detailed, */
+        format_eMail_with_Detail(email.eMail,
+                 email.ID, 
+                 email.`Type`,
+                 email.prio, True)                   AS Email_Detailed,
+		format_eMail_with_Detail(email.eMail,
+                 email.ID, 
+                 email.`Type`,
+                 email.prio, False)                  AS Email_Detailed_Long,
+
 		-- Personen Details
 	    DATE_FORMAT(pers.Geburtstag,'%d.%m.%Y')      AS Geburtstag,
 		DATE_FORMAT(pers.Todestag ,'%d.%m.%Y')       AS Todestag,
@@ -955,85 +974,6 @@ CREATE VIEW EMail_Liste AS
 	LEFT OUTER JOIN email_adressen AS email  ON pt.EMail_Adressen_ID   = email.ID
 	LEFT OUTER JOIN Personen       AS pers   ON pt.personen_ID         = pers.ID
     ORDER BY Familien_Name, Pers_ID, Prio;
-
--- -----------------------------------------
-DROP VIEW IF EXISTS EMail_Liste_Sorted; 
-CREATE VIEW EMail_Liste_Sorted AS
-	SELECT         
-		*
-	FROM EMail_Liste AS E
-    ORDER BY Familien_Name;
-
--- -----------------------------------------
-/*
-DROP VIEW IF EXISTS EMail_Liste_Alle_EMail; 
-CREATE VIEW EMail_Liste_Alle_EMail AS
-	   SELECT
-		Pers_ID,
-        Kategorien,
-        Sex,
-		Vorname_Initial,
-		Familien_Name,          -- Rothlin-Collet
-        GROUP_CONCAT(Email_Detailed SEPARATOR ' ; ') AS eMail_Detailed_Alle,
-        
-        -- Personen Details
-	    Geburtstag,
-		`Alter`,
-        
-        -- Personen Grunddaten
-		Name_Angenommen,
-		Ledig_Name, 
-		Partner_Name,
-		Privat_Adressen_ID,
-        Geschaefts_Adressen_ID
-   
-	   FROM EMail_Liste_Sorted AS T
-	   GROUP BY Pers_ID
-	   ORDER BY Familien_Name;
-*/
-
--- -----------------------------------------
-DROP VIEW IF EXISTS EMail_Liste_Prio_0; 
-CREATE VIEW EMail_Liste_Prio_0 AS
-	SELECT
-        *
-	FROM EMail_Liste_Sorted 
-    WHERE Prio = 0;
- 
- -- -----------------------------------------
-DROP VIEW IF EXISTS EMail_Liste_Prio_1; 
-CREATE VIEW EMail_Liste_Prio_1 AS
-	SELECT
-        *
-	FROM EMail_Liste_Sorted 
-    WHERE Prio = 1;
-    
-
--- -----------------------------------------
-DROP VIEW IF EXISTS EMail_Liste_Prio_2; 
-CREATE VIEW EMail_Liste_Prio_2 AS
-	SELECT
-        *
-	FROM EMail_Liste_Sorted 
-    WHERE Prio = 2;
-    
--- -----------------------------------------
-DROP VIEW IF EXISTS EMailing_Liste_Spezial; 
-CREATE VIEW EMailing_Liste_Spezial AS
-	SELECT 
-		Pers_ID AS ID,
-		`Alter`,
-        Kategorien,
-        Sex, 
-        Vorname_Initial AS Vorname, 
-        Familien_Name AS Nachname,
-        Privat_Adressen_ID,
-        Geschaefts_Adressen_ID,
-        eMail_Adresse AS eMail 
-	FROM EMail_Liste 
-    WHERE sex IN ('Herr', 'Frau') AND
-                 (FIND_IN_SET('Bürger', `Kategorien`) > 0)
-    ORDER BY Sex,`Alter`;
 
 -- -----------------------------------------
 DROP VIEW IF EXISTS IBAN_Liste; 
@@ -1058,15 +998,18 @@ CREATE VIEW IBAN_Liste AS
 		iban.Bezeichnung                             AS Bezeichnung,
 		iban.Bankname                                AS Bankname,
 		iban.Bankort                                 AS Bankort,
-		''               							 AS IBAN_Detailed,
-		/* CONCAT(iban.ID,
-		       ':',
-               iban.prio,
-               -- ':',
-               -- LEFT(email.`Type`, 4),
-               -- email.`Type`, 
-               ':',
-               iban.Nummer)                          AS IBAN_Detailed, */
+        format_IBAN_with_Detail(iban.Nummer,
+                   iban.ID, 
+                   iban.Bezeichnung,
+                   iban.Bankname,
+                   iban.Bankort,
+                  iban.prio, TRUE)   				 AS IBAN_Detailed,
+        format_IBAN_with_Detail(iban.Nummer,
+                   iban.ID, 
+                   iban.Bezeichnung,
+                   iban.Bankname,
+                   iban.Bankort,
+                  iban.prio, FALSE)   				 AS IBAN_Detailed_Long,
                
 		-- Personen Details
 	    DATE_FORMAT(pers.Geburtstag,'%d.%m.%Y')      AS Geburtstag,
@@ -1085,57 +1028,6 @@ CREATE VIEW IBAN_Liste AS
 	FROM IBAN AS iban
 	LEFT OUTER JOIN Personen AS pers   ON iban.personen_ID  = pers.ID
 	WHERE pers.Todestag IS NULL;
-
--- -----------------------------------------------------
-DROP VIEW IF EXISTS IBAN_Liste_Sorted;
-CREATE VIEW IBAN_Liste_Sorted AS
-	SELECT         
-        *
-	FROM IBAN_Liste AS ib
-    ORDER BY Familien_Name;
-
--- -----------------------------------------------------
-/*
-DROP VIEW IF EXISTS IBAN_Liste_Alle_IBAN; 
-CREATE VIEW IBAN_Liste_Alle_IBAN AS
-	   SELECT
-		Pers_ID,
-        Kategorien,
-        Sex,
-		Vorname_Initial,
-		Familien_Name,          -- Rothlin-Collet
-        GROUP_CONCAT(IBAN_Detailed SEPARATOR ' ; ') AS IBAN_Detailed_Alle,
-        
-        -- Personen Details
-	    Geburtstag,
-		`Alter`,
-        
-        -- Personen Grunddaten
-		Name_Angenommen,
-		Ledig_Name, 
-		Partner_Name,
-		Privat_Adressen_ID,
-        Geschaefts_Adressen_ID
-   
-	   FROM IBAN_Liste_Sorted AS T
-	   GROUP BY Pers_ID
-	   ORDER BY Familien_Name;
-*/
-       
--- --------------------------------------------------------------------------------
-DROP VIEW IF EXISTS IBAN_Liste_Prio_0; 
-CREATE VIEW IBAN_Liste_Prio_0 AS
-	SELECT * FROM  IBAN_Liste_Sorted WHERE Prio = 0;
-
--- --------------------------------------------------------------------------------
-DROP VIEW IF EXISTS IBAN_Liste_Prio_1; 
-CREATE VIEW IBAN_Liste_Prio_1 AS
-	SELECT * FROM  IBAN_Liste_Sorted WHERE Prio = 1;
-    
--- --------------------------------------------------------------------------------
-DROP VIEW IF EXISTS IBAN_Liste_Prio_2; 
-CREATE VIEW IBAN_Liste_Prio_2 AS
-	SELECT * FROM  IBAN_Liste_Sorted WHERE Prio = 2;
 
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Personen_Daten; 
@@ -1158,7 +1050,8 @@ CREATE VIEW Personen_Daten AS
                       P.Partner_Name_Angenommen, 
                       P.Ledig_Name, 
                       P.Partner_Name)                 AS Last_Name,         -- Rothlin           
-                      
+			
+		  pAdr.ID                                     AS Priv_Adr_ID,      
 		  getStrassenAdresse(pAdr.Strasse, 
                              pAdr.Hausnummer, 
 							 pAdr.Postfachnummer)      AS Private_Strassen_Adresse,
@@ -1166,27 +1059,28 @@ CREATE VIEW Personen_Daten AS
                         pAdr.Ort)                      AS Private_PLZ_Ort,  
                         
 		  get_TelNr_With_Details(P.ID, 0, TRUE,  FALSE)                  AS Tel_Nr,
-          get_TelNr_With_Details(P.ID, 0, TRUE,  TRUE)                   AS Tel_Nr_Detail,
           get_TelNr_With_Details(P.ID, 0, FALSE, TRUE)                   AS Tel_Nr_Detail_Long,
           
 		  get_TelNr_With_Details(P.ID, 1, TRUE,  FALSE)                  AS Tel_Nr_1,
-          get_TelNr_With_Details(P.ID, 1, TRUE,  TRUE)                   AS Tel_Nr_1_Detail,
           get_TelNr_With_Details(P.ID, 1, FALSE, TRUE)                   AS Tel_Nr_1_Detail_Long,
           
 		  get_TelNr_With_Details(P.ID, 2, TRUE,  FALSE)                  AS Tel_Nr_2,
-          get_TelNr_With_Details(P.ID, 2, TRUE,  TRUE)                   AS Tel_Nr_2_Detail,
           get_TelNr_With_Details(P.ID, 2, FALSE, TRUE)                   AS Tel_Nr_2_Detail_Long,
           
-		  -- getPrio_0_EMail(P.ID)                        AS eMail,
-          IF (getPrio_0_EMail(P.ID)  is NULL, "",  getPrio_0_EMail(P.ID)) AS eMail,
-          IF (getPrio_1_EMail(P.ID)  is NULL, "",  getPrio_1_EMail(P.ID)) AS eMail_1,
-          IF (getPrio_2_EMail(P.ID)  is NULL, "",  getPrio_2_EMail(P.ID)) AS eMail_2,
-		  -- getAll_emailAddrs(P.ID)                      AS eMail_Alle,
           
-		  -- getPrio_0_IBAN(P.ID)                         AS IBAN,
-          IF (getPrio_0_IBAN(P.ID)  is NULL, "",  getPrio_0_IBAN(P.ID)) AS IBAN,
-          -- getAll_IBANs(P.ID)                           AS IBAN_Alle,
-                    
+		  get_Email_With_Details(P.ID, 0, TRUE,  FALSE)                  AS eMail,
+          get_Email_With_Details(P.ID, 0, FALSE, TRUE)                   AS eMail_Detail_Long,
+          
+		  get_Email_With_Details(P.ID, 1, TRUE,  FALSE)                  AS eMail_1,
+          get_Email_With_Details(P.ID, 1, FALSE, TRUE)                   AS eMail_1_Detail_Long,
+          
+		  get_Email_With_Details(P.ID, 2, TRUE,  FALSE)                  AS eMail_2,
+          get_Email_With_Details(P.ID, 2, FALSE, TRUE)                   AS eMail_2_Detail_Long,
+          
+		  get_IBAN_With_Details(P.ID, 0, TRUE,  FALSE)                   AS IBAN,
+          get_IBAN_With_Details(P.ID, 0, FALSE, TRUE)                    AS IBAN_Detail_Long,
+
+                   
 		  DATE_FORMAT(P.Geburtstag,'%d.%m.%Y')                                 AS Geburtstag,
           DATE_FORMAT(P.Geburtstag,'%Y')                                       AS Geburtsjahr,
 		  DATE_FORMAT(P.Todestag ,'%d.%m.%Y')                                  AS Todestag,
@@ -1239,7 +1133,7 @@ CREATE VIEW Personen_Daten AS
           
 		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                              AS Angemeldet_Am,
           DATE_FORMAT(P.Angemeldet_Am,'%Y')                                    AS Angemeldet_Am_Jahr,
-          Bezahlt_Aufnahme_Gebühr                                             AS Bezahlte_Aufnahme_Gebühr,
+          Bezahlte_Aufnahme_Gebühr                                             AS Bezahlte_Aufnahme_Gebühr,
           DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                             AS Aufgenommen_Am,
           DATE_FORMAT(P.Aufgenommen_Am,'%Y')                                   AS Aufgenommen_Am_Jahr,
           DATE_FORMAT(P.`Sich_Für_Bürgertag_Angemeldet_Am`,'%d.%m.%Y')         AS `Sich_Für_Bürgertag_Angemeldet_Am`,
@@ -1264,6 +1158,7 @@ CREATE VIEW Personen_Daten AS
 		  pAdr.Ort                                     AS Private_Ort,
 		  pAdr.Land                                    AS Private_Land,
           
+          gAdr.ID                                      AS Gesch_Adr_ID,
 		  gAdr.Strasse                                 AS Geschaeft_Strasse,
 		  gAdr.Hausnummer                              AS Geschaeft_Hausnummer,
           gAdr.Postfachnummer                          AS Geschaeft_Postfachnummer,
@@ -1345,6 +1240,11 @@ CREATE VIEW Personen_Daten AS
 			  WHEN FIND_IN_SET('Bürger', P.Kategorien) > 0   THEN 'Ja'
 			  ELSE ''
 			END AS Ist_Bürger,
+            			
+			CASE 
+			WHEN FIND_IN_SET('Verwaltungsberechtigt', P.Kategorien) > 0   THEN 'Ja'
+			  ELSE ''
+			END AS Ist_Verwaltungsberechtigt,
             
 			CASE 
 			  WHEN FIND_IN_SET('Nutzungsberechtigt', P.Kategorien) > 0   THEN 'Ja'
@@ -1398,8 +1298,30 @@ CREATE VIEW Personen_Daten AS
     ORDER BY Familien_Name, Vorname_Initial;
 
 -- SELECT * FROM Personen_Daten;
+-- --------------------------------------------------------------------------------    
+DROP VIEW IF EXISTS Pers_Search_List; 
+CREATE VIEW Pers_Search_List AS
+	SELECT
+        ID,
+        CONCAT(Geschlecht,';',
+               Vorname_Initial,';',
+               Familien_Name,';',
+               Private_Strassen_Adresse,';',
+               Private_PLZ_Ort,';',
+               Tel_Nr_Detail_Long,';',
+               eMail_Detail_Long,';',
+			   IBAN_Detail_Long) AS Search_Field
+    FROM Personen_Daten ORDER BY ID;
+    
 -- -----------------------------------------------------
--- SELECT * FROM Personen_Daten ;
+DROP VIEW IF EXISTS Firmen_Institutionen; 
+CREATE VIEW Firmen_Institutionen AS
+    SELECT
+	    *
+    FROM Personen_Daten
+    WHERE Geschlecht != 'Herr' AND Geschlecht != 'Frau'
+    ORDER BY Familien_Name, Vorname;
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Personen_Daten_Lebend; 
 CREATE VIEW Personen_Daten_Lebend AS
@@ -1429,13 +1351,36 @@ CREATE VIEW Genossenrat AS
     ORDER BY Funktion, Familien_Name, Vorname;
     
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Mitarbeiter; 
+DROP VIEW IF EXISTS Mitarbeiter;
 CREATE VIEW Mitarbeiter AS
     SELECT
         *
     FROM Personen_Daten
     WHERE FIND_IN_SET('Angestellter', Kategorien) >  0
     ORDER BY Funktion, Familien_Name, Vorname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Geno_Reisende; 
+CREATE VIEW Geno_Reisende AS
+    SELECT
+        ID,
+        ''                          AS Anzahl_angemeldet,
+        Geschlecht,
+        Vorname_Initial             AS Vorname,
+        Familien_Name               AS `Name`,
+        Private_Strassen_Adresse    AS Strasse_Nr,
+        Private_PLZ_Ort             AS PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        Geburtstag,
+        Kategorien,
+        Brief_Anrede_PerDu
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0  OR
+          -- FIND_IN_SET('GPK', Kategorien) >  0          OR
+          FIND_IN_SET('Angestellter', Kategorien) >  0 OR
+          ID IN (488)
+    ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Graue_Panter; 
@@ -1455,6 +1400,42 @@ CREATE VIEW Bürger_Nutzungsberechtigt AS
     WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
     ORDER BY Familien_Name, Vorname;
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt; 
+CREATE VIEW Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt AS
+    SELECT
+        *
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND FIND_IN_SET('Verwaltungsberechtigt', Kategorien) =  0
+    ORDER BY Familien_Name, Vorname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Einladungsliste_Geno_Gemeinde; 
+CREATE VIEW Einladungsliste_Geno_Gemeinde AS
+    SELECT
+        -- *
+        ID,
+        -- Zivilstand,
+        Geschlecht,
+        Vorname_Initial,
+        Familien_Name,
+        Private_Strassen_Adresse   AS Strasse,
+        Private_PLZ,
+        Private_Ort,
+        -- Private_PLZ_Ort            AS PLZ_Ort,
+        Anrede_1_Short_Short,
+        Anrede_Short_Short,
+        Anrede_Long_Short,
+        Anrede_Short_Long,
+        Anrede_Long_Long,
+        Brief_Anrede,
+        Brief_Anrede_Long,
+        Brief_Anrede_Text,
+        Brief_Anrede_PerDu
+    FROM Personen_Daten
+    WHERE Todestag IS NULL AND -- FIND_IN_SET('Bürger', Kategorien) >  0 AND 
+                               FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
+    ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Bürger_eMailing; 
@@ -1484,11 +1465,18 @@ CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
 DROP VIEW IF EXISTS Unbereinigt_Email_TelNr_IBAN; 
 CREATE VIEW Unbereinigt_Email_TelNr_IBAN AS
     SELECT
-        *
+        -- *
+        ID,
+        Ist_Nutzungsberechtigt AS Nutzen,
+        Geschlecht,
+        Vorname_Initial,
+        Familien_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_ORT,
+        Tel_Nr_Detail_Long,
+        IBAN_Detail_Long,
+        eMail_Detail_Long
     FROM Bürger_Lebend
-	-- WHERE eMail  IS NULL OR eMail  = '' OR
-    --       Tel_Nr IS NULL OR Tel_Nr = '' OR
-    --       IBAN   IS NULL OR IBAN   = ''
     WHERE eMail_ID  IS NULL OR
           Tel_Nr_ID IS NULL OR
           IBAN_ID   IS NULL
@@ -1509,6 +1497,8 @@ CREATE VIEW Bürger_Gestorben AS
         Todesjahr,
         IF (Todesjahr = DATE_FORMAT(now(),'%Y'), 'Ja', '') AS `Dieses Jahr gestorben`,
         `Alter`,
+        Hat_16a_Teil,
+        Hat_35a_Teil,
         last_update
     FROM Personen_Daten 
     WHERE Todestag IS NOT NULL AND FIND_IN_SET('Bürger', Kategorien) >  0
@@ -1580,42 +1570,47 @@ SELECT ID, Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Private_PLZ
       WHERE Such_Begriff LIKE BINARY '%Guntlin%' AND Such_Begriff LIKE BINARY '%Karl%';
 */
 -- SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Lüönd%';
+
 -- -----------------------------------------------------
-/* TBD 2023-07_10
-DROP VIEW IF EXISTS PD_Tel_Email_IBAN; 
-CREATE VIEW PD_Tel_Email_IBAN AS
+DROP VIEW IF EXISTS Personen_Daten_Raw; 
+CREATE VIEW Personen_Daten_Raw AS
 	SELECT
 		  ID,
+          Zivilstand,
 		  Kategorien,
-		  Zivilstand,
+          Funktion,
 		  Geschlecht,               -- Herr | Frau
-		  -- Vorname,
-          -- Vorname_2,
-          Vorname_Initial,          -- Walter M.
-          -- Ledig_Name,
-          -- Partner_Name,
-		  -- Partner_Name_Angenommen,
-		  -- LastName,                 -- Rothlin
-          Familien_Name,            -- Rothlin-Collet
-          		  
-		  -- Private_Strasse,
-		  -- Private_Hausnummer,
-          -- Private_Postfachnummer,
-          Private_Strassen_Adresse,
-		  -- Private_PLZ,
-          Private_PLZ_International,
+		  Vorname,
+          Vorname_2,
+          Ledig_Name,
+          Partner_Name,
+		  Partner_Name_Angenommen,
+          
+          Private_Adressen_ID,		  
+		  Private_Strasse,
+		  Private_Hausnummer,
+          Private_Postfachnummer,
+          Private_Ort_ID,
+		  Private_PLZ,
 		  Private_Ort,
+          Private_Land_ID,
 		  Private_Land,
           
           AHV_Nr,
 		  Betriebs_Nr,
 
-          IBAN,
-          eMail,
-          Tel_Nr,
+          Tel_Nr_Detail_Long,
+          Tel_Nr_1_Detail_Long,
+          Tel_Nr_2_Detail_Long,
 
+          eMail_Detail_Long,
+          eMail_1_Detail_Long,
+          eMail_2_Detail_Long,
+          
+          IBAN_Detail_Long,
+          
           Geburtstag,
-          `Alter`,
+          Todestag,
           
           Nach_Wangen_Gezogen,
           Von_Wangen_Weggezogen,
@@ -1627,28 +1622,18 @@ CREATE VIEW PD_Tel_Email_IBAN AS
           Funktion_Abgegeben_Am,
           Chronik_Bezogen_Am,
           
-		  -- Geschaeft_Strasse,
-		  -- Geschaeft_Hausnummer,
-          -- Geschaeft_Postfachnummer,
-          Geschaeft_Strassen_Adresse,
-		  -- Geschaeft_PLZ,
-          Geschaeft_PLZ_International,    -- CH-8855
+		  Geschaeft_Adressen_ID,		  
+		  Geschaeft_Strasse,
+		  Geschaeft_Hausnummer,
+          Geschaeft_Postfachnummer,
+          Geschaeft_Ort_ID,
+		  Geschaeft_PLZ,
 		  Geschaeft_Ort,
-		  Geschaeft_Land,
-          
-		  Anrede_Short_Short,		-- Herr W.Rothlin
-		  Anrede_Long_Short,		-- Herr Walter Rothlin
-		  Anrede_Short_Long,		-- Herr W.Rothlin-Collet
-		  Anrede_Long_Long,		    -- Herr Walter Rothlin-Collet
-          Brief_Anrede,             -- Sehr geehrter Herr Rothlin | Sehr geehrte Frau Collet | Sehr geehrte Damen, Sehr geehrte Herren
-		  Brief_Anrede_Long,        -- Sehr geehrter Herr Rothlin-Collet | Sehr geehrte Frau Collet Rothlin | Sehr geehrte Damen, Sehr geehrte Herren    
-          Brief_Anrede_PerDu,       -- Lieber Walter | Liebe Claudia
-
-          last_update
-	FROM Personen_Daten AS P
-    WHERE Todestag IS NULL;
-    -- ORDER BY LastName, Vorname;
-*/
+          Geschaeft_Land_ID,
+		  Geschaeft_Land
+	FROM Personen_Daten
+    WHERE Todestag IS NULL
+    ORDER BY ID;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Neubürger_Vorvorjahr; 
@@ -1729,9 +1714,53 @@ CREATE VIEW Neubürger_Dieses_Jahr AS
 	  Partner_ID,
 	  Mutter_ID,
 	  Vater_ID
-	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now(),'%Y');
+	FROM Personen_Daten 
+    WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now(),'%Y');
 
 -- SELECT  DATE_FORMAT(now() - INTERVAL 1 YEAR,'%Y');
+
+
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Rückkehrer_Dieses_Jahr;
+CREATE VIEW Rückkehrer_Dieses_Jahr AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  IBAN,
+	  Geburtstag,
+	  `Alter`
+	FROM Personen_Daten 
+    WHERE (FIND_IN_SET('Bürger', Kategorien) >  0) AND 
+          (DATE_FORMAT(STR_TO_DATE(Nach_Wangen_Gezogen, '%d.%m.%Y'),'%Y')  = DATE_FORMAT(now(),'%Y'));
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Wegzüger_Dieses_Jahr;
+CREATE VIEW Wegzüger_Dieses_Jahr AS
+	SELECT 
+	  ID, 
+	  Kategorien,
+	  Geschlecht, 
+	  Vorname_Initial           AS Vorname, 
+	  Familien_Name             AS Familienname, 
+	  Private_Strassen_Adresse  AS Strasse,
+	  Private_PLZ_Ort           AS PLZ_Ort,
+	  Tel_Nr,
+	  eMail,
+	  IBAN,
+	  Geburtstag,
+	  `Alter`
+	FROM Personen_Daten 
+    WHERE (FIND_IN_SET('Bürger', Kategorien) >  0) AND 
+          (DATE_FORMAT(STR_TO_DATE(Von_Wangen_Weggezogen, '%d.%m.%Y'),'%Y')  = DATE_FORMAT(now(),'%Y'));
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Newsletter_Abo; 
 CREATE VIEW Newsletter_Abo AS
@@ -1750,6 +1779,59 @@ CREATE VIEW Newsletter_Abo AS
       Newsletter_Abonniert_Am
 	FROM Personen_Daten WHERE Newsletter_Abonniert_Am IS NOT NULL;
     
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzenauszahlung;
+CREATE VIEW Nutzenauszahlung AS
+	SELECT 
+	  ID, 
+	  -- Kategorien,
+	  CASE 
+		  WHEN Hat_16a_Teil  = 'Ja'  AND Hat_35a_Teil != 'Ja'   THEN 'Nur 16a_Teil'
+		  WHEN Hat_16a_Teil != 'Ja'  AND Hat_35a_Teil  = 'Ja'   THEN 'Nur 35a_Teil'
+          WHEN Hat_16a_Teil  = 'Ja'  AND Hat_35a_Teil  = 'Ja'   THEN 'Beide Landteile'
+		  ELSE 'Keine Landteile'
+	  END AS Bürger_Teile,
+      Ist_Bürger,
+      Ist_Verwaltungsberechtigt,
+      Ist_Nutzungsberechtigt,
+      Hat_16a_Teil,
+      Hat_35a_Teil,
+      Hat_Bürger_Teil,
+	  Geschlecht, 
+	  Vorname_Initial                               AS Vorname, 
+	  Familien_Name                                 AS Familienname, 
+	  Private_Strassen_Adresse                      AS Strasse,
+	  Private_PLZ_Ort                               AS PLZ_Ort,
+      ROUND(calc_nutzen_by_katset(Kategorien),2)    AS Nutzen,
+      IBAN
+	  -- Tel_Nr,
+	  -- eMail,
+	  -- Geburtstag,
+	  -- `Alter`
+      
+	FROM Personen_Daten 
+    WHERE FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
+    ORDER BY Bürger_Teile, Familienname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzenstatistik;
+CREATE VIEW Nutzenstatistik AS    
+	SELECT 
+		Bürger_Teile            AS Bürgerteile,
+		Count(Nutzen)           AS Anzahl,
+		ROUND(Sum(Nutzen),2)    AS Nutzen_Betrag
+	FROM Nutzenauszahlung 
+	GROUP BY Bürger_Teile
+	ORDER BY Nutzen_Betrag;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzensumme; 
+CREATE VIEW Nutzensumme AS     
+SELECT
+	sum(Anzahl)         AS `Anzahl Auszahlungen`,
+    sum(Nutzen_Betrag)  AS `Anzahlungs Summe`
+FROM Nutzenstatistik;
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Pachtlandzuteilung; 
 CREATE VIEW Pachtlandzuteilung AS
@@ -1845,10 +1927,10 @@ CREATE VIEW Paechterstatistik AS
 		   Paechter_Strasse,
 		   Paechter_PLZ_Ort,
            Paechter_Alter,
-		   ROUND(SUM(Flaeche),2)                  AS Geno_Flaeche,
+		   ROUND(SUM(Flaeche),2)         AS Geno_Flaeche,
 		   SUM(Geno_Pachtzins_pro_Jahr)  AS Geno_Pachtzins
 	FROM Pachtlandzuteilung
-	WHERE Verpaechter_ID = 625
+	WHERE Verpaechter_ID = 625   -- Geno
 	GROUP BY Paechter_ID
 	ORDER BY Paechter_Name;
     
@@ -1936,6 +2018,14 @@ CREATE VIEW Wärmeanschlüsse_View AS
        eigentümer.Tel_Nr                           AS Eigentümer_Tel_Nr,
        eigentümer.eMail                            AS Eigentümer_eMail,
        
+       -- eigentümer_2.ID                               AS Eigentümer_2_ID,
+	   eigentümer_2.Vorname_Initial                  AS Eigentümer_2_Vorname,
+       eigentümer_2.Familien_Name                    AS Eigentümer_2_Familienname,
+       eigentümer_2.Private_Strassen_Adresse         AS Eigentümer_2_Adresse,
+       eigentümer_2.Private_PLZ_Ort                  AS Eigentümer_2_PLZ_Ort,
+       eigentümer_2.Tel_Nr                           AS Eigentümer_2_Tel_Nr,
+       eigentümer_2.eMail                            AS Eigentümer_2_eMail,
+       
 	   -- kontakt.ID                                  AS Kontakt_ID,
        kontakt.Vorname_Initial                     AS Kontakt_Vorname,
        kontakt.Familien_Name                       AS Kontakt_Familienname,
@@ -1969,12 +2059,13 @@ CREATE VIEW Wärmeanschlüsse_View AS
        elektriker.eMail                               AS Elektriker_eMail
        
 	FROM Wärmeanschlüsse AS anschluss
-    LEFT OUTER JOIN Adress_Daten   AS standort   ON standort.ID   = anschluss.Standort_Adresse_ID
-    LEFT OUTER JOIN Personen_Daten AS eigentümer ON eigentümer.ID = anschluss.Eigentümer_ID
-    LEFT OUTER JOIN Personen_Daten AS kontakt    ON kontakt.ID    = anschluss.Kontakt_ID
-    LEFT OUTER JOIN Personen_Daten AS rechAdr    ON rechAdr.ID    = anschluss.Rechnungs_Adresse_ID
-    LEFT OUTER JOIN Personen_Daten AS heiziger   ON heiziger.ID   = anschluss.Heizungs_Installateur_ID
-    LEFT OUTER JOIN Personen_Daten AS elektriker ON elektriker.ID = anschluss.Elektro_Installateur_ID;
+    LEFT OUTER JOIN Adress_Daten   AS standort     ON standort.ID     = anschluss.Standort_Adresse_ID
+    LEFT OUTER JOIN Personen_Daten AS eigentümer   ON eigentümer.ID   = anschluss.Eigentümer_ID
+    LEFT OUTER JOIN Personen_Daten AS eigentümer_2 ON eigentümer_2.ID = anschluss.Eigentümer_2_ID
+    LEFT OUTER JOIN Personen_Daten AS kontakt      ON kontakt.ID      = anschluss.Kontakt_ID
+    LEFT OUTER JOIN Personen_Daten AS rechAdr      ON rechAdr.ID      = anschluss.Rechnungs_Adresse_ID
+    LEFT OUTER JOIN Personen_Daten AS heiziger     ON heiziger.ID     = anschluss.Heizungs_Installateur_ID
+    LEFT OUTER JOIN Personen_Daten AS elektriker   ON elektriker.ID   = anschluss.Elektro_Installateur_ID;
 
 -- -----------------------------------------------------
 /*
@@ -2076,6 +2167,10 @@ CREATE VIEW PD_Row_Counts AS
 		'Nutzungsberechtigte Bürger'                          AS `Table Name`,
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
 	UNION
+	SELECT
+		'Nutzungsberechtigte aber nicht Verwaltungsberechtigte Bürger'                 AS `Table Name`,
+		(SELECT count(*) FROM `bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt`) AS `Row Count`
+	UNION
         SELECT
 		'Bürger mit eMail'                                    AS `Table Name`,
 		(SELECT count(*) FROM `bürger_eMailing`)              AS `Row Count`
@@ -2087,6 +2182,10 @@ CREATE VIEW PD_Row_Counts AS
         SELECT
 		'Nutzungsberechtigte Bürger'                          AS `Table Name`,
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
+	UNION
+	SELECT
+		'Einladungen für Genossen-Gemeinde'                       AS `Table Name`,
+		(SELECT count(*) FROM `Einladungsliste_Geno_Gemeinde`)    AS `Row Count`
 	UNION
 	SELECT
 		'+++----------------------------+'                        AS `Table Name`,
@@ -2113,11 +2212,11 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Landteile`)                     AS `Row Count`
 	UNION
 	SELECT
-		'Landteile Genossame'                                  AS `Table Name`,
+		'Landteile Genossame'                                                             AS `Table Name`,
 		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID = 625)                     AS `Row Count`
 	UNION
 	SELECT
-		'Landteile'                                            AS `Table Name`,
+		'Landteile'                                                                        AS `Table Name`,
 		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625)                     AS `Row Count`
 	UNION
 	SELECT
@@ -2125,15 +2224,15 @@ CREATE VIEW PD_Row_Counts AS
 		'+++++-----------+'                                       AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 16a Teilen'                            AS `Table Name`,
+		'Verpächter mit 16a Teilen'                                                                    AS `Table Name`,
 		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0)         AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 35a Teilen'                            AS `Table Name`,
+		'Verpächter mit 35a Teilen'                                                                    AS `Table Name`,
 		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a',        Kategorien) >  0)         AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 16a und 35a Teilen'                            AS `Table Name`,
+		'Verpächter mit 16a und 35a Teilen'                                                           AS `Table Name`,
 		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 AND  
                                                FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
 	UNION
@@ -2150,11 +2249,11 @@ CREATE VIEW PD_Row_Counts AS
 		'+-------------+++'                                       AS `Row Count`
 	UNION
 	SELECT
-		'Bezogene Chroniken'                            AS `Table Name`,
+		'Bezogene Chroniken'                                                  AS `Table Name`,
 		(SELECT count(*) FROM Personen WHERE Chronik_Bezogen_Am IS NOT NULL)  AS `Row Count`
 	UNION
 	SELECT
-		'Abos Newsletter'                            AS `Table Name`,
+		'Abos Newsletter'                                                          AS `Table Name`,
 		(SELECT count(*) FROM Personen WHERE Newsletter_Abonniert_Am IS NOT NULL)  AS `Row Count`
 	UNION
 	SELECT
@@ -2163,7 +2262,7 @@ CREATE VIEW PD_Row_Counts AS
 	UNION
 	SELECT
 		'Wärmeverbund Vollanschlüsse'                        AS `Table Name`,
-		(SELECT count(*) FROM Wärmeanschlüsse_View)  AS `Row Count`
+		(SELECT count(*) FROM Wärmeanschlüsse_View)          AS `Row Count`
 	;
 
 
@@ -2211,6 +2310,37 @@ CREATE VIEW ENUM_SET_Values AS
 						   `TABLE_TYPE`   = 'BASE TABLE') -- 'Personen'
 	ORDER BY `TABLE_SCHEMA` , `TABLE_NAME` , `COLUMN_NAME`;
     
+    
+    
+DROP VIEW IF EXISTS Table_Meta_Data; 
+CREATE VIEW Table_Meta_Data AS
+    SELECT
+		`TABLE_SCHEMA`   AS `Schema`,
+		`TABLE_NAME`     AS `Table`,
+		`COLUMN_NAME`    AS `Attribute`,
+		`DATA_TYPE`      AS `Attr_Type`,
+		`COLUMN_KEY`     AS `Is_key`,
+		`COLUMN_TYPE`    AS `Attr_Type_Values`,
+        
+		CASE 
+			  WHEN `DATA_TYPE` = 'set' or  `DATA_TYPE` = 'enum' THEN 
+              		REPLACE(
+			           REPLACE(
+				          REPLACE(
+				             REPLACE(`COLUMN_TYPE`,')',''),
+				            'enum(',''),
+			             'set(',''),
+		            '\'','') 
+			  ELSE ''
+		END AS `Enum_Set_Values`
+    FROM `INFORMATION_SCHEMA`.`COLUMNS`
+    WHERE `TABLE_SCHEMA` = 'genossame_wangen' AND
+		   `TABLE_NAME` IN (SELECT `TABLE_NAME` 
+					        FROM `INFORMATION_SCHEMA`.`TABLES`
+					        WHERE `TABLE_SCHEMA` = 'genossame_wangen' AND
+							      `TABLE_TYPE`   = 'BASE TABLE')
+    ORDER BY `TABLE_SCHEMA` , `TABLE_NAME` , `COLUMN_NAME`, `ORDINAL_POSITION`;
+    
 -- --------------------------------------------------------------------------------    
 -- ===============================================================================================
 -- == Create stored procedures for business (external) write access                             ==
@@ -2227,11 +2357,19 @@ CREATE PROCEDURE getEmailAdrId(IN  email_addr VARCHAR(45),
                                IN  Prio       TINYINT, 
                                OUT email_id   SMALLINT(5))
 BEGIN
-    IF ((SELECT count(*) FROM email_adressen WHERE eMail=email_addr) = 0) THEN
+    IF ((SELECT count(*) 
+         FROM email_adressen 
+         WHERE `eMail` = email_addr    AND
+               `Type`  = email_type    AND
+               `Prio`    = Prio)       = 0) THEN
         INSERT INTO email_adressen (`eMail`,`Type`,`Prio`) VALUES (email_addr, email_type, Prio);
         COMMIT;
     END IF;
-    SELECT id FROM email_adressen WHERE eMail=email_addr AND Type=email_type INTO email_id;
+    SELECT id 
+    FROM email_adressen 
+    WHERE `eMail`  = email_addr AND 
+          `Type`   = email_type AND
+		  `Prio`   = Prio INTO email_id;
 END$$
 DELIMITER ;
 
@@ -2286,12 +2424,22 @@ BEGIN
     IF ((SELECT count(*) 
          FROM Telefonnummern 
          WHERE Telefonnummern.Laendercode = Laendercode AND 
-               Telefonnummern.Vorwahl     = Vorwahl AND 
-               Telefonnummern.Nummer=Nummer) = 0) THEN
+               Telefonnummern.Vorwahl     = Vorwahl     AND 
+               Telefonnummern.Nummer      = Nummer      AND
+               Telefonnummern.Type        = TEL_Type    AND
+               Telefonnummern.Endgeraet   = Endgeraet   AND 
+               Telefonnummern.Prio        = Prio)              = 0) THEN
 					INSERT INTO Telefonnummern (`Laendercode`,`Vorwahl`,`Nummer`,`Type`,`Endgeraet`,`Prio`) VALUES (Laendercode, Vorwahl, Nummer, TEL_Type, Endgeraet, Prio);
 					COMMIT;
     END IF;
-    SELECT id FROM Telefonnummern WHERE Telefonnummern.Laendercode=Laendercode AND Telefonnummern.Vorwahl=Vorwahl AND Telefonnummern.Nummer=Nummer INTO tel_id;
+    SELECT id 
+    FROM Telefonnummern 
+    WHERE Telefonnummern.Laendercode = Laendercode AND 
+          Telefonnummern.Vorwahl     = Vorwahl     AND 
+          Telefonnummern.Nummer      = Nummer      AND
+          Telefonnummern.Type        = TEL_Type    AND
+		  Telefonnummern.Endgeraet   = Endgeraet   AND 
+		  Telefonnummern.Prio        = Prio INTO tel_id;
 END$$
 DELIMITER ;
 
@@ -2347,8 +2495,8 @@ BEGIN
     IF ((SELECT count(*) 
          FROM IBAN 
          WHERE IBAN.Personen_ID = pers_id AND
-               IBAN.Nummer = iban_nummer  AND
-               IBAN.Prio = 0) = 0) THEN
+               IBAN.Nummer      = iban_nummer  AND
+               IBAN.Prio        = 0) = 0) THEN
 					INSERT INTO IBAN (`ID`, `Nummer`, `prio`) VALUES (pers_id, iban_nummer, 0);
 					COMMIT;
     END IF;
@@ -2573,6 +2721,39 @@ DELIMITER ;
 -- ------------------------------------------------------
 -- Personen
 -- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS addPersonen;
+DELIMITER $$
+CREATE PROCEDURE addPersonen(IN  `source`                  ENUM('Initial_1', 'Loader_1', 'BuergerDB', 'ImmoTop'),
+							 IN  `vorname`                 VARCHAR(45),
+                             IN  `ledig_name`              VARCHAR(45),
+                             IN  `partner_name`            VARCHAR(45),
+                             IN  `partner_name_angenommen` BOOLEAN,
+							 IN  `privat_adressen_id`      VARCHAR(45),  
+                             OUT `personen_id`             SMALLINT(5))
+BEGIN
+	INSERT INTO personen (`source`, `vorname`, `ledig_name`, `partner_name`, `partner_name_angenommen`, `privat_adressen_id`) 
+             VALUES (`source`, `vorname`, `ledig_name`, `partner_name`, `partner_name_angenommen`, `privat_adressen_id`);
+	COMMIT;
+    SELECT id 
+    FROM personen 
+    WHERE personen.`source`                 = `source`                AND
+		  personen.vorname                  = vorname                 AND 
+          personen.ledig_name               = ledig_name              AND
+          personen.partner_name             = partner_name            AND
+          personen.partner_name_angenommen  = partner_name_angenommen AND 
+          personen.privat_adressen_id       = privat_adressen_id
+	ORDER by last_update DESC LIMIT 1
+	INTO personen_id;
+END$$
+DELIMITER ;
+
+
+-- Tests
+-- set @personen_id = 0;
+-- call addPersonen('Loader_1', 'Claudia', 'Collet', 'Rothlin', False, '438', @personen_id);
+-- select @personen_id;
+
+
 DROP PROCEDURE IF EXISTS getPersonenId;
 DELIMITER $$
 CREATE PROCEDURE getPersonenId(IN source ENUM('Initial_1', 'Loader_1', 'BuergerDB', 'ImmoTop'),
@@ -2680,6 +2861,9 @@ DELIMITER ;
 -- ------------------------------------------------------
 -- Zwingende Data updates
 -- ------------------------------------------------------
+-- SELECT * FROM Personen_Daten WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND ID=644;
+-- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Verwaltungsberechtigt') WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0;
+
 DROP PROCEDURE IF EXISTS important_updates;
 DELIMITER $$
 CREATE PROCEDURE important_updates()
@@ -2731,7 +2915,6 @@ BEGIN
 	UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Nuolen' AND Kanton = 'SZ');
 	-- UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Siebnen' AND Kanton = 'SZ');
 	*/
-
 
 
 	-- Gestorbene Personen_Daten
@@ -2817,6 +3000,18 @@ call important_updates();
 -- ------------------------------------------------------
 -- Hilfreiche Abfragen
 -- ------------------------------------------------------
+/*
+ UPDATE EMail_Adressen SET Type='Fehlermeldung' 
+		   WHERE ID IN (4,65,11,164,95,130,287,40,44,145,139,277,44,112,183,226,258,174,288,444);
+ UPDATE EMail_Adressen SET Prio=100 
+		   WHERE ID IN (4,65,11,164,95,130,287,40,44,145,139,277,44,112,183,226,258,174,288,444);
+
+UPDATE EMail_Adressen SET eMail=CONCAT('FEHLER:',eMail)
+		   WHERE ID IN (4,65,11,164,95,130,287,40,44,145,139,277,44,112,183,226,258,174,288,444);
+*/
+           
+-- SELECT * FROM email_liste WHERE Pers_ID in (671,491,804,88,489);
+
 -- SELECT ID,Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Kategorien FROM personen_daten Where Such_Begriff LIKE Binary '%Züger%' ORDER BY Vorname_Initial;
 
  -- SELECT ID,Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Kategorien FROM personen_daten Where ID in (11,23,42) ORDER BY Familien_Name, Vorname_Initial;
@@ -2880,4 +3075,285 @@ SELECT * FROM eMail_Adressen WHERE eMail = 'fam-schnellmann@bluewin.ch';
 
 SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 590;
 SELECT * FROM telefonnummern WHERE nummer = 7928579;
+*/
+
+
+
+
+-- ----------------------------------------------------------------------------------
+-- TBD TBD TBD TBD TBD TBD TBD TBD TBD TBD TBD TBD
+-- ----------------------------------------------------------------------------------
+/* TBD 2023-07_10
+DROP FUNCTION IF EXISTS getPrio_0_TelNr;
+DELIMITER //
+CREATE FUNCTION getPrio_0_TelNr(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT Tel_Nr FROM Telnr_Liste WHERE Pers_ID = p_id AND prio=0 LIMIT 1);
+END//
+DELIMITER ;
+
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getPrio_1_TelNr;
+DELIMITER //
+CREATE FUNCTION getPrio_1_TelNr(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT Tel_Nr FROM Telnr_Liste WHERE Pers_ID = p_id AND prio=1 LIMIT 1);
+END//
+DELIMITER ;
+
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getPrio_2_TelNr;
+DELIMITER //
+CREATE FUNCTION getPrio_2_TelNr(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT Tel_Nr FROM Telnr_Liste WHERE Pers_ID = p_id AND prio=2 LIMIT 1);
+END//
+DELIMITER ;
+
+-- SELECT Laendercode FROM Telnr_Liste WHERE Pers_ID = 1103 AND prio=0 LIMIT 1;
+-- SELECT Vorwahl     FROM Telnr_Liste WHERE Pers_ID = 1103 AND prio=0 LIMIT 1;
+-- SELECT Nummer      FROM Telnr_Liste WHERE Pers_ID = 1103 AND prio=0 LIMIT 1;
+-- Test-Cases
+-- SELECT getPrio_0_TelNr(1103);  -- --> 0793315587
+*/
+
+
+/* TBD 2023-07-10 
+DROP VIEW IF EXISTS Telnr_Liste_Sorted; 
+CREATE VIEW Telnr_Liste_Sorted AS
+	SELECT
+        *
+	FROM Telnr_Liste AS T
+    ORDER BY Familien_Name;
+
+-- -----------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste_Alle_TelNr; 
+CREATE VIEW Telnr_Liste_Alle_TelNr AS
+	   SELECT
+		Pers_ID,
+        Kategorien,
+        Sex,
+		Vorname_Initial,
+		Familien_Name,          -- Rothlin-Collet
+        GROUP_CONCAT(Tel_Nr_Detailed SEPARATOR ' ; ') AS Tel_Nr_Detailed_Alle,
+        
+        -- Personen Details
+	    Geburtstag,
+		`Alter`,
+        
+        -- Personen Grunddaten
+		Name_Angenommen,
+		Ledig_Name, 
+		Partner_Name,
+		Privat_Adressen_ID,
+        Geschaefts_Adressen_ID
+   
+	   FROM Telnr_Liste_Sorted AS T
+       GROUP BY Pers_ID
+	   ORDER BY Familien_Name;
+
+-- -----------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste_Prio_0; 
+CREATE VIEW Telnr_Liste_Prio_0 AS
+	SELECT
+		* 
+	FROM Telnr_Liste_Sorted 
+    WHERE Prio=0;
+
+-- -----------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste_Prio_1; 
+CREATE VIEW Telnr_Liste_Prio_1 AS
+	SELECT
+		* 
+	FROM Telnr_Liste_Sorted 
+    WHERE Prio=1;
+    
+-- -----------------------------------------
+DROP VIEW IF EXISTS Telnr_Liste_Prio_2; 
+CREATE VIEW Telnr_Liste_Prio_2 AS
+	SELECT
+		* 
+	FROM Telnr_Liste_Sorted 
+    WHERE Prio=2;
+*/    
+-- -----------------------------------------
+
+/*
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getAll_emailAddrs;
+DELIMITER //
+CREATE FUNCTION getAll_emailAddrs(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT eMail_Detailed_Alle FROM email_liste_alle_email WHERE Pers_ID = p_id);
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT getAll_emailAddrs(919);  -- --> xxxxxx
+*/
+
+/*
+-- -----------------------------------------
+DROP VIEW IF EXISTS EMail_Liste_Sorted; 
+CREATE VIEW EMail_Liste_Sorted AS
+	SELECT         
+		*
+	FROM EMail_Liste AS E
+    ORDER BY Familien_Name;
+
+-- -----------------------------------------
+*/
+/*
+DROP VIEW IF EXISTS EMail_Liste_Alle_EMail; 
+CREATE VIEW EMail_Liste_Alle_EMail AS
+	   SELECT
+		Pers_ID,
+        Kategorien,
+        Sex,
+		Vorname_Initial,
+		Familien_Name,          -- Rothlin-Collet
+        GROUP_CONCAT(Email_Detailed SEPARATOR ' ; ') AS eMail_Detailed_Alle,
+        
+        -- Personen Details
+	    Geburtstag,
+		`Alter`,
+        
+        -- Personen Grunddaten
+		Name_Angenommen,
+		Ledig_Name, 
+		Partner_Name,
+		Privat_Adressen_ID,
+        Geschaefts_Adressen_ID
+   
+	   FROM EMail_Liste_Sorted AS T
+	   GROUP BY Pers_ID
+	   ORDER BY Familien_Name;
+*/
+
+/*
+-- -----------------------------------------
+DROP VIEW IF EXISTS EMail_Liste_Prio_0; 
+CREATE VIEW EMail_Liste_Prio_0 AS
+	SELECT
+        *
+	FROM EMail_Liste_Sorted 
+    WHERE Prio = 0;
+ 
+ -- -----------------------------------------
+DROP VIEW IF EXISTS EMail_Liste_Prio_1; 
+CREATE VIEW EMail_Liste_Prio_1 AS
+	SELECT
+        *
+	FROM EMail_Liste_Sorted 
+    WHERE Prio = 1;
+    
+
+-- -----------------------------------------
+DROP VIEW IF EXISTS EMail_Liste_Prio_2; 
+CREATE VIEW EMail_Liste_Prio_2 AS
+	SELECT
+        *
+	FROM EMail_Liste_Sorted 
+    WHERE Prio = 2;
+
+*/
+
+/*
+-- -----------------------------------------
+DROP VIEW IF EXISTS EMailing_Liste_Spezial; 
+CREATE VIEW EMailing_Liste_Spezial AS
+	SELECT 
+		Pers_ID AS ID,
+		`Alter`,
+        Kategorien,
+        Sex, 
+        Vorname_Initial AS Vorname, 
+        Familien_Name AS Nachname,
+        Privat_Adressen_ID,
+        Geschaefts_Adressen_ID,
+        eMail_Adresse AS eMail 
+	FROM EMail_Liste 
+    WHERE sex IN ('Herr', 'Frau') AND
+                 (FIND_IN_SET('Bürger', `Kategorien`) > 0)
+    ORDER BY Sex,`Alter`;
+*/
+
+/*
+
+DROP FUNCTION IF EXISTS getPrio_0_IBAN;
+DELIMITER //
+CREATE FUNCTION getPrio_0_IBAN(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT IBAN_Nummer FROM iban_liste_prio_0 WHERE Pers_id = p_id AND prio=0 LIMIT 1);
+END//
+DELIMITER ;
+*/
+
+/*
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getAll_IBANs;
+DELIMITER //
+CREATE FUNCTION getAll_IBANs(p_id INT) RETURNS CHAR(100)
+BEGIN
+    RETURN (SELECT IBAN_Detailed_Alle FROM IBAN_liste_alle_IBAN WHERE Pers_ID = p_id);
+END//
+DELIMITER ;
+
+-- Test-Cases
+-- SELECT getAll_IBANs(919);  -- --> xxxxxx
+*/
+
+-- -----------------------------------------------------
+/*
+DROP VIEW IF EXISTS IBAN_Liste_Sorted;
+CREATE VIEW IBAN_Liste_Sorted AS
+	SELECT         
+        *
+	FROM IBAN_Liste AS ib
+    ORDER BY Familien_Name;
+*/
+-- -----------------------------------------------------
+/*
+DROP VIEW IF EXISTS IBAN_Liste_Alle_IBAN; 
+CREATE VIEW IBAN_Liste_Alle_IBAN AS
+	   SELECT
+		Pers_ID,
+        Kategorien,
+        Sex,
+		Vorname_Initial,
+		Familien_Name,          -- Rothlin-Collet
+        GROUP_CONCAT(IBAN_Detailed SEPARATOR ' ; ') AS IBAN_Detailed_Alle,
+        
+        -- Personen Details
+	    Geburtstag,
+		`Alter`,
+        
+        -- Personen Grunddaten
+		Name_Angenommen,
+		Ledig_Name, 
+		Partner_Name,
+		Privat_Adressen_ID,
+        Geschaefts_Adressen_ID
+   
+	   FROM IBAN_Liste_Sorted AS T
+	   GROUP BY Pers_ID
+	   ORDER BY Familien_Name;
+*/
+       
+-- --------------------------------------------------------------------------------
+/*
+DROP VIEW IF EXISTS IBAN_Liste_Prio_0; 
+CREATE VIEW IBAN_Liste_Prio_0 AS
+	SELECT * FROM  IBAN_Liste_Sorted WHERE Prio = 0;
+
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS IBAN_Liste_Prio_1; 
+CREATE VIEW IBAN_Liste_Prio_1 AS
+	SELECT * FROM  IBAN_Liste_Sorted WHERE Prio = 1;
+    
+-- --------------------------------------------------------------------------------
+DROP VIEW IF EXISTS IBAN_Liste_Prio_2; 
+CREATE VIEW IBAN_Liste_Prio_2 AS
+	SELECT * FROM  IBAN_Liste_Sorted WHERE Prio = 2;
+
 */
