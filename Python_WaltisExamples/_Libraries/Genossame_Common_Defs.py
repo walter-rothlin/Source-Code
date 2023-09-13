@@ -602,7 +602,7 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                         else:
                             if (db_attr_name == 'Join'):
                                 print("JOIN    .... ", excel_column_name, new_value_from_excel)
-                                if
+
                             else:
                                 attr_type = get_db_attr_type(stammdaten_schema, table=db_table_name, attribute=db_attr_name, take_action=take_action, verbal=verbal_while_update)
                                 count_of_updated_attributs += update_db_attribute(stammdaten_schema,

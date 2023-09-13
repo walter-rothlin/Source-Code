@@ -32,10 +32,10 @@ def indent(elem, level=0):
     return elem
 
 
-root = ET.parse("G:/_WaltisDaten/SourceCode/GitHosted/Python_WaltisExamples/Code_14_fHoch3/F_hoch_3/FDP_Plakate/Kuessnacht.kml").getroot()
+root = ET.parse("../Code_14_fHoch3/F_hoch_3/FDP_Plakate/Neu_3.kml").getroot()
 indent(root)
 
 ET.dump(root)
 treeStr = ET.ElementTree(root)
-treeStr.write("G:/_WaltisDaten/SourceCode/GitHosted/Python_WaltisExamples/Code_14_fHoch3/F_hoch_3/FDP_Plakate/Kuessnacht_nice.kml")
+treeStr.write("../Code_14_fHoch3/F_hoch_3/FDP_Plakate/Neu_3_nice.kml")
 

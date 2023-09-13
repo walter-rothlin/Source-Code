@@ -13,7 +13,7 @@
 
 from xml.dom import minidom
 
-dom = minidom.parse("G:/_WaltisDaten/SourceCode/GitHosted/XML/sample_2.xml")
+dom = minidom.parse("C:/Users/Landwirtschaft/Documents/SoruceCode/XML/sample_2.xml")
 
 # doc.getElementsByTagName returns NodeList
 name = dom.getElementsByTagName("name")[0]

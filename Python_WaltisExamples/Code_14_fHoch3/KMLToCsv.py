@@ -33,13 +33,13 @@ def indent(elem, level=0):
     return elem
 
 
-sourceFN = 'Galgenen.kml'
-sourceNiceFN = 'Galgenen_nice.kml'
-destinationFN = 'Galgenen.csv'
+sourceFN = 'Neu_3.kml'
+sourceNiceFN = 'Neu_3_nice.kml'
+destinationFN = 'Neu_3.csv'
 
-baseFor_KML = 'G:/_WaltisDaten/SourceCode/GitHosted/Python_WaltisExamples/Code_14_fHoch3/F_hoch_3/FDP_Plakate/'
-baseFor_XSL = 'G:/_WaltisDaten/SourceCode/GitHosted/XML/'
-baseFor_XSD = 'G:/_WaltisDaten/SourceCode/GitHosted/XML/'
+baseFor_KML = 'C:/Users/Landwirtschaft/Documents/SoruceCode/Python_WaltisExamples/Code_14_fHoch3/F_hoch_3/FDP_Plakate/'
+baseFor_XSL = 'C:/Users/Landwirtschaft/Documents/SoruceCode/XML/'
+baseFor_XSD = 'C:/Users/Landwirtschaft/Documents/SoruceCode/XML/'
 baseFor_CSV = baseFor_KML
 
 
