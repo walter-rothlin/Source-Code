@@ -210,34 +210,65 @@ def addPersonen_to_db(db, source, vorname, ledig_name, partner_name, partner_nam
         print(f"An unexpected error occurred: {e}")
         return None
 
-def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
-    if verbal:
-        print(f'''
-           --> Calling get_db_attr_type(db,
-                                    table                  = {table}, 
-                                    attribute              = {attribute},
-                                    take_action            = {take_action},
-                                    verbal                 = {verbal})''')
 
-    sql_insert = f"SELECT Attr_Type,Enum_Set_Values FROM Table_Meta_data WHERE `Table` = '{table}' AND `Attribute` = '{attribute}'"
-    if verbal:
-        print(sql_insert)
-    mycursor = db.cursor()
-    mycursor.execute(sql_insert)
-    ret_val = {}
-    for aRec in mycursor.fetchall():
-        ret_val = {
-            'type' : aRec[0].decode('ascii'),
-            'enums': ''  # aRec[1]    # .decode('ascii')
-        }
-    return ret_val
 
 
 # email functions
 # ---------------
+def CRUD_email_in_db(db, pers_id, email_detailed, take_action=False, verbal=False):
+    this_fct_call = f'''
+       --> Calling CRUD_email_in_db(db,
+                        pers_id         = {pers_id}, 
+                        email_detailed  = {email_detailed},
+                        take_action     = {take_action},
+                        verbal          = {verbal})'''
+    try:
+        myCursor = db.cursor()
+        if verbal:
+            print(this_fct_call)
+        new_email_details = split_email_detailed_long(email_detailed)
+        if verbal:
+            print('splited:', new_email_details)
+        current_emails_for_this_person = get_email_details_persid(db, pers_id, verbal=verbal)
+        if current_emails_for_this_person is not None:
+            if verbal:
+                print('Old emails for', pers_id, current_emails_for_this_person)
+
+            # merge eMails
+
+        if new_email_details['ID'] == '?':
+            print(f"add_email({pers_id}, {new_email_details['eMail']})")
+            args = (pers_id, new_email_details['eMail'], new_email_details['Type'], new_email_details['Prio'], 'x')  # 'x' in the Tuple will be replaced by OUT-Value
+            if verbal:
+                 print(f"""...call proc .... addEmailAdr{args}""")
+            result_args = myCursor.callproc('addEmailAdr', args)
+
+
+        else:
+            sql_string = f"""Update Into"""
+
+
+
+    except mysql.connector.Error as err:
+        print(f"ERROR: {err}")
+        print(this_fct_call)
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        print(this_fct_call)
+        return None
+
 def get_email_ids_for_persid(db, pers_id, verbal=False):
     ret_list = []
-    sql_insert = f'SELECT EMail_adressen_ID FROM personen_has_email_adressen WHERE Personen_ID = {pers_id} '
+    sql_insert = f"""
+            SELECT EMail_adressen_ID 
+            FROM personen_has_email_adressen 
+            WHERE Personen_ID = {pers_id}
+             """
+    if verbal:
+        print(f"""... in get_email_ids_for_persid...
+           {sql_insert}
+           """)
     mycursor = db.cursor()
     mycursor.execute(sql_insert)
     for aId in mycursor.fetchall():
@@ -246,10 +277,29 @@ def get_email_ids_for_persid(db, pers_id, verbal=False):
 
 def get_email_details_for_ids(db, email_ids, verbal=False):
     email_ids_where_clause = ', '.join(email_ids)
-    sql_insert = f'SELECT ID, eMail, Type, Prio FROM email_adressen WHERE ID in ({email_ids_where_clause}) ORDER BY Prio'
-    mycursor = db.cursor(dictionary=True)
-    mycursor.execute(sql_insert)
-    return mycursor.fetchall()
+    if verbal:
+        print(f"""
+            get_email_details_for_ids(db, 
+                  {email_ids})
+                  
+        email_ids_where_clause:{email_ids_where_clause}    
+        """)
+    if len(email_ids) > 0:
+        sql_insert = f"""
+                SELECT ID, eMail, Type, Prio 
+                FROM email_adressen 
+                WHERE ID in ({email_ids_where_clause})
+                ORDER BY Prio
+                """
+        if verbal:
+            print(f"""... in get_email_details_for_ids...
+               {sql_insert}
+               """)
+        mycursor = db.cursor(dictionary=True)
+        mycursor.execute(sql_insert)
+        return mycursor.fetchall()
+    else:
+        return None
 
 def get_email_details_persid(db, pers_id, verbal=False):
     email_ids = get_email_ids_for_persid(db, pers_id, verbal=verbal)
@@ -264,7 +314,7 @@ def fix_email_details_persid(db, pers_id, verbal=False):
         last_prio += 1
     print(email_details)
 
-def split_email_detailed_long(detailed_long_str, verbal=False, email_only=False):
+def split_email_detailed_long(detailed_long_str, type_default='Sonstige', prio_default=0, verbal=False, email_only=False):
     if verbal:
         print(f" called .... split_email_detailed_long('{detailed_long_str}', '{verbal}')")
     detailed_long_str = detailed_long_str.replace(' ', '')
@@ -272,13 +322,17 @@ def split_email_detailed_long(detailed_long_str, verbal=False, email_only=False)
     if len(detailed_list) > 1:
         if verbal:
             print(detailed_list)
-        ret_value = {'ID': detailed_list[0],
+        ret_value = {'ID': detailed_list[1],
                      'eMail': detailed_list[0],
-                     'Type': detailed_list[2],
-                     'Prio': detailed_list[1],
+                     'Type': detailed_list[3],
+                     'Prio': detailed_list[2],
                      }
     else:
-        ret_value = {'eMail': detailed_list[0]}
+        ret_value = {'ID': '?',
+                     'eMail': detailed_list[0],
+                     'Type': type_default,
+                     'Prio': prio_default,
+                     }
 
     if email_only:
         ret_value = ret_value['eMail']
@@ -602,7 +656,12 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                         else:
                             if (db_attr_name == 'Join'):
                                 print("JOIN    .... ", excel_column_name, new_value_from_excel)
-
+                                if excel_column_name.startswith('eMail'):
+                                    print(f'eMail: {excel_column_name}: {new_value_from_excel}')
+                                    ret_val = CRUD_email_in_db(stammdaten_schema, pers_id, new_value_from_excel.replace(' ', ''), take_action=False, verbal=True)
+                                    print(ret_val)
+                                elif excel_column_name.startswith('Tel_Nr'):
+                                    print(f'Tel_Nr: "{excel_column_name}": "{new_value_from_excel}"')
                             else:
                                 attr_type = get_db_attr_type(stammdaten_schema, table=db_table_name, attribute=db_attr_name, take_action=take_action, verbal=verbal_while_update)
                                 count_of_updated_attributs += update_db_attribute(stammdaten_schema,

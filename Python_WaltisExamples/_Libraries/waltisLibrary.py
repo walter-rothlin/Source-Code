@@ -2732,6 +2732,29 @@ def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
     else:
         return myresult[0][0]
 
+# uses the view Table_Meta_Data
+def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_db_attr_type(db,
+                                    table                  = {table}, 
+                                    attribute              = {attribute},
+                                    take_action            = {take_action},
+                                    verbal                 = {verbal})''')
+
+    sql_insert = f"SELECT Attr_Type,Enum_Set_Values FROM Table_Meta_data WHERE `Table` = '{table}' AND `Attribute` = '{attribute}'"
+    if verbal:
+        print(sql_insert)
+    mycursor = db.cursor()
+    mycursor.execute(sql_insert)
+    ret_val = {}
+    for aRec in mycursor.fetchall():
+        ret_val = {
+            'type' : aRec[0].decode('ascii'),
+            'enums': ''  # aRec[1]    # .decode('ascii')
+        }
+    return ret_val
+
 def update_db_attribute(db=None,
                         db_tbl_name=None, db_attr_name=None, db_attr_type='varchar', db_attr_set_enum_values='',
                         id_attr_name='ID', id=None,
