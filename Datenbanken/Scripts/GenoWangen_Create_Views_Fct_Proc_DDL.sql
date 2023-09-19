@@ -25,6 +25,7 @@
 --                                   Added Wegzüger_Dieses_Jahr;Rückkehrer_Dieses_Jahr
 -- 02-Sep-2023   Walter Rothlin      Added addPersonen()
 -- 07-Sep-2023   Walter Rothlin      Added Geno_Reisend
+-- 19-Sep-2023   Walter Rothlin      Added update_eMail, delete_eMail Procedures
 -- -----------------------------------------
 
 -- To-Does
@@ -2407,6 +2408,30 @@ DELIMITER ;
 -- set @id = 0;
 -- call addEmailAdr('644', 'yyyy.yyyy@rothlin.com', 'Sonstige', 0, @id);
 -- select @id;
+
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS updateEmailAdr;
+DELIMITER $$
+CREATE PROCEDURE updateEmailAdr(IN  email_id    SMALLINT(5), 
+                                IN  email_addr VARCHAR(45), 
+                                IN  email_type ENUM('Privat', 'Geschaeft', 'Sonstige'), 
+							    IN  Prio       TINYINT)
+BEGIN
+	UPDATE `email_adressen` SET `eMail` = email_addr, `Type` = email_type, `Prio` = Prio WHERE `ID` = `email_id`;
+    COMMIT;
+END$$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS deleteEmailAdr;
+DELIMITER $$
+CREATE PROCEDURE deleteEmailAdr(IN pers_id      SMALLINT(5),
+		                        IN email_id    SMALLINT(5))
+BEGIN
+	DELETE FROM `personen_has_email_adressen` WHERE `Personen_ID` = pers_id AND `EMail_Adressen_ID` = email_id;
+    -- DELETE FROM `email_adressen` WHERE `ID` = email_id;
+    COMMIT;
+END$$
+DELIMITER ;
 
 -- ------------------------------------------------------
 -- Telefonnummer

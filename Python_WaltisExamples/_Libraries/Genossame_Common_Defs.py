@@ -237,16 +237,28 @@ def CRUD_email_in_db(db, pers_id, email_detailed, take_action=False, verbal=Fals
             # merge eMails
 
         if new_email_details['ID'] == '?':
-            print(f"add_email({pers_id}, {new_email_details['eMail']})")
+            print(f"add_email({pers_id}, {new_email_details})")
             args = (pers_id, new_email_details['eMail'], new_email_details['Type'], new_email_details['Prio'], 'x')  # 'x' in the Tuple will be replaced by OUT-Value
-            if verbal:
-                 print(f"""...call proc .... addEmailAdr{args}""")
-            result_args = myCursor.callproc('addEmailAdr', args)
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... addEmailAdr{args}""")
+                result_args = myCursor.callproc('addEmailAdr', args)
+        elif new_email_details['eMail'] == 'NULL':
+            print(f"delete_email({pers_id}, {new_email_details['ID']})")
+            args = (pers_id, new_email_details['ID'])
 
-
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... deleteEmailAdr{args}""")
+                result_args = myCursor.callproc('deleteEmailAdr', args)
         else:
-            sql_string = f"""Update Into"""
+            print(f"update_email({pers_id}, {new_email_details})")
+            args = (new_email_details['ID'], new_email_details['eMail'], new_email_details['Type'], new_email_details['Prio'])
 
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... updateEmailAdr{args}""")
+                result_args = myCursor.callproc('updateEmailAdr', args)
 
 
     except mysql.connector.Error as err:
@@ -623,7 +635,7 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
             if verbal_while_update:
 
 
-                if pers_id == 1172:
+                if pers_id != 10000:
                     print('-->', pers_id, 'Update Person details')
 
                     db_table_name     = 'Personen'
@@ -658,7 +670,7 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                                 print("JOIN    .... ", excel_column_name, new_value_from_excel)
                                 if excel_column_name.startswith('eMail'):
                                     print(f'eMail: {excel_column_name}: {new_value_from_excel}')
-                                    ret_val = CRUD_email_in_db(stammdaten_schema, pers_id, new_value_from_excel.replace(' ', ''), take_action=False, verbal=True)
+                                    ret_val = CRUD_email_in_db(stammdaten_schema, pers_id, new_value_from_excel.replace(' ', ''), take_action=True, verbal=True)
                                     print(ret_val)
                                 elif excel_column_name.startswith('Tel_Nr'):
                                     print(f'Tel_Nr: "{excel_column_name}": "{new_value_from_excel}"')
