@@ -1,3 +1,6 @@
+SELECT DATE_FORMAT(concat('31.12.',year(Now())),'%d.%m') AS `Alter_in_diesem_Jahr`;
+
+
 SELECT ID, Vorname_Initial, Familien_Name,eMail_Detail_Long,eMail_1_Detail_Long,eMail_2_Detail_Long FROM personen_daten WHERE ID IN (660,97,164,669,336,470);
 SELECT * FROM email_adressen WHERE ID = 484;
 SELECT * FROM personen WHERE ID IN (574);

@@ -26,6 +26,7 @@
 -- 02-Sep-2023   Walter Rothlin      Added addPersonen()
 -- 07-Sep-2023   Walter Rothlin      Added Geno_Reisend
 -- 19-Sep-2023   Walter Rothlin      Added update_eMail, delete_eMail Procedures
+-- 20-Sep-2023   Walter Rothlin      Added Bürger_Geburtstag, Bürger_Geburtstag_Gerade, Mitarbeiter_Geburtstage
 -- -----------------------------------------
 
 -- To-Does
@@ -1340,7 +1341,58 @@ CREATE VIEW Bürger_Lebend AS
     FROM Personen_Daten
     WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0
     ORDER BY Familien_Name, Vorname;
+ 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Geburtstage; 
+CREATE VIEW Bürger_Geburtstage AS
+    SELECT
+        ID,
+        Geburtstag,
+        `Alter`,
+        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%m%d') AS Sorter,
+        Geschlecht,
+        Vorname_Initial,
+        Familien_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail
+    FROM Bürger_Lebend
+    -- WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0
+    ORDER BY Sorter ASC;
     
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Geburtstage_Gerade; 
+CREATE VIEW Bürger_Geburtstage_Gerade AS
+    SELECT
+        *
+    FROM Bürger_Geburtstage
+    WHERE `Alter` IN (70, 75, 80, 85) OR `Alter` >= 90
+    ORDER BY Sorter ASC;
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Mitarbeiter_Geburtstage; 
+CREATE VIEW Mitarbeiter_Geburtstage AS
+    SELECT
+		ID,
+        Geburtstag  AS Geburtsdatum,
+        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%d %b') AS Geburtstag,
+        -- Kategorien,
+        `Alter`,
+        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%m%d') AS Sorter,
+        Geschlecht,
+        Vorname_Initial,
+        Familien_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail
+    FROM Personen_Daten
+    WHERE FIND_IN_SET('Angestellter', Kategorien) >  0 OR
+          FIND_IN_SET('Genossenrat', Kategorien) >  0  OR
+          FIND_IN_SET('GPK', Kategorien) >  0
+	ORDER BY Sorter ASC;
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Genossenrat; 
 CREATE VIEW Genossenrat AS

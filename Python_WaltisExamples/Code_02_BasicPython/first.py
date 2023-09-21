@@ -19,6 +19,7 @@ import sys
 ## C:\Python38\python.exe G:\_Daten_2020_06_16\SourceCode\Python_Raspberry\BZU_Code_2020_03_11\ExamplesPython\Code_02_BasicPython\first.py
 
 # Line Comment
+# Neuer Kommentar
 
 """
 https://docs.python.org/3/tutorial/index.html Tutorial

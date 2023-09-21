@@ -18,7 +18,7 @@ import socket
 # https://realpython.com/python-sockets/
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
-PORT = 65430        # The port used by the server
+PORT = 1024        # The port used by the server
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print(f"TCP/IP Client connecting to '{PORT:d}'...", end="", flush=True)
