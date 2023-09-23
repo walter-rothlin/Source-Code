@@ -210,8 +210,163 @@ def addPersonen_to_db(db, source, vorname, ledig_name, partner_name, partner_nam
         print(f"An unexpected error occurred: {e}")
         return None
 
+# telnr functions
+# ---------------
+def CRUD_telnr_in_db(db, pers_id, telnr_detailed, take_action=False, verbal=False):
+    this_fct_call = f'''
+       --> Calling CRUD_telnr_in_db(db,
+                        pers_id         = {pers_id}, 
+                        email_detailed  = {telnr_detailed},
+                        take_action     = {take_action},
+                        verbal          = {verbal})'''
+
+    try:
+        myCursor = db.cursor()
+        if verbal:
+            print(this_fct_call)
+        new_telnr_details = split_telnr_detailed_long(telnr_detailed)
+        if verbal:
+            print('splited:', new_telnr_details)
+        current_telnrs_for_this_person = get_telnr_details_persid(db, pers_id, verbal=verbal)
+        if current_telnrs_for_this_person is not None:
+            if verbal:
+                print('Old Telnrs for', pers_id, current_telnrs_for_this_person)
+
+            # merge Telnrs
+
+        if new_telnr_details['ID'] == '?':
+            print(f"addTelnr({pers_id}, {new_telnr_details})")
+            args = (pers_id, new_telnr_details['Laendercode'], new_telnr_details['Vorwahl'], new_telnr_details['Nummer'], new_telnr_details['Type'], new_telnr_details['Endgeraet'], new_telnr_details['Prio'], 'x')  # 'x' in the Tuple will be replaced by OUT-Value
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... addTelnr{args}""")
+                result_args = myCursor.callproc('addTelnr', args)
+        elif new_telnr_details['Nummer'] == 'NULL':
+            print(f"delete_telnr({pers_id}, {new_telnr_details['ID']})")
+            args = (pers_id, new_telnr_details['ID'])
+
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... deleteTelnr{args}""")
+                result_args = myCursor.callproc('deleteTelnr', args)
+        else:
+            print(f"update_Telnr({pers_id}, {new_telnr_details})")
+            args = (new_telnr_details['ID'], new_telnr_details['Laendercode'], new_telnr_details['Vorwahl'], new_telnr_details['Nummer'], new_telnr_details['Type'], new_telnr_details['Endgeraet'], new_telnr_details['Prio'])
+
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... updateTelnr{args}""")
+                result_args = myCursor.callproc('updateTelnr', args)
 
 
+    except mysql.connector.Error as err:
+        print(f"ERROR: {err}")
+        print(this_fct_call)
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        print(this_fct_call)
+        return None
+
+
+def get_telnr_ids_for_persid(db, pers_id, verbal=False):
+    ret_list = []
+    sql_insert = f"""
+            SELECT Telefonnummern_ID 
+            FROM personen_has_telefonnummern
+            WHERE Personen_ID = {pers_id}
+             """
+    if verbal:
+        print(f"""... in get_telnr_ids_for_persid...
+           {sql_insert}
+           """)
+    mycursor = db.cursor()
+    mycursor.execute(sql_insert)
+    for aId in mycursor.fetchall():
+        ret_list.append(str(aId[0]))
+    return ret_list
+
+
+def get_telnr_details_for_ids(db, telnr_ids, verbal=False):
+    telnr_ids_where_clause = ', '.join(telnr_ids)
+    if verbal:
+        print(f"""
+            get_telnr_details_for_ids(db, 
+                  {telnr_ids})
+
+        telnr_ids_where_clause:{telnr_ids_where_clause}    
+        """)
+    if len(telnr_ids) > 0:
+        sql_insert = f"""
+                SELECT ID, Laendercode, Vorwahl, Nummer, Type, Endgeraet, Prio 
+                FROM telefonnummern 
+                WHERE ID in ({telnr_ids_where_clause})
+                ORDER BY Prio
+                """
+        if verbal:
+            print(f"""... in get_telnr_details_for_ids...
+               {sql_insert}
+               """)
+        mycursor = db.cursor(dictionary=True)
+        mycursor.execute(sql_insert)
+        return mycursor.fetchall()
+    else:
+        return None
+
+
+def get_telnr_details_persid(db, pers_id, verbal=False):
+    telnr_ids = get_telnr_ids_for_persid(db, pers_id, verbal=verbal)
+    return get_telnr_details_for_ids(db, telnr_ids, verbal=verbal)
+
+
+def TBC_fix_email_details_persid(db, pers_id, verbal=False):
+    email_details = get_email_details_persid(db, pers_id, verbal=verbal)
+    last_prio = 0
+    for a_eMail_details in email_details:
+        a_eMail_details['eMail'] = a_eMail_details['eMail'].lower().replace(' ', '')
+        a_eMail_details['Prio'] = last_prio
+        last_prio += 1
+    print(email_details)
+
+
+def split_telnr_detailed_long(detailed_long_str, prio_default=0, type_default='Sonstige', type_endgeraet='Festnetz', verbal=False, telnr_only=False):
+    if verbal:
+        print(f" called .... split_telnr_detailed_long('{detailed_long_str}', '{verbal}')")
+    detailed_long_str = detailed_long_str.replace(' ', '')
+    detailed_list = detailed_long_str.split(':')
+    if len(detailed_list) > 2:
+        if verbal:
+            print(detailed_list)
+        ret_value = {'Laendercode': '0041',
+                     'Vorwahl': detailed_list[0][0:3],
+                     'Nummer': detailed_list[0][3:10],
+                     'ID': detailed_list[1],
+                     'Prio': detailed_list[2],
+                     'Type': detailed_list[3],
+                     'Endgeraet': detailed_list[4],
+                     }
+    elif len(detailed_list) > 1:
+        ret_value = {'Laendercode': '',
+                     'Vorwahl': '',
+                     'Nummer': detailed_list[0],
+                     'ID': detailed_list[1],
+                     'Prio': prio_default,
+                     'Type': type_default,
+                     'Endgeraet': type_endgeraet,
+                     }
+    else:
+        ret_value = {'Laendercode': '',
+                     'Vorwahl': '',
+                     'Nummer': detailed_list[0],
+                     'ID': '?',
+                     'Prio': prio_default,
+                     'Type': type_default,
+                     'Endgeraet': type_endgeraet,
+                     }
+
+    if telnr_only:
+        ret_value = ret_value['Vorwahl'] + ' ' + ret_value['Nummer']
+    return ret_value
 
 # email functions
 # ---------------
@@ -331,13 +486,19 @@ def split_email_detailed_long(detailed_long_str, type_default='Sonstige', prio_d
         print(f" called .... split_email_detailed_long('{detailed_long_str}', '{verbal}')")
     detailed_long_str = detailed_long_str.replace(' ', '')
     detailed_list = detailed_long_str.split(':')
-    if len(detailed_list) > 1:
+    if len(detailed_list) > 2:
         if verbal:
             print(detailed_list)
         ret_value = {'ID': detailed_list[1],
                      'eMail': detailed_list[0],
                      'Type': detailed_list[3],
                      'Prio': detailed_list[2],
+                     }
+    elif len(detailed_list) > 1:
+        ret_value = {'ID': detailed_list[1],
+                     'eMail': detailed_list[0],
+                     'Type': type_default,
+                     'Prio': prio_default,
                      }
     else:
         ret_value = {'ID': '?',
@@ -356,6 +517,164 @@ def AUTO_TEST__split_email_detailed_long(verbal=True):
     print('2) ', split_email_detailed_long('walter.rothlin@fh-hwz.ch  :320:  1:Geschaeft:', verbal=verbal), '\n' + generateStringRepeats(10, '----'))
     print('3) ', split_email_detailed_long('walterrr@rothlin.com', verbal=verbal), '\n' + generateStringRepeats(10, '----'))
     print('\n\n... AUTO_TEST__split_email_detailed_long Done!!\n')
+
+# telnr functions
+# ---------------
+def CRUD_IBAN_in_db(db, pers_id, IBAN_detailed, take_action=False, verbal=False):
+    this_fct_call = f'''
+       --> Calling CRUD_IBAN_in_db(db,
+                        pers_id         = {pers_id}, 
+                        IBAN_detailed   = {IBAN_detailed},
+                        take_action     = {take_action},
+                        verbal          = {verbal})'''
+
+    try:
+        myCursor = db.cursor()
+        if verbal:
+            print(this_fct_call)
+        new_IBAN_details = split_IBAN_detailed_long(IBAN_detailed)
+        if verbal:
+            print('splited:', new_IBAN_details)
+
+        current_IBANs_for_this_person = get_IBAN_details_persid(db, pers_id, verbal=verbal)
+        if current_IBANs_for_this_person is not None:
+            if verbal:
+                print('Old IBANs for', pers_id, current_IBANs_for_this_person)
+
+            # merge Telnrs
+
+        if new_IBAN_details['ID'] == '?':
+            print(f"addIBAN({pers_id}, {new_IBAN_details})")
+            args = (pers_id, new_IBAN_details['Nummer'], new_IBAN_details['Bezeichnung'], new_IBAN_details['Bankname'], new_IBAN_details['Bankort'], new_IBAN_details['Prio'], 'x')  # 'x' in the Tuple will be replaced by OUT-Value
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... addIBAN{args}""")
+                result_args = myCursor.callproc('addIBAN', args)
+        elif new_IBAN_details['Nummer'] == 'NULL':
+            print(f"delete_telnr({pers_id}, {new_IBAN_details['ID']})")
+            args = (pers_id, new_IBAN_details['ID'])
+
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... deleteIBAN{args}""")
+                result_args = myCursor.callproc('deleteIBAN', args)
+        else:
+            print(f"update_IBAN({pers_id}, {new_IBAN_details})")
+            args = (pers_id, new_IBAN_details['Nummer'], new_IBAN_details['Bezeichnung'], new_IBAN_details['Bankname'], new_IBAN_details['Bankort'], new_IBAN_details['Prio'], new_IBAN_details['ID'])
+
+            if take_action:
+                if verbal:
+                    print(f"""...call proc .... updateIBAN{args}""")
+                result_args = myCursor.callproc('updateIBAN', args)
+
+
+    except mysql.connector.Error as err:
+        print(f"ERROR: {err}")
+        print(this_fct_call)
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        print(this_fct_call)
+        return None
+
+
+def get_IBAN_ids_for_persid(db, pers_id, verbal=False):
+    ret_list = []
+    sql_insert = f"""
+            SELECT ID 
+            FROM iban
+            WHERE Personen_ID = {pers_id}
+             """
+    if verbal:
+        print(f"""... in get_IBAN_ids_for_persid...
+           {sql_insert}
+           """)
+    mycursor = db.cursor()
+    mycursor.execute(sql_insert)
+    for aId in mycursor.fetchall():
+        ret_list.append(str(aId[0]))
+    return ret_list
+
+
+def get_IBAN_details_for_ids(db, IBAN_ids, verbal=False):
+    IBAN_ids_where_clause = ', '.join(IBAN_ids)
+    if verbal:
+        print(f"""
+            get_IBAN_details_for_ids(db, 
+                  {IBAN_ids})
+
+        IBAN_ids_where_clause:{IBAN_ids_where_clause}    
+        """)
+    if len(IBAN_ids) > 0:
+        sql_insert = f"""
+                SELECT ID, Nummer, Bezeichnung, Bankname, Bankort, Prio 
+                FROM iban 
+                WHERE ID in ({IBAN_ids_where_clause})
+                ORDER BY Prio
+                """
+        if verbal:
+            print(f"""... in get_IBAN_details_for_ids...
+               {sql_insert}
+               """)
+        mycursor = db.cursor(dictionary=True)
+        mycursor.execute(sql_insert)
+        return mycursor.fetchall()
+    else:
+        return None
+
+
+def get_IBAN_details_persid(db, pers_id, verbal=False):
+    IBAN_ids = get_IBAN_ids_for_persid(db, pers_id, verbal=verbal)
+    return get_IBAN_details_for_ids(db, IBAN_ids, verbal=verbal)
+
+
+def TBC_fix_email_details_persid(db, pers_id, verbal=False):
+    email_details = get_email_details_persid(db, pers_id, verbal=verbal)
+    last_prio = 0
+    for a_eMail_details in email_details:
+        a_eMail_details['eMail'] = a_eMail_details['eMail'].lower().replace(' ', '')
+        a_eMail_details['Prio'] = last_prio
+        last_prio += 1
+    print(email_details)
+
+
+def split_IBAN_detailed_long(detailed_long_str, prio_default=0, bezeichnung_default='', bankname_default='', bankort_default='', verbal=False, IBAN_only=False):
+    if verbal:
+        print(f" called .... split_IBAN_detailed_long('{detailed_long_str}', '{verbal}')")
+    detailed_long_str = detailed_long_str.replace(' ', '')
+    detailed_list = detailed_long_str.split(':')
+
+    # print('CH97 0077 7001 5721 7077 8:', format_IBAN('CH97 0077 7001 5721 7077 8'))
+    if len(detailed_list) > 2:
+        if verbal:
+            print(detailed_list)
+        ret_value = {'Nummer': format_IBAN(detailed_list[0]),
+                     'ID': detailed_list[1],
+                     'Prio': detailed_list[2],
+                     'Bankname': detailed_list[3],
+                     'Bankort': detailed_list[4],
+                     'Bezeichnung': detailed_list[5],
+                     }
+    elif len(detailed_list) > 1:
+        ret_value = {'Nummer': detailed_list[0],
+                     'ID': detailed_list[1],
+                     'Prio': prio_default,
+                     'Bankname': bankname_default,
+                     'Bankort': bankort_default,
+                     'Bezeichnung': bezeichnung_default,
+                     }
+    else:
+        ret_value = {'Nummer': detailed_list[0],
+                     'ID': '?',
+                     'Prio': prio_default,
+                     'Bankname': bankname_default,
+                     'Bankort': bankort_default,
+                     'Bezeichnung': bezeichnung_default,
+                     }
+
+    if IBAN_only:
+        ret_value = ret_value['Vorwahl'] + ' ' + ret_value['Nummer']
+    return ret_value
 
 
 # div  functions
@@ -583,7 +902,7 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
         # Dates
         # -----
         {'excel': 'Geburtstag'},
-        {'excel': 'Geburtstag'},
+        {'excel': 'Todestag'},
         {'excel': 'Nach_Wangen_Gezogen'},
         {'excel': 'Von_Wangen_Weggezogen'},
         {'excel': 'Baulandgesuch_Eingereicht_Am'},
@@ -602,6 +921,16 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
         {'excel': 'eMail_1_Detail_Long',
          'db': 'Join'},
         {'excel': 'eMail_2_Detail_Long',
+         'db': 'Join'},
+
+        {'excel': 'Tel_Nr_Detail_Long',
+         'db': 'Join'},
+        {'excel': 'Tel_Nr_1_Detail_Long',
+         'db': 'Join'},
+        {'excel': 'Tel_Nr_2_Detail_Long',
+         'db': 'Join'},
+
+        {'excel': 'IBAN_Detail_Long',
          'db': 'Join'},
     ]
 
@@ -636,7 +965,7 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
 
 
                 if pers_id != 10000:
-                    print('-->', pers_id, 'Update Person details')
+                    # print('-->', pers_id, 'Update Person details')
 
                     db_table_name     = 'Personen'
                     for a_mapping in db_attr_excel_column_mapping:
@@ -660,20 +989,27 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                             do_reset_cell=take_action,
                             reset_cell_value='',
                             take_action=take_action,
-                            verbal=verbal_while_update)
+                            verbal=False)
                         new_value_from_excel = values[excel_column_name]
                         if new_value_from_excel is None or new_value_from_excel == '':
-                            if verbal_while_update:
-                                print(pers_id, 'No update for', excel_column_name)
+                            if False:
+                                print(f"{pers_id:5d} No update for {excel_column_name}")
                         else:
+                            print(f"{pers_id:5d} {excel_column_name} --> {new_value_from_excel}")
                             if (db_attr_name == 'Join'):
-                                print("JOIN    .... ", excel_column_name, new_value_from_excel)
+                                # print("JOIN    .... ", excel_column_name, new_value_from_excel)
                                 if excel_column_name.startswith('eMail'):
-                                    print(f'eMail: {excel_column_name}: {new_value_from_excel}')
-                                    ret_val = CRUD_email_in_db(stammdaten_schema, pers_id, new_value_from_excel.replace(' ', ''), take_action=True, verbal=True)
+                                    print(f'    eMail: {excel_column_name}: {new_value_from_excel}')
+                                    ret_val = CRUD_email_in_db(stammdaten_schema, pers_id, new_value_from_excel.replace(' ', ''), take_action=True, verbal=verbal_while_update)
                                     print(ret_val)
                                 elif excel_column_name.startswith('Tel_Nr'):
-                                    print(f'Tel_Nr: "{excel_column_name}": "{new_value_from_excel}"')
+                                    print(f'    Tel_Nr: "{excel_column_name}": "{new_value_from_excel}"')
+                                    ret_val = CRUD_telnr_in_db(stammdaten_schema, pers_id, new_value_from_excel.replace(' ', ''), take_action=True, verbal=verbal_while_update)
+                                    print(ret_val)
+                                elif excel_column_name.startswith('IBAN'):
+                                    print(f'    Tel_Nr: "{excel_column_name}": "{new_value_from_excel}"')
+                                    ret_val = CRUD_IBAN_in_db(stammdaten_schema, pers_id, new_value_from_excel.replace(' ', ''), take_action=True, verbal=verbal_while_update)
+                                    print(ret_val)
                             else:
                                 attr_type = get_db_attr_type(stammdaten_schema, table=db_table_name, attribute=db_attr_name, take_action=take_action, verbal=verbal_while_update)
                                 count_of_updated_attributs += update_db_attribute(stammdaten_schema,

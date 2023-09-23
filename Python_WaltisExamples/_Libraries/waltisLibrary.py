@@ -47,6 +47,7 @@
 # 13-Jul-2023   Walter Rothlin      Added split_adress_street_nr()
 # 03-Sep-2023   Walter Rothlin      Added Resuable DB und Excel Functions
 # 12-Sep-2023   Walter Rothlin      Added is_US_Date, is_EU_Date
+# 23-Sep-2023   Walter Rothlin      Added format_IBAN
 # ------------------------------------------------------------------
 
 
@@ -1835,6 +1836,10 @@ def AUTO_TEST_xPath_Get(verbal=False):
         print("--> Test Cases Failed  : {a:4d}".format(a=testCasesFailed))
     return {"TestName": getMyFctName(), "testCasesExecuted": testCasesExecuted, "testCasesFailed": testCasesFailed}
 
+def format_IBAN(IBAN):
+    IBAN_str = IBAN.replace(' ', '')
+    IBAN_str = IBAN_str[:4] + ' ' + IBAN_str[4:8] + ' ' + IBAN_str[8:12] + ' ' + IBAN_str[12:16] + ' ' + IBAN_str[16:20] + ' ' + IBAN_str[20:]
+    return IBAN_str
 
 def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, currecny='CHF', reference=None, additional_information=""):
     invoice_data = {

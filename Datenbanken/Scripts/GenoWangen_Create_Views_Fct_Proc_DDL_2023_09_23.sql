@@ -25,10 +25,8 @@
 --                                   Added Wegzüger_Dieses_Jahr;Rückkehrer_Dieses_Jahr
 -- 02-Sep-2023   Walter Rothlin      Added addPersonen()
 -- 07-Sep-2023   Walter Rothlin      Added Geno_Reisend
--- 19-Sep-2023   Walter Rothlin      Added updateEmailAdr, deleteEmailAdr Procedures
+-- 19-Sep-2023   Walter Rothlin      Added update_eMail, delete_eMail Procedures
 -- 20-Sep-2023   Walter Rothlin      Added Bürger_Geburtstag, Bürger_Geburtstag_Gerade, Mitarbeiter_Geburtstage
--- 23-Sep-2023   Walter Rothlin      Added updateTelnr, deleteTelnr Procedures
--- 23-Sep-2023   Walter Rothlin      Added updateIBAN, deleteIBAN Procedures
 -- -----------------------------------------
 
 -- To-Does
@@ -2591,7 +2589,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- ------------------------------------------------------
 DROP PROCEDURE IF EXISTS deleteTelnr;
 DELIMITER $$
 CREATE PROCEDURE deleteTelnr(IN pers_id      SMALLINT(5),
@@ -2640,54 +2637,35 @@ DROP PROCEDURE IF EXISTS addIBAN;
 DELIMITER $$
 CREATE PROCEDURE addIBAN(IN   pers_id          SMALLINT, 
                          IN   iban_nummer      VARCHAR(26),
-                         IN   bezeichnung      VARCHAR(45),
-                         IN   bankname         VARCHAR(45),
-                         IN   bankort          VARCHAR(45),
-                         IN   prio             TINYINT,
 						 OUT  iban_id          SMALLINT)
 BEGIN
     IF ((SELECT count(*) 
          FROM IBAN 
          WHERE IBAN.Personen_ID = pers_id AND
                IBAN.Nummer = iban_nummer  AND
-               IBAN.Prio = prio) = 0) THEN
-					INSERT INTO IBAN (`Personen_ID`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `prio`) VALUES (pers_id, iban_nummer, bezeichnung, bankname, bankort, prio);
+               IBAN.Prio = 0) = 0) THEN
+					INSERT INTO IBAN (`Personen_ID`, `Nummer`, `prio`) VALUES (pers_id, iban_nummer, 0);
 					COMMIT;
     END IF;
     SELECT ID 
     FROM IBAN 
     WHERE IBAN.Personen_ID = pers_id AND
 		  IBAN.Nummer = iban_nummer AND
-          IBAN.Prio = prio INTO iban_id;
+          IBAN.Prio = 0 INTO iban_id;
 END$$
 DELIMITER ;
 
--- ------------------------------------------------------
-DROP PROCEDURE IF EXISTS updateIBAN;
-DELIMITER $$
-CREATE PROCEDURE updateIBAN(IN   pers_id          SMALLINT, 
-							IN   iban_nummer      VARCHAR(26),
-                            IN   bezeichnung      VARCHAR(45),
-                            IN   bankname         VARCHAR(45),
-                            IN   bankort          VARCHAR(45),
-                            IN   prio             TINYINT,
-						    IN   iban_id          SMALLINT)
-BEGIN
-	UPDATE `iban` SET `Nummer` = iban_nummer, `Bezeichnung` = bezeichnung, `Bankname` = bankname, `Bankort` = bankort, `Prio` = Prio WHERE `ID` = `iban_id` AND  `Personen_ID` = `pers_id`;
-    COMMIT;
-END$$
-DELIMITER ;
-
--- ------------------------------------------------------
-DROP PROCEDURE IF EXISTS deleteIBAN;
-DELIMITER $$
-CREATE PROCEDURE deleteIBAN(IN pers_id      SMALLINT(5),
-							IN IBAN_id    SMALLINT(5))
-BEGIN
-	DELETE FROM `iban` WHERE `Personen_ID` = pers_id AND `ID` = IBAN_id;
-    COMMIT;
-END$$
-DELIMITER ;
+/*
+    SELECT *
+    FROM IBAN 
+    WHERE IBAN.Personen_ID = 990 AND
+		  IBAN.Nummer      = 'CH46 0077 7002 5458 0007 8';
+         
+-- Tests
+set @id = 0;
+call addIBAN(527, 'CH15 0077 7000 0324 3489 7', @id);
+select @id;
+*/ 
 
 -- ------------------------------------------------------
 -- Land
@@ -3060,8 +3038,8 @@ BEGIN
 	-- Gestorbene Personen_Daten
 	-- -------------------------
 	UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
-	-- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Bürger')  WHERE  Todestag IS NOT NULL;
-	-- DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
+	UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Bürger')  WHERE  Todestag IS NOT NULL;
+	DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
     
 	/* 
     DELETE 
@@ -3195,6 +3173,8 @@ WHERE
         AND (Such_Begriff LIKE BINARY '%Kä' AND Such_Begriff LIKE BINARY '%holz%')
 ORDER BY Familien_Name, Vorname;
 */
+
+
 
 /*
 SELECT * FROM personen_has_email_adressen WHERE Personen_ID = 305;
