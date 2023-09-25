@@ -48,6 +48,7 @@
 # 03-Sep-2023   Walter Rothlin      Added Resuable DB und Excel Functions
 # 12-Sep-2023   Walter Rothlin      Added is_US_Date, is_EU_Date
 # 23-Sep-2023   Walter Rothlin      Added format_IBAN
+#                                         split_plz_ort()
 # ------------------------------------------------------------------
 
 
@@ -1196,6 +1197,36 @@ def AUTO_TEST__split_adress_street_nr():
     for a_test_case in test_cases:
         strasse_nr = split_adress_street_nr(a_test_case, verbal=False)
         print('Strasse:', strasse_nr['Street'], '  Nr:', strasse_nr['No'])
+
+def split_plz_ort(plz_ort_string, verbal=False):
+    parts = plz_ort_string.split(' ')
+    if verbal:
+        print(parts)
+    return {'PLZ': parts[0], 'Ort': ' '.join(parts[1:])}
+
+def split_familien_name(familien_name, sex='Herr', verbal=False):
+    parts = familien_name.split('-')
+    if verbal:
+        print(parts, '   Sex:', sex )
+
+    ret_val = {}
+    if len(parts) == 1:
+        parts = familien_name.split(' ')
+        if len(parts) == 1:
+            ret_val = {'Ledig_Name': parts[0], 'Partner_Name': '', 'Partner_Name_Angenommen': 0}
+        else:
+            if sex == 'Herr':
+                ret_val = {'Ledig_Name': parts[1], 'Partner_Name': parts[0], 'Partner_Name_Angenommen': 1}
+            else:
+                ret_val = {'Ledig_Name': parts[0], 'Partner_Name': parts[1], 'Partner_Name_Angenommen': 0}
+    else:
+        if sex == 'Herr':
+            ret_val = {'Ledig_Name': parts[0], 'Partner_Name': parts[1], 'Partner_Name_Angenommen': 0}
+        else:
+            ret_val = {'Ledig_Name': parts[1], 'Partner_Name': parts[0], 'Partner_Name_Angenommen': 1}
+
+    return ret_val
+
 def howManyDigitsAreInString_Classic(aString, trace=False):
     count = 0
     for c in aString:
@@ -2851,6 +2882,8 @@ def update_db_attribute(db=None,
             print(myresult)
 
     return update_count
+
+
 # ------------------------
 # Reusable Excel-Functions
 # ------------------------

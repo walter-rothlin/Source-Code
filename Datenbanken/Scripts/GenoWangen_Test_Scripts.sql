@@ -1,10 +1,28 @@
-SELECT * FROM personen WHERE ID IN (213);
+UPDATE `personen` SET `Partner_ID`  = 644   WHERE `ID` = 1172;   -- Partner von Claudia		is 	Walti
+UPDATE `personen` SET `Partner_ID`  = '1172'  WHERE `ID` = '644';    -- Partner von Walti   	is 	Claudia
+UPDATE `personen` SET `Vater_ID`    = '644'   WHERE `ID` = '1103';   -- Vater   von Tobias     	is  Walti
+UPDATE `personen` SET `Mutter_ID`   = '1172'  WHERE `ID` = '1103';   -- Mutter  von Tobias     	is  Claudia
+
+
+
+SELECT *
+	-- ID, Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Private_PLZ_Ort, Geburtstag,
+	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
+FROM personen_daten 
+-- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Egeter%'))
+ORDER BY Familien_Name;
+
+SELECT * FROM personen       WHERE ID IN (1175);
+SELECT * FROM personen_daten WHERE ID IN (488);
+SELECT * FROM adressen;
+-- WHERE Strasse LIKE '%Bahnhofstr.%';
+-- WHERE ID IN (438);
+
 SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (213));
 SELECT * FROM iban WHERE Personen_ID in (644, 213);
 
-SELECT ID, Vorname_Initial, Familien_Name,Geburtstag,Tel_Nr_Detail_Long, IBAN_Detail_Long 
-FROM personen_daten 
-WHERE ID IN (204,213,644);
+
 
 SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (826);
 
@@ -35,6 +53,12 @@ SELECT * FROM email_adressen WHERE eMail LIKE 'fehler:%';
 -- DELETE FROM email_adressen WHERE eMail LIKE 'fehler:%';
 
 SELECT * FROM `personen_has_email_adressen` WHERE `Personen_ID` = 1172 AND `EMail_Adressen_ID` = 485;
+
+-- Reset Auto-Increment to max + 1
+SELECT MAX(ID) INTO @max_value FROM adressen;
+SELECT @max_value;   -- 701
+ALTER TABLE adressen AUTO_INCREMENT = 702;
+
 
 /*
         SELECT

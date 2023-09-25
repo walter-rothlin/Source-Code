@@ -375,7 +375,8 @@ if __name__ == '__main__':
     # ==================================================
     # email_telnr_IBAN_migrieren(geno_schema, reco_data_fn=r'V:\Geno_Wangen_Daten.xlsx', reco_sheetname='Reco_Fehlende_eMail_telNr_IBAN', verbal=True, take_action=True)
 
-    process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', verbal=True, take_action=True)
+    pre_process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', verbal=True, take_action=True)
+    # process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', verbal=True, take_action=True)
 
 
     # news_letter_daten_migrieren(geno_schema, r"V:\EDV\Newsletter\MailadressenGenossenbürger.xlsx", verbal=True)

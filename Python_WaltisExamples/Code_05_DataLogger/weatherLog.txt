@@ -1,3 +1,0 @@
-# <Name>weatherLog.txt</Name>
-Timestamp             |Level   |Feuchte |Temp   |Druck  |
-2022-11-14 10:06:49   |DEBUG   |   79.00|   7.53| 985.00|
