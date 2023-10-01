@@ -86,6 +86,23 @@ def db_connect(connect_to_prod=True, trace=False):
                                              trace=trace)
     return stammdaten_schema
 
+def get_person_details_for_id(db_connection, pers_id, verbal=False, db_table='personen_daten', select_attributes=['ID', 'Vorname_Initial', 'Familien_Name', 'Private_Strassen_Adresse', 'Private_PLZ_Ort']):
+    select_person = f"""
+            SELECT 
+               {','.join(select_attributes)}
+            FROM {db_table} 
+            WHERE ID = {pers_id};
+    """
+    myCursor = db_connection.cursor()
+    if verbal:
+        print(select_person)
+
+    myCursor.execute(select_person)
+    result_set = myCursor.fetchall()
+    if verbal:
+        print(result_set)
+    return result_set
+
 
 def get_personen_ids(db_connection, such_kriterien, verbal=False, db_table='personen_daten', search_attr='Such_Begriff', select_attributes=['ID', 'Vorname_Initial', 'Familien_Name', 'Private_Strassen_Adresse', 'Private_PLZ_Ort']):
     verbal = False
@@ -179,7 +196,7 @@ def addPersonen_to_db_by_hash(db, arguments, take_action=False, verbal=False):
 def addPersonen_to_db(db, source, vorname, ledig_name, partner_name, partner_name_angenommen, privat_adressen_id=701, take_action=False, verbal=False):
     try:
         if privat_adressen_id == '':
-            privat_adressen_id = 701
+            privat_adressen_id = 701  # Unbekannte Strasse an unbekanntem Ort (4797)
         if verbal:
             print(f'''
                --> Calling addPersonen_to_db(db,
@@ -823,7 +840,7 @@ def get_ort_id_from_db_by_pers_id(db=None, pers_id=None, take_action=False, verb
         ret_id = result_args[1]
     return ret_id
 
-def get_ort_id_from_db_by_plz_ort(db=None, plz_ort='', take_action=False, verbal=False):
+def get_ort_id_from_db_by_plz_ort(db=None, plz_ort='', kanton='SZ', land_id=1, take_action=False, verbal=False):
     if verbal:
         print(f'''
            --> Calling get_ort_id_from_db_by_plz_ort(db,
@@ -834,7 +851,7 @@ def get_ort_id_from_db_by_plz_ort(db=None, plz_ort='', take_action=False, verbal
     myCursor = db.cursor()
     ret_id = -1
     result = split_plz_ort(plz_ort)
-    args = (result['PLZ'], result['Ort'], None, None, 'x')
+    args = (result['PLZ'], result['Ort'], kanton, land_id, 'x')
     if take_action:
         if verbal:
             print(f"""...call proc .... getOrtId{args}""")
@@ -893,14 +910,15 @@ def get_adress_id_from_db_by_strassen_adresse(db=None, strassen_adresse='', ort_
 
     return ret_id
 
-def pre_process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, take_action=False):
+def pre_process_CUD(db, reco_data_fn, reco_sheetname, db_attr_excel_column_mapping=None, verbal=False, take_action=False):
     if verbal:
         print(f'''
            --> Calling pre_process_CUD(stammdaten_schema,
-                                    {reco_data_fn}, 
-                                    {reco_sheetname}, 
-                                    verbal={verbal}, 
-                                    take_action={take_action})''')
+                    File    = {reco_data_fn}, 
+                    Sheet   = {reco_sheetname},
+                    Mapping = {db_attr_excel_column_mapping}  
+                    verbal  = {verbal}, 
+                    take_action = {take_action})''')
 
         print(f'Open Excel:{reco_data_fn} [{reco_sheetname}]')
 
@@ -909,53 +927,121 @@ def pre_process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=Fals
     workbook = openpyxl.load_workbook(reco_data_fn, data_only=True)
     worksheet_sheet = workbook[reco_sheetname]
 
-    db_attr_excel_column_mapping = [
-        {'excel': 'Familien_Name',
-         'db': 'PreProcessor'},
-    ]
+    statistics = {
+            'Familien_Name': 0,
+            'Private_PLZ_Ort': 0,
+            'Private_Strassen_Adresse': 0}
 
     title_row = 1
     first_value_row = 2
     row = first_value_row
     count_of_total_lines = 0
     while worksheet_sheet["A" + str(row)].value is not None:
+        id_value_from_excel = worksheet_sheet["A" + str(row)].value
         count_of_total_lines += 1
         for a_mapping in db_attr_excel_column_mapping:
-            if a_mapping.get('db') == 'PreProcessor':
-                print('--> Preprocessor field:', a_mapping)
-                excel_column_name = a_mapping['excel']
+            # print('--> Preprocessor field:',  a_mapping['excel'])
+            excel_column_name = a_mapping['excel']
 
-                values = get_cell_values_by_column_titles(
-                    worksheet_sheet,
-                    title_row=title_row,
-                    row=row,
-                    column_names=[excel_column_name],
-                    do_reset_cell=take_action,
-                    reset_cell_value='',
-                    take_action=take_action,
-                    verbal=True)
+            values = get_cell_values_by_column_titles(
+                worksheet_sheet,
+                title_row=title_row,
+                row=row,
+                column_names=[excel_column_name],
+                do_reset_cell=take_action,
+                reset_cell_value='',
+                take_action=take_action,
+                verbal=False)
 
-                new_value_from_excel = values[excel_column_name]
-                if new_value_from_excel is not None and new_value_from_excel != '':
-                    print('Pre_Processor: ', new_value_from_excel)
-                    if excel_column_name == 'Familien_Name':
-                        sex_value = get_cell_values_by_column_titles(
-                            worksheet_sheet,
-                            title_row=title_row,
-                            row=row,
-                            column_names=['Geschlecht'],
-                            do_reset_cell=False,
-                            reset_cell_value='',
-                            take_action=take_action,
-                            verbal=True)
-                        sex_value =  sex_value['Geschlecht']
-                        ret_val = split_familien_name(new_value_from_excel, sex_value, verbal=True)
-                        print(ret_val)
-                        set_cell_value_by_column_title(ret_val['Ledig_Name']             , worksheet_sheet, title_row=title_row, row=row, column_name='Ledig_Name'             , take_action=True, verbal=True)
-                        set_cell_value_by_column_title(ret_val['Partner_Name']           , worksheet_sheet, title_row=title_row, row=row, column_name='Partner_Name'           , take_action=True, verbal=True)
-                        set_cell_value_by_column_title(ret_val['Partner_Name_Angenommen'], worksheet_sheet, title_row=title_row, row=row, column_name='Partner_Name_Angenommen', take_action=True, verbal=True)
+            new_value_from_excel = values[excel_column_name]
+            if new_value_from_excel is not None and new_value_from_excel != '':
+                print(f"{row:5d}: {a_mapping['excel']:20s}:{new_value_from_excel:20s}")
+
+                if excel_column_name == 'Familien_Name':
+                    statistics['Familien_Name'] += 1
+                    sex_value = get_cell_values_by_column_titles(
+                        worksheet_sheet,
+                        title_row=title_row,
+                        row=row,
+                        column_names=['Geschlecht'],
+                        do_reset_cell=False,
+                        reset_cell_value='',
+                        take_action=take_action,
+                        verbal=False)
+                    sex_value = sex_value['Geschlecht']
+                    ret_val = split_familien_name(new_value_from_excel, sex_value, verbal=False)
+                    # print('1) ', ret_val)
+                    set_cell_value_by_column_title(ret_val['Ledig_Name']             , worksheet_sheet, title_row=title_row, row=row, column_name='Ledig_Name'             , take_action=True, verbal=False)
+                    set_cell_value_by_column_title(ret_val['Partner_Name']           , worksheet_sheet, title_row=title_row, row=row, column_name='Partner_Name'           , take_action=True, verbal=False)
+                    set_cell_value_by_column_title(ret_val['Partner_Name_Angenommen'], worksheet_sheet, title_row=title_row, row=row, column_name='Partner_Name_Angenommen', take_action=True, verbal=False)
+                    print(f"       -->  {ret_val['Ledig_Name']:20s}:{ret_val['Partner_Name']:20s}:{ret_val['Partner_Name_Angenommen']:1d}")
+
+                elif excel_column_name == 'Private_PLZ_Ort':
+                    statistics['Private_PLZ_Ort'] += 1
+                    ort_id = get_ort_id_from_db_by_plz_ort(db=db, plz_ort=new_value_from_excel, take_action=take_action, verbal=False)
+                    # print('1) ', ort_id)
+                    ret_val = set_cell_value_by_column_title(ort_id, worksheet_sheet, title_row=title_row, row=row, column_name='Private_Ort_ID', take_action=True, verbal=False)
+                    # print('2) ', ret_val)
+                    print(f"       -->  {ort_id:5d}")
+
+                elif excel_column_name == 'Private_Strassen_Adresse':
+                    statistics['Private_Strassen_Adresse'] += 1
+                    new_value_from_excel = new_value_from_excel.replace('strasse', 'str.')
+                    # print(f'    Private_Strasse: "{excel_column_name}": "{new_value_from_excel}"')
+                    ort_id = get_cell_values_by_column_titles(
+                        worksheet_sheet,
+                        title_row=title_row,
+                        row=row,
+                        column_names=['Private_Ort_ID'],
+                        do_reset_cell=True,
+                        reset_cell_value='',
+                        take_action=take_action,
+                        verbal=False)['Private_Ort_ID']
+                    # print('1) ', ort_id)
+                    addr_id = get_adress_id_from_db_by_strassen_adresse(db=db, strassen_adresse=new_value_from_excel, ort_id=ort_id,          take_action=True, verbal=False)
+                    set_cell_value_by_column_title(addr_id, worksheet_sheet, title_row=title_row, row=row, column_name='Private_Adressen_ID', take_action=True, verbal=False)
+                    print(f"       -->  {addr_id:5d}")
+
+                else:
+                    print(end='')
+
+        # get details for id from DB
+        if id_value_from_excel == 'P':
+            pers_values = get_cell_values_by_column_titles(worksheet_sheet, title_row=title_row, row=row, column_names=['Vorname', 'Ledig_Name', 'Partner_Name'], do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False)
+            key_values = {key: value for key, value in pers_values.items() if is_not_empty(value)}
+
+            non_empty_values = []
+            for a_value in key_values.values():
+                non_empty_values.append(a_value)
+
+            ## print('non_empty_values:', non_empty_values)
+            ret_val = get_personen_ids(db, such_kriterien=non_empty_values, verbal=True)
+            ## print('PPPPP', ret_val)
+            if len(ret_val) == 0:
+                set_cell_value_by_column_title('?', worksheet_sheet, title_row=title_row, row=row, column_name='ID', take_action=True, verbal=False)
+            elif len(ret_val) == 1:
+                set_cell_value_by_column_title(ret_val[0][0], worksheet_sheet, title_row=title_row, row=row, column_name='ID', take_action=True, verbal=False)
+                get_cell_values_by_column_titles(worksheet_sheet, title_row=title_row, row=row, column_names=['Vorname', 'Ledig_Name', 'Partner_Name'], do_reset_cell=True, reset_cell_value='', take_action=True, verbal=False)
+            else:
+                set_cell_value_by_column_title(str(ret_val), worksheet_sheet, title_row=title_row, row=row, column_name='DetailsFromDB', take_action=True, verbal=False)
+
+        elif id_value_from_excel == '?':
+            pass
+
+        else:
+            ret_val = get_person_details_for_id(db, id_value_from_excel, verbal=False)
+            set_cell_value_by_column_title(str(ret_val), worksheet_sheet, title_row=title_row, row=row, column_name='DetailsFromDB', take_action=True, verbal=False)
+
+        # check if all attributes are empty
+        if are_all_values_empty(worksheet_sheet, title_row=1, row=row, exclude_attr_names=['ID', 'DetailsFromDB', 'ToDoes']):
+            set_cell_value_by_column_title('All Done', worksheet_sheet, title_row=title_row, row=row, column_name='ToDoes', take_action=True, verbal=False)
+        else:
+            set_cell_value_by_column_title('', worksheet_sheet, title_row=title_row, row=row, column_name='ToDoes', take_action=True, verbal=False)
 
         row += 1
+
+    statistics['Line Processed in Excel'] = count_of_total_lines
+    print('\n\nPre-Processing Statistics:\n  ', statistics)
 
     # Save the Excel
     # --------------
@@ -965,12 +1051,14 @@ def pre_process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=Fals
         workbook.save(reco_data_fn)
         workbook.close()
 
-def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, take_action=False):
+
+def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, excel_db_field_mapping, verbal=False, take_action=False):
     if verbal:
         print(f'''
            --> Calling process_CUD(stammdaten_schema,
                                     {reco_data_fn}, 
-                                    {reco_sheetname}, 
+                                    {reco_sheetname},
+                                    excel_db_field_mapping, 
                                     verbal={verbal}, 
                                     take_action={take_action})''')
 
@@ -989,87 +1077,6 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
     count_of_total_lines = 0
 
 
-    db_attr_excel_column_mapping = [
-        # Adress-Details (Umzug, Wegzug, Rückkehrer)
-        # ------------------------------------------
-        {'excel': 'Familien_Name',
-         'db': 'PreProcessor'},
-
-        # Person_Details
-        # --------------
-        {'excel': 'Source'},
-        {'excel': 'History'},
-        {'excel': 'Bemerkungen'},
-        {'excel': 'Zivilstand'},
-        {'excel': 'Kategorien'},
-        {'excel': 'Funktion'},
-        {'excel': 'Firma'},
-
-        {'db': 'Sex',
-         'excel': 'Geschlecht'},
-        {'excel': 'Vorname'},
-        {'excel': 'Vorname_2'},
-        {'excel': 'Ledig_Name'},
-        {'excel': 'Partner_Name'},
-        {'excel': 'Partner_Name_Angenommen'},
-
-        {'excel': 'AHV_Nr'},
-        {'excel': 'Betriebs_Nr'},
-
-        {'excel': 'Baulandgesuch_Details'},
-        {'excel': 'Bezahlte_Aufnahme_Gebühr'},
-        {'excel': 'Ausbezahlter_Bürgertaglohn'},
-
-        # Verwandtschaft
-        # --------------
-        {'excel': 'Partner_ID'},
-        {'excel': 'Vater_ID'},
-        {'excel': 'Mutter_ID'},
-
-        # Adresse
-        # -------
-        {'db': 'Privat_Adressen_ID',
-         'excel': 'Private_Adressen_ID'},
-
-        # Dates
-        # -----
-        {'excel': 'Geburtstag'},
-        {'excel': 'Todestag'},
-        {'excel': 'Nach_Wangen_Gezogen'},
-        {'excel': 'Von_Wangen_Weggezogen'},
-        {'excel': 'Baulandgesuch_Eingereicht_Am'},
-        {'excel': 'Bauland_Gekauft_Am'},
-        {'excel': 'Angemeldet_Am'},
-        {'excel': 'Aufgenommen_Am'},
-        {'excel': 'Sich_Für_Bürgertag_Angemeldet_Am'},
-        {'excel': 'Neubürgertag_gemacht_Am'},
-        {'excel': 'Funktion_Uebernommen_Am'},
-        {'excel': 'Funktion_Abgegeben_Am'},
-        {'excel': 'Chronik_Bezogen_Am'},
-        {'excel': 'Newsletter_Abonniert_Am'},
-
-        {'excel': 'eMail_Detail_Long',
-         'db': 'Join'},
-        {'excel': 'eMail_1_Detail_Long',
-         'db': 'Join'},
-        {'excel': 'eMail_2_Detail_Long',
-         'db': 'Join'},
-
-        {'excel': 'Tel_Nr_Detail_Long',
-         'db': 'Join'},
-        {'excel': 'Tel_Nr_1_Detail_Long',
-         'db': 'Join'},
-        {'excel': 'Tel_Nr_2_Detail_Long',
-         'db': 'Join'},
-
-        {'excel': 'IBAN_Detail_Long',
-         'db': 'Join'},
-
-        {'excel': 'Private_PLZ_Ort',
-         'db': 'Join'},
-        {'excel': 'Private_Strassen_Adresse',
-         'db': 'Join'},
-    ]
 
     title_row = 1
     first_value_row = 2
@@ -1077,74 +1084,58 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
     while worksheet_sheet["A" + str(row)].value is not None:
         count_of_total_lines += 1
 
-        for a_mapping in db_attr_excel_column_mapping:
-            if a_mapping.get('db') == 'PreProcessor':
-                print('--> Preprocessor field:', a_mapping)
+        pers_id = get_cell_value_by_column_title(worksheet_sheet, title_row=title_row, row=row, column_name='ID', verbal=False)['ID']
+        if pers_id == '?':
+            count_of_new_records += 1
+            values = get_cell_values_by_column_titles(
+                             worksheet_sheet,
+                             title_row        = title_row,
+                             row              = row,
+                             column_names     = ['Vorname', 'Ledig_Name', 'Partner_Name', 'Partner_Name_Angenommen', 'Private_Adressen_ID'],
+                             do_reset_cell    = take_action,
+                             reset_cell_value = '',
+                             take_action      = take_action,
+                             verbal           = verbal_while_insert)
+            values['Source'] = 'Loader_1'
+            ret_val   = addPersonen_to_db_by_hash(stammdaten_schema, values, take_action=take_action, verbal=verbal_while_insert)
+            ret_val_1 = set_cell_value_by_column_title(ret_val, worksheet_sheet, title_row=1, row=row, column_name='ID', take_action=take_action, verbal=verbal_while_insert)
+            if verbal_while_insert:
+                print(ret_val, ret_val_1)
+
+        elif pers_id != 'P':
+            db_table_name = 'Personen'
+            for a_mapping in excel_db_field_mapping:
                 excel_column_name = a_mapping['excel']
+                # print('excel_column_name: ', excel_column_name)
+                '''
+                if a_mapping.get('db') == 'PreProcessor':
+                    print('--> Preprocessor field:', a_mapping)
+                    
 
-                values = get_cell_values_by_column_titles(
-                    worksheet_sheet,
-                    title_row=title_row,
-                    row=row,
-                    column_names=[excel_column_name],
-                    do_reset_cell=take_action,
-                    reset_cell_value='',
-                    take_action=take_action,
-                    verbal=True)
+                    values = get_cell_values_by_column_titles(
+                        worksheet_sheet,
+                        title_row=title_row,
+                        row=row,
+                        column_names=[excel_column_name],
+                        do_reset_cell=take_action,
+                        reset_cell_value='',
+                        take_action=take_action,
+                        verbal=True)
 
-                new_value_from_excel = values[excel_column_name]
-                if new_value_from_excel is not None and new_value_from_excel != '':
-                    print('Pre_Processor: ', new_value_from_excel)
-                    if excel_column_name == 'Familien_Name':
-                        sex_value = get_cell_values_by_column_titles(
-                            worksheet_sheet,
-                            title_row=title_row,
-                            row=row,
-                            column_names=['Geschlecht'],
-                            do_reset_cell=False,
-                            reset_cell_value='',
-                            take_action=take_action,
-                            verbal=True)
-                        sex_value =  sex_value['Geschlecht']
-                        ret_val = split_familien_name(new_value_from_excel, sex_value, verbal=True)
-                        print(ret_val)
-                        set_cell_value_by_column_title(ret_val['Ledig_Name']             , worksheet_sheet, title_row=title_row, row=row, column_name='Ledig_Name'             , take_action=True, verbal=True)
-                        set_cell_value_by_column_title(ret_val['Partner_Name']           , worksheet_sheet, title_row=title_row, row=row, column_name='Partner_Name'           , take_action=True, verbal=True)
-                        set_cell_value_by_column_title(ret_val['Partner_Name_Angenommen'], worksheet_sheet, title_row=title_row, row=row, column_name='Partner_Name_Angenommen', take_action=True, verbal=True)
+                    new_value_from_excel = values[excel_column_name]
+                    if new_value_from_excel is not None and new_value_from_excel != '':
+                        if a_mapping.get('db') is not None:
+                            db_attr_name = a_mapping['db']
+                        else:
+                            db_attr_name = a_mapping['excel']
 
-                    break
-            if a_mapping.get('db') is not None:
-                db_attr_name = a_mapping['db']
-            else:
-                db_attr_name = a_mapping['excel']
-
-            if a_mapping.get('excel') is not None:
-                excel_column_name = a_mapping['excel']
-            else:
-                excel_column_name = a_mapping['db']
-            # print('db_attr_name:', db_attr_name, '    excel_column_name:', excel_column_name)
-            # halt()
-
-            pers_id = get_cell_value_by_column_title(worksheet_sheet, title_row=title_row, row=row, column_name='ID', verbal=False)['ID']
-            if pers_id == '?':
-                count_of_new_records += 1
-                values = get_cell_values_by_column_titles(
-                                 worksheet_sheet,
-                                 title_row        = title_row,
-                                 row              = row,
-                                 column_names     = ['Vorname', 'Ledig_Name', 'Partner_Name', 'Partner_Name_Angenommen', 'Private_Adressen_ID'],
-                                 do_reset_cell    = take_action,
-                                 reset_cell_value = '',
-                                 take_action      = take_action,
-                                 verbal           = verbal_while_insert)
-                values['Source'] = 'Loader_1'
-                ret_val   = addPersonen_to_db_by_hash(stammdaten_schema, values, take_action=take_action, verbal=verbal_while_insert)
-                ret_val_1 = set_cell_value_by_column_title(ret_val, worksheet_sheet, title_row=1, row=row, column_name='ID', take_action=take_action, verbal=verbal_while_insert)
-                if verbal_while_insert:
-                    print(ret_val, ret_val_1)
-
-            elif pers_id != 'P':
-                db_table_name     = 'Personen'
+                        if a_mapping.get('excel') is not None:
+                            excel_column_name = a_mapping['excel']
+                        else:
+                            excel_column_name = a_mapping['db']
+                        # print('db_attr_name:', db_attr_name, '    excel_column_name:', excel_column_name)
+                        # halt()
+                '''
                 values = get_cell_values_by_column_titles(
                     worksheet_sheet,
                     title_row=title_row,
@@ -1155,9 +1146,21 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                     take_action=take_action,
                     verbal=False)
                 new_value_from_excel = values[excel_column_name]
-                if new_value_from_excel is None or new_value_from_excel == '':
+                db_attr_name = ''
+                if new_value_from_excel is not None and new_value_from_excel != '':
+                    if a_mapping.get('db') is not None:
+                        db_attr_name = a_mapping['db']
+                    else:
+                        db_attr_name = a_mapping['excel']
+
+                    if a_mapping.get('excel') is not None:
+                        excel_column_name = a_mapping['excel']
+                    else:
+                        excel_column_name = a_mapping['db']
+
+                if new_value_from_excel is None or new_value_from_excel == '' or db_attr_name == 'Pre':
                     if False:
-                        print(f"{pers_id:5d} No update for {excel_column_name}")
+                        print(f"{pers_id:5d} No update for {excel_column_name} {db_attr_name}")
                 else:
                     print(f"{pers_id:5d} {excel_column_name} --> {new_value_from_excel}")
                     if (db_attr_name == 'Join'):
@@ -1186,6 +1189,7 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                             set_cell_value_by_column_title(addr_id, worksheet_sheet, title_row=title_row, row=row, column_name='Private_Adressen_ID', take_action=True, verbal=verbal_while_update)
                             print(addr_id)
                             print('\n')
+
                     else:
                         attr_type = get_db_attr_type(stammdaten_schema, table=db_table_name, attribute=db_attr_name, take_action=take_action, verbal=verbal_while_update)
                         count_of_updated_attributs += update_db_attribute(stammdaten_schema,
@@ -1193,7 +1197,7 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, verbal=False, t
                                 id_attr_name='ID', id=pers_id,
                                 new_value=new_value_from_excel, new_value_format=None,
                                 take_action=take_action, verbal=verbal_while_update)
-                count_of_updated_records += 1
+                    count_of_updated_records += 1
         row += 1
 
     # Save the Excel
@@ -1273,6 +1277,282 @@ def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, v
 # -------------------------------------------------------------------
 # ++++++++++++ Alte, nicht mehr gebrauchte Funktionen +++++++++++++++
 # -------------------------------------------------------------------
+
+# ---------------------------------------------
+# Functions inital load Buergerdaten
+# ---------------------------------------------
+def import_data_from_EXCEL(filename, sheet_name, csv_db_col_mapping={}, db=None, db_tbl_name=None, verbal=False, ingnore_sql_error=False):
+    sheet_data = pd.read_excel(filename, sheet_name=sheet_name)
+    csv_column_names = csv_db_col_mapping.keys()
+    # print('columns:', csv_column_names)
+    df = pd.DataFrame(sheet_data, columns=csv_column_names)
+
+    row_counter_file_loaded = 0
+    row_counter_file_not_loaded = 0
+    mycursor = db.cursor()
+    for index, row in df.iterrows():
+        row_counter_file_loaded += 1
+        csv_values = []
+        db_attributes_names = []
+
+        for a_csv_column_name in csv_column_names:
+            default_value = str(csv_db_col_mapping[a_csv_column_name].get('default_value'))
+            attribute_type = str(csv_db_col_mapping[a_csv_column_name].get('db_attribute_type'))
+            a_csv_column_value = str(row[a_csv_column_name]).replace("'", "\\'")
+
+            # print('1)', a_csv_column_name, ':: ', attribute_type, ': ', a_csv_column_value, '  (', default_value, ')', sep='', end='')
+            if (a_csv_column_value == 'nan' or a_csv_column_value == 'NaT' or a_csv_column_value == ''):
+                if default_value != '':
+                    a_csv_column_value = default_value
+                else:
+                    a_csv_column_value = ""
+            elif a_csv_column_value == 'False':
+                a_csv_column_value = "0"
+            elif a_csv_column_value == 'True':
+                a_csv_column_value = "1"
+            else:
+                pass
+
+            # print('-->', attribute_type)
+            if attribute_type == 'int':
+                # print('RegEx:', a_csv_column_value)
+                a_csv_column_value = convert_str_to_int(a_csv_column_value)
+            # print('   Final:', a_csv_column_value)
+            if a_csv_column_value is not None and a_csv_column_value != 'None':
+                if attribute_type == 'int':
+                    csv_values.append(str(a_csv_column_value))
+                    # csv_values.append('{zahl:11d}'.format(zahl=a_csv_column_value))
+                else:
+                    csv_values.append("'" + a_csv_column_value + "'")
+                db_attributes_names.append(str(csv_db_col_mapping[a_csv_column_name]['db_table_attribute_name']))
+
+        csv_values_as_string = ', '.join(csv_values)
+        db_attributes_names_as_string = ', '.join(db_attributes_names)
+
+
+        # print('db_attributes_types:', db_attributes_types)
+
+        if ingnore_sql_error:
+            sql_insert = f'''
+             INSERT IGNORE INTO {db_tbl_name} ({db_attributes_names_as_string}) VALUES 
+                    ({csv_values_as_string})
+            '''
+        else:
+            sql_insert = f'''
+             INSERT INTO {db_tbl_name} ({db_attributes_names_as_string}) VALUES 
+                    ({csv_values_as_string})
+            '''
+
+        try:
+            mycursor.execute(sql_insert)
+        except Exception:
+            if verbal:
+                print('ERROR:', sql_insert)
+            row_counter_file_not_loaded += 1
+    db.commit()
+
+    prompt_file = 'rows_in_file (' + sheet_name + '):'
+    rec_count_file = {prompt_file: row_counter_file_loaded}
+
+    prompt_db = 'rows_in_db   (' + db_tbl_name + '):'
+    rec_count_db = get_record_count(db, db_tbl_name)
+
+    prompt_not_loaded = 'rows_not_loaded:'
+    rec_not_loaded = {prompt_not_loaded: row_counter_file_not_loaded}
+
+    if rec_count_file[prompt_file] != rec_count_db[prompt_db]:
+        print('\nWARNING:')
+        if verbal:
+            print('1) rec_count_db  :', str(rec_count_db))
+            print('2) rec_count_file:', str(rec_count_file))
+            print('3) rec_not_loaded:', str(rec_not_loaded))
+
+
+    return [rec_count_file, rec_count_db, rec_not_loaded]
+
+def inital_load_fromExcel(input_fn, db_connection, doit=False):
+    if doit:
+        initial_load(input_fn, ['Länder', 'Orte', 'Adressen', 'Personen'], db_connection)
+        initial_load(input_fn, ['IBAN'], db_connection)
+        initial_load(input_fn, ['EMail', 'Person_Has_EMail'], db_connection)
+        initial_load(input_fn, ['Telefon', 'Person_Has_Telefonnummer'], db_connection)
+
+def initial_load(inport_excel_fn, tables_to_load, db_connection):
+    for a_table in tables_to_load:
+        if a_table == 'Länder':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   sheet_name='Länder',
+                                   csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
+                                                       'Land': {'db_table_attribute_name': 'Name'},
+                                                       'Code': {'db_table_attribute_name': 'Code'},
+                                                       'Landesvorwahl': {'db_table_attribute_name': 'Landesvorwahl'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='Land')
+            print(resultat)
+
+        if a_table == 'Orte':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   sheet_name='Orte',
+                                   csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
+                                                       'PLZ': {'db_table_attribute_name': 'PLZ'},
+                                                       'Name': {'db_table_attribute_name': 'Name'},
+                                                       'Kanton': {'db_table_attribute_name': 'Kanton'},
+                                                       'Land_ID': {'db_table_attribute_name': 'Land_ID'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='Orte')
+            print(resultat)
+
+        if a_table == 'Adressen':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   sheet_name='Adressen',
+                                   csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
+                                                       'Strasse': {'db_table_attribute_name': 'Strasse'},
+                                                       'Hausnummer': {'db_table_attribute_name': 'Hausnummer'},
+                                                       'Postfachnummer': {'db_table_attribute_name': 'Postfachnummer'},
+                                                       'Adresszusatz': {'db_table_attribute_name': 'Adresszusatz'},
+                                                       'Wohnung': {'db_table_attribute_name': 'Wohnung'},
+                                                       'Kataster_Nr': {'db_table_attribute_name': 'Kataster_Nr'},
+                                                       'x_CH1903': {'db_table_attribute_name': 'x_CH1903'},
+                                                       'Y_CH1903': {'db_table_attribute_name': 'y_CH1903'},
+                                                       'Politisch_Wangen': {'db_table_attribute_name': 'Politisch_Wangen'},
+                                                       'Ort_ID': {'db_table_attribute_name': 'Orte_ID'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='Adressen')
+            print(resultat)
+
+        if a_table == 'Personen':
+            '''
+            'Partner_ID': {'db_table_attribute_name': 'Partner_ID',
+                           'default_value': 'None',
+                           'db_attribute_type': 'int'},
+            'Vater_ID': {'db_table_attribute_name': 'Vater_ID',
+                           'default_value': 'None',
+                           'db_attribute_type': 'int'},
+            'Mutter_ID': {'db_table_attribute_name': 'Mutter_ID',
+                           'default_value': 'None',
+                           'db_attribute_type': 'int'},
+            '''
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   sheet_name='Personen',
+                                   csv_db_col_mapping={'ID': {'db_table_attribute_name': 'ID'},
+                                                       'Source': {'db_table_attribute_name': 'Source'},
+                                                       'History': {'db_table_attribute_name': 'History'},
+                                                       'Bemerkungen': {'db_table_attribute_name': 'Bemerkungen'},
+                                                       'Sex': {'db_table_attribute_name': 'Sex'},
+                                                       'Firma': {'db_table_attribute_name': 'Firma'},
+                                                       'Vorname': {'db_table_attribute_name': 'Vorname'},
+                                                       'Vorname_2': {'db_table_attribute_name': 'Vorname_2'},
+                                                       'Ledig_Name': {'db_table_attribute_name': 'Ledig_Name'},
+                                                       'Partner_Name': {'db_table_attribute_name': 'Partner_Name'},
+                                                       'Partner_Name_Angenommen': {'db_table_attribute_name': 'Partner_Name_Angenommen'},
+                                                       'AHV_Nr': {'db_table_attribute_name': 'AHV_Nr'},
+                                                       'Betriebs_Nr': {'db_table_attribute_name': 'Betriebs_Nr'},
+                                                       'Zivilstand': {'db_table_attribute_name': 'Zivilstand'},
+                                                       'Kategorien': {'db_table_attribute_name': 'Kategorien'},
+                                                       'Geburtstag': {'db_table_attribute_name': 'Geburtstag'},
+                                                       'Todestag': {'db_table_attribute_name': 'Todestag'},
+                                                       'Nach_Wangen_Gezogen': {'db_table_attribute_name': 'Nach_Wangen_Gezogen'},
+                                                       'Von_Wangen_Weggezogen': {'db_table_attribute_name': 'Von_Wangen_Weggezogen'},
+                                                       'Baulandgesuch_Eingereicht_Am': {'db_table_attribute_name': 'Baulandgesuch_Eingereicht_Am'},
+                                                       'Bauland_Gekauft_Am': {'db_table_attribute_name': 'Bauland_Gekauft_Am'},
+                                                       'Baulandgesuch_Details': {'db_table_attribute_name': 'Baulandgesuch_Details'},
+                                                       'Angemeldet_Am': {'db_table_attribute_name': 'Angemeldet_Am'},
+                                                       'Bezahlt_Aufnahme_Gebühr': {'db_table_attribute_name': 'Bezahlt_Aufnahme_Gebühr'},
+                                                       'Aufgenommen_Am': {'db_table_attribute_name': 'Aufgenommen_Am'},
+                                                       'Sich_Für_Bürgertag_Angemeldet_Am': {'db_table_attribute_name': 'Sich_Für_Bürgertag_Angemeldet_Am'},
+                                                       'Neubürgertag_gemacht_Am': {'db_table_attribute_name': 'Neubürgertag_gemacht_Am'},
+                                                       'Ausbezahlter_Bürgertaglohn': {'db_table_attribute_name': 'Ausbezahlter_Bürgertaglohn'},
+                                                       'Funktion_Uebernommen_Am': {'db_table_attribute_name': 'Funktion_Uebernommen_Am'},
+                                                       'Funktion_Abgegeben_Am': {'db_table_attribute_name': 'Funktion_Abgegeben_Am'},
+                                                       'Chronik_Bezogen_Am': {'db_table_attribute_name': 'Chronik_Bezogen_Am'},
+                                                       'Newsletter_Abonniert_Am': {'db_table_attribute_name': 'Newsletter_Abonniert_Am'},
+                                                       'Privat_Adressen_ID': {'db_table_attribute_name': 'Privat_Adressen_ID'},
+                                                       'Geschaefts_Adressen_ID': {'db_table_attribute_name': 'Geschaefts_Adressen_ID'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='Personen')
+            print(resultat)
+
+        if a_table == 'IBAN':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   sheet_name='IBAN_Liste',
+                                   csv_db_col_mapping={'IBAN_ID': {'db_table_attribute_name': 'ID'},
+                                                       'IBAN_Nummer': {'db_table_attribute_name': 'Nummer'},
+                                                       'Bezeichnung': {'db_table_attribute_name': 'Bezeichnung'},
+                                                       'Bankname': {'db_table_attribute_name': 'Bankname'},
+                                                       'Bankort': {'db_table_attribute_name': 'Bankort'},
+                                                       'Pers_ID': {'db_table_attribute_name': 'Personen_ID'},
+                                                       'Prio': {'db_table_attribute_name': 'Prio'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='IBAN')
+            print(resultat)
+
+        if a_table == 'EMail':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   verbal=False,
+                                   sheet_name='EMail_Liste',
+                                   csv_db_col_mapping={'Email_ID': {'db_table_attribute_name': 'ID'},
+                                                       'eMail_adresse': {'db_table_attribute_name': 'eMail'},
+                                                       'Type': {'db_table_attribute_name': 'Type'},
+                                                       'Prio': {'db_table_attribute_name': 'Prio'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='email_adressen')
+            print(resultat)
+
+        if a_table == 'Person_Has_EMail':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   sheet_name='EMail_Liste',
+                                   csv_db_col_mapping={'Pers_ID': {'db_table_attribute_name': 'Personen_ID'},
+                                                       'Email_ID': {'db_table_attribute_name': 'EMail_adressen_ID'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='personen_has_email_adressen')
+            print(resultat)
+
+        if a_table == 'Telefon':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   verbal=False,
+                                   sheet_name='Telefon_Liste',
+                                   csv_db_col_mapping={'Tel_ID': {'db_table_attribute_name': 'ID'},
+                                                       'Laendercode': {'db_table_attribute_name': 'Laendercode'},
+                                                       'Vorwahl': {'db_table_attribute_name': 'Vorwahl'},
+                                                       'Nummer': {'db_table_attribute_name': 'Nummer'},
+                                                       'Type': {'db_table_attribute_name': 'Type'},
+                                                       'Endgeraet': {'db_table_attribute_name': 'Endgeraet'},
+                                                       'Prio': {'db_table_attribute_name': 'Prio'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='Telefonnummern')
+            print(resultat)
+
+        if a_table == 'Person_Has_Telefonnummer':
+            resultat = import_data_from_EXCEL(inport_excel_fn,
+                                   sheet_name='Telefon_Liste',
+                                   csv_db_col_mapping={'Pers_ID': {'db_table_attribute_name': 'Personen_ID'},
+                                                       'Tel_ID': {'db_table_attribute_name': 'Telefonnummern_ID'},
+                                                       'last_update': {'db_table_attribute_name': 'last_update'}
+                                                       },
+                                   db=db_connection,
+                                   db_tbl_name='personen_has_telefonnummern')
+            print(resultat)
+
+
+def initial_load_buerger(stammdaten_schema, excel_file, verbal=False):
+    inital_load_fromExcel(excel_file, stammdaten_schema, doit=True)
+
 # ---------------------------------------------
 # Functions für Reco email_telnr_IBAN migration
 # ---------------------------------------------

@@ -30,7 +30,7 @@ f = open(filename, 'w')
 f.write(text)
 f.close()
 
-print('file written:',filename)
+print('file written:', filename)
 f = open(filename, 'a')
 f.write(text)
 f.close()
@@ -41,7 +41,7 @@ print('==============')
 f = open(filename, "r")
 z_no = 0
 for line in f:
-    print(z_no,':',line, end='')
+    print(z_no, ':' ,line, end='')
     z_no += 1
 f.close()
 

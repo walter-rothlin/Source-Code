@@ -424,7 +424,7 @@ CREATE FUNCTION getLastName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_
 BEGIN
 	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
 		IF (p_partner_name = '' OR p_partner_name is NULL) THEN
-			RETURN  firstUpper(p_ledig_name);
+			RETURN  p_ledig_name;
 		ELSE
             IF (p_sex = 'Herr') THEN
 				IF (p_name_angenommen = True) THEN
@@ -840,14 +840,18 @@ DROP VIEW IF EXISTS Adress_Daten;
 CREATE VIEW Adress_Daten AS
 	SELECT
 		a.ID                                      AS ID,
+		CONCAT(getStrassenAdresse(a.Strasse, 
+                           a.Hausnummer, 
+                           a.postfachnummer),':     ',ol.PLZ,':',ol.Ort)      AS Strassen_Adresse_Ort,
+        getStrassenAdresse(a.Strasse, 
+                           a.Hausnummer, 
+                           a.postfachnummer)      AS Strassen_Adresse,
+
 		a.Strasse                                 AS Strasse,
 		a.Hausnummer                              AS Hausnummer,
         a.postfachnummer                          AS Postfachnummer,
         a.Adresszusatz                            AS Adresszusatz,
         a.Wohnung                                 AS Wohnung,
-		getStrassenAdresse(a.Strasse, 
-                           a.Hausnummer, 
-                           a.postfachnummer)      AS Strassen_Adresse,
         a.Kataster_Nr                             AS Kataster_Nr,
         a.x_CH1903                                AS x_CH1903,
         a.y_CH1903                                AS y_CH1903,
@@ -863,9 +867,8 @@ CREATE VIEW Adress_Daten AS
         a.last_update                             AS a_last_update,
         ol.last_update                            AS o_last_update
 	FROM Adressen AS a
-	LEFT OUTER JOIN ORT_LAND AS ol ON ol.ID = a.Orte_ID;
-
--- SELECT * FROM Adress_Daten;
+	LEFT OUTER JOIN ORT_LAND AS ol ON ol.ID = a.Orte_ID
+    ORDER BY Strassen_Adresse_Ort;
 
 -- -----------------------------------------
 DROP VIEW IF EXISTS Telnr_Liste; 
@@ -1061,6 +1064,8 @@ CREATE VIEW Personen_Daten AS
 		  getStrassenAdresse(pAdr.Strasse, 
                              pAdr.Hausnummer, 
 							 pAdr.Postfachnummer)      AS Private_Strassen_Adresse,
+                             
+		  pAdr.Ort_ID                                  AS Priv_Ort_ID,
           formatPLZ_ort(pAdr.PLZ, 
                         pAdr.Ort)                      AS Private_PLZ_Ort,  
                         
@@ -1304,7 +1309,6 @@ CREATE VIEW Personen_Daten AS
 	LEFT OUTER JOIN Adress_Daten AS gAdr ON  P.Geschaefts_Adressen_ID     = gAdr.ID
     ORDER BY Familien_Name, Vorname_Initial;
 
--- SELECT * FROM Personen_Daten;
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Pers_Search_List; 
 CREATE VIEW Pers_Search_List AS
@@ -1448,7 +1452,7 @@ CREATE VIEW Geno_Reisende AS
     WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0  OR
           -- FIND_IN_SET('GPK', Kategorien) >  0          OR
           FIND_IN_SET('Angestellter', Kategorien) >  0 OR
-          ID IN (488, 1180)   -- Partner
+          ID IN (488, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188)   -- Partner
     ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------
@@ -2724,10 +2728,10 @@ DELIMITER ;
 
 DROP PROCEDURE IF EXISTS getOrtId;
 DELIMITER $$
-CREATE PROCEDURE getOrtId(IN plz SMALLINT(4), IN ortsname VARCHAR(45), IN kanton VARCHAR(10), IN tel_vorwahl VARCHAR(3), OUT id SMALLINT(5))
+CREATE PROCEDURE getOrtId(IN plz SMALLINT(4), IN ortsname VARCHAR(45), IN kanton VARCHAR(10), IN land_id INT, OUT id INT)
 BEGIN
     IF ((SELECT count(*) FROM orte WHERE orte.plz = plz AND orte.name = ortsname) = 0) THEN
-        INSERT INTO orte (`plz`, `name`, `kanton`, `tel_vorwahl`) VALUES (plz, ortsname, kanton, tel_vorwahl);
+        INSERT INTO orte (`plz`, `name`, `kanton`, `land_ID`) VALUES (plz, ortsname, kanton, land_id);
         COMMIT;
     END IF;
     SELECT orte.id FROM orte WHERE orte.plz = plz and orte.name = ortsname INTO id;
@@ -2800,7 +2804,7 @@ BEGIN
     SELECT id FROM adressen WHERE (adressen.strasse = strasse AND 
                                   adressen.hausnummer = hausnummer AND 
                                   adressen.orte_id = ort_id) OR
-                                  (adressen.strasse    = CONCAT(strasse,' ', hausnummer) AND 
+                                  (adressen.strasse    = CONCAT(strasse, ' ', hausnummer) AND 
                                   adressen.orte_id = ort_id) INTO adress_id;
 END$$
 DELIMITER ;

@@ -36,7 +36,6 @@ ort_wetterstation = input("Ort             :")
 if ort_wetterstation == '':
     ort_wetterstation = 'Wangen+SZ'
 
-url_request   = "http://api.openweathermap.org/data/2.5/weather?q=Munich&appid=144747fd356c86e7926ca91ce78ce170"
 url_end_point = "http://api.openweathermap.org/data/2.5/weather"
 params_end_point = {
     'q': ort_wetterstation,

@@ -2887,6 +2887,25 @@ def update_db_attribute(db=None,
 # ------------------------
 # Reusable Excel-Functions
 # ------------------------
+def is_not_empty(value):
+    return value is not None and value != ''
+def are_all_values_empty(ws, title_row=1, row=1, exclude_attr_names=[]):
+    column_header_list = get_existing_column_titles(ws, title_row=title_row, exclude_attr_names=exclude_attr_names, key_only=False)
+    ret_value = get_cell_values_by_column_titles(ws, title_row=title_row, row=row, column_names=column_header_list, do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False)
+
+    non_empty_values = {key: value for key, value in ret_value.items() if is_not_empty(value)}
+    # print(non_empty_values)
+    if len(non_empty_values) == 0:
+        return True
+    else:
+        return False
+
+def get_existing_column_titles(ws, title_row=1, exclude_attr_names=[], key_only=False):
+    ret_value = {cell.value: cell.column for cell in ws[title_row] if cell.value not in exclude_attr_names}
+    if key_only:
+        ret_value = list(ret_value.keys())
+    return ret_value
+
 def get_cell_values_by_column_titles(ws, title_row=1, row=1, column_names=[], do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
     if verbal:
         print(f'''

@@ -14,16 +14,36 @@
 import json
 import requests
 
-url_str = "https://api.openweathermap.org/data/2.5/weather?q=Wangen+SZ&units=metric&lang=de&appid=144747fd356c86e7926ca91ce78ce170"
+city_name = input('City:')
+if city_name == '':
+    city_name = 'Wangen SZ'
 
-responseStr = requests.get(url_str)
-print(responseStr.text)
 
-print("\n\nParses the response String and converts it to a JSON structutre (Dict-List-Dict...)")
-responseStr = responseStr.text
-jsonResponse = json.loads(responseStr)
 
-print("Show single fields!")
-print("   Ortsname:", jsonResponse['name'])
-print("   Land:", jsonResponse['sys']['country'])
-print("   Temp:", jsonResponse['main']['temp'])
+url_end_point = "http://api.openweathermap.org/data/2.5/weather"
+params_end_point = {
+    'q'    : city_name,
+    'appid': '144747fd356c86e7926ca91ce78ce170',
+    'mode' : '',         # xml, html
+    'units': 'metric',   # standard, metric, imperial
+}
+
+response = requests.get(url_end_point, params=params_end_point)
+print(response, '\n\n')
+response_str = response.text
+print(response_str, '\n\n')
+json_response = json.loads(response_str)
+print(json_response)
+
+print('\n\'Show single fields from JSON response!')
+print('   Ortsname     :', json_response['name'])
+print('   Land         :', json_response['sys']['country'])
+print('   Longitude    : ',json_response['coord']['lon'])
+print('   Latitude     : ',json_response['coord']['lat'])
+print('   Temp         :', json_response['main']['temp'], '°C')
+print('   Luftdruck    :', json_response['main']['pressure'], 'mBar')
+print('   Feuchtigkeit :', json_response['main']['humidity'], '%')
+print('   Text         :', json_response['weather'][0]['main'], json_response['weather'][0]['description'])
+
+
+

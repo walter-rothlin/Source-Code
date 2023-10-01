@@ -4,26 +4,43 @@ UPDATE `personen` SET `Vater_ID`    = '644'   WHERE `ID` = '1103';   -- Vater   
 UPDATE `personen` SET `Mutter_ID`   = '1172'  WHERE `ID` = '1103';   -- Mutter  von Tobias     	is  Claudia
 
 
-
 SELECT *
 	-- ID, Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Private_PLZ_Ort, Geburtstag,
 	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
 FROM personen_daten 
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
-WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Egeter%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Laib%'))
 ORDER BY Familien_Name;
 
-SELECT * FROM personen       WHERE ID IN (1175);
-SELECT * FROM personen_daten WHERE ID IN (488);
-SELECT * FROM adressen;
--- WHERE Strasse LIKE '%Bahnhofstr.%';
--- WHERE ID IN (438);
+SELECT * FROM personen       WHERE ID IN (193,171,619);
+SELECT * FROM personen_daten WHERE ID IN (1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188);
+
+
 
 SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (213));
 SELECT * FROM iban WHERE Personen_ID in (644, 213);
 
+-- Adressen
+-- --------
+SELECT * FROM adressen;
 
+SELECT * FROM adressen
+-- WHERE Strasse LIKE '%Zürcherstr.%';
+WHERE ID IN (715);
 
+SELECT * FROM adressen WHERE (adressen.strasse  = 'Falkenstr.' AND adressen.hausnummer = '9' AND adressen.orte_id = 2) OR
+							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2);
+                              
+SELECT * from personen WHERE Privat_Adressen_ID IN (644);
+
+SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
+                               adressen.strasse  = 'Falkenstr' AND adressen.hausnummer = '9' AND adressen.orte_id = 2) OR
+							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2)
+                              );
+                              
+
+-- email
+-- -----
 SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (826);
 
 SELECT * FROM email_adressen WHERE ID in (139);
