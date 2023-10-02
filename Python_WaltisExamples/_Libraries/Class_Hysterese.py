@@ -9,7 +9,7 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 24-April-2019	Initial Version
+# 24-April-2019	Walter Rothlin Initial Version
 #
 # ------------------------------------------------------------------
 class Hysterese:
