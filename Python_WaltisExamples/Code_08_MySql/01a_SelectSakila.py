@@ -42,7 +42,7 @@ stm_selectCities = """
     WHERE 
        city like BINARY 'O%'
 """
-print(stm_selectCities,end='\n\n\n')
+print(stm_selectCities, end='\n\n\n')
 
 
 

@@ -14,6 +14,7 @@ ORDER BY Familien_Name;
 
 SELECT * FROM personen       WHERE ID IN (193,171,619);
 SELECT * FROM personen_daten WHERE ID IN (1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188);
+SELECT * FROM personen_daten WHERE ID IN (1105);
 
 
 
@@ -57,7 +58,10 @@ UPDATE `personen` SET `Vater_ID` = '223'    WHERE (`ID` = '644');
 UPDATE `personen` SET `Vater_ID` = '644'   WHERE (`ID` = '1103');
 UPDATE `personen` SET `Mutter_ID` = '1172' WHERE (`ID` = '1103');
 
+SELECT Strassen_Adresse_Ort FROM adress_daten GROUP BY Strassen_Adresse_Ort Having count(*) > 1;  # alle doppelten Einträget
+SELECT * FROM adress_daten WHERE Strassen_Adresse_Ort in ('Allmeindstr. 32:     8855:Wangen', 'Löwenfeld 7:     8855:Wangen');
 
+SELECT * FROM adress_daten WHERE Strassen_Adresse_Ort in ((SELECT Strassen_Adresse_Ort FROM adress_daten GROUP BY Strassen_Adresse_Ort Having count(*) > 1));
 
 SELECT * FROM personen_has_email_adressen WHERE EMail_Adressen_ID = 287;
 -- DELETE FROM `personen_has_email_adressen` WHERE (`Personen_ID` = '1082') and (`EMail_Adressen_ID` = '287');

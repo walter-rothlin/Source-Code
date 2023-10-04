@@ -97,7 +97,7 @@ def create_qr_code(json):
 
         xml_str = xml_str[:closing_tag_pos] + swiss_cross + xml_str[
                                                             closing_tag_pos:]
-    print(xml_str)
+    # print(xml_str)
     return xml_str
 
 

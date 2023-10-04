@@ -29,6 +29,7 @@
 -- 20-Sep-2023   Walter Rothlin      Added Bürger_Geburtstag, Bürger_Geburtstag_Gerade, Mitarbeiter_Geburtstage
 -- 23-Sep-2023   Walter Rothlin      Added updateTelnr, deleteTelnr Procedures
 -- 23-Sep-2023   Walter Rothlin      Added updateIBAN, deleteIBAN Procedures
+-- 03-Oct-2023   Walter Rothlin		 Added view Double_Adresses
 -- -----------------------------------------
 
 -- To-Does
@@ -420,7 +421,7 @@ DELIMITER ;
 --  Fct 10.11) Gibt LastName zurueck (siehe Testcases) 
 DROP FUNCTION IF EXISTS getLastName;
 DELIMITER //
-CREATE FUNCTION getLastName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45)) RETURNS CHAR(50)
+CREATE FUNCTION getLastName(p_sex CHAR(5), p_name_angenommen BOOLEAN, p_ledig_name CHAR(45), p_partner_name CHAR(45)) RETURNS CHAR(50)
 BEGIN
 	IF (p_sex = 'Herr' or p_sex = 'Frau') THEN
 		IF (p_partner_name = '' OR p_partner_name is NULL) THEN
@@ -446,7 +447,49 @@ BEGIN
 END//
 DELIMITER ;
 
--- Test-Cases
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getInitial_LastName;
+DELIMITER //
+CREATE FUNCTION getInitial_LastName(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45), p_firstname CHAR(45)) RETURNS CHAR(50)
+BEGIN
+	RETURN  CONCAT(LEFT(p_firstname, 1), '.', getLastName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name));
+END//
+DELIMITER ;
+
+-- SELECT getInitial_LastName('Herr', FALSE,  'Rothlin', 'Collet', 'Walter');  -- --> W.Rothlin
+
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getInitial_Familienname;
+DELIMITER //
+CREATE FUNCTION getInitial_Familienname(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45), p_firstname CHAR(45)) RETURNS CHAR(50)
+BEGIN
+	RETURN  CONCAT(LEFT(p_firstname, 1), '.', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name));
+END//
+DELIMITER ;
+
+-- SELECT getInitial_Familienname('Herr', FALSE,  'Rothlin', 'Collet', 'Walter');  -- --> W.Rothlin-Collet
+
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getVorname_Name;
+DELIMITER //
+CREATE FUNCTION getVorname_Name(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45), p_firstname CHAR(45)) RETURNS CHAR(50)
+BEGIN
+	RETURN  CONCAT(p_firstname, ' ', getLastName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name));
+END//
+DELIMITER ;
+
+-- SELECT getVorname_Name('Herr', FALSE,  'Rothlin', 'Collet', 'Walter');   -- --> Walter Rothlin   
+
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS getVorname_Familienname;
+DELIMITER //
+CREATE FUNCTION getVorname_Familienname(p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45), p_firstname CHAR(45)) RETURNS CHAR(50)
+BEGIN
+	RETURN  CONCAT(p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name));
+END//
+DELIMITER ;
+
+-- SELECT getVorname_Familienname('Herr', FALSE,  'Rothlin', 'Collet', 'Walter');   -- --> Walter Rothlin-Collet  
 
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS calc_yearly_pachtfee;
@@ -871,6 +914,19 @@ CREATE VIEW Adress_Daten AS
     ORDER BY Strassen_Adresse_Ort;
 
 -- -----------------------------------------
+DROP VIEW IF EXISTS Double_Adresses; 
+CREATE VIEW Double_Adresses AS
+	SELECT * 
+	FROM adress_daten 
+	WHERE Strassen_Adresse_Ort IN ((SELECT Strassen_Adresse_Ort 
+									FROM adress_daten 
+									GROUP BY Strassen_Adresse_Ort 
+									Having count(*) > 1));
+
+-- SELECT Strassen_Adresse_Ort FROM adress_daten GROUP BY Strassen_Adresse_Ort Having count(*) > 1;  # alle doppelten Einträget
+-- SELECT * FROM adress_daten WHERE Strassen_Adresse_Ort in ('Allmeindstr. 32:     8855:Wangen', 'Löwenfeld 7:     8855:Wangen');
+
+-- -----------------------------------------
 DROP VIEW IF EXISTS Telnr_Liste; 
 CREATE VIEW Telnr_Liste AS
 	SELECT
@@ -1053,19 +1109,45 @@ CREATE VIEW Personen_Daten AS
           getFamilieName(P.Sex, 
                       P.Partner_Name_Angenommen, 
                       P.Ledig_Name, 
-                      P.Partner_Name)                 AS Familien_Name,     -- Rothlin-Collet
+                      P.Partner_Name)                 AS Familien_Name,              -- Rothlin-Collet
 		  
           getLastName(P.Sex, 
                       P.Partner_Name_Angenommen, 
                       P.Ledig_Name, 
-                      P.Partner_Name)                 AS Last_Name,         -- Rothlin           
-			
+                      P.Partner_Name)                 AS Last_Name,                  -- Rothlin
+
+		  getInitial_LastName(P.Sex, 
+                      P.Partner_Name_Angenommen, 
+                      P.Ledig_Name, 
+                      P.Partner_Name,
+                      P.Vorname)                      AS Initial_Name,               -- W.Rothlin   
+                      
+		  getInitial_Familienname(P.Sex, 
+                      P.Partner_Name_Angenommen, 
+                      P.Ledig_Name, 
+                      P.Partner_Name,
+                      P.Vorname)                      AS Initial_Familienname,      -- W.Rothlin-Collet   
+                      
+		  getVorname_Name(P.Sex, 
+                      P.Partner_Name_Angenommen, 
+                      P.Ledig_Name, 
+                      P.Partner_Name,
+                      P.Vorname)                      AS Vorname_Name,              -- Walter Rothlin   
+
+		  getVorname_Familienname(P.Sex, 
+                      P.Partner_Name_Angenommen, 
+                      P.Ledig_Name, 
+                      P.Partner_Name,
+                      P.Vorname)                      AS Vorname_Familienname,      -- Walter Rothlin-Collet   
+		
 		  pAdr.ID                                     AS Priv_Adr_ID,      
 		  getStrassenAdresse(pAdr.Strasse, 
                              pAdr.Hausnummer, 
 							 pAdr.Postfachnummer)      AS Private_Strassen_Adresse,
                              
 		  pAdr.Ort_ID                                  AS Priv_Ort_ID,
+          pAdr.PLZ                                     AS Priv_PLZ,
+          pAdr.Ort                                     AS Priv_Ort,
           formatPLZ_ort(pAdr.PLZ, 
                         pAdr.Ort)                      AS Private_PLZ_Ort,  
                         
@@ -1394,7 +1476,7 @@ CREATE VIEW Mitarbeiter_Geburtstage AS
 		DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%W')    AS Wochentag,
 		Geburtstag  AS Geburtsdatum,
         `Alter`,
-        `Alter_in_diesem_Jahr`
+        `Alter_in_diesem_Jahr`,
         
         Geschlecht,
         Vorname_Initial,
@@ -1943,11 +2025,20 @@ CREATE VIEW Pachtlandzuteilung AS
           Paechter_Adr.Geschlecht                    AS Paechter_Geschlecht,
           -- Paechter_Adr.Firma                         AS Pachter_Firma,
 		  Paechter_Adr.Vorname_Initial               AS Paechter_Vorname,
-          Paechter_Adr.Familien_Name                 AS Paechter_Name,
+          Paechter_Adr.Last_Name                     AS Paechter_Last_Name,               -- Rothlin
+          Paechter_Adr.Familien_Name                 AS Paechter_Name,                    -- Rothlin-Collet
+          Paechter_Adr.Initial_Name                  AS Paechter_Initial_Name,            -- W.Rothlin
+          Paechter_Adr.Initial_Familienname          AS Paechter_Initial_Familienname,    -- W.Rothlin-Collet
+		  Paechter_Adr.Vorname_Name                  AS Paechter_Vorname_Name,            -- Walter Rothlin
+          Paechter_Adr.Vorname_Familienname          AS Paechter_Vorname_Familienname,    -- Walter Rothlin-Collet
 
           Paechter_Adr.Private_Strassen_Adresse      AS Paechter_Strasse,
           -- Paechter_Adr.Private_Hausnummer            AS Paechter_Hausnummer,
+		  Paechter_Adr.Priv_PLZ                      AS Paechter_Priv_PLZ,
+		  Paechter_Adr.Priv_Ort                      AS Paechter_Priv_Ort,
+
           Paechter_Adr.Private_PLZ_Ort               AS Paechter_PLZ_Ort,
+		  -- Paechter_Adr.Private_Ort                   AS Paechter_Ort,
           Paechter_Adr.Tel_Nr                        AS Paechter_Tel_Nr,
           Paechter_Adr.eMail                         AS Paechter_eMail,
           Paechter_Adr.Geburtsjahr                   AS Paechter_Geburtsjahr,
@@ -1955,7 +2046,8 @@ CREATE VIEW Pachtlandzuteilung AS
           Paechter_Adr.Todestag                      AS Paechter_Todestag,
           Paechter_Adr.Todesjahr                     AS Paechter_Todesjahr,
           Paechter_Adr.`Alter`                       AS Paechter_Alter,
-          -- Paechter_Adr.Private_Ort                   AS Paechter_Ort,
+          Paechter_Adr.IBAN                          AS Paechter_IBAN,
+          Paechter_Adr.Brief_Anrede                  AS Paechter_Brief_Anrede,
 
 		  -- Verpächtere Daten
           -- -----------------
@@ -1966,10 +2058,19 @@ CREATE VIEW Pachtlandzuteilung AS
           Verpaechter_Adr.Geschlecht                 AS Verpaechter_Geschlecht,
 		  Verpaechter_Adr.Firma                      AS Verpaechter_Firma,
 		  Verpaechter_Adr.Vorname_Initial            AS Verpaechter_Vorname,
-          Verpaechter_Adr.Familien_Name              AS Verpaechter_Name,
+          Verpaechter_Adr.Last_Name                  AS Verpaechter_Last_Name,               -- Rothlin
+          Verpaechter_Adr.Familien_Name              AS Verpaechter_Name,                    -- Rothlin-Collet
+          Verpaechter_Adr.Initial_Name               AS Verpaechter_Initial_Name,            -- W.Rothlin
+          Verpaechter_Adr.Initial_Familienname       AS Verpaechter_Initial_Familienname,    -- W.Rothlin-Collet
+		  Verpaechter_Adr.Vorname_Name               AS Verpaechter_Vorname_Name,            -- Walter Rothlin
+          Verpaechter_Adr.Vorname_Familienname       AS Verpaechter_Vorname_Familienname,    -- Walter Rothlin-Collet
+          
           Verpaechter_Adr.Private_Strassen_Adresse   AS Verpaechter_Strasse,
           -- Verpaechter_Adr.Private_Hausnummer         AS Verpaechter_Hausnummer,
+		  Verpaechter_Adr.Priv_PLZ                   AS Verpaechter_Priv_PLZ,
+		  Verpaechter_Adr.Priv_Ort                   AS Verpaechter_Priv_Ort,
           Verpaechter_Adr.Private_PLZ_Ort            AS Verpaechter_PLZ_Ort,
+		  -- Verpaechter_Adr.Private_Ort                AS Verpaechter_Ort,
           Verpaechter_Adr.Tel_Nr                     AS Verpaechter_Tel_Nr,
           Verpaechter_Adr.eMail                      AS Verpaechter_eMail,
 		  Verpaechter_Adr.Geburtsjahr                AS Verpaechter_Geburtsjahr,
@@ -1977,8 +2078,9 @@ CREATE VIEW Pachtlandzuteilung AS
           Verpaechter_Adr.Todestag                   AS Verpaechter_Todestag,
           Verpaechter_Adr.Todesjahr                  AS Verpaechter_Todesjahr,
           Verpaechter_Adr.`Alter`                    AS Verpaechter_Alter,
-          -- Verpaechter_Adr.Private_Ort                AS Verpaechter_Ort,
-          
+		  Verpaechter_Adr.IBAN                       AS Verpaechter_IBAN,
+          Verpaechter_Adr.Brief_Anrede               AS Verpaechter_Brief_Anrede,
+
 		  -- Vertragliche Daten
           -- ------------------
           L.Vertragsart                              AS Vertragsart,
@@ -1996,10 +2098,22 @@ CREATE VIEW Paechterstatistik AS
 	SELECT Paechter_ID,
 		   Paechter_Geschlecht,
 		   Paechter_Vorname,
+           Paechter_Last_Name,
 		   Paechter_Name,
+           Paechter_Initial_Name,
+           Paechter_Initial_Familienname,
+           Paechter_Vorname_Name,
+           Paechter_Vorname_Familienname,
 		   Paechter_Strasse,
+           Paechter_Priv_PLZ,
+           Paechter_Priv_Ort,
 		   Paechter_PLZ_Ort,
            Paechter_Alter,
+           Paechter_Geburtstag,
+           Paechter_Tel_Nr,
+           Paechter_eMail,
+           Paechter_IBAN,
+           Paechter_Brief_Anrede,
 		   ROUND(SUM(Flaeche),2)         AS Geno_Flaeche,
 		   SUM(Geno_Pachtzins_pro_Jahr)  AS Geno_Pachtzins
 	FROM Pachtlandzuteilung

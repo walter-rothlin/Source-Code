@@ -49,6 +49,8 @@
 # 12-Sep-2023   Walter Rothlin      Added is_US_Date, is_EU_Date
 # 23-Sep-2023   Walter Rothlin      Added format_IBAN
 #                                         split_plz_ort()
+# 04-Oct-2023   Walter Rothlin      Added format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True)
+#                                         get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=[], as_json=True, take_action=True, verbal=False)
 # ------------------------------------------------------------------
 
 
@@ -72,6 +74,7 @@ import xml.etree.ElementTree as ET
 import urllib.parse
 import openpyxl
 import mysql.connector
+import locale
 
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
@@ -1178,6 +1181,59 @@ def remove_set_value(set_values, value_to_remove, verbal=True):
 
 # String Functions
 # ================
+def format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True):
+    locale.setlocale(locale.LC_ALL, '')
+    return locale.format_string("%" + str(vorkommastellen) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
+
+def AUTO_TEST__format_float(verbal=False):
+    testsPerformed = 0
+    testsFailed = 0
+    testSuite = "format_float"
+
+    testsPerformed += 1
+    case = 1
+    if format_float(1234.3) != "1’234.30":
+        print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
+        print("    Result: ", format_float(1234.3), "   Expected:", "1’234.30", end="\n\n")
+        testsFailed += 1
+
+    testsPerformed += 1
+    case = 2
+    if format_float(1234.3, nachkommastellen=3) != "1’234.300":
+        print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
+        print("    Result: ", format_float(1234.3, nachkommastellen=3), "   Expected:", "1’234.300", end="\n\n")
+        testsFailed += 1
+
+    testsPerformed += 1
+    case = 3
+    if format_float(1234.3, nachkommastellen=3, do_grouping=False) != "1234.300":
+        print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
+        print(f"    Result:{format_float(1234.3, nachkommastellen=3, do_grouping=False)}:   Expected:1234.300:", end="\n\n")
+        testsFailed += 1
+
+    testsPerformed += 1
+    case = 4
+    if format_float(1234.3, vorkommastellen=10, nachkommastellen=3, do_grouping=False) != "  1234.300":
+        print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
+        print(f"    Result:{format_float(1234.3, vorkommastellen=10, nachkommastellen=3, do_grouping=False)}:   Expected:  1234.300:", end="\n\n")
+        testsFailed += 1
+
+    testsPerformed += 1
+    case = 5
+    if format_float(1234.3, vorkommastellen=10, nachkommastellen=2, do_grouping=True) != "  1’234.30":
+        print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
+        print(f"    Result:{format_float(1234.3, vorkommastellen=10, nachkommastellen=2, do_grouping=True)}:   Expected:  1’234.30:", end="\n\n")
+        testsFailed += 1
+
+
+    if verbal:
+        print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
+              ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
+              "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
+
+    return [testsPerformed, testsFailed]
+
 def split_adress_street_nr(street_nr_string, verbal=False):
     parts = street_nr_string.split(' ')
     if verbal:
@@ -1925,11 +1981,19 @@ def addTimestampToFileName(fileName, timestampFormat="%Y_%m_%d"):
     fileName = fileName[:indexBeforeFileType] + "_" + datetime.now().strftime(timestampFormat) + fileName[indexBeforeFileType:]
     return fileName
 
-def getPath(filename = None):
-    if filename is None or len(filename) == 0:
+def getPath(full_filename = None):
+    if full_filename is None or len(full_filename) == 0:
         return os.path.abspath(os.getcwd()) + "\\"
     else:
-        return "TBI 06.12.2021"
+        directory, filename = os.path.split(full_filename)
+        return directory
+
+def getFilename(full_filename = None):
+    if full_filename is None or len(full_filename) == 0:
+        return ''
+    else:
+        directory, filename = os.path.split(full_filename)
+        return filename
 
 def createDirIfNotExists(dir_path="./TestData", access_rights=0o755, verbal=False):
     try:
@@ -2743,6 +2807,33 @@ def dictify(context, names):
 # ---------------------
 # Reusable DB-Functions
 # ---------------------
+def get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=[], as_json=True, take_action=True, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_record_details_from_db(db,
+                                    table_name       = {table_name},
+                                    key_id           = {key_id},
+                                    attributes       = {db_attributes_names},
+                                    take_action      = {take_action},
+                                    verbal           = {verbal})''')
+
+    myCursor = db.cursor(dictionary=as_json)
+    if len(db_attributes_names) == 0:
+        fields = '*'
+    else:
+        fields = ', '.join(db_attributes_names)
+
+    if key_id is not None:
+        sql_select = f"SELECT {fields} FROM {table_name} WHERE ID={key_id}"
+    else:
+        sql_select = f"SELECT {fields} FROM {table_name}"
+
+    if verbal:
+        print(sql_select)
+    myCursor.execute(sql_select)
+    myresult = myCursor.fetchall()
+    return myresult
+
 def mysql_db_connect(db_host='localhost', port=3306, db_schema='stammdaten', db_user_name=None, password=None, trace=False):
     if trace:
         print(f"Connecting to '{db_schema:s}@{db_host:s}' with user '{db_user_name:s}'....", end="", flush=True)
@@ -3091,6 +3182,9 @@ if __name__ == '__main__':
         totalTests[0] += testStat[0]
         totalTests[1] += testStat[1]
 
+        testStat = AUTO_TEST__format_float(verbal=doVerbal)
+        totalTests[0] += testStat[0]
+        totalTests[1] += testStat[1]
 
         deleteDir("./TestData")
         if doVerbal:
