@@ -15,6 +15,8 @@
 -- 11-Jul-2023   Walter Rothlin      Added 'Fehlermeldung' zu email
 -- 12-Jul-2023   Walter Rothlin      Added  `Projekt_Nr` Eigentümer_2_ID to Wärmeanschlüsse
 -- 29-Aug-2023   Walter Rothlin      Added  'Verwaltungsberechtigt' zu Kategorien
+-- 05_Oct-2023   Walter Rothlin      Added  SAK (Standard Arbeitskraft)
+-- 07-Oct_2023   Walter Rothlin		 Added   `Sich_Für_Bürgertag_definitiv_abgemeldet_Am` to Personen
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -147,6 +149,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Partner_Name`             VARCHAR(45) NULL,
   `Partner_Name_Angenommen`  BOOLEAN DEFAULT FALSE,
   `AHV_Nr`                   VARCHAR(45) NULL,
+  `SAK`                      FLOAT NULL DEFAULT NULL,           
   `Betriebs_Nr`              VARCHAR(45) NULL,
 
   `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt',
@@ -163,24 +166,25 @@ CREATE TABLE IF NOT EXISTS Personen (
                     DEFAULT NULL,
   
   -- Datumsangaben
-  `Geburtstag`                          DATE NULL,
-  `Todestag`                            DATE NULL,
-  `Nach_Wangen_Gezogen`                 DATE NULL,
-  `Von_Wangen_Weggezogen`               DATE NULL,
-  `Baulandgesuch_Eingereicht_Am`        DATE NULL,
-  `Bauland_Gekauft_Am`                  DATE NULL,
-  `Baulandgesuch_Details`               VARCHAR(500) NULL,
-  `Angemeldet_Am`                       DATE NULL,
-  `Bezahlte_Aufnahme_Gebühr`            FLOAT UNSIGNED NULL,
-  `Aufgenommen_Am`                      DATE NULL,
-  `Sich_Für_Bürgertag_Angemeldet_Am`    DATE NULL,
-  `Neubürgertag_gemacht_Am`             DATE NULL,
-  `Ausbezahlter_Bürgertaglohn`          FLOAT UNSIGNED NULL,
-  `Funktion_Uebernommen_Am`             DATE NULL,
-  `Funktion`                            VARCHAR(45) NULL,
-  `Funktion_Abgegeben_Am`               DATE NULL,
-  `Chronik_Bezogen_Am`                  DATE NULL,
-  `Newsletter_Abonniert_Am`             DATE NULL,
+  `Geburtstag`                                    DATE NULL,
+  `Todestag`                                      DATE NULL,
+  `Nach_Wangen_Gezogen`                           DATE NULL,
+  `Von_Wangen_Weggezogen`                         DATE NULL,
+  `Baulandgesuch_Eingereicht_Am`                  DATE NULL,
+  `Bauland_Gekauft_Am`                            DATE NULL,
+  `Baulandgesuch_Details`                         VARCHAR(500) NULL,
+  `Angemeldet_Am`                                 DATE NULL,
+  `Bezahlte_Aufnahme_Gebühr`                      FLOAT UNSIGNED NULL,
+  `Aufgenommen_Am`                                DATE NULL,
+  `Sich_Für_Bürgertag_Angemeldet_Am`              DATE NULL,
+  `Sich_Für_Bürgertag_definitiv_abgemeldet_Am`    DATE NULL,
+  `Neubürgertag_gemacht_Am`                       DATE NULL,
+  `Ausbezahlter_Bürgertaglohn`                    FLOAT UNSIGNED NULL,
+  `Funktion_Uebernommen_Am`                       DATE NULL,
+  `Funktion`                                      VARCHAR(45) NULL,
+  `Funktion_Abgegeben_Am`                         DATE NULL,
+  `Chronik_Bezogen_Am`                            DATE NULL,
+  `Newsletter_Abonniert_Am`                       DATE NULL,
   
    -- FK: Verwandschaft
   `Partner_ID` 		                   INT NULL,

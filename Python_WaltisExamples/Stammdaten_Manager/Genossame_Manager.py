@@ -112,6 +112,7 @@ db_attr_excel_column_mapping = [
 
     {'excel': 'AHV_Nr'},
     {'excel': 'Betriebs_Nr'},
+    {'excel': 'SAK'},
 
     {'excel': 'Baulandgesuch_Details'},
     {'excel': 'Bezahlte_Aufnahme_Gebühr'},
@@ -152,6 +153,7 @@ db_attr_excel_column_mapping = [
     {'excel': 'Angemeldet_Am'},
     {'excel': 'Aufgenommen_Am'},
     {'excel': 'Sich_Für_Bürgertag_Angemeldet_Am'},
+    {'excel': 'Sich_Für_Bürgertag_definitiv_abgemeldet_Am'},
     {'excel': 'Neubürgertag_gemacht_Am'},
     {'excel': 'Funktion_Uebernommen_Am'},
     {'excel': 'Funktion_Abgegeben_Am'},
@@ -202,5 +204,5 @@ if __name__ == '__main__':
 
     # Cleanup Date
     # ============
-    # execute_important_sql_queries(stammdaten_schema)
+    execute_important_sql_queries(geno_schema)
 

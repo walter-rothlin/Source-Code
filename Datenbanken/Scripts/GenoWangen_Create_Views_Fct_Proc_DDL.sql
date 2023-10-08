@@ -30,6 +30,7 @@
 -- 23-Sep-2023   Walter Rothlin      Added updateTelnr, deleteTelnr Procedures
 -- 23-Sep-2023   Walter Rothlin      Added updateIBAN, deleteIBAN Procedures
 -- 03-Oct-2023   Walter Rothlin		 Added view Double_Adresses
+-- 05-Sep-2023   Walter Rothlin	     Added Kommissions- und Projekt-Listen
 -- -----------------------------------------
 
 -- To-Does
@@ -1182,6 +1183,7 @@ CREATE VIEW Personen_Daten AS
           year(now()) - year(P.Geburtstag)                                     AS Alter_in_diesem_Jahr,
           
 		  P.AHV_Nr                                     AS AHV_Nr,
+          P.SAK                                        AS SAK,
 		  P.Betriebs_Nr                                AS Betriebs_Nr,
           
 		  P.History                                    AS History,
@@ -1225,14 +1227,15 @@ CREATE VIEW Personen_Daten AS
           DATE_FORMAT(P.Nach_Wangen_Gezogen,'%d.%m.%Y')                        AS Nach_Wangen_Gezogen,
           DATE_FORMAT(P.Von_Wangen_Weggezogen,'%d.%m.%Y')                      AS Von_Wangen_Weggezogen,
           
-		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                              AS Angemeldet_Am,
-          DATE_FORMAT(P.Angemeldet_Am,'%Y')                                    AS Angemeldet_Am_Jahr,
-          Bezahlte_Aufnahme_Gebühr                                             AS Bezahlte_Aufnahme_Gebühr,
-          DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                             AS Aufgenommen_Am,
-          DATE_FORMAT(P.Aufgenommen_Am,'%Y')                                   AS Aufgenommen_Am_Jahr,
-          DATE_FORMAT(P.`Sich_Für_Bürgertag_Angemeldet_Am`,'%d.%m.%Y')         AS `Sich_Für_Bürgertag_Angemeldet_Am`,
-          DATE_FORMAT(P.`Neubürgertag_gemacht_Am`,'%d.%m.%Y')                  AS `Neubürgertag_gemacht_Am`,
-          Ausbezahlter_Bürgertaglohn                                           AS Ausbezahlter_Bürgertaglohn,
+		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                                        AS Angemeldet_Am,
+          DATE_FORMAT(P.Angemeldet_Am,'%Y')                                              AS Angemeldet_Am_Jahr,
+          Bezahlte_Aufnahme_Gebühr                                                       AS Bezahlte_Aufnahme_Gebühr,
+          DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                                       AS Aufgenommen_Am,
+          DATE_FORMAT(P.Aufgenommen_Am,'%Y')                                             AS Aufgenommen_Am_Jahr,
+          DATE_FORMAT(P.`Sich_Für_Bürgertag_Angemeldet_Am`,'%d.%m.%Y')                   AS `Sich_Für_Bürgertag_Angemeldet_Am`,
+          DATE_FORMAT(P.`Sich_Für_Bürgertag_definitiv_abgemeldet_Am`,'%d.%m.%Y')         AS `Sich_Für_Bürgertag_definitiv_abgemeldet_Am`,
+          DATE_FORMAT(P.`Neubürgertag_gemacht_Am`,'%d.%m.%Y')                            AS `Neubürgertag_gemacht_Am`,
+          Ausbezahlter_Bürgertaglohn                                                     AS Ausbezahlter_Bürgertaglohn,
           
           DATE_FORMAT(P.Baulandgesuch_Eingereicht_Am,'%d.%m.%Y')               AS Baulandgesuch_Eingereicht_Am,
           DATE_FORMAT(P.Bauland_Gekauft_Am,'%d.%m.%Y')                         AS Bauland_Gekauft_Am,
@@ -1504,6 +1507,153 @@ CREATE VIEW Genossenrat AS
     WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0 OR
           FIND_IN_SET('GPK', Kategorien) >  0
     ORDER BY Funktion, Familien_Name, Vorname;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Kommissionen; 
+CREATE VIEW Kommissionen AS
+    SELECT
+        ID,
+        'LWK'         AS `Kommission`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (644,100,693,336,572)
+    UNION
+	SELECT
+        ID,
+        'Forst'         AS `Kommission`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (357,589,660)
+    UNION
+	SELECT
+        ID,
+        'Liegenschaft'         AS `Kommission`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (524, 261, 483, 224, 1028)
+	UNION
+	SELECT
+        ID,
+        'Energie'         AS `Kommission`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (357,644,1036,1096,1102,757)
+	UNION
+	SELECT
+        ID,
+        'GPK'         AS `Kommission`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (452, 871, 647)
+	ORDER BY Kommission, Last_Name, Vorname_Initial;
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Projekt_Personen_Listen; 
+CREATE VIEW Projekt_Personen_Listen AS
+    SELECT
+        ID,
+        'GPK_Kandidaten'         AS `Projekt`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        Tel_Nr_1,
+        eMail,
+        ''                       AS `Diverses`,
+        ''                       AS `Diverses_2`,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (992, 995, 1077, 840)
+    UNION
+	SELECT
+        ID,
+        'Winkelhöfli'         AS `Projekt`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        Tel_Nr_1,
+        eMail,
+        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
+		Concat('SAK:',SAK)                  AS `Diverses_2`,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (693, 1076, 723, 100)
+	ORDER BY Projekt, Last_Name, Vorname_Initial;
     
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Mitarbeiter;
@@ -1562,7 +1712,7 @@ CREATE VIEW Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt AS
         *
     FROM Personen_Daten
     WHERE FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND FIND_IN_SET('Verwaltungsberechtigt', Kategorien) =  0
-    ORDER BY Familien_Name, Vorname;
+    ORDER BY Zivilstand, STR_TO_DATE(`Todestag`,'%d.%m.%Y'); -- Familien_Name, Vorname;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Einladungsliste_Geno_Gemeinde; 
@@ -1649,6 +1799,7 @@ CREATE VIEW Bürger_Gestorben AS
         Geburtstag,
 		Geburtsjahr,
         Todestag,
+        STR_TO_DATE(Todestag,'%d.%m.%Y') AS Sorter,
         Todesjahr,
         IF (Todesjahr = DATE_FORMAT(now(),'%Y'), 'Ja', '') AS `Dieses Jahr gestorben`,
         `Alter`,
@@ -1891,7 +2042,8 @@ CREATE VIEW Rückkehrer_Dieses_Jahr AS
 	  eMail,
 	  IBAN,
 	  Geburtstag,
-	  `Alter`
+	  `Alter`,
+      Nach_Wangen_Gezogen
 	FROM Personen_Daten 
     WHERE (FIND_IN_SET('Bürger', Kategorien) >  0) AND 
           (DATE_FORMAT(STR_TO_DATE(Nach_Wangen_Gezogen, '%d.%m.%Y'),'%Y')  = DATE_FORMAT(now(),'%Y'));
@@ -1911,7 +2063,8 @@ CREATE VIEW Wegzüger_Dieses_Jahr AS
 	  eMail,
 	  IBAN,
 	  Geburtstag,
-	  `Alter`
+	  `Alter`,
+      Von_Wangen_Weggezogen
 	FROM Personen_Daten 
     WHERE (FIND_IN_SET('Bürger', Kategorien) >  0) AND 
           (DATE_FORMAT(STR_TO_DATE(Von_Wangen_Weggezogen, '%d.%m.%Y'),'%Y')  = DATE_FORMAT(now(),'%Y'));
@@ -3201,25 +3354,15 @@ BEGIN
 	UPDATE Land SET Landesvorwahl = CONCAT('00',Landesvorwahl)          WHERE LENGTH(Landesvorwahl) = 2;
 	UPDATE Land SET Landesvorwahl = CONCAT('0',Landesvorwahl)           WHERE LENGTH(Landesvorwahl) = 3;
     
-	/* -- NUR bei inital load ab Stammdaten
-	UPDATE Adressen SET Orte_ID=(SELECT ID FROM Orte WHERE `Name` = 'Nuolen') 
-		   WHERE ID IN (SELECT Privat_Adressen_ID FROM Personen 
-						WHERE ID IN (147,947,307,536,661,144,138,145,307,343,474,693));
-
-
-	UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Wangen' AND Kanton = 'SZ');
-	UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Nuolen' AND Kanton = 'SZ');
-	-- UPDATE `Adressen` SET Politisch_Wangen       = 1   WHERE Orte_ID IN (SELECT ID FROM Orte WHERE `Name`= 'Siebnen' AND Kanton = 'SZ');
-	*/
-
-
 	-- Gestorbene Personen_Daten
 	-- -------------------------
 	UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
 	-- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Bürger')  WHERE  Todestag IS NOT NULL;
-	-- DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
+	-- 
     
 	/* 
+    DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
+    
     DELETE 
     FROM email_adressen 
     WHERE ID IN (SELECT EMail_Adressen_ID 
@@ -3247,27 +3390,6 @@ BEGIN
     WHERE Personen_ID IN (SELECT ID 
                           FROM Personen 
                           WHERE Zivilstand = 'Gestorben'); 
-    */
-    
-	-- Bürger / Nutzungberechtigt (wer Bürger ist und in der politschen Gemeinde Wangen lebt ist Nutzungsberechtigt)
-	-- --------------------------
-	/*
-    DROP TABLE IF EXISTS Temp_Table;
-	CREATE TABLE IF NOT EXISTS Temp_Table (
-	  `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	  `last_update`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	  PRIMARY KEY (`ID`));
-
-	INSERT Temp_Table (`ID`)
-		SELECT ID FROM `Personen` WHERE FIND_IN_SET('Bürger', Kategorien) >  0 AND Privat_Adressen_ID IN (SELECT ID FROM `Adressen` WHERE Politisch_Wangen = 1);
-		
-	UPDATE `Personen` SET Kategorien = removeSetValue(Kategorien, 'Nutzungsberechtigt');
-
-	UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Nutzungsberechtigt')  
-	   WHERE Todestag IS NULL AND 
-			 ID IN (SELECT ID FROM `Temp_Table`);
-
-	DROP TABLE IF EXISTS Temp_Table;
     */
     
     -- Landteile

@@ -9,16 +9,18 @@ SELECT *
 	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
 FROM personen_daten 
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
-WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Laib%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%c/o%' AND Such_Begriff LIKE Binary '%%'))
 ORDER BY Familien_Name;
 
-SELECT * FROM personen       WHERE ID IN (193,171,619);
-SELECT * FROM personen_daten WHERE ID IN (1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188);
-SELECT * FROM personen_daten WHERE ID IN (1105);
+SELECT * FROM personen       WHERE ID IN (171,193,555,561,619,785);  # c/o Adressen
+SELECT * FROM personen       WHERE ID IN (552, 785, 137, 549);       # Bemerkungen: Wegzug infolge Einschränkung
+
+SELECT * FROM personen_daten WHERE ID IN (552, 785, 137, 549);
+SELECT * FROM personen WHERE ID IN (193);
 
 
 
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (213));
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (723));
 SELECT * FROM iban WHERE Personen_ID in (644, 213);
 
 -- Adressen
@@ -32,13 +34,13 @@ WHERE ID IN (715);
 SELECT * FROM adressen WHERE (adressen.strasse  = 'Falkenstr.' AND adressen.hausnummer = '9' AND adressen.orte_id = 2) OR
 							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2);
                               
-SELECT * from personen WHERE Privat_Adressen_ID IN (644);
+SELECT * from personen WHERE ID IN (508, 585, 716, 390, 831, 248,610,193);
+SELECT * from personen WHERE ID IN (934);
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
                                adressen.strasse  = 'Falkenstr' AND adressen.hausnummer = '9' AND adressen.orte_id = 2) OR
 							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2)
                               );
-                              
 
 -- email
 -- -----
@@ -76,10 +78,11 @@ SELECT * FROM email_adressen WHERE eMail LIKE 'fehler:%';
 SELECT * FROM `personen_has_email_adressen` WHERE `Personen_ID` = 1172 AND `EMail_Adressen_ID` = 485;
 
 -- Reset Auto-Increment to max + 1
+/*
 SELECT MAX(ID) INTO @max_value FROM adressen;
 SELECT @max_value;   -- 701
 ALTER TABLE adressen AUTO_INCREMENT = 702;
-
+*/
 
 /*
         SELECT
