@@ -204,5 +204,9 @@ if __name__ == '__main__':
 
     # Cleanup Date
     # ============
+    print('\n\n')
+    print('==================')
+    print('Cleanup DB        ')
+    print('==================')
     execute_important_sql_queries(geno_schema)
 

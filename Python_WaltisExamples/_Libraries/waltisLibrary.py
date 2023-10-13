@@ -2922,8 +2922,11 @@ def update_db_attribute(db=None,
             sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = NULL WHERE {id_attr_name} = {id}"
         elif old_value != new_value:
             if db_attr_type == 'varchar':
-                if new_value[0] == '+':
-                    sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = CONCAT({db_attr_name}, '{new_value}') WHERE {id_attr_name} = {id}"
+                if new_value[0] == '+' or  new_value[0] == ';' or  new_value[0] == '|':
+                    if len(old_value) > 0:
+                        sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = CONCAT({db_attr_name}, '{new_value}') WHERE {id_attr_name} = {id}"
+                    else:
+                        sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value[1:]}' WHERE {id_attr_name} = {id}"
                 else:
                     sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = '{new_value}' WHERE {id_attr_name} = {id}"
 

@@ -31,6 +31,7 @@
 -- 23-Sep-2023   Walter Rothlin      Added updateIBAN, deleteIBAN Procedures
 -- 03-Oct-2023   Walter Rothlin		 Added view Double_Adresses
 -- 05-Sep-2023   Walter Rothlin	     Added Kommissions- und Projekt-Listen
+-- 07-Oct-2023   Walter Rothlin      Added Nutzungsberechtigt_co_Einschränkung
 -- -----------------------------------------
 
 -- To-Does
@@ -87,17 +88,22 @@ DELIMITER ;
 --  Remove a value from a SET
 DROP FUNCTION IF EXISTS removeSetValue;
 DELIMITER //
-CREATE FUNCTION  removeSetValue(oldSetValue VARCHAR(500), valueToRremove VARCHAR(100)) RETURNS VARCHAR(500)
+CREATE FUNCTION removeSetValue(oldSetValue VARCHAR(500), valueToRemove VARCHAR(100)) RETURNS VARCHAR(500)
 BEGIN
-   IF oldSetValue IS NULL OR length(oldSetValue) = 0 THEN
-         RETURN  oldSetValue;
+   DECLARE newValue VARCHAR(500);  -- Declare a local variable
+
+   IF oldSetValue IS NULL OR LENGTH(oldSetValue) = 0 THEN
+      RETURN oldSetValue;
    ELSE
-         -- RETURN REPLACE(REPLACE(oldSetValue, valueToRremove, ''),',,', ',');
-	  SET valueToRremove = CONCAT('\'',valueToRremove,'\'');
-	  RETURN TRIM(BOTH ',' FROM REPLACE(REPLACE(CONCAT(',',REPLACE(oldSetValue, ',', ',,'), ','),valueToRremove, ''), ',,', ','));
+      SET valueToRemove = CONCAT(',', valueToRemove, ',');
+      SET oldSetValue = CONCAT(',', oldSetValue, ',');
+      SET newValue = TRIM(BOTH ',' FROM REPLACE(oldSetValue, valueToRemove, ','));
+      RETURN newValue;  -- Use the local variable to store the result
    END IF;
 END//
 DELIMITER ;
+
+
 
 DROP FUNCTION IF EXISTS removeSetValue_New;
 DELIMITER //
@@ -1224,7 +1230,7 @@ CREATE VIEW Personen_Daten AS
           getPrio_0_TelNr_ID(P.ID)                     AS Tel_Nr_ID,
           
           
-          DATE_FORMAT(P.Nach_Wangen_Gezogen,'%d.%m.%Y')                        AS Nach_Wangen_Gezogen,
+          DATE_FORMAT(P.Nach_Wangen_Gezogen,'%d.%m.%Y')                        AS Nach_Wangen_Gezogen,   -- Wiederanmeldungsdatum
           DATE_FORMAT(P.Von_Wangen_Weggezogen,'%d.%m.%Y')                      AS Von_Wangen_Weggezogen,
           
 		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                                        AS Angemeldet_Am,
@@ -1653,6 +1659,50 @@ CREATE VIEW Projekt_Personen_Listen AS
 		Vorname_Familienname
     FROM Personen_Daten
     WHERE ID IN (693, 1076, 723, 100)
+	UNION
+	SELECT
+        ID,
+        'Winteratzung'         AS `Projekt`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        Tel_Nr_1,
+        eMail,
+        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
+		Concat('SAK:',SAK)                  AS `Diverses_2`,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (1208, 723, 832)
+    UNION
+	SELECT
+        ID,
+        'Kibietzförderflächen'         AS `Projekt`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        Tel_Nr_1,
+        eMail,
+        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
+		Concat('SAK:',SAK)                  AS `Diverses_2`,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (493,693,202,495,637)
 	ORDER BY Projekt, Last_Name, Vorname_Initial;
     
 -- -----------------------------------------------------
@@ -1706,14 +1756,24 @@ CREATE VIEW Bürger_Nutzungsberechtigt AS
     ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt; 
-CREATE VIEW Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt AS
+DROP VIEW IF EXISTS Nutzungsberechtigt_co_Einschränkung; 
+CREATE VIEW Nutzungsberechtigt_co_Einschränkung AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND FIND_IN_SET('Verwaltungsberechtigt', Kategorien) =  0
-    ORDER BY Zivilstand, STR_TO_DATE(`Todestag`,'%d.%m.%Y'); -- Familien_Name, Vorname;
+    WHERE Bemerkungen LIKE '%Wegzug infolge Einschränkung%' OR
+          Familien_Name LIKE '%c/o%'
+    ORDER BY Familien_Name, Vorname;
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Nicht_Nutzungsberechtigt; 
+CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
+    SELECT
+        *
+    FROM Personen_Daten
+    WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) =  0
+    ORDER BY Familien_Name, Vorname;
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Einladungsliste_Geno_Gemeinde; 
 CREATE VIEW Einladungsliste_Geno_Gemeinde AS
@@ -1756,15 +1816,7 @@ CREATE VIEW Bürger_Mailing AS
     SELECT
         *
     FROM Bürger_Nutzungsberechtigt
-    WHERE eMail is Null or eMail = '' or eMail = 'keine';   
--- -----------------------------------------------------
-DROP VIEW IF EXISTS Bürger_Nicht_Nutzungsberechtigt; 
-CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
-    SELECT
-        *
-    FROM Personen_Daten
-    WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) =  0
-    ORDER BY Familien_Name, Vorname;
+    WHERE eMail is Null or eMail = '' or eMail = 'keine';
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Unbereinigt_Email_TelNr_IBAN; 
@@ -1792,6 +1844,8 @@ DROP VIEW IF EXISTS Bürger_Gestorben;
 CREATE VIEW Bürger_Gestorben AS
     SELECT 
         ID,
+	    Zivilstand,
+        Kategorien,
         Geschlecht,
         Vorname_Initial,
         Familien_Name,
@@ -1945,7 +1999,8 @@ CREATE VIEW Personen_Daten_Raw AS
 DROP VIEW IF EXISTS Neubürger_Vorvorjahr; 
 CREATE VIEW Neubürger_Vorvorjahr AS
 	SELECT 
-	  ID, 
+	  ID,
+      Zivilstand,
 	  Kategorien,
 	  Geschlecht, 
 	  Vorname_Initial           AS Vorname, 
@@ -1961,6 +2016,7 @@ CREATE VIEW Neubürger_Vorvorjahr AS
 	  Bezahlte_Aufnahme_Gebühr,
 	  Aufgenommen_Am,
 	  Sich_Für_Bürgertag_Angemeldet_Am,
+      Sich_Für_Bürgertag_definitiv_abgemeldet_Am,
 	  Neubürgertag_gemacht_Am,
 	  Ausbezahlter_Bürgertaglohn,
 	  Partner_ID,
@@ -1972,7 +2028,8 @@ CREATE VIEW Neubürger_Vorvorjahr AS
 DROP VIEW IF EXISTS Neubürger_Vorjahr; 
 CREATE VIEW Neubürger_Vorjahr AS
 	SELECT 
-	  ID, 
+	  ID,
+      Zivilstand,
 	  Kategorien,
 	  Geschlecht, 
 	  Vorname_Initial           AS Vorname, 
@@ -1988,6 +2045,7 @@ CREATE VIEW Neubürger_Vorjahr AS
 	  Bezahlte_Aufnahme_Gebühr,
 	  Aufgenommen_Am,
 	  Sich_Für_Bürgertag_Angemeldet_Am,
+      Sich_Für_Bürgertag_definitiv_abgemeldet_Am,
 	  Neubürgertag_gemacht_Am,
 	  Ausbezahlter_Bürgertaglohn,
 	  Partner_ID,
@@ -1996,10 +2054,11 @@ CREATE VIEW Neubürger_Vorjahr AS
 	FROM Personen_Daten WHERE Angemeldet_Am_Jahr  = DATE_FORMAT(now() - INTERVAL 1 YEAR,'%Y');
     
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Neubürger_Dieses_Jahr; 
+DROP VIEW IF EXISTS Neubürger_Dieses_Jahr;   -- Neuanmeldungen laufendes Jahr
 CREATE VIEW Neubürger_Dieses_Jahr AS
 	SELECT 
-	  ID, 
+	  ID,
+      Zivilstand,
 	  Kategorien,
 	  Geschlecht, 
 	  Vorname_Initial           AS Vorname, 
@@ -2015,6 +2074,7 @@ CREATE VIEW Neubürger_Dieses_Jahr AS
 	  Bezahlte_Aufnahme_Gebühr,
 	  Aufgenommen_Am,
 	  Sich_Für_Bürgertag_Angemeldet_Am,
+      Sich_Für_Bürgertag_definitiv_abgemeldet_Am,
 	  Neubürgertag_gemacht_Am,
 	  Ausbezahlter_Bürgertaglohn,
 	  Partner_ID,
@@ -2025,7 +2085,18 @@ CREATE VIEW Neubürger_Dieses_Jahr AS
 
 -- SELECT  DATE_FORMAT(now() - INTERVAL 1 YEAR,'%Y');
 
-
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Einladung_Nächster_Bürgertag; 
+CREATE VIEW Einladung_Nächster_Bürgertag AS
+	SELECT 
+		*
+    FROM Neubürger_Dieses_Jahr
+    UNION
+	SELECT 
+		*
+    FROM Neubürger_Vorjahr
+    WHERE Neubürgertag_gemacht_Am IS NULL AND
+		  Sich_Für_Bürgertag_definitiv_abgemeldet_Am IS NULL;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Rückkehrer_Dieses_Jahr;
@@ -3313,10 +3384,28 @@ DELIMITER ;
 -- SELECT * FROM Personen_Daten WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND ID=644;
 -- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Verwaltungsberechtigt') WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0;
 
+
+
+
+
+
+/* UPDATE `Personen` SET Kategorien = removeSetValue(Kategorien, 'Verwaltungsberechtigt')  
+WHERE ID IN (SELECT ID 
+			 FROM Personen_Daten 
+			 WHERE Todestag IS NOT NULL AND 
+				   FIND_IN_SET('Verwaltungsberechtigt', Kategorien) >  0);
+*/                   
+                   
+                   
+                   
+
+
+
 DROP PROCEDURE IF EXISTS important_updates;
 DELIMITER $$
 CREATE PROCEDURE important_updates()
 BEGIN
+    
 	-- Adressen Felder richtig setzen, so dass views und Fct funktionieren
 	UPDATE `Personen` SET `Partner_Name`           = ''  WHERE Partner_Name   IS NULL;
 	UPDATE `Personen` SET `History`                = ''  WHERE `History`      IS NULL;
@@ -3354,10 +3443,12 @@ BEGIN
 	UPDATE Land SET Landesvorwahl = CONCAT('00',Landesvorwahl)          WHERE LENGTH(Landesvorwahl) = 2;
 	UPDATE Land SET Landesvorwahl = CONCAT('0',Landesvorwahl)           WHERE LENGTH(Landesvorwahl) = 3;
     
+    
 	-- Gestorbene Personen_Daten
 	-- -------------------------
 	UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
-	-- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Bürger')  WHERE  Todestag IS NOT NULL;
+
+
 	-- 
     
 	/* 

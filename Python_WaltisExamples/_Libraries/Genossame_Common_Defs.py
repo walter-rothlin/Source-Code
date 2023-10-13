@@ -162,14 +162,265 @@ def get_personen_id(db_connection, such_kriterien, verbal=False):
     return pers_id
 
 
-def execute_important_sql_queries(db, verbal=False):
-    myCursor = db.cursor()
+def execute_important_sql_queries(db, verbal=True):
+    myCursor = db.cursor(dictionary=True)
     if verbal:
-        print('Calling stored-proc important updates...', end='')
+        print('--> Calling stored-proc important updates...', end='')
     args = ()
     result_args = myCursor.callproc('important_updates', args)
     if verbal:
-        print('done')
+        print('done\n')
+
+    # If Nach_Wangen_Gezogen und Von_Wangen_Weggezogen => Aelteres in Bemerkungen schreiben und NULL setzten
+    # -------------------------------------------------------------------------------------------------------
+    if verbal:
+        print('''--> Checking if somebody has set ...
+                 Nach_Wangen_Gezogen AND Von_Wangen_Weggezogen
+                     Move older date to Bemerkungen (append)
+                     Set older date to NULL
+              ''', end='')
+    select_person = f"""
+        SELECT ID, 
+               Bemerkungen, 
+               DATE_FORMAT(Nach_Wangen_Gezogen,'%Y_%m_%d:Rückkehr nach Wangen') AS Rückkehr_am, 
+               DATE_FORMAT(Von_Wangen_Weggezogen,'%Y_%m_%d:Wegzug von Wangen')  AS Wegzug_am
+        FROM personen 
+        WHERE Nach_Wangen_Gezogen IS NOT NULL AND
+              Von_Wangen_Weggezogen IS NOT NULL;
+    """
+    if False:
+        print(select_person)
+
+    myCursor.execute(select_person)
+    result_set = myCursor.fetchall()
+    if len(result_set) > 0:
+        print(result_set)
+    for a_result in result_set:
+        if a_result['Rückkehr_am'] < a_result['Wegzug_am']:
+            print(f"{a_result['ID']} ist Wegzüger")
+            res = update_db_attribute(db=db,
+                                db_tbl_name='Personen', db_attr_name='Bemerkungen', db_attr_type='varchar', db_attr_set_enum_values='',
+                                id_attr_name='ID', id=a_result['ID'],
+                                new_value=f"|{a_result['Rückkehr_am']}", new_value_format=None,
+                                take_action=True, verbal=False)
+            res = update_db_attribute(db=db,
+                                      db_tbl_name='Personen', db_attr_name='Nach_Wangen_Gezogen',
+                                      id_attr_name='ID', id=a_result['ID'],
+                                      new_value='NULL', new_value_format=None,
+                                      take_action=True, verbal=False)
+        else:
+            print(f"{a_result['ID']} ist Rückkehrer")
+            res = update_db_attribute(db=db,
+                                db_tbl_name='Personen', db_attr_name='Bemerkungen', db_attr_type='varchar', db_attr_set_enum_values='',
+                                id_attr_name='ID', id=a_result['ID'],
+                                new_value=f"|{a_result['Wegzug_am']}", new_value_format=None,
+                                take_action=True, verbal=False)
+            res = update_db_attribute(db=db,
+                                      db_tbl_name='Personen', db_attr_name='Von_Wangen_Weggezogen',
+                                      id_attr_name='ID', id=a_result['ID'],
+                                      new_value='NULL', new_value_format=None,
+                                      take_action=True, verbal=False)
+    if verbal:
+        print('done!!\n')
+
+    # If Nach_Wangen_Gezogen before 1.7. dieses Jahr => +Verwaltungsberechtigt,Nutzungsberechtigt
+    # ------------------------------------------------------------------------------------------------------
+    if verbal:
+        print('''--> Checking if somebody has moved to Wangen ...
+              ''', end='')
+    select_person = f"""
+        SELECT ID,
+			   Vorname,
+			   Ledig_Name,
+               Kategorien,
+               STR_TO_DATE(CONCAT(DATE_FORMAT(now(),'%Y'),'-07-01'),'%Y-%m-%d') AS Reference_Date,
+               IF (Nach_Wangen_Gezogen <=  STR_TO_DATE(CONCAT(DATE_FORMAT(now(),'%Y'),'-07-01'),'%Y-%m-%d'), "True", "False") AS is_Nutzungsberechtigt,
+			   Nach_Wangen_Gezogen
+        FROM personen 
+        WHERE Nach_Wangen_Gezogen IS NOT NULL AND
+              FIND_IN_SET('Nutzungsberechtigt', Kategorien) =  0;
+    """
+    if False:
+        print(select_person)
+
+    myCursor.execute(select_person)
+    result_set = myCursor.fetchall()
+    if len(result_set) > 0:
+        print(result_set)
+
+    for a_person in result_set:
+        update_person = f"""
+             UPDATE `personen` SET `Kategorien` = addSetValue(`Kategorien`,'Verwaltungsberechtigt')
+             WHERE `ID` = {a_person['ID']};   
+         """
+        if False:
+            print(update_person)
+        myCursor.execute(update_person)
+        db.commit()
+        result_set = myCursor.fetchall()
+        if len(result_set) > 0:
+            print(result_set)
+
+        if a_person['is_Nutzungsberechtigt'] == 'True':
+            update_person = f"""
+                 UPDATE `personen` SET `Kategorien` = addSetValue(`Kategorien`,'Nutzungsberechtigt')
+                 WHERE `ID` = {a_person['ID']};   
+             """
+            if False:
+                print(update_person)
+            myCursor.execute(update_person)
+            db.commit()
+            result_set = myCursor.fetchall()
+            if len(result_set) > 0:
+                print(result_set)
+
+    if verbal:
+        print('''
+                Kategorien = +Verwaltungsberechtigt
+                if the move was before 1.7. then
+                Kategorien = Nutzungsberechtigt
+             done!!
+             ''')
+
+    # If Von_Wangen_Weggezogen => -Verwaltungsberechtigt und im darauf folgendem Jahr -Nutzungsberechtigt
+    # ---------------------------------------------------------------------------------------------------
+    if verbal:
+        print('''--> Checking if somebody has moved away from Wangen ...
+              ''', end='')
+    select_person = f"""
+        SELECT ID,
+			   Vorname,
+			   Ledig_Name,
+               Kategorien,
+               DATE_FORMAT(Von_Wangen_Weggezogen,'%Y') AS Wegzug_Jahr,
+               DATE_FORMAT(now(),'%Y')                 AS Reference_Year,
+               IF (DATE_FORMAT(Von_Wangen_Weggezogen,'%Y') < DATE_FORMAT(now(),'%Y'), "False", "True") AS is_Nutzungsberechtigt,
+			   Von_Wangen_Weggezogen
+        FROM personen 
+        WHERE Von_Wangen_Weggezogen IS NOT NULL AND
+              FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0;
+    """
+    if False:
+        print(select_person)
+
+    myCursor.execute(select_person)
+    result_set = myCursor.fetchall()
+    if len(result_set) > 0:
+        print(result_set)
+
+    for a_person in result_set:
+        update_person = f"""
+             UPDATE `personen` SET `Kategorien` = removeSetValue(`Kategorien`,'Verwaltungsberechtigt')
+             WHERE `ID` = {a_person['ID']};   
+         """
+        if False:
+            print(update_person)
+        myCursor.execute(update_person)
+        db.commit()
+        result_set = myCursor.fetchall()
+        if len(result_set) > 0:
+            print(result_set)
+
+        if a_person['is_Nutzungsberechtigt'] == 'False':
+            update_person = f"""
+                 UPDATE `personen` SET `Kategorien` = removeSetValue(`Kategorien`,'Nutzungsberechtigt')
+                 WHERE `ID` = {a_person['ID']};   
+             """
+            if False:
+                print(update_person)
+            myCursor.execute(update_person)
+            db.commit()
+            result_set = myCursor.fetchall()
+            if len(result_set) > 0:
+                print(result_set)
+
+    if verbal:
+        print('''
+                Kategorien = -Verwaltungsberechtigt
+                Kategorien = -Nutzungsberechtigt (Im Jahr darauf)
+             done!!
+             ''')
+
+
+
+
+    # Falls Todestag gesetzt, Zivilstand='Gestorben' und -Verwaltungsberechtigt und Newsletter_Abonniert_Am = NULL
+    # ------------------------------------------------------------------------------------------------------------
+    if verbal:
+        print('''--> Checking if somebody has Todestag gesetzt, ...''', end='')
+    select_person = f"""
+        SELECT ID 
+        FROM personen_daten 
+        WHERE Todestag IS NOT NULL AND 
+              FIND_IN_SET('Verwaltungsberechtigt', Kategorien) >  0;
+    """
+    if False:
+        print(select_person)
+
+    myCursor.execute(select_person)
+    result_set = myCursor.fetchall()
+    if len(result_set) > 0:
+        print(result_set)
+    for pers_id in result_set:
+
+        update_person = f"""
+            UPDATE `personen` SET `Kategorien` = removeSetValue(`Kategorien`,'Verwaltungsberechtigt'),
+                                  `Zivilstand` = 'Gestorben',
+                                  `Newsletter_Abonniert_Am` = NULL 
+            WHERE `ID` = {pers_id['ID']};   
+        """
+        if False:
+            print(update_person)
+        myCursor.execute(update_person)
+        db.commit()
+        result_set = myCursor.fetchall()
+        if len(result_set) > 0:
+            print(result_set)
+
+    if verbal:
+        print('''
+                Zivilstand = Gestorben
+                Kategorien = -Verwaltungsberechtigt
+                Newsletter_Abonniert_Am = NULL
+             done!!
+             ''')
+
+    # Falls Todesjahr letztes Jahr oder älter ==> -Nutzungsberechtigt
+    # ---------------------------------------------------------------
+    if verbal:
+        print('''--> Checking if somebody has passed away last year or earlier ...''', end='')
+    select_person = f"""
+        SELECT ID 
+        FROM personen_daten 
+        WHERE Todestag IS NOT NULL AND 
+              FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND 
+              Todesjahr < DATE_FORMAT(now(),'%Y');
+    """
+    if False:
+        print(select_person)
+
+    myCursor.execute(select_person)
+    result_set = myCursor.fetchall()
+    if len(result_set) > 0:
+        print(result_set)
+    for pers_id in result_set:
+        update_person = f"""
+            UPDATE `personen` SET `Kategorien` = removeSetValue(`Kategorien`,'Nutzungsberechtigt')
+            WHERE `ID` = {pers_id['ID']};   
+        """
+        if verbal:
+            print(update_person)
+        myCursor.execute(update_person)
+        db.commit()
+        result_set = myCursor.fetchall()
+        if verbal:
+            print(result_set)
+
+    if verbal:
+        print('''
+                Kategorien = -Nutzungsberechtigt           
+             done!!
+             ''')
 
 def addPersonen_to_db_by_hash(db, arguments, take_action=False, verbal=False):
     verbal = True
