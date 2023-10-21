@@ -234,7 +234,7 @@ def execute_important_sql_queries(db, verbal=True):
 			   Ledig_Name,
                Kategorien,
                STR_TO_DATE(CONCAT(DATE_FORMAT(now(),'%Y'),'-07-01'),'%Y-%m-%d') AS Reference_Date,
-               IF (Nach_Wangen_Gezogen <=  STR_TO_DATE(CONCAT(DATE_FORMAT(now(),'%Y'),'-07-01'),'%Y-%m-%d'), "True", "False") AS is_Nutzungsberechtigt,
+               IF (Nach_Wangen_Gezogen <  STR_TO_DATE(CONCAT(DATE_FORMAT(now(),'%Y'),'-07-01'),'%Y-%m-%d'), "True", "False") AS is_Nutzungsberechtigt,
 			   Nach_Wangen_Gezogen
         FROM personen 
         WHERE Nach_Wangen_Gezogen IS NOT NULL AND
@@ -421,6 +421,74 @@ def execute_important_sql_queries(db, verbal=True):
                 Kategorien = -Nutzungsberechtigt           
              done!!
              ''')
+
+    # Re-Setzt Hat_16a und Hat_35a Teil neu
+    # -------------------------------------
+    if verbal:
+        print('''--> Re-Setzt Hat_16a und Hat_35a Teil neu ...''', end='\n')
+    res_count = remove_all_enum_value_in_set(db, 'personen', 'Kategorien', enum_val_to_remove='Hat_16a', take_action=True, verbal=False)
+    if verbal and res_count > 0:
+        print(f'Von {res_count:3d} Bürgern wurde der "Hat_16a" Teil entfernt ')
+
+    res_count = remove_all_enum_value_in_set(db, 'personen', 'Kategorien', enum_val_to_remove='Hat_35a', take_action=True, verbal=False)
+    if verbal and res_count > 0:
+        print(f'Von {res_count:3d} Bürgern wurde der "Hat_35a" Teil entfernt ')
+
+
+    count_of_16a_Teile = 0
+    count_of_35a_Teile = 0
+    select_person = f"""
+        SELECT * 
+        FROM Buergerteile;
+    """
+    if False:
+        print(select_person)
+
+    myCursor.execute(select_person)
+    result_set = myCursor.fetchall()
+    if len(result_set) > 0:
+        # print(result_set)
+        for a_buergerteil in result_set:
+            if False:
+                print(f"""{a_buergerteil['Verpaechter_Kategorien']} {a_buergerteil['Verpaechter_ID']}
+                 {a_buergerteil['Verpaechter_Vorname']}
+                 {a_buergerteil['Verpaechter_Name']} 
+                 {a_buergerteil['Verpaechter_Strasse']}
+                 {a_buergerteil['Verpaechter_PLZ_Ort']}
+                 {a_buergerteil['Flaeche']}\n""")
+            # print(f"""{a_buergerteil['Verpaechter_Kategorien']} {a_buergerteil['Verpaechter_ID']} {a_buergerteil['Flaeche']}\n""")
+            flaeche_in_aren = a_buergerteil['Flaeche']
+            if flaeche_in_aren > 15.0 and flaeche_in_aren < 17.0:
+                update_person = f"""
+                    UPDATE `personen` SET `Kategorien` = addSetValue(`Kategorien`,'HAT_16a')
+                    WHERE `ID` = {a_buergerteil['Verpaechter_ID']};   
+                """
+                if False:
+                    print(update_person)
+                myCursor.execute(update_person)
+                if myCursor.rowcount == 1:
+                    count_of_16a_Teile += 1
+                    db.commit()
+
+            if flaeche_in_aren > 30.0 and flaeche_in_aren < 37.0:
+                update_person = f"""
+                    UPDATE `personen` SET `Kategorien` = addSetValue(`Kategorien`,'HAT_35a')
+                    WHERE `ID` = {a_buergerteil['Verpaechter_ID']};   
+                """
+                if False:
+                    print(update_person)
+                myCursor.execute(update_person)
+                if myCursor.rowcount == 1:
+                    count_of_35a_Teile += 1
+                    db.commit()
+
+
+    if verbal:
+        print(f'Bei {count_of_16a_Teile:3d} Bürgern wurde "Hat_16a" gesetzt ')
+        print(f'Bei {count_of_35a_Teile:3d} Bürgern wurde "Hat_35a" gesetzt ')
+        print('''             done!!
+             ''')
+
 
 def addPersonen_to_db_by_hash(db, arguments, take_action=False, verbal=False):
     verbal = True

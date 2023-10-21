@@ -17,6 +17,7 @@
 -- 29-Aug-2023   Walter Rothlin      Added  'Verwaltungsberechtigt' zu Kategorien
 -- 05_Oct-2023   Walter Rothlin      Added  SAK (Standard Arbeitskraft)
 -- 07-Oct_2023   Walter Rothlin		 Added   `Sich_Für_Bürgertag_definitiv_abgemeldet_Am` to Personen
+-- 16-Oct-2023   Walter Rothlin      Added Bemerkungen zu landteilen
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -518,6 +519,7 @@ CREATE TABLE IF NOT EXISTS `Landteile` (
   `Gemeindegebiet_ID`    INT UNSIGNED NULL,
   
   `Flaeche_In_Aren`      FLOAT UNSIGNED NULL,
+  `Bemerkungen`          VARCHAR(255)   NULL,
   `Pachtzins_Pro_Are`    FLOAT UNSIGNED NULL,
   `Fix_Pachtzins`        FLOAT UNSIGNED NULL,
   `Vertragsart`          ENUM('Pachtvertrag','Fixpacht','Gebrauchsleihe','Gekündigt','Bürger_ist_Verpächter') DEFAULT NULL,

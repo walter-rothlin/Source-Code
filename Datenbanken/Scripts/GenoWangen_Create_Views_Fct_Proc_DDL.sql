@@ -32,6 +32,8 @@
 -- 03-Oct-2023   Walter Rothlin		 Added view Double_Adresses
 -- 05-Sep-2023   Walter Rothlin	     Added Kommissions- und Projekt-Listen
 -- 07-Oct-2023   Walter Rothlin      Added Nutzungsberechtigt_co_Einschränkung
+-- 15-Oct-2023   Walter Rothlin      Added Proc reset_table_autoincrement()
+-- 16-Oct-2023   Walter Rothlin		 Added View Pächter_Pachtland_Differenzen
 -- -----------------------------------------
 
 -- To-Does
@@ -1053,7 +1055,7 @@ CREATE VIEW IBAN_Liste AS
 	SELECT
         -- Allgemeine Daten
         pers.ID                                      AS Pers_ID,
-        'Nein'                                       AS 'Geändert',
+        pers.Zivilstand                              AS Zivilstand,
         pers.Kategorien                              AS Kategorien,
         pers.Sex                                     AS Sex,
 		getName_With_Initial(pers.Vorname, 
@@ -1098,8 +1100,7 @@ CREATE VIEW IBAN_Liste AS
         getYounger(pers.last_update, iban.last_update)  AS last_update
         
 	FROM IBAN AS iban
-	LEFT OUTER JOIN Personen AS pers   ON iban.personen_ID  = pers.ID
-	WHERE pers.Todestag IS NULL;
+	LEFT OUTER JOIN Personen AS pers   ON iban.personen_ID  = pers.ID;
 
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Personen_Daten; 
@@ -1637,10 +1638,32 @@ CREATE VIEW Projekt_Personen_Listen AS
 		Vorname_Familienname
     FROM Personen_Daten
     WHERE ID IN (992, 995, 1077, 840)
+	UNION
+	SELECT
+        ID,
+        'Gebrauchsleihe: Marienhöfli'         AS `Projekt`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        Tel_Nr_1,
+        eMail,
+        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
+		Concat('SAK:',SAK)                  AS `Diverses_2`,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (693, 990)
     UNION
 	SELECT
         ID,
-        'Winkelhöfli'         AS `Projekt`,
+        'Gebrauchsleihe: Stall Winkelhöfli'         AS `Projekt`,
         Geschlecht,
 		Vorname_Initial,
         Last_Name,
@@ -1680,7 +1703,7 @@ CREATE VIEW Projekt_Personen_Listen AS
         Brief_Anrede,
 		Vorname_Familienname
     FROM Personen_Daten
-    WHERE ID IN (1208, 723, 832)
+    WHERE ID IN (1208, 723, 832, 783, 1113, 1210)
     UNION
 	SELECT
         ID,
@@ -1752,7 +1775,7 @@ CREATE VIEW Bürger_Nutzungsberechtigt AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0
+    WHERE FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 -- AND FIND_IN_SET('Bürger', Kategorien) >  0
     ORDER BY Familien_Name, Vorname;
 
 -- -----------------------------------------------------
@@ -1897,6 +1920,20 @@ CREATE VIEW Pächter AS
 	ORDER BY `ID`;
 
 -- -----------------------------------------------------
+DROP VIEW IF EXISTS Pächter_Pachtland_Differenzen; 
+CREATE VIEW Pächter_Pachtland_Differenzen AS
+	-- Pächter ohne Pachtland
+	SELECT 'Pächter ohne Pachtland' AS Status, ID AS ID, Kategorien, Vorname, Name, Adresse, Ort
+	FROM pächter
+	WHERE ID NOT IN (SELECT DISTINCT Paechter_ID FROM Pachtlandzuteilung)
+	UNION
+	-- Haben Pachtland ohne den Pächter-Status zu haben
+	SELECT 'Nicht Pächter-Status' AS Status, Paechter_ID  AS ID, Paechter_Kategorien, Paechter_Vorname, Paechter_Name, Paechter_Strasse, Paechter_PLZ_Ort
+	FROM Pachtlandzuteilung
+	WHERE Paechter_ID NOT IN (SELECT ID FROM pächter)
+	ORDER BY Status, ID;
+
+-- -----------------------------------------------------
 DROP VIEW IF EXISTS Verpächter; 
 CREATE VIEW Verpächter AS
 	SELECT
@@ -1918,17 +1955,10 @@ CREATE VIEW Verpächter AS
 	FROM Personen_Daten
     WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
           FIND_IN_SET('Hat_35a',        Kategorien) >  0 OR
-          `ID` IN (625)   /*,416,411,341,340,86,371,226,268,298,100,125) OR
-          `ID` IN (121,84,88,244,303,258,438,350,165,438,119,63,73,94,72) OR
-          `ID` IN (135,88,175,224,326,368,322,437,359)  OR
-          `ID` IN (261,93,281,369,97,85,293,114,85,259,244,279,182,192,383,119,97,93,281,95,144) */
+          `ID` IN (625)
 	ORDER BY `ID`;
     
-/*
-SELECT ID, Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Private_PLZ_Ort
-      FROM personen_daten 
-      WHERE Such_Begriff LIKE BINARY '%Guntlin%' AND Such_Begriff LIKE BINARY '%Karl%';
-*/
+
 -- SELECT * FROM personen_daten WHERE Such_Begriff LIKE BINARY '%Lüönd%';
 
 -- -----------------------------------------------------
@@ -2221,6 +2251,7 @@ CREATE VIEW Pachtlandzuteilung AS
           L.AV_Parzellen_Nr                          AS AV_Parzelle,
           L.GENO_Parzellen_Nr                        AS GENO_Parzelle,
           L.Flur_Bezeichnung                         AS Flur_Bezeichnung,
+          L.Bemerkungen                              AS Bemerkungen,
           L.Flaeche_In_Aren                          AS Flaeche,
           ROUND(L.Pachtzins_Pro_Are, 2)              AS Pachtzins_pro_Are,
 		  ROUND(L.Fix_Pachtzins, 2)                  AS FixPachtPreis,
@@ -2311,39 +2342,53 @@ CREATE VIEW Pachtlandzuteilung AS
           L.Pachtbeginn_Am                           AS Pachtbeginn,
           L.Rueckgabe_Am                             AS Rueckgabe,
           L.Vertragsende_Am                          AS Vertragsende,
-          L.Pachtende_Am                             AS Pachtende
+          L.Pachtende_Am                             AS Pachtende,
+          
+		  -- Vorherige Pächter / Verpächter
+          -- ------------------------------
+		   L.Vorheriger_Verpaechter_ID                       AS Vorheriger_Verpaechter_ID,
+		   Vorheriger_Verpaechter_Adr.Vorname_Familienname   AS Vorheriger_Verpaechter_Vorname_Familiennamer,
+           
+           L.Vorheriger_Paechter_ID                          AS Vorheriger_Paechter_ID,
+           Vorheriger_Paechter_Adr.Vorname_Familienname      AS Vorheriger_Paechter_Vorname_Familiennamer
+
 	FROM Landteile AS L
-    LEFT OUTER JOIN Personen_Daten AS Paechter_Adr    ON  L.Paechter_ID     = Paechter_Adr.ID
-	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr ON  L.Verpaechter_ID  = Verpaechter_Adr.ID;
+    LEFT OUTER JOIN Personen_Daten AS Paechter_Adr                   ON  L.Paechter_ID                = Paechter_Adr.ID
+    LEFT OUTER JOIN Personen_Daten AS Vorheriger_Paechter_Adr        ON  L.Vorheriger_Paechter_ID     = Vorheriger_Paechter_Adr.ID
+	LEFT OUTER JOIN Personen_Daten AS Verpaechter_Adr                ON  L.Verpaechter_ID             = Verpaechter_Adr.ID
+    LEFT OUTER JOIN Personen_Daten AS Vorheriger_Verpaechter_Adr     ON  L.Vorheriger_Verpaechter_ID  = Vorheriger_Verpaechter_Adr.ID;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Paechterstatistik; 
 CREATE VIEW Paechterstatistik AS
-	SELECT Paechter_ID,
-		   Paechter_Geschlecht,
+	SELECT Paechter_ID                   AS ID,
+		   Paechter_Geschlecht           AS Sex,
+           Paechter_Vorname_Familienname,
+           Paechter_Strasse              AS Strasse,
+           Paechter_Priv_PLZ             AS PLZ,
+           Paechter_Priv_Ort             AS Ort,
+           ROUND(SUM(Flaeche),2)         AS Geno_Flaeche,
+		   SUM(Geno_Pachtzins_pro_Jahr)  AS Geno_Pachtzins,
+           Paechter_Alter                AS `Alter`,
+           Paechter_Geburtstag           AS Geburtstag,
+           Paechter_Tel_Nr               AS Tel_Nr,
+           Paechter_eMail                AS eMail,
+           Paechter_IBAN                 AS IBAN,
+           Paechter_Brief_Anrede,
 		   Paechter_Vorname,
            Paechter_Last_Name,
 		   Paechter_Name,
            Paechter_Initial_Name,
            Paechter_Initial_Familienname,
            Paechter_Vorname_Name,
-           Paechter_Vorname_Familienname,
-		   Paechter_Strasse,
-           Paechter_Priv_PLZ,
-           Paechter_Priv_Ort,
-		   Paechter_PLZ_Ort,
-           Paechter_Alter,
-           Paechter_Geburtstag,
-           Paechter_Tel_Nr,
-           Paechter_eMail,
-           Paechter_IBAN,
-           Paechter_Brief_Anrede,
-		   ROUND(SUM(Flaeche),2)         AS Geno_Flaeche,
-		   SUM(Geno_Pachtzins_pro_Jahr)  AS Geno_Pachtzins
+		   Paechter_PLZ_Ort
 	FROM Pachtlandzuteilung
 	WHERE Verpaechter_ID = 625   -- Geno
 	GROUP BY Paechter_ID
-	ORDER BY Paechter_Name;
+	ORDER BY Paechter_Last_Name, Paechter_Vorname;
+    
+-- SELECT count(*) FROM Pachtlandzuteilung WHERE Verpaechter_ID = 625;   -- Geno
+-- SELECT count(*) FROM Pachtlandzuteilung WHERE Verpaechter_ID != 625;
     
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Buergerteile; 
@@ -2369,7 +2414,12 @@ CREATE VIEW Buergerteile AS
 		   Paechter_Name,
 		   Paechter_Strasse,
 		   Paechter_PLZ_Ort,
-           Paechter_Kategorien
+           Paechter_Kategorien,
+           Vorheriger_Verpaechter_ID,
+		   Vorheriger_Verpaechter_Vorname_Familiennamer,
+           Vorheriger_Paechter_ID,
+		   Vorheriger_Paechter_Vorname_Familiennamer
+
 	FROM Pachtlandzuteilung
 	WHERE Verpaechter_ID != 625
     ORDER BY Verpaechter_Name, Verpaechter_Vorname;
@@ -2379,7 +2429,7 @@ DROP VIEW IF EXISTS Buergerteile_Speziell;
 CREATE VIEW Buergerteile_Speziell AS
 	SELECT *
 	FROM Buergerteile
-	WHERE Verpaechter_Todestag != '' OR
+	WHERE Verpaechter_Todestag != '' OR Verpaechter_Todestag is not NULL OR
           FIND_IN_SET('Nutzungsberechtigt', Verpaechter_Kategorien) =  0 OR
           FIND_IN_SET('Bürger',             Verpaechter_Kategorien) =  0
     ORDER BY Verpaechter_Name, Verpaechter_Vorname;
@@ -2535,24 +2585,12 @@ CREATE VIEW Wärmeanschlüsse_Reco AS
 DROP VIEW IF EXISTS PD_Row_Counts; 
 CREATE VIEW PD_Row_Counts AS
 	SELECT
-		'Land'                          AS `Table Name`,
-		(SELECT count(*) FROM `Land`)   AS `Row Count`
+		'Personen'                                AS `Table Name`,
+		(SELECT count(*) FROM `Personen`)         AS `Row Count`
 	UNION
 	SELECT
-		'Orte'                          AS `Table Name`,
-		(SELECT count(*) FROM `Orte`)   AS `Row Count`
-	UNION
-	SELECT
-		'Adressen'                          AS `Table Name`,
-		(SELECT count(*) FROM `Adressen`)   AS `Row Count`
-	UNION
-	SELECT
-		'Personen'                          AS `Table Name`,
-		(SELECT count(*) FROM `Personen`)   AS `Row Count`
-	UNION
-	SELECT
-		'IBAN'                          AS `Table Name`,
-		(SELECT count(*) FROM `IBAN`)   AS `Row Count`
+		'IBAN'                                    AS `Table Name`,
+		(SELECT count(*) FROM `IBAN`)             AS `Row Count`
 	UNION
 	SELECT
 		'email_adressen'                          AS `Table Name`,
@@ -2563,24 +2601,44 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Personen_has_email_adressen`)   AS `Row Count`
 	UNION
 	SELECT
-		'Telefonnummern'                          AS `Table Name`,
-		(SELECT count(*) FROM `telefonnummern`)   AS `Row Count`
+		'Telefonnummern'                                       AS `Table Name`,
+		(SELECT count(*) FROM `telefonnummern`)                AS `Row Count`
 	UNION
 	SELECT
 		'Personen_has_telefonnummern'                          AS `Table Name`,
 		(SELECT count(*) FROM `Personen_has_telefonnummern`)   AS `Row Count`
 	UNION
 	SELECT
-		'++-----------------------------+'                        AS `Table Name`,
-		'++--------------+'                                       AS `Row Count`
-	UNION
-    SELECT
-		'Nutzungsberechtigte Bürger'                          AS `Table Name`,
-		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
+		'Land'                               AS `Table Name`,
+		(SELECT count(*) FROM `Land`)        AS `Row Count`
 	UNION
 	SELECT
-		'Nutzungsberechtigte aber nicht Verwaltungsberechtigte Bürger'                 AS `Table Name`,
-		(SELECT count(*) FROM `bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt`) AS `Row Count`
+		'Orte'                               AS `Table Name`,
+		(SELECT count(*) FROM `Orte`)        AS `Row Count`
+	UNION
+	SELECT
+		'Adressen'                          AS `Table Name`,
+		(SELECT count(*) FROM `Adressen`)   AS `Row Count`
+	UNION
+	SELECT
+		'+---------------------------------------+'               AS `Table Name`,
+		'++--------------+'                                       AS `Row Count`
+	UNION
+	SELECT
+		'Nutzungsberechtigte Bürger'                              AS `Table Name`,
+		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)        AS `Row Count`
+	UNION
+    SELECT
+		'Gestorbene Nutzungsberechtigte Bürger'                                             AS `Table Name`,
+		(SELECT count(*) FROM `bürger_Nutzungsberechtigt` WHERE `Todestag` IS NOT NULL)     AS `Row Count`
+	UNION
+	SELECT
+		'Nutzungsberechtigte aber nicht Verwaltungsberechtigte Bürger'                      AS `Table Name`,
+		(SELECT count(*) FROM `bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt`)      AS `Row Count`
+	UNION
+	SELECT
+		'Einladungen für Genossen-Gemeinde'                       AS `Table Name`,
+		(SELECT count(*) FROM `Einladungsliste_Geno_Gemeinde`)    AS `Row Count`
 	UNION
         SELECT
 		'Bürger mit eMail'                                    AS `Table Name`,
@@ -2595,12 +2653,8 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
 	UNION
 	SELECT
-		'Einladungen für Genossen-Gemeinde'                       AS `Table Name`,
-		(SELECT count(*) FROM `Einladungsliste_Geno_Gemeinde`)    AS `Row Count`
-	UNION
-	SELECT
-		'+++----------------------------+'                        AS `Table Name`,
-		'+++-------------+'                                       AS `Row Count`
+		'+---------------------------------------+'           AS `Table Name`,
+		'+++-------------+'                                   AS `Row Count`
 	UNION
         SELECT
 		'Neubürger Vorvorjahr'                                AS `Table Name`,
@@ -2615,32 +2669,37 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Neubürger_dieses_Jahr`)        AS `Row Count`
 	UNION
 	SELECT
-		'++++---------------------------+'                        AS `Table Name`,
-		'++++------------+'                                       AS `Row Count`
+		'+---------------------------------------+'                           AS `Table Name`,
+		'++++------------+'                                                   AS `Row Count`
 	UNION
 	SELECT
-		'Landteile Total'                                      AS `Table Name`,
-		(SELECT count(*) FROM `Landteile`)                     AS `Row Count`
+		'Landteile Genossame (inkl. Streuteile)'                              AS `Table Name`,
+		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID = 625)         AS `Row Count`
 	UNION
 	SELECT
-		'Landteile Genossame'                                                             AS `Table Name`,
-		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID = 625)                     AS `Row Count`
+		'Bürger-Landteile'                                                    AS `Table Name`,
+		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625)        AS `Row Count`
 	UNION
 	SELECT
-		'Landteile'                                                                        AS `Table Name`,
-		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625)                     AS `Row Count`
+		'Landteile Total'                                                     AS `Table Name`,
+		(SELECT count(*) FROM `Landteile`)                                    AS `Row Count`
 	UNION
 	SELECT
-		'+++++--------------------------+'                        AS `Table Name`,
-		'+++++-----------+'                                       AS `Row Count`
+		'+---------------------------------------+'                           AS `Table Name`,
+		'+++++-----------+'                                                   AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 16a Teilen'                                                                    AS `Table Name`,
-		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0)         AS `Row Count`
+		'Verpächter von einem  16a Bürgerteile'                                                       AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0)        AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter mit 35a Teilen'                                                                    AS `Table Name`,
-		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a',        Kategorien) >  0)         AS `Row Count`
+		'Verpächter von einem 35a Bürgerteile'                                                        AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
+	UNION
+	SELECT
+		'Verpächter von 16a und/oder 35a Bürgerteile'                                                 AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
+                                               FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
 	UNION
 	SELECT
 		'Verpächter mit 16a und 35a Teilen'                                                           AS `Table Name`,
@@ -2648,15 +2707,29 @@ CREATE VIEW PD_Row_Counts AS
                                                FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
 	UNION
 	SELECT
-		'+-----------------------------++'                        AS `Table Name`,
+		'Verpächter von nur 16a Teilen'                                                                AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 AND  
+                                               FIND_IN_SET('Hat_35a',        Kategorien) =  0)         AS `Row Count`
+	UNION
+	SELECT
+		'Verpächter von nur 35a Teilen'                                                                AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) =  0 AND  
+                                               FIND_IN_SET('Hat_35a',        Kategorien) >  0)         AS `Row Count`
+	UNION
+	SELECT
+		'+---------------------------------------+'               AS `Table Name`,
 		'+--------------++'                                       AS `Row Count`
 	UNION
 	SELECT
-		'Pächter'                                              AS `Table Name`,
-		(SELECT count(*) FROM Pächter )                        AS `Row Count`
+		'Pächter Nutzungsberechtigt'                                                                AS `Table Name`,
+		(SELECT count(*) FROM Pächter WHERE FIND_IN_SET('Nutzungsberechtigt',   Kategorien) >  0 )  AS `Row Count`
 	UNION
 	SELECT
-		'+----------------------------+++'                        AS `Table Name`,
+		'Pächter Total'                                           AS `Table Name`,
+		(SELECT count(*) FROM Pächter )                           AS `Row Count`
+	UNION
+	SELECT
+		'+---------------------------------------+'               AS `Table Name`,
 		'+-------------+++'                                       AS `Row Count`
 	UNION
 	SELECT
@@ -2668,7 +2741,7 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM Personen WHERE Newsletter_Abonniert_Am IS NOT NULL)  AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------++++'                        AS `Table Name`,
+		'+---------------------------------------+'               AS `Table Name`,
 		'+------------++++'                                       AS `Row Count`
 	UNION
 	SELECT
@@ -3378,29 +3451,65 @@ DELIMITER ;
 
 
 
+
+
+-- ------------------------------------------------------
+/*
+DROP PROCEDURE IF EXISTS chat_GPT_reset_table_autoincrement;
+DELIMITER $$
+
+CREATE PROCEDURE chat_GPT_reset_table_autoincrement(IN a_table_name VARCHAR(45), OUT max_value INT)
+BEGIN
+  -- Check if the table is empty
+  SET @check_query = CONCAT('SELECT COUNT(*) INTO max_value FROM ', a_table_name);
+  PREPARE stmt_check FROM @check_query;
+  EXECUTE stmt_check;
+  DEALLOCATE PREPARE stmt_check;
+
+  IF max_value = 0 THEN
+    SET max_value = 1; -- Set a default starting value for empty tables
+  ELSE
+    -- Declare a variable for holding the maximum ID value
+    SET @max_query = CONCAT('SELECT MAX(ID) INTO max_value FROM ', a_table_name);
+    PREPARE stmt_max FROM @max_query;
+    EXECUTE stmt_max;
+    DEALLOCATE PREPARE stmt_max;
+  END IF;
+
+  SET @alter_query = CONCAT('ALTER TABLE ', a_table_name, ' AUTO_INCREMENT = ', max_value);
+  PREPARE stmt_alter FROM @alter_query;
+  EXECUTE stmt_alter;
+  DEALLOCATE PREPARE stmt_alter;
+END$$
+
+DELIMITER ;
+*/
+
+DROP PROCEDURE IF EXISTS reset_table_autoincrement_landteile;
+DELIMITER $$
+
+CREATE PROCEDURE reset_table_autoincrement_landteile(IN a_table_name VARCHAR(45), OUT max_value INT)
+BEGIN
+  IF ((SELECT count(*) FROM landteile) = 0) THEN
+    SET max_value = 1; -- Set a default starting value for empty tables
+    ALTER TABLE landteile AUTO_INCREMENT = 1;
+  ELSE
+	SELECT MAX(ID) + 1 AS MAX_ID INTO @max_value FROM landteile;
+  END IF;
+END$$
+
+DELIMITER ;
+
+-- SELECT count(*) FROM landteile;
+-- SELECT MAX(ID) + 1 AS MAX_ID INTO @max_value FROM landteile;
+
+-- SET @max_value = -1;
+-- CALL reset_table_autoincrement('Landteile', @max_value);
+-- SELECT @max_value;
+
 -- ------------------------------------------------------
 -- Zwingende Data updates
 -- ------------------------------------------------------
--- SELECT * FROM Personen_Daten WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND ID=644;
--- UPDATE `Personen` SET Kategorien = addSetValue(Kategorien, 'Verwaltungsberechtigt') WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0;
-
-
-
-
-
-
-/* UPDATE `Personen` SET Kategorien = removeSetValue(Kategorien, 'Verwaltungsberechtigt')  
-WHERE ID IN (SELECT ID 
-			 FROM Personen_Daten 
-			 WHERE Todestag IS NOT NULL AND 
-				   FIND_IN_SET('Verwaltungsberechtigt', Kategorien) >  0);
-*/                   
-                   
-                   
-                   
-
-
-
 DROP PROCEDURE IF EXISTS important_updates;
 DELIMITER $$
 CREATE PROCEDURE important_updates()

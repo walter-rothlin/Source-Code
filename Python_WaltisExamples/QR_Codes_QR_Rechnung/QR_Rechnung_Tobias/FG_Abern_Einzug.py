@@ -59,7 +59,7 @@ if __name__ == '__main__':
             addr_FG_Aberen,
             addr_strassenbenutzung,
             amount="50.00",
-            additional_information="Strassenbeutzung 2022"),
+            additional_information="Strassenbeutzung 2023"),
         invoice_text_html="",
         pdfName=pdfName,
         htmlName=htmlName)

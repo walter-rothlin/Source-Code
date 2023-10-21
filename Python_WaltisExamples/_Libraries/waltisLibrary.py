@@ -51,6 +51,7 @@
 #                                         split_plz_ort()
 # 04-Oct-2023   Walter Rothlin      Added format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True)
 #                                         get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=[], as_json=True, take_action=True, verbal=False)
+# 16-Oct-2023   Walter Rothlin      Added remove_all_enum_value_in_set()
 # ------------------------------------------------------------------
 
 
@@ -2807,6 +2808,40 @@ def dictify(context, names):
 # ---------------------
 # Reusable DB-Functions
 # ---------------------
+def remove_all_enum_value_in_set(db, table, attribute_name, enum_val_to_remove, key_attr_name='ID', take_action=False, verbal=False):
+    myCursor = db.cursor(dictionary=True)
+    records_affected = 0
+    if verbal:
+        print(f'''
+           --> Calling remove_all_enum_value_in_set(db,
+                                    table                   = {table}, 
+                                    attribute_name          = {attribute_name},
+                                    enum_val_to_remove      = {enum_val_to_remove},
+                                    key_attr_name           = {key_attr_name},
+                                    take_action             = {take_action},                                    
+                                    verbal                  = {verbal})''')
+
+    update_person = f"""
+        UPDATE {table} AS p1
+        JOIN (
+            SELECT {key_attr_name}, removeSetValue({attribute_name}, '{enum_val_to_remove}') AS replaceSetValue
+            FROM {table}
+            WHERE FIND_IN_SET('{enum_val_to_remove}', {attribute_name}) > 0
+        ) AS subquery
+        ON p1.{key_attr_name} = subquery.{key_attr_name}
+        SET p1.{attribute_name} = subquery.replaceSetValue;
+     """
+
+    if verbal:
+        print(update_person)
+
+    if take_action:
+        myCursor.execute(update_person)
+        db.commit()
+        records_affected = myCursor.rowcount
+
+    return records_affected
+
 def get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=[], as_json=True, take_action=True, verbal=False):
     if verbal:
         print(f'''
