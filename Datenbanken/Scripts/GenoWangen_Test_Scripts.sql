@@ -4,8 +4,28 @@
 SELECT * FROM personen WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0;
 SELECT * FROM personen WHERE FIND_IN_SET('Hat_35a', Kategorien) >  0;
 
-SELECT * FROM landteile WHERE Paechter_ID IN (202);
-SELECT * FROM pachtlandzuteilung WHERE Paechter_ID IN (1118);
+SELECT * FROM landteile WHERE Verpaechter_ID IN (341);
+SELECT * FROM landteile WHERE Verpaechter_ID NOT IN (341);
+SELECT * FROM pachtlandzuteilung WHERE Verpaechter_ID IN (341);
+      
+      
+SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625;  -- 182
+SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0;   -- 84
+SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a', Kategorien) >  0;   -- 97
+
+
+
+SELECT * FROM landteile WHERE Verpaechter_ID IN (341);
+
+
+
+SELECT Verpaechter_ID FROM `Landteile` WHERE Verpaechter_ID != 625;
+SELECT * FROM `Landteile` WHERE Verpaechter_ID NOT IN (SELECT ID FROM Verpächter WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0 OR FIND_IN_SET('Hat_35a', Kategorien));
+
+
+SELECT * FROM Verpächter WHERE ID NOT IN (SELECT Verpaechter_ID FROM `Landteile` WHERE Verpaechter_ID != 625);
+SELECT * FROM pachtlandzuteilung WHERE Verpaechter_ID NOT IN (SELECT Verpaechter_ID FROM `Landteile` WHERE Verpaechter_ID != 625);
+SELECT * FROM Verpächter WHERE ID != 625;
       
 SELECT * FROM Pachtlandzuteilung;
 SELECT ID FROM pächter;

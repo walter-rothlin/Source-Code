@@ -34,6 +34,7 @@
 -- 07-Oct-2023   Walter Rothlin      Added Nutzungsberechtigt_co_Einschränkung
 -- 15-Oct-2023   Walter Rothlin      Added Proc reset_table_autoincrement()
 -- 16-Oct-2023   Walter Rothlin		 Added View Pächter_Pachtland_Differenzen
+-- 22-Oct-2023   Walter Rothlin		 Added View Bürger_mit_Mehrfachteilen
 -- -----------------------------------------
 
 -- To-Does
@@ -2528,6 +2529,27 @@ CREATE VIEW Wärmeanschlüsse_View AS
     LEFT OUTER JOIN Personen_Daten AS heiziger     ON heiziger.ID     = anschluss.Heizungs_Installateur_ID
     LEFT OUTER JOIN Personen_Daten AS elektriker   ON elektriker.ID   = anschluss.Elektro_Installateur_ID;
 
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_mit_Mehrfachteilen; 
+CREATE VIEW Bürger_mit_Mehrfachteilen AS
+SELECT 
+    Ver_landteil,
+    SUBSTRING_INDEX(Ver_landteil, ' ', 1)  AS Verpaechter_ID,
+	COUNT(*)                               AS Anzahl,
+    SUBSTRING_INDEX(Ver_landteil, ' ', -1) AS Flaeche
+FROM (
+    SELECT ID, 
+        Flaeche_In_Aren, 
+        Paechter_ID, 
+        Verpaechter_ID, 
+        CONCAT(Verpaechter_ID, ' ', Flaeche_In_Aren) AS Ver_landteil
+    FROM `Landteile` 
+    WHERE Verpaechter_ID != 625
+) AS SubqueryAlias  -- Add an alias here
+GROUP BY Ver_landteil
+HAVING COUNT(*) > 1;
+
 -- -----------------------------------------------------
 /*
 DROP VIEW IF EXISTS Wärmeanschlüsse_Reco; 
@@ -2621,15 +2643,15 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Adressen`)   AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------------------+'               AS `Table Name`,
-		'++--------------+'                                       AS `Row Count`
+		'+------------------------------------------------+'      AS `Table Name`,
+		' '                                                 AS `Row Count`
 	UNION
 	SELECT
 		'Nutzungsberechtigte Bürger'                              AS `Table Name`,
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)        AS `Row Count`
 	UNION
     SELECT
-		'Gestorbene Nutzungsberechtigte Bürger'                                             AS `Table Name`,
+		'Gestorbene (dieses Jahr) Nutzungsberechtigte Bürger'                               AS `Table Name`,
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt` WHERE `Todestag` IS NOT NULL)     AS `Row Count`
 	UNION
 	SELECT
@@ -2653,8 +2675,8 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `bürger_Nutzungsberechtigt`)    AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------------------+'           AS `Table Name`,
-		'+++-------------+'                                   AS `Row Count`
+		'+------------------------------------------------+'  AS `Table Name`,
+		'  '                                            AS `Row Count`
 	UNION
         SELECT
 		'Neubürger Vorvorjahr'                                AS `Table Name`,
@@ -2669,37 +2691,53 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Neubürger_dieses_Jahr`)        AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------------------+'                           AS `Table Name`,
-		'++++------------+'                                                   AS `Row Count`
+		'+------------------------------------------------+'                  AS `Table Name`,
+		'   '                                                           AS `Row Count`
 	UNION
 	SELECT
 		'Landteile Genossame (inkl. Streuteile)'                              AS `Table Name`,
 		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID = 625)         AS `Row Count`
 	UNION
 	SELECT
-		'Bürger-Landteile'                                                    AS `Table Name`,
+		'Bürger-Landteile (Landteile)'                                        AS `Table Name`,
 		(SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625)        AS `Row Count`
 	UNION
 	SELECT
-		'Landteile Total'                                                     AS `Table Name`,
+		' '          AS `Table Name`,
+		'____'       AS `Row Count`
+	UNION
+	SELECT
+		'Landteile Total (Landteile)'                                         AS `Table Name`,
 		(SELECT count(*) FROM `Landteile`)                                    AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------------------+'                           AS `Table Name`,
-		'+++++-----------+'                                                   AS `Row Count`
+		' '          AS `Table Name`,
+		'===='       AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter von einem  16a Bürgerteile'                                                       AS `Table Name`,
-		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0)        AS `Row Count`
+		'+------------------------------------------------+'                  AS `Table Name`,
+		'    '                                                                AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter von einem 35a Bürgerteile'                                                        AS `Table Name`,
-		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
+		'Verpächter von einem 16a Bürgerteile'                                                 AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0)        AS `Row Count`
 	UNION
 	SELECT
-		'Verpächter von 16a und/oder 35a Bürgerteile'                                                 AS `Table Name`,
-		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
-                                               FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
+		'Verpächter von einem 35a Bürgerteile'                                                 AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a', Kategorien) >  0)        AS `Row Count`
+	UNION
+	SELECT
+		' '           AS `Table Name`,
+		'_____'       AS `Row Count`
+	UNION
+    SELECT
+		'Bürger-Landteile (Verpächter)       '                                                        AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0) +
+        (SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
+	UNION
+	SELECT
+		' '           AS `Table Name`,
+		'====='       AS `Row Count`
 	UNION
 	SELECT
 		'Verpächter mit 16a und 35a Teilen'                                                           AS `Table Name`,
@@ -2717,8 +2755,25 @@ CREATE VIEW PD_Row_Counts AS
                                                FIND_IN_SET('Hat_35a',        Kategorien) >  0)         AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------------------+'               AS `Table Name`,
-		'+--------------++'                                       AS `Row Count`
+		' '           AS `Table Name`,
+		'______'      AS `Row Count`
+    UNION
+	SELECT
+		'Verpächter von 16a und/oder 35a Bürgerteile'                                                 AS `Table Name`,
+		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
+                                               FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
+	UNION
+	SELECT
+		' '           AS `Table Name`,
+		'======='       AS `Row Count`
+	UNION
+	SELECT
+		'ERROR: Bürger mit Mehrfachen Bürgerteilen'                                                 AS `Table Name`,
+		(SELECT count(*) FROM Bürger_mit_Mehrfachteilen                                             AS `Row Count`
+	UNION
+	SELECT
+		'+------------------------------------------------+'      AS `Table Name`,
+		'      '                                             AS `Row Count`
 	UNION
 	SELECT
 		'Pächter Nutzungsberechtigt'                                                                AS `Table Name`,
@@ -2729,8 +2784,8 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM Pächter )                           AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------------------+'               AS `Table Name`,
-		'+-------------+++'                                       AS `Row Count`
+		'+------------------------------------------------+'      AS `Table Name`,
+		'       '                                            AS `Row Count`
 	UNION
 	SELECT
 		'Bezogene Chroniken'                                                  AS `Table Name`,
@@ -2741,8 +2796,8 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM Personen WHERE Newsletter_Abonniert_Am IS NOT NULL)  AS `Row Count`
 	UNION
 	SELECT
-		'+---------------------------------------+'               AS `Table Name`,
-		'+------------++++'                                       AS `Row Count`
+		'+------------------------------------------------+'      AS `Table Name`,
+		'           '                                           AS `Row Count`
 	UNION
 	SELECT
 		'Wärmeverbund Vollanschlüsse'                        AS `Table Name`,
