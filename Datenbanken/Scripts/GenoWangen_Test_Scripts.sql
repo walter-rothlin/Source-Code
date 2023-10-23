@@ -4,10 +4,8 @@
 SELECT * FROM personen WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0;
 SELECT * FROM personen WHERE FIND_IN_SET('Hat_35a', Kategorien) >  0;
 
-SELECT * FROM landteile WHERE Verpaechter_ID IN (341);
-SELECT * FROM landteile WHERE Verpaechter_ID NOT IN (341);
+SELECT * FROM landteile WHERE Verpaechter_ID IN (341);   
 SELECT * FROM pachtlandzuteilung WHERE Verpaechter_ID IN (341);
-      
       
 SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625;  -- 182
 SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0;   -- 84
@@ -15,7 +13,6 @@ SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a', Kategorien) >  0; 
 
 
 
-SELECT * FROM landteile WHERE Verpaechter_ID IN (341);
 
 
 
@@ -79,7 +76,7 @@ SELECT *
 	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
 FROM personen_daten 
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
-WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Schnellmann%' AND Such_Begriff LIKE Binary '%Alfred%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Jul%'))
 ORDER BY Familien_Name;
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
@@ -93,6 +90,7 @@ SELECT * FROM personen WHERE ID IN (644,1103,934,1045);        -- Testpersonen f
 SELECT * FROM personen WHERE ID IN (802,906,908,999,1049);     -- Pächter ohne Pachten
 
 SELECT * FROM personen_daten WHERE ID IN (396,1026,1087,839,217); -- Mutationen vom 12.10.23
+SELECT * FROM personen_daten WHERE ID IN (610,508,1101); -- Mutationen vom 23.10.23
 SELECT * FROM personen WHERE ID IN (285, 1084);                   -- 285, 1084, Wegzug unklar; In Abklärung beim Schreiber; 285 hat Landteil noch bei Edgar Hüppin
 
 SELECT * FROM personen WHERE ID IN (285, 1084); -- sonstige temp Abfragen
@@ -102,13 +100,14 @@ SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen
 
 -- IBAN
 -- ----
-SELECT * FROM iban       WHERE Personen_ID IN (610,1107, 934,534,619,806,820,721,508,1101,1104,509);     -- Nutzungsberechtigte ohne IBAN
-SELECT * FROM iban_liste WHERE Pers_ID     IN (610,1107, 934,534,619,806,820,721,508,1101,1104,509);     -- Nutzungsberechtigte ohne IBAN
-SELECT * FROM Personen_Daten WHERE (IBAN is NULL or IBAN = '') AND  FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0;
+SELECT * FROM Personen_Daten WHERE (IBAN is NULL or IBAN = '') AND  FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0; -- Nutzungsberechtigte ohne IBAN
+SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer LIKE BINARY 'c%';                        -- Schlecht formatierte IBAN
+SELECT * FROM iban       WHERE Personen_ID IN (610,1107, 934,534,619,806,820,721,508,1101,1104,509);     
+SELECT * FROM iban_liste WHERE Pers_ID     IN (610,1107, 934,534,619,806,820,721,508,1101,1104,509);
 SELECT * FROM iban WHERE Personen_ID in (534,509,721,820,806,1209,202,12.10,783,1208,644);
 SELECT * FROM Personen_Daten WHERE ID in (534,509,721,820,806,1209,202,12.10,783,1208);
 
-    
+
 -- Adressen
 -- --------
 SELECT * FROM adressen;

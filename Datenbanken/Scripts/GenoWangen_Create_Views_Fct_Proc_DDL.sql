@@ -35,14 +35,14 @@
 -- 15-Oct-2023   Walter Rothlin      Added Proc reset_table_autoincrement()
 -- 16-Oct-2023   Walter Rothlin		 Added View Pächter_Pachtland_Differenzen
 -- 22-Oct-2023   Walter Rothlin		 Added View Bürger_mit_Mehrfachteilen
+-- 23-Oct-2023   Walter Rothlin		 Do Formate IBAN
 -- -----------------------------------------
 
 -- To-Does
 -- Split Strasse Hausnummer
 -- Split, eliminate Spaces and Format Telefonnummer (fct)  41 --> 0041   554601440    055 460 14 40
--- Eliminate space and Format IBAN (fct)
 -- View PERSONEN_DATEN mit Partner, Vater und Mutter erweitern
--- If Todestag is not NULL then alle Telefonnummer, iban, eMail Adressen löschen
+-- If (Zivilstand = Gestorben) AND (Kategorie != Nutzungsberechtigt) then alle Telefonnummer, iban, eMail Adressen löschen
 -- Ueberprüfen ob jede Person nur 1 Telnr, IBAN und eMail addresse pro Prioritaet hat und die schön aufsteigend von 0 an sind
 -- -----------------------------------------
 SET NAMES utf8mb4;
@@ -2644,7 +2644,7 @@ CREATE VIEW PD_Row_Counts AS
 	UNION
 	SELECT
 		'+------------------------------------------------+'      AS `Table Name`,
-		' '                                                 AS `Row Count`
+		' '                                                       AS `Row Count`
 	UNION
 	SELECT
 		'Nutzungsberechtigte Bürger'                              AS `Table Name`,
@@ -2676,7 +2676,7 @@ CREATE VIEW PD_Row_Counts AS
 	UNION
 	SELECT
 		'+------------------------------------------------+'  AS `Table Name`,
-		'  '                                            AS `Row Count`
+		'  '                                                  AS `Row Count`
 	UNION
         SELECT
 		'Neubürger Vorvorjahr'                                AS `Table Name`,
@@ -2691,7 +2691,7 @@ CREATE VIEW PD_Row_Counts AS
 		(SELECT count(*) FROM `Neubürger_dieses_Jahr`)        AS `Row Count`
 	UNION
 	SELECT
-		'+------------------------------------------------+'                  AS `Table Name`,
+		'+------------------------------------------------+'            AS `Table Name`,
 		'   '                                                           AS `Row Count`
 	UNION
 	SELECT
@@ -2759,21 +2759,21 @@ CREATE VIEW PD_Row_Counts AS
 		'______'      AS `Row Count`
     UNION
 	SELECT
-		'Verpächter von 16a und/oder 35a Bürgerteile'                                                 AS `Table Name`,
+		'Verpächter von 16a und/oder 35a Bürgerteile'                                                AS `Table Name`,
 		(SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a',        Kategorien) >  0 OR
-                                               FIND_IN_SET('Hat_35a',        Kategorien) >  0)        AS `Row Count`
+                                               FIND_IN_SET('Hat_35a',        Kategorien) >  0)       AS `Row Count`
 	UNION
 	SELECT
 		' '           AS `Table Name`,
 		'======='       AS `Row Count`
 	UNION
 	SELECT
-		'ERROR: Bürger mit Mehrfachen Bürgerteilen'                                                 AS `Table Name`,
-		(SELECT count(*) FROM Bürger_mit_Mehrfachteilen                                             AS `Row Count`
+		'ERROR: Bürger mit Mehrfachen Bürgerteilen'                                                  AS `Table Name`,
+		(SELECT count(*) FROM Bürger_mit_Mehrfachteilen)                                             AS `Row Count`
 	UNION
 	SELECT
 		'+------------------------------------------------+'      AS `Table Name`,
-		'      '                                             AS `Row Count`
+		'      '                                                  AS `Row Count`
 	UNION
 	SELECT
 		'Pächter Nutzungsberechtigt'                                                                AS `Table Name`,
@@ -2785,7 +2785,7 @@ CREATE VIEW PD_Row_Counts AS
 	UNION
 	SELECT
 		'+------------------------------------------------+'      AS `Table Name`,
-		'       '                                            AS `Row Count`
+		'       '                                                 AS `Row Count`
 	UNION
 	SELECT
 		'Bezogene Chroniken'                                                  AS `Table Name`,
@@ -2797,7 +2797,7 @@ CREATE VIEW PD_Row_Counts AS
 	UNION
 	SELECT
 		'+------------------------------------------------+'      AS `Table Name`,
-		'           '                                           AS `Row Count`
+		'           '                                             AS `Row Count`
 	UNION
 	SELECT
 		'Wärmeverbund Vollanschlüsse'                        AS `Table Name`,
@@ -3569,7 +3569,6 @@ DROP PROCEDURE IF EXISTS important_updates;
 DELIMITER $$
 CREATE PROCEDURE important_updates()
 BEGIN
-    
 	-- Adressen Felder richtig setzen, so dass views und Fct funktionieren
 	UPDATE `Personen` SET `Partner_Name`           = ''  WHERE Partner_Name   IS NULL;
 	UPDATE `Personen` SET `History`                = ''  WHERE `History`      IS NULL;
@@ -3613,7 +3612,18 @@ BEGIN
 	UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
 
 
-	-- 
+	-- Formate IBAN
+	-- ------------
+	UPDATE iban
+	SET Nummer = UPPER(CONCAT(
+				 SUBSTRING(Nummer, 1, 4) , ' ',
+				 SUBSTRING(Nummer, 5, 4) , ' ',
+				 SUBSTRING(Nummer, 9, 4) , ' ',
+				 SUBSTRING(Nummer, 13, 4), ' ',
+				 SUBSTRING(Nummer, 17, 4), ' ',
+				 SUBSTRING(Nummer, 21)
+				 ))
+	WHERE Nummer NOT LIKE '% %' OR Nummer LIKE BINARY 'c%';
     
 	/* 
     DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
@@ -3646,21 +3656,6 @@ BEGIN
                           FROM Personen 
                           WHERE Zivilstand = 'Gestorben'); 
     */
-    
-    -- Landteile
-    -- ---------
-    /*
-    UPDATE Landteile SET Buergerlandteil = 'Geno' WHERE Verpaechter_ID  = 625; 
-    UPDATE Landteile SET Buergerlandteil = '16a'  WHERE Flaeche_In_Aren = 16;
-    UPDATE Landteile SET Buergerlandteil = '35a'  WHERE Flaeche_In_Aren = 35; 
-
-	UPDATE Personen SET Kategorien = addSetValue(Kategorien, 'Hat_16a')  
-	WHERE ID in (SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = '16a' AND Verpaechter_ID IS NOT NULL);
-
-	UPDATE Personen SET Kategorien = addSetValue(Kategorien, 'Hat_35a')  
-	WHERE ID in (SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = '35a' AND Verpaechter_ID IS NOT NULL);
-    */
-	-- SELECT DISTINCT Verpaechter_ID FROM landteile WHERE Buergerlandteil = 'Geno' AND Verpaechter_ID IS NOT NULL;
 
 END$$
 DELIMITER ;
