@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form-Elemente</title>
+</head>
+<body>
+
+<h1>Form-Elemente</h1>
+<form METHOD="GET" ACTION="https://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl">
+    Vorname:<INPUT TYPE="TEXT"  NAME="firstname"/><br/>
+    Nachname:<INPUT TYPE="TEXT" NAME="lastname"/><br/>
+    Passwort:<INPUT TYPE="PASSWORD" NAME="passwort"/><br/>
+    <br/><br/>
+
+	Menu-Auswahl<br/>
+	<SELECT NAME="Menu-Auswahl" SIZE="4" MULTIPLE>
+	<OPTION VALUE="Pizza"/>Pizza
+	<OPTION VALUE="Salat" SELECTED/>Salat
+	<OPTION VALUE="Suppe"/>Suppe
+	<OPTION VALUE="Glace"/>Glace
+	<OPTION VALUE="Schoggi"/>Schoggi
+	</SELECT>
+
+
+    <br/><br/>
+    <INPUT TYPE="CHECKBOX" NAME="Vegetarisches Essen" CHECKED/>Ich esse vegetarisch
+	<INPUT TYPE="CHECKBOX" NAME="Halbtax Abo"/>Ich habe ein 1/2 Tax Abo<br/>
+
+    <br/><br/>
+    <INPUT TYPE="RADIO" NAME="Treffpunkt" VALUE="Schulhaus HWZ"/>Schulhaus HWZ
+	<INPUT TYPE="RADIO" NAME="Treffpunkt" VALUE="HB" CHECKED/>HB
+	<INPUT TYPE="RADIO" NAME="Treffpunkt" VALUE="Talstation"/>Talstation
+	<INPUT TYPE="RADIO" NAME="Treffpunkt" VALUE="Bushaltestelle"/>Bushaltestelle
+
+    <br/><br/>
+    Kommentar:<br/>
+    <TEXTAREA NAME="Comment" ROWS="5" COLS="50" WRAP="virtual">Ich habe nichts zu sagen! Gruss Walti
+    </TEXTAREA>
+
+    <br/><br/>
+    <INPUT TYPE="RESET"  VALUE="Zurücksetzen"/>
+	<INPUT TYPE="SUBMIT" NAME="abgesendet" VALUE="Auftrag absenden"/><br/><br/>
+</form>
+
+</body>
+</html>

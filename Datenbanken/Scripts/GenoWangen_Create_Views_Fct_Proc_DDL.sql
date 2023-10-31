@@ -36,6 +36,7 @@
 -- 16-Oct-2023   Walter Rothlin		 Added View Pächter_Pachtland_Differenzen
 -- 22-Oct-2023   Walter Rothlin		 Added View Bürger_mit_Mehrfachteilen
 -- 23-Oct-2023   Walter Rothlin		 Do Formate IBAN
+-- 30-Oct_2023   Walter Rothlin      Added Nutzenbudget
 -- -----------------------------------------
 
 -- To-Does
@@ -2187,7 +2188,8 @@ CREATE VIEW Newsletter_Abo AS
 	  Geburtstag,
 	  `Alter`,
       Newsletter_Abonniert_Am
-	FROM Personen_Daten WHERE Newsletter_Abonniert_Am IS NOT NULL;
+	FROM Personen_Daten 
+    WHERE Newsletter_Abonniert_Am IS NOT NULL;
     
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Nutzenauszahlung;
@@ -2226,14 +2228,37 @@ CREATE VIEW Nutzenauszahlung AS
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Nutzenstatistik;
 CREATE VIEW Nutzenstatistik AS    
-	SELECT 
+	SELECT
+        Count(Nutzen)           AS Anzahl,
 		Bürger_Teile            AS Bürgerteile,
-		Count(Nutzen)           AS Anzahl,
 		ROUND(Sum(Nutzen),2)    AS Nutzen_Betrag
 	FROM Nutzenauszahlung 
 	GROUP BY Bürger_Teile
 	ORDER BY Nutzen_Betrag;
-
+    
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzenbudget;
+CREATE VIEW Nutzenbudget AS    
+	SELECT 
+		sum(anzahl)                                                         AS Anzahl,
+		(SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 1) AS Nutzenart, 
+		sum(anzahl) * (SELECT `Value` from properties WHERE ID = 1)         AS Betrag 
+	FROM nutzenstatistik
+	UNION
+	SELECT 
+		sum(anzahl)                                                         AS Anzahl,
+		(SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 2) AS Nutzenart, 
+		sum(anzahl) * (SELECT `Value` from properties WHERE ID = 2)         AS Betrag 
+	FROM nutzenstatistik
+	WHERE Bürgerteile != 'Nur 16a_Teil' AND Bürgerteile != 'Beide Landteile'
+	UNION
+	SELECT 
+		sum(anzahl)                                                         AS Anzahl,
+		(SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 3) AS Nutzenart, 
+		sum(anzahl) * (SELECT `Value` from properties WHERE ID = 3)         AS Betrag 
+	FROM nutzenstatistik
+	WHERE Bürgerteile != 'Nur 35a_Teil' AND Bürgerteile != 'Beide Landteile';
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Nutzensumme; 
 CREATE VIEW Nutzensumme AS     
@@ -3609,8 +3634,8 @@ BEGIN
     
 	-- Gestorbene Personen_Daten
 	-- -------------------------
-	UPDATE `Personen` SET Zivilstand = 'Gestorben' WHERE Todestag IS NOT NULL;
-
+	UPDATE `Personen` SET Zivilstand = 'Gestorben'      WHERE Todestag IS NOT NULL;
+    UPDATE `Personen` SET Newsletter_Abonniert_am = NULL WHERE Todestag IS NOT NULL;
 
 	-- Formate IBAN
 	-- ------------

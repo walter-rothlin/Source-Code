@@ -11,11 +11,6 @@ SELECT count(*) FROM `Landteile` WHERE Verpaechter_ID != 625;  -- 182
 SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0;   -- 84
 SELECT count(*) FROM Verpächter WHERE FIND_IN_SET('Hat_35a', Kategorien) >  0;   -- 97
 
-
-
-
-
-
 SELECT Verpaechter_ID FROM `Landteile` WHERE Verpaechter_ID != 625;
 SELECT * FROM `Landteile` WHERE Verpaechter_ID NOT IN (SELECT ID FROM Verpächter WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0 OR FIND_IN_SET('Hat_35a', Kategorien));
 
@@ -43,9 +38,6 @@ FROM Pachtlandzuteilung
 WHERE Paechter_ID NOT IN (SELECT ID FROM pächter)
 ORDER BY Status, ID;
 
-
-
-
 UPDATE personen AS p1
 JOIN (
     SELECT ID, removeSetValue(Kategorien, 'Hat_35a') AS replaceSetValue
@@ -68,15 +60,16 @@ SELECT @max_value;   -- 701
 UPDATE `personen` SET `Partner_ID`  = 644   WHERE `ID` = 1172;   -- Partner von Claudia		is 	Walti
 UPDATE `personen` SET `Partner_ID`  = '1172'  WHERE `ID` = '644';    -- Partner von Walti   	is 	Claudia
 UPDATE `personen` SET `Vater_ID`    = '644'   WHERE `ID` = '1103';   -- Vater   von Tobias     	is  Walti
+UPDATE `personen` SET `Vater_ID`    = '1172'   WHERE `ID` = '1103';   -- Mutter  von Tobias     	is  Claudia
 UPDATE `personen` SET `Vater_ID`    = '223'    WHERE (`ID` = '644');
-UPDATE `personen` SET `Mutter_ID`   = '1172'  WHERE `ID` = '1103';   -- Mutter  von Tobias     	is  Claudia
+
 
 SELECT *
 	-- ID, Vorname_Initial, Familien_Name, Private_Strassen_Adresse, Private_PLZ_Ort, Geburtstag,
 	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
 FROM personen_daten 
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
-WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Jul%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Hüppin%' AND Such_Begriff LIKE Binary '%Edith%'))
 ORDER BY Familien_Name;
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
@@ -84,17 +77,10 @@ SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHER
 							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2)
                               );
 
-SELECT * FROM personen WHERE ID IN (171,193,555,561,619,785);  --  c/o Adressen
-SELECT * FROM personen WHERE ID IN (552, 785, 137, 549);       --  Bemerkungen: Wegzug infolge Einschränkung
-SELECT * FROM personen WHERE ID IN (644,1103,934,1045);        -- Testpersonen für Rückkehrer und Wegzüger
-SELECT * FROM personen WHERE ID IN (802,906,908,999,1049);     -- Pächter ohne Pachten
-
-SELECT * FROM personen_daten WHERE ID IN (396,1026,1087,839,217); -- Mutationen vom 12.10.23
-SELECT * FROM personen_daten WHERE ID IN (610,508,1101); -- Mutationen vom 23.10.23
+SELECT * FROM personen_daten WHERE ID IN (170, 207); -- sonstige temp Abfragen
 SELECT * FROM personen WHERE ID IN (285, 1084);                   -- 285, 1084, Wegzug unklar; In Abklärung beim Schreiber; 285 hat Landteil noch bei Edgar Hüppin
-
-SELECT * FROM personen WHERE ID IN (285, 1084); -- sonstige temp Abfragen
-
+SELECT * FROM personen_daten WHERE Bemerkungen != '' AND Bemerkungen LIKE '%weg%';
+    
 SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (723));
 
 

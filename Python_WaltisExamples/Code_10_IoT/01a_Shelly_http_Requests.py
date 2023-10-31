@@ -61,6 +61,7 @@ http://192.168.1.133/rpc/Switch.GetStatus?id=0
 
 '''
 
+
 import requests
 import json
 defaultIp = '192.168.107.133'    # Testlampe Shelly 1 Blue
