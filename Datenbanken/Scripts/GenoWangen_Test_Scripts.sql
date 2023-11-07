@@ -69,7 +69,7 @@ SELECT *
 	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
 FROM personen_daten 
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
-WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Hüppin%' AND Such_Begriff LIKE Binary '%Edith%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%%' AND Such_Begriff LIKE Binary '%Eisenburgstr%'))
 ORDER BY Familien_Name;
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
@@ -77,11 +77,13 @@ SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHER
 							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2)
                               );
 
-SELECT * FROM personen_daten WHERE ID IN (170, 207); -- sonstige temp Abfragen
+SELECT * FROM personen_daten WHERE ID IN (546, 1108); -- sonstige temp Abfragen
+SELECT * FROM personen       WHERE ID IN (1049,198); -- sonstige temp Abfragen
+
 SELECT * FROM personen WHERE ID IN (285, 1084);                   -- 285, 1084, Wegzug unklar; In Abklärung beim Schreiber; 285 hat Landteil noch bei Edgar Hüppin
 SELECT * FROM personen_daten WHERE Bemerkungen != '' AND Bemerkungen LIKE '%weg%';
     
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (723));
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (289));
 
 
 -- IBAN

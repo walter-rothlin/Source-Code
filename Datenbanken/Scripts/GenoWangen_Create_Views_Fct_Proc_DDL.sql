@@ -1594,7 +1594,7 @@ CREATE VIEW Kommissionen AS
         Brief_Anrede,
 		Vorname_Familienname
     FROM Personen_Daten
-    WHERE ID IN (357,644,1036,1096,1102,757)
+    WHERE ID IN (357,644,1036,1096,757,1122,1125)
 	UNION
 	SELECT
         ID,
