@@ -2,6 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: Bruch_Rechner.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Fraction/Fraction_Calulator_40.py
 #
 # Description: Reference application for Class_Bruch
 #
@@ -12,13 +13,13 @@
 # 25-Jan-2021	Initial Version
 #
 # ------------------------------------------------------------------
-from Class_Bruch import *
+from waltisLibrary import *
+from Class_Fraction_40 import *
 
-help(Bruch)
+help(Fraction)
 
 print(unterstreichen("Test-Cases from Bruch_Rechner"))
-bruch1 = Bruch()
+bruch1 = Fraction()
 print(bruch1)
-print(bruch1.toDecimal.__doc__)
+print(bruch1.to_decimal().__doc__)
 print(bruch1)
-

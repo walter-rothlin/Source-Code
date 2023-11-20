@@ -19,7 +19,7 @@
 # 12-Oct-2022   Walter Rothlin  Simplifying automated testing
 #
 # ------------------------------------------------------------------
-
+import math
 class Fraction:
     """
     Provides basic support for math operations with fractions
@@ -39,8 +39,28 @@ class Fraction:
         """
         - Erzeugt eine String-Representation eines Bruches in der Form [3/4]
         """
+
+        lcm = math.lcm(3, 6, 9)
+        gcd = math.gcd(45, 15, 30)
+        print('lcm:', lcm)
+        print('gcd:', gcd)
+
         return self.to_string()
 
+
+    def prettyprint(self):
+        """Gibt den Bruch dreizeilig aus, wobei Zähler und Nenner
+        zentriert gesetzt sind.
+        """
+        zaehler_str = str(self.__zaehler)
+        nenner_str = str(self.__nenner)
+        feldbreite = max(len(zaehler_str), len(nenner_str))
+        bruchstrich = "-" * feldbreite
+        return f'''
+                {zaehler_str.center(feldbreite)}
+                {bruchstrich}
+                {nenner_str.center(feldbreite)}
+                '''
     def to_string(self, sep="/", startChr="[", endChar="]"):
         return startChr + str(self.__zaehler) + sep + str(self.__nenner) + endChar
 
@@ -87,9 +107,7 @@ class Fraction:
     # binary business methods
     # -----------------------
     def mul(self, factor):
-        self.__zaehler = self.__zaehler * factor.__zaehler
-        self.__nenner = self.__nenner * factor.__nenner
-        return self
+        return Fraction(self.__zaehler * factor.__zaehler, self.__nenner * factor.__nenner)
 
     # overload * operator
     def __mul__(self, factor):
@@ -98,9 +116,7 @@ class Fraction:
 
 
     def div(self, divisor):
-        self.__zaehler = self.__zaehler * divisor.__nenner
-        self.__nenner = self.__nenner * divisor.__zaehler
-        return self
+        return Fraction(self.__zaehler * divisor.__nenner, self.__nenner * divisor.__zaehler)
 
     # overload / operator
     def __truediv__(self, divisor):
@@ -146,6 +162,7 @@ def TEST_SIMPLE_init_str(verbal=False):
     Ctr |55      |72     |[55/72]
     Ctr |-5      |40     |[-5/40]
     Ctr |5       |-40    |[5/-40]
+    Ctr |7       |-40    |[5/-40]
     """
 
     listOfTestCases = testCases.split("\n")
@@ -160,7 +177,7 @@ def TEST_SIMPLE_init_str(verbal=False):
         if str(bruch_1) != expectedResult:
             testsFailed += 1
             print("Error: Testcase ", testsPerformed)
-            print("Bruch(", param_1, ",", param_2, ") = ", str(bruch_1), "    Expected:", expectedResult, sep="")
+            print("Fraction(", param_1, ",", param_2, ") = ", str(bruch_1), "    Expected:", expectedResult, sep="")
             print()
     print("\n\n")
     print("==> Test-Statistics Class_Bruch: Tests Performed:", testsPerformed, "   Tests Failed:", testsFailed, "    Passed:", round(100-(100 * testsFailed / testsPerformed),1), "%", sep="" )
@@ -376,7 +393,7 @@ def TEST_mul_div_add_sub_operators(verbal=False):
 
 if __name__ == '__main__':
     TEST_SIMPLE_init_str(verbal=True)
-    TEST_setter_getter_properties(verbal=True)
-    TEST_reciprocal_to_decimal_shorten_expand(verbal=True)
-    TEST_mul_div_add_sub(verbal=True)
-    TEST_mul_div_add_sub_operators(verbal=True)
+    # TEST_setter_getter_properties(verbal=True)
+    # TEST_reciprocal_to_decimal_shorten_expand(verbal=True)
+    # TEST_mul_div_add_sub(verbal=True)
+    # TEST_mul_div_add_sub_operators(verbal=True)
