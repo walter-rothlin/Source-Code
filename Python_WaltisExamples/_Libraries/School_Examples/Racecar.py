@@ -19,93 +19,29 @@
 # 20-Nov-2023   Walter Rothlin      Extended for HBU_2023
 # 20-Nov-2023   Walter Rothlin      Splitted Racecar und Car in two files
 # ------------------------------------------------------------------
-class Car:
-    """This class represents a basic car."""
+from Car import *
 
-    max_serien_nummer = 1000   # class-variable oder static instance variable: für alle erzeugte Objekte gemeinsam
-
-    def __init__(self, marke="Alfa", farbe="weiss", v=0, max_speed=130):
+class Racecar(Car):
+    """This class represents a racecar, which is a type of car."""
+    def __init__(self, marke="Ferrari", farbe="rot", v=0, maxSpeed=200, gewicht=800):
         """
-        Initializes a new Car object.
+        Initializes a new Racecar object.
 
-        :param marke: The brand of the car.
-        :param farbe: The color of the car.
-        :param v: The speed of the car.
-        :param max_speed: The maximum speed of the car.
+        :param marke: The brand of the racecar.
+        :param farbe: The color of the racecar.
+        :param v: The speed of the racecar.
+        :param maxSpeed: The maximum speed of the racecar.
+        :param gewicht: The weight of the racecar.
         """
-        self.__marke = marke
-        self.__color = farbe
-        self.__speed = v
-        self.__maxSpeed = max_speed
-        self.__leistung = 75
-        self.__serial_number = Car.max_serien_nummer
-        Car.max_serien_nummer += 1
+        super().__init__(marke=marke, farbe=farbe, v=v, max_speed=maxSpeed)
+        self.__gewicht = gewicht
 
     def __str__(self):
-        return f"""
-           Marke:{self.__marke} 
-           Farbe:{self.__color} 
-           Speed:{str(self.__speed)} 
-           Serien-Nummer:{str(self.__serial_number)} 
-           Max_Serien-Nummer:{str(Car.max_serien_nummer)}
-        """
-
-    def set_leistung(self, new_leistung):
-        """
-        Sets the power of the car.
-
-        :param new_leistung: The new power value.
-        """
-        print('set_leistung() has been called!')
-        # print("datentype:", str(type(newLeistung)))
-        try:
-            newLeistung = float(new_leistung)
-        except ValueError:
-            newLeistung = 0
-
-        if type(newLeistung) == float or type(newLeistung) == int:
-            if 200 >= newLeistung >= 50:
-                self.__leistung = newLeistung
-            else:
-                print(newLeistung, "ist ausserhalb der Toleranz")
-        else:
-            print("'", newLeistung, "'", " falscher Datentyp für Leistung!", sep="")
-
-    def getLeistung(self):
-        """
-        Gets the power of the car.
-
-        :return: The power of the car.
-        """
-        print('get_leistung() has been called!')
-        return self.__leistung
-
-    engine_power = property(fget=getLeistung, fset=set_leistung)
-
-
-    def setColor(self, newColor):
-        self.__color = newColor
-
-    def getColor(self):
-        return self.__color
-
-    car_color = property(fget=getColor)
+        return "Racecar::" + "Gewicht:" + str(self.__gewicht) + super().__str__()
 
     def setSpeed(self, newSpeed):
-        if newSpeed > self.__maxSpeed:
-            self.__speed = self.__maxSpeed
-        else:
-            self.__speed = newSpeed
+        super().setSpeed(newSpeed)
 
-    def getSpeed(self):
-        return self.__speed
-
-    def increaseSpeed(self, vDiff):
-        self.setSpeed(self.__speed + vDiff)
-
-    @staticmethod
-    def get_production_statistics():
-        return Car.max_serien_nummer
 
 if __name__ == '__main__':
     waltisCar = Car("BMW", "weiss")
@@ -129,6 +65,13 @@ if __name__ == '__main__':
 
     claudiasCar = Car(farbe="gruen")
     print("Claudias Car:", claudiasCar, "\n\n")
+
+
+    schumisCar = Racecar(marke="Ferrari", farbe="rot", maxSpeed=340)
+    print(schumisCar)
+    schumisCar.setSpeed(223)
+    print(schumisCar)
+
 
     print("\n\n")
     print("Zugriffstests")
