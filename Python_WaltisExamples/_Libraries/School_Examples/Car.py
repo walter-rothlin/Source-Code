@@ -18,13 +18,25 @@
 # 28-Jun-2022   Walter Rothlin      Property (leistung)
 # 20-Nov-2023   Walter Rothlin      Extended for HBU_2023
 # 20-Nov-2023   Walter Rothlin      Splitted Racecar und Car in two files
+# 20-Nov-2023   Walter Rothlin      Added Colors as Enums
 # ------------------------------------------------------------------
+from enum import Enum
+
+class Colors(Enum):
+    RED         = 'FF0000'
+    GREEN       = '00FF00'
+    BLUE        = '0000FF'
+    YELLOW      = 'FFFF00'
+    BLACK       = '000000'
+    WHITE       = 'FFFFFF'
+
+
 class Car:
     """This class represents a basic car."""
 
     max_serien_nummer = 1000   # class-variable oder static instance variable: für alle erzeugte Objekte gemeinsam
 
-    def __init__(self, marke="Alfa", farbe="weiss", v=0, max_speed=130):
+    def __init__(self, marke="Alfa", farbe=Colors.WHITE, v=0, max_speed=130):
         """
         Initializes a new Car object.
 
@@ -43,28 +55,31 @@ class Car:
 
     def __str__(self):
         return f"""
-           Marke:{self.__marke} 
-           Farbe:{self.__color} 
-           Speed:{str(self.__speed)} 
+           Marke        :{self.__marke} 
+           Farbe        :{str(self.__color.value)}  ({self.__color.name})
+           Speed        :{str(self.__speed)}
+           MaxSpeed     :{str(self.__maxSpeed)} 
+           Leistung     :{str(self.__leistung)} 
            Serien-Nummer:{str(self.__serial_number)} 
            Max_Serien-Nummer:{str(Car.max_serien_nummer)}
         """
 
-    def set_leistung(self, new_leistung):
+    def set_leistung(self, new_leistung, min_P=50, max_P=200, trace=True):
         """
         Sets the power of the car.
 
         :param new_leistung: The new power value.
         """
-        print('set_leistung() has been called!')
-        # print("datentype:", str(type(newLeistung)))
+        if trace:
+            print('Car::set_leistung() has been called!')
+
         try:
             newLeistung = float(new_leistung)
         except ValueError:
             newLeistung = 0
 
         if type(newLeistung) == float or type(newLeistung) == int:
-            if 200 >= newLeistung >= 50:
+            if max_P >= newLeistung >= min_P:
                 self.__leistung = newLeistung
             else:
                 print(newLeistung, "ist ausserhalb der Toleranz")
@@ -108,7 +123,7 @@ class Car:
         return Car.max_serien_nummer
 
 if __name__ == '__main__':
-    waltisCar = Car("BMW", "weiss")
+    waltisCar = Car("BMW")
     print("Waltis Car after init:", waltisCar)
     waltisCar.setSpeed(300)
 
@@ -116,18 +131,18 @@ if __name__ == '__main__':
     # ! # waltisCar.car_color = 'blue'        # kein Setter für car_color property defined
     # ! # print(waltisCar.__color)      # gibt runtime-fehler
     print(waltisCar._Car__color)        # Don't do it that way!!!!
-    waltisCar.Farbe = 'rot'             # Dynamische Attributte
+    waltisCar.Farbe = Colors.RED             # Dynamische Attributte
 
     print(waltisCar.Farbe)
     print("Waltis Car after setSpeed:", waltisCar)
     print('\n')
-    felixsCar = Car("Fiat", "blau")
+    felixsCar = Car("Fiat", Colors.BLUE)
     print("Felixs Car:", felixsCar)
     felixsCar.increaseSpeed(10)
     felixsCar.increaseSpeed(125)
     print("Felixs Car:", felixsCar)
 
-    claudiasCar = Car(farbe="gruen")
+    claudiasCar = Car(farbe=Colors.GREEN)
     print("Claudias Car:", claudiasCar, "\n\n")
 
     print("\n\n")
