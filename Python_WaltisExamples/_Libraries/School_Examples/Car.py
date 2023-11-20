@@ -64,6 +64,10 @@ class Car:
            Max_Serien-Nummer:{str(Car.max_serien_nummer)}
         """
 
+    ''' Operator Overloading for == '''
+    def __eq__(self, otherObj):
+        return self.__marke == otherObj.__marke
+
     def set_leistung(self, new_leistung, min_P=50, max_P=200, trace=True):
         """
         Sets the power of the car.
@@ -141,6 +145,17 @@ if __name__ == '__main__':
     felixsCar.increaseSpeed(10)
     felixsCar.increaseSpeed(125)
     print("Felixs Car:", felixsCar)
+
+    print('\n')
+    felixsCar = Car(marke='Fiat')
+    waltisCar = Car(marke='Fiat')
+    ## waltisCar = felixsCar
+    if waltisCar == felixsCar:
+        print("Felixs Car == Waltis Car")
+    else:
+        print("Felixs Car != Waltis Car")
+    print('\n')
+
 
     claudiasCar = Car(farbe=Colors.GREEN)
     print("Claudias Car:", claudiasCar, "\n\n")
