@@ -1,0 +1,3 @@
+# <Name>./logger.txt</Name>
+Timestamp             |Level   |Title
+2023-11-13 20:17:21   |INFO    |12.3|14.5|sun shine

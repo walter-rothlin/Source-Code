@@ -18,6 +18,7 @@
 -- 05_Oct-2023   Walter Rothlin      Added  SAK (Standard Arbeitskraft)
 -- 07-Oct_2023   Walter Rothlin		 Added   `Sich_Für_Bürgertag_definitiv_abgemeldet_Am` to Personen
 -- 16-Oct-2023   Walter Rothlin      Added Bemerkungen zu landteilen
+-- 07-Nov-2023   Walter Rothlin      Added Entschädigungs_Modelle und Durchleitungsrechte
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -358,64 +359,79 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
 -- ALTER TABLE `iban` 
 -- ADD UNIQUE INDEX `Nummer_UNIQUE` (`Nummer` ASC) VISIBLE;
 
+
 -- -----------------------------------------
--- Table `Waermebezueger`
+-- Table `Entschädigungs_Modelle`
 -- -----------------------------------------
-/*
-DROP TABLE IF EXISTS `Waermebezueger`;
-CREATE TABLE IF NOT EXISTS `Waermebezueger` (
-  `ID`                   INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `kW_Leistung`          INT UNSIGNED NULL,
-  `Zaehler_Nr`           VARCHAR(20) NULL,
-  `Vertragsende`         DATE NULL,
-  `Objekt_Adresse`       INT UNSIGNED NOT NULL,
-  `Objekt_Owner`         INT UNSIGNED NOT NULL,
-  `Rechnungs_Empfaenger` INT UNSIGNED NOT NULL,
-  `Handwerker`           INT UNSIGNED NOT NULL,
-  `last_update`          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        
-  -- PK-Constraints
+DROP TABLE IF EXISTS `Entschädigungs_Modelle`;
+CREATE TABLE IF NOT EXISTS `Entschädigungs_Modelle` (
+  `ID`                               INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Betrag`                           FLOAT UNSIGNED NULL,
+  `Form_Betragszahlung`              ENUM('Einmalig Auszahlung', 
+                                          'Reduktion bei Vertragsabschluss') DEFAULT NULL,
+  `Zeitpunk_der_Zahlung`             ENUM('Zukünftig', 
+                                          'Abgeschlossen') DEFAULT NULL,
+  `Details`                          VARCHAR(100) NULL DEFAULT NULL,
+  `Bezahlt_Am`                       DATE NULL,
+  `Ablauf_Datum`                     DATE NULL,
+  
+  `last_update`                      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`));
+  
+
+-- -----------------------------------------
+-- Table `Durchleitungsrechte`
+-- -----------------------------------------
+DROP TABLE IF EXISTS `Durchleitungsrechte`;
+CREATE TABLE IF NOT EXISTS `Durchleitungsrechte` (
+  `ID`                               INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Parzellen_Nummer`                 VARCHAR(45) NULL,  -- Wohnung, Kataster_Nr, x,y sind in Adressen
+  `Korrenspondenz`                   VARCHAR(500) NULL,
+  `Vertrags_Name`                    VARCHAR(30)  NULL,
+  
+
+  `Vertrag_unterzeichnet_Am`         DATE NULL,
+  `Notariel_beglaubigt_Am`           DATE NULL,
+  `Gültig_bis_Am`                    DATE NULL,
+  
+  `Standort_Adresse_ID`              INT UNSIGNED NULL,
+  `Haupt_Vertragspartner_ID`         INT UNSIGNED NULL,  -- m:n Beziehung
+  `Anzahl_Vertrags_Partner`          INT UNSIGNED NULL   DEFAULT 1,
+  `Entschädigungs_ID`				 INT UNSIGNED NULL,
+  
+  `last_update`                      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
-  
-  -- Indizes
-  INDEX `fk_Waermebezueger_Adressen1_idx` (`Objekt_Adresse` ASC)       VISIBLE,
-  INDEX `fk_Waermebezueger_Personen1_idx` (`Objekt_Owner` ASC)         VISIBLE,
-  INDEX `fk_Waermebezueger_Personen2_idx` (`Rechnungs_Empfaenger` ASC) VISIBLE,
-  INDEX `fk_Waermebezueger_Personen3_idx` (`Handwerker` ASC)           VISIBLE,
-  
-  -- FK-Constraints
-  CONSTRAINT `fk_Waermebezueger_Adressen1`
-    FOREIGN KEY (`Objekt_Adresse`)
-    REFERENCES `Adressen` (`ID`)
+  INDEX `fk_Durchleitungsrechte_Standort_Adresse_idx`          (`Standort_Adresse_ID`        ASC) VISIBLE,
+  INDEX `fk_Durchleitungsrechte_Haupt_Vertragspartner_idx`     (`Haupt_Vertragspartner_ID`   ASC) VISIBLE,
+  INDEX `fk_Durchleitungsrechte_Entschädigungs_idx`            (`Entschädigungs_ID`          ASC) VISIBLE,
+  CONSTRAINT `fk_Durchleitungsrechte_Standort_Adresse`
+    FOREIGN KEY (`Standort_Adresse_ID`)
+    REFERENCES `adressen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Waermebezueger_Personen1`
-    FOREIGN KEY (`Objekt_Owner`)
-    REFERENCES `Personen` (`ID`)
+  CONSTRAINT `fk_Durchleitungsrechte_Haupt_Vertragspartner`
+    FOREIGN KEY (`Haupt_Vertragspartner_ID`)
+    REFERENCES `personen` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Waermebezueger_Personen2`
-    FOREIGN KEY (`Rechnungs_Empfaenger`)
-    REFERENCES `Personen` (`ID`)
+  CONSTRAINT `fk_Durchleitungsrechte_Entschaedigung`
+    FOREIGN KEY (`Entschädigungs_ID`)
+    REFERENCES `Entschädigungs_Modelle` (`ID`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Waermebezueger_Personen3`
-    FOREIGN KEY (`Handwerker`)
-    REFERENCES `Personen` (`ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-*/
+    ON UPDATE NO ACTION
+    );
+
 
 -- -----------------------------------------
 -- Table `Wärmeanschlüsse`
 -- -----------------------------------------
--- DROP TABLE IF EXISTS `Waermebezueger`;
 DROP TABLE IF EXISTS `Wärmeanschlüsse`;
 CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
-  `ID`                               INT NOT NULL,
+  `ID`                               INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `Parzellen_Nummer`                 VARCHAR(45) NULL,  -- Wohnung, Kataster_Nr, x,y sind in Adressen
   `Korrenspondenz`                   VARCHAR(500) NULL,
   `Projekt_Nr`                       VARCHAR(10) NULL,
+  `Vertrags_Name`                    VARCHAR(30)  NULL,
   `Gebietsbezeichnung`               VARCHAR(45) NULL,
   `Anschluss_Type`                   ENUM('Vollanschluss', 
                                           'Teilanschluss_Grundstück', 
@@ -445,9 +461,9 @@ CREATE TABLE IF NOT EXISTS `Wärmeanschlüsse` (
   `SBS_Baterrien_gewechselt_Am`      DATE NULL,
   
   `Parameter`                              VARCHAR(500) NULL,
-  `Durchleitungsvertrag_unterzeichnet_Am` DATE NULL,
-  `Durchleitungsvertrag_endet_Am`         DATE NULL,
-  `Bezahlte_Durchleitungs_Gebühr`         FLOAT UNSIGNED NULL,   -- NULL kein DL-Recht     0..xxx DL-Recht gegeben
+  -- `Durchleitungsvertrag_unterzeichnet_Am` DATE NULL,
+  -- `Durchleitungsvertrag_endet_Am`         DATE NULL,
+  -- `Bezahlte_Durchleitungs_Gebühr`         FLOAT UNSIGNED NULL,   -- NULL kein DL-Recht     0..xxx DL-Recht gegeben
   `Bemerkungen`                           VARCHAR(500) NULL,
   
   `Standort_Adresse_ID`              INT UNSIGNED NULL,

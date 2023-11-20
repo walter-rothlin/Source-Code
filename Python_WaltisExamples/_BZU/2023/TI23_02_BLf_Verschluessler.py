@@ -1,15 +1,37 @@
+
+
+def shift_one_char(a_letter, shift_chr, backward=False):
+    shift = ord(shift_chr[0])
+    if backward:
+        shift = -shift
+    if (a_letter >= " ") and (a_letter <= "~"):
+        return chr(((ord(a_letter) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
+    else:
+        return a_letter
+
+def verschluesseln(klartext, key, crypt=True):
+    chiffrat = ''
+
+    key_length = len(key)
+    klartext_position = 0
+    for ein_buchstabe in klartext:
+        key_chr = key[klartext_position % key_length]
+        chiffrat += shift_one_char(ein_buchstabe, key_chr, backward=not crypt)
+        klartext_position += 1
+    return chiffrat
+
 print('Verschlüssler')
 print('=============')
 
-# ASCII Tabelle generieren pythonBasics_16_StrHexBinOct.py
-
 do_loop = True
 while do_loop:
-    ein_buchstabe = input('Klartext:')
-    shifter = int(input('Shifter:'))
+    klartext_mldg = input('Klartext:')
+    key_str = input('Key     :')
+    geheimtext = verschluesseln(klartext_mldg, key_str)
+    print(f'{klartext_mldg}  key:{key_str} --> {geheimtext}')
 
-    chiffrat = chr(ord(ein_buchstabe) + shifter)
-    print(f'{ein_buchstabe} geshiftet um {shifter} --> {chiffrat}')
+    klartext_mldg = verschluesseln(geheimtext, key_str, crypt=False)
+    print(f'{geheimtext}  key:{key_str} --> {klartext_mldg}')
 
     weiter = input('Weiter (J/N)?')
     if weiter == 'N':
@@ -18,19 +40,19 @@ while do_loop:
 print('Programm beendet!!!')
 
 
-i = ord(' ')
-print("|{z:5s}|{ordDec:3d}|{ordHex:5s}|{ordOct:6s}|{ordBin:8s}|".format(
-                                                                z=chr(i),
-                                                                ordDec=i,
-                                                                ordHex=hex(i)[2:].upper(),
-                                                                ordOct=oct(i)[2:].upper().rjust(3, "0"),
-                                                                ordBin=bin(i)[2:].upper().rjust(7, "0")))
-print("+{z:5s}+{ordDec:3s}+{ordHex:5s}+{ordOct:6s}+{ordBin:8s}+".format(
-                                                                z=aLine(5),
-                                                                ordDec=aLine(3),
-                                                                ordHex=aLine(5),
-                                                                ordOct=aLine(6),
-                                                                ordBin=aLine(8)))
 
-print()
+
+
+
+
+
+
+
+
+
+
+
+i = ord(' ')
+print(f'|{chr(i):5s}|{i:3d}|{hex(i)[2:].upper():5s}|{oct(i)[2:].upper().rjust(3, "0"):6s}|{bin(i)[2:].upper().rjust(7, "0"):8s}|')
+
 

@@ -9,15 +9,30 @@
 #
 # History:
 # 20-Apr-2021	Initial Version
+# 13-Nov-2023   Refactoring with HBU students
 #
 # ------------------------------------------------------------------
 
 from waltisLibrary import *
 
 class WR_Logger:
-    # Ctr (Konstruktor)
-    # -----------------
-    def __init__(self, fName, delimiter="|", headerStr=None, titleStr="Title", withTimeStamp=True, withLevel=True, doVerbal=True, timeFormatString="nice", onlyChanges=False, ringbufferSize=-1, cWidth_TimeStamp = 22, cWidth_Level = 8):
+    """
+    WR_Logger Class:
+
+
+    """
+    def __init__(self, fName='./logger.txt',
+                 delimiter="|",
+                 headerStr=None,
+                 titleStr="Title",
+                 withTimeStamp=True,
+                 withLevel=True,
+                 doVerbal=True,
+                 timeFormatString="nice",
+                 onlyChanges=False,
+                 ringbufferSize=-1,
+                 cWidth_TimeStamp = 22,
+                 cWidth_Level = 8):
         self.__fName = fName
         self.__delimiter = delimiter
         self.__withTimeStamp = withTimeStamp
@@ -28,7 +43,7 @@ class WR_Logger:
         self.__ringbufferSize = ringbufferSize
         self.__cWidth_TimeStamp = cWidth_TimeStamp
         self.__cWidth_Level = cWidth_Level
-        self.countOfLines = 0
+        self.__countOfLines = 0
         self.lastValues = ""
         if headerStr is None:
             headerStr = "# <Name>" + fName + "</Name>"
@@ -57,7 +72,7 @@ class WR_Logger:
         retStr += "doVerbal          :" + str(self.__doVerbal)          + "\n"
         retStr += "onlyChanges       :" + str(self.__onlyChanges)       + "\n"
         retStr += "useRingbufferSize :" + str(self.__ringbufferSize)    + "\n"
-        retStr += "Count of Lines    :" + str(self.countOfLines)        + "\n"
+        retStr += "Count of Lines    :" + str(self.__countOfLines) + "\n"
         return retStr
 
     # overload == (equal to) operator
@@ -90,7 +105,7 @@ class WR_Logger:
                 f = open(self.__fName, "w")
             else:
                 f = open(self.__fName, "a")
-            self.countOfLines += 1
+            self.__countOfLines += 1
             f.write(aLogEntry + "\n")
             f.close()
 
@@ -103,3 +118,9 @@ class WR_Logger:
 
         if self.__doVerbal:
             print()
+
+
+if __name__ == '__main__':
+    data_logger_1 = WR_Logger()
+
+    data_logger_1.addLogEntry('12.3|14.5|sun shine')

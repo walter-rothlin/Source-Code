@@ -233,7 +233,7 @@ if __name__ == '__main__':
     # ============
     # initial_load_buerger(geno_schema, r'V:\Geno_Wangen_Daten.xlsx', verbal=True)
     #
-    if True:
+    if False:
         initial_load_pachtland(geno_schema, r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte.xlsx', verbal=True)
 
 
@@ -250,6 +250,7 @@ if __name__ == '__main__':
         db_attr_excel_column_mapping_1 = [{'excel': 'Private_Strassen_Adresse'}]
         pre_process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', db_attr_excel_column_mapping=db_attr_excel_column_mapping_1, verbal=True, take_action=True)
 
+    if True:
         print('\n\n')
         print('==================')
         print('Processing changes')

@@ -1614,6 +1614,25 @@ CREATE VIEW Kommissionen AS
 		Vorname_Familienname
     FROM Personen_Daten
     WHERE ID IN (452, 871, 647)
+	UNION
+	SELECT
+        ID,
+        'Nuoler_Ried'         AS `Kommission`,
+        Geschlecht,
+		Vorname_Initial,
+        Last_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail,
+        IBAN,
+        Geburtstag,
+        Alter_in_diesem_Jahr,
+        AHV_Nr,
+        Brief_Anrede,
+		Vorname_Familienname
+    FROM Personen_Daten
+    WHERE ID IN (357,644,524,483,100,336,1211,1212,1213,1214,1215)
 	ORDER BY Kommission, Last_Name, Vorname_Initial;
     
 -- -----------------------------------------------------
@@ -2214,8 +2233,11 @@ CREATE VIEW Nutzenauszahlung AS
 	  Familien_Name                                 AS Familienname, 
 	  Private_Strassen_Adresse                      AS Strasse,
 	  Private_PLZ_Ort                               AS PLZ_Ort,
-      ROUND(calc_nutzen_by_katset(Kategorien),2)    AS Nutzen,
-      IBAN
+      Vorname_Name                                  AS Vorname_Nachname,
+      IBAN                                          AS IBAN,
+      'Genossennutzen 2023'                         AS Grund,   
+      ROUND(calc_nutzen_by_katset(Kategorien),2)    AS Nutzen
+      
 	  -- Tel_Nr,
 	  -- eMail,
 	  -- Geburtstag,
@@ -2492,9 +2514,9 @@ CREATE VIEW Wärmeanschlüsse_View AS
        `anschluss`.`SBS_Baterrien_gewechselt_Am`                AS `SBS_Baterrien_gewechselt_Am`,
   
        `anschluss`.`Parameter`                                  AS `Parameter`,
-       `anschluss`.`Durchleitungsvertrag_unterzeichnet_Am`      AS `Durchleitungsvertrag_unterzeichnet_Am`,
-       `anschluss`.`Durchleitungsvertrag_endet_Am`              AS `Durchleitungsvertrag_endet_Am`,
-       `anschluss`.`Bezahlte_Durchleitungs_Gebühr`              AS `Bezahlte_Durchleitungs_Gebühr`,
+       -- `anschluss`.`Durchleitungsvertrag_unterzeichnet_Am`      AS `Durchleitungsvertrag_unterzeichnet_Am`,
+       -- `anschluss`.`Durchleitungsvertrag_endet_Am`              AS `Durchleitungsvertrag_endet_Am`,
+       -- `anschluss`.`Bezahlte_Durchleitungs_Gebühr`              AS `Bezahlte_Durchleitungs_Gebühr`,
        `anschluss`.`Bemerkungen`                                AS `Bemerkungen`,
        
        -- eigentümer.ID                               AS Eigentümer_ID,

@@ -69,7 +69,7 @@ SELECT *
 	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
 FROM personen_daten 
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
-WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%%' AND Such_Begriff LIKE Binary '%Eisenburgstr%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%%' AND Such_Begriff LIKE Binary '%Mühlestr. 3a%'))
 ORDER BY Familien_Name;
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
@@ -77,8 +77,8 @@ SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHER
 							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2)
                               );
 
-SELECT * FROM personen_daten WHERE ID IN (546, 1108); -- sonstige temp Abfragen
-SELECT * FROM personen       WHERE ID IN (1049,198); -- sonstige temp Abfragen
+SELECT * FROM personen_daten WHERE ID IN (1035); -- sonstige temp Abfragen
+SELECT * FROM personen       WHERE ID IN (1211,1212,1213,1214,1215); -- sonstige temp Abfragen
 
 SELECT * FROM personen WHERE ID IN (285, 1084);                   -- 285, 1084, Wegzug unklar; In Abklärung beim Schreiber; 285 hat Landteil noch bei Edgar Hüppin
 SELECT * FROM personen_daten WHERE Bemerkungen != '' AND Bemerkungen LIKE '%weg%';
@@ -90,11 +90,19 @@ SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen
 -- ----
 SELECT * FROM Personen_Daten WHERE (IBAN is NULL or IBAN = '') AND  FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0; -- Nutzungsberechtigte ohne IBAN
 SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer LIKE BINARY 'c%';                        -- Schlecht formatierte IBAN
-SELECT * FROM iban       WHERE Personen_ID IN (610,1107, 934,534,619,806,820,721,508,1101,1104,509);     
+SELECT * FROM iban       WHERE Personen_ID IN (657, 1091, 815, 1035, 483, 428);     
 SELECT * FROM iban_liste WHERE Pers_ID     IN (610,1107, 934,534,619,806,820,721,508,1101,1104,509);
 SELECT * FROM iban WHERE Personen_ID in (534,509,721,820,806,1209,202,12.10,783,1208,644);
-SELECT * FROM Personen_Daten WHERE ID in (534,509,721,820,806,1209,202,12.10,783,1208);
+SELECT -- *
+   ID, Vorname_Name, IBAN
+FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428);  -- Fehler bei IBAN
 
+
+-- Mutationen
+-- ----------
+SELECT * FROM Personen_Daten WHERE ID in (534,509,721,820,806,1209,202,12.10,783,1208);
+SELECT * FROM Personen_Daten WHERE ID in (1083,204,585, 1103);                   -- Mutationen vom 15.11.23
+SELECT * FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428, 606);  -- Mutationen vom 17.11.23
 
 -- Adressen
 -- --------
@@ -104,11 +112,17 @@ SELECT * FROM adressen
 WHERE ID IN (715);                     
 
 
--- email
--- -----
+-- email/telnr
+-- -----------
+SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1211,1212,1213,1214,1215));
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (1211,1212,1213,1214,1215,644));
+
+SELECT * FROM telefonnummern WHERE Nummer = '4804183';
+SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 120;
+
+SELECT * FROM email_adressen WHERE email LIKE '%Rothlin%';
 SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (826);
-SELECT * FROM email_adressen WHERE ID in (139);
-SELECT * FROM email_adressen WHERE ID = 139;
+
 
 SELECT Strassen_Adresse_Ort FROM adress_daten GROUP BY Strassen_Adresse_Ort Having count(*) > 1;  # alle doppelten Einträget
 SELECT * FROM adress_daten WHERE Strassen_Adresse_Ort in ('Allmeindstr. 32:     8855:Wangen', 'Löwenfeld 7:     8855:Wangen');
@@ -125,7 +139,7 @@ SELECT * FROM email_adressen WHERE eMail LIKE 'fehler:%';
 -- DELETE FROM `personen_has_email_adressen` WHERE `EMail_Adressen_ID` IN (SELECT ID FROM email_adressen WHERE eMail LIKE 'fehler:%');
 -- DELETE FROM email_adressen WHERE eMail LIKE 'fehler:%';
 
-SELECT * FROM `personen_has_email_adressen` WHERE `Personen_ID` = 1172 AND `EMail_Adressen_ID` = 485;
+SELECT * FROM `personen_has_email_adressen` WHERE `Personen_ID` = 644 AND `EMail_Adressen_ID` = 485;
 
 -- Reset Auto-Increment to max + 1
 /*
