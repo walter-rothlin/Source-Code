@@ -10,17 +10,15 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 25-Jan-2021	Initial Version
+# 25-Jan-2021	Walter Rothlin  Initial Version
+# 22-Nov-2023   Walter Rothlin  Implemented TBI 21.11.23
 #
 # ------------------------------------------------------------------
 from waltisLibrary import *
-from Class_Fraction_40 import *
+from Class_Fraction import *
 
-help(Fraction)
+bruch_1 = Fraction(2, 3)
+bruch_1.reciprocal()
+print(bruch_1)
 
-print(unterstreichen("Test-Cases from Bruch_Rechner"))
-bruch1 = Fraction()
-print(bruch1)
-print(bruch1.toDecimal.__doc__)
-print(bruch1)
 

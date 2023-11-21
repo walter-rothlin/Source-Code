@@ -18,6 +18,7 @@
 # 12-Oct-2022   Walter Rothlin  Implemented operators * / + and -
 # 12-Oct-2022   Walter Rothlin  Simplifying automated testing
 # 21-Nov-2023   Walter Rothlin  HBU Changes
+# 22-Nov-2023   Walter Rothlin  Implemented TBI 21.11.23
 #
 # ------------------------------------------------------------------
 from waltisLibrary import *
