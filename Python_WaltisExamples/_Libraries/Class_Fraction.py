@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: Class_Fraction.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Fraction/Class_Fraction.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_Fraction.py
 #
 # Description: Implementiert einen Bruch (Farction) and the basics oparators
 #
@@ -69,8 +69,47 @@ class Fraction:
         return startChr + str(self.__zaehler) + sep + str(self.__nenner) + endChar
 
 
+    # comparable methods (operators)
+    # ------------------------------
+    def __lt__(self, other):  # <
+        """
+        - True if self decimal value < other decimal value
+        """
+        return True
+
+    def __gt__(self, other):  # >
+        """
+        - True if self decimal value > other decimal value
+        """
+        return True
+
+    def __le__(self, other):  # <=
+        """
+        - True if self decimal value <= other decimal value
+        """
+        return True
+
+    def __ge__(self, other):  # >=
+        """
+        - True if self decimal value >= other decimal value
+        """
+        return True
+
+    def __eq__(self, other):  # ==
+        """
+        - True if Nenners and Zaehlers are equal (Not decimal value)
+        """
+        return True
+
+    def __ne__(self, other):  # !=
+        """
+        - False if Nenners and Zaehlers are equal (Not decimal value)
+        """
+        return True
+
 
     # setter / getters and properties
+    # -------------------------------
     def set_zaehler(self, zaehler):
         self.__zaehler = zaehler
 
@@ -90,6 +129,7 @@ class Fraction:
 
 
     # unary business methods
+    # ----------------------
     def reciprocal(self):
         """
         - setzt self auf dem Kehrwert [1/2] ==> [2/1]
@@ -126,8 +166,8 @@ class Fraction:
         return self
 
 
-    # binary business methods
-    # -----------------------
+    # binary business methods (Grundoperationen)
+    # ------------------------------------------
     def mul(self, factor):
         return Fraction(self.__zaehler * factor.__zaehler, self.__nenner * factor.__nenner)
 
@@ -179,8 +219,11 @@ def TEST_SIMPLE_init_str(verbal=False):
     05|Ctr |2       |7      |          |[2/7]
     06|Ctr |55      |72     |          |[55/72]
     07|Ctr |-5      |40     |          |[-5/40]
-    08|Ctr |5       |-40    |          |[5/-40]
-    09|Ctr |        |       | [7/40]   |[7/40]
+    08|Ctr |5       |-40    |          |[-5/40]
+    09|Ctr |-5      |-40    |          |[5/40]
+    10|Ctr |        |       | [7/40]   |[7/40]
+    11|Ctr |        |       | [-6]     |[-6/1]
+    12|Ctr |        |       | [-7/40]  |[-7/40]
     """
 
     listOfTestCases = testCases.split("\n")
@@ -211,19 +254,18 @@ def TEST_SIMPLE_init_str(verbal=False):
             bruch_1 = Fraction(bruch_str=param_3)
         if str(bruch_1) != expectedResult:
             testsFailed += 1
-            print(f"Error: Testcase {testsPerformed}")
+            print(f"\nError: Testcase {testsPerformed}")
             if param_3 is None:
-                print(f"Fraction(zaehler={param_1}, nenner={param_2}) = {str(bruch_1)}      Expected:{expectedResult}")
+                print(f"==> Fraction(zaehler={param_1}, nenner={param_2}) = '{str(bruch_1)}'      Expected:'{expectedResult}'")
             else:
-                print(print(f"Fraction(bruch_str={param_3}) = {str(bruch_1)}      Expected:{expectedResult}"))
+                print(f"==> Fraction(bruch_str='{param_3}') = {str(bruch_1)}      Expected:{expectedResult}")
     if verbal:
-        print("1) ctr Tests")
+        print("\n1) ctr Tests")
         print("------------")
         print(f"     Test performed: {testsPerformed}")
         print(f"     Test failed   : {testsFailed}")
         print(f"     Passed        : {round(100-(100 * testsFailed / testsPerformed),1)}%")
         print("\n")
-
 
 def TEST_setter_getter_properties(verbal=False):
     error_count = 0
