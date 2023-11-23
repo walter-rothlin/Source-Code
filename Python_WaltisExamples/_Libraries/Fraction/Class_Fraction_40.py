@@ -203,10 +203,18 @@ class Fraction:
 
     # self (Grundoperationen)
     # -----------------------
-    -= __isub__(self, other)
-    += __iadd__(self, other)
-    *= __imul__(self, other)
-    /= __idiv__(self, other)
+    def __isub__(self, other):  # -=
+        return self
+
+    def __iadd__(self, other):  # +=
+        return self
+
+    def __imul__(self, other):  # *=
+        return self
+
+    def __idiv__(self, other):  # /=
+        return self
+
 
 # static test methods
 def TEST_SIMPLE_init_str(verbal=False):
