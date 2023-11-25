@@ -28,7 +28,44 @@ class Fraction:
     Provides basic support for math operations with fractions
     """
 
-    # Standard methods
+    # setter / getters and properties
+    # -------------------------------
+    def set_zaehler(self, zaehler_param):
+        if zaehler_param is None:
+            self.__zaehler = 1
+        elif isinstance(zaehler_param, int):
+            self.__zaehler = zaehler_param
+        else:
+            try:
+                self.__zaehler = int(zaehler_param)
+            except Exception:
+                self.__zaehler = 0
+
+        # elif re.fullmatch(r'[+-]?\d', zaehler_param):
+        #     self.__zaehler = int(zaehler_param)
+        # else:
+
+    def get_zaehler(self):
+        return self.__zaehler
+
+    zaehler = property(get_zaehler, set_zaehler)
+
+    def set_nenner(self, nenner_param):
+        if nenner_param is None:
+            self.__nenner = 1
+        elif isinstance(nenner_param, int):
+            self.__nenner = nenner_param
+        else:
+            try:
+                self.__nenner = int(nenner_param)
+            except Exception:
+                self.__nenner = 1
+
+    def get_nenner(self):
+        return self.__nenner
+
+    nenner = property(get_nenner, set_nenner)
+
     def __init__(self, zaehler=0, nenner=1, bruch=None, bruch_str=None):
         """
         - Check if nenner is not 0
@@ -105,44 +142,6 @@ class Fraction:
         - False if Nenners and Zaehlers are equal (Not decimal value)
         """
         return True
-
-    # setter / getters and properties
-    # -------------------------------
-    def set_zaehler(self, zaehler_param):
-        if zaehler_param is None:
-            self.__zaehler = 1
-        elif isinstance(zaehler_param, int):
-            self.__zaehler = zaehler_param
-        else:
-            try:
-                self.__zaehler = int(zaehler_param)
-            except Exception:
-                self.__zaehler = 0
-
-        # elif re.fullmatch(r'[+-]?\d', zaehler_param):
-        #     self.__zaehler = int(zaehler_param)
-        # else:
-
-    def get_zaehler(self):
-        return self.__zaehler
-
-    zaehler = property(get_zaehler, set_zaehler)
-
-    def set_nenner(self, nenner_param):
-        if nenner_param is None:
-            self.__nenner = 1
-        elif isinstance(nenner_param, int):
-            self.__nenner = nenner_param
-        else:
-            try:
-                self.__nenner = int(nenner_param)
-            except Exception:
-                self.__nenner = 1
-
-    def get_nenner(self):
-        return self.__nenner
-
-    nenner = property(get_nenner, set_nenner)
 
     # unary business methods
     # ----------------------
