@@ -104,12 +104,28 @@ SELECT * FROM Personen_Daten WHERE ID in (534,509,721,820,806,1209,202,12.10,783
 SELECT * FROM Personen_Daten WHERE ID in (1083,204,585, 1103);                   -- Mutationen vom 15.11.23
 SELECT * FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428, 606);  -- Mutationen vom 17.11.23
 
--- Adressen
--- --------
-SELECT * FROM adressen;
-SELECT * FROM adressen
--- WHERE Strasse LIKE '%Zürcherstr.%';
-WHERE ID IN (715);                     
+-- Adressen bereinigen (double Adresses)
+-- -------------------------------------
+SELECT * FROM `adressen` WHERE ID in (399, 673);
+
+SELECT ID, 'Personen', Vorname, Ledig_Name, Privat_Adressen_ID, Geschaefts_Adressen_ID  
+FROM `personen` WHERE Privat_Adressen_ID     in (399, 673) OR
+					  Geschaefts_Adressen_ID in (399, 673)
+UNION
+SELECT ID, 'Durchleitungsrecht', '', '', Standort_Adresse_ID, ''  
+FROM `Durchleitungsrechte` WHERE Standort_Adresse_ID     in (399, 673)
+UNION
+SELECT ID, 'Wärmeanschlüsse', '', '', Standort_Adresse_ID, ''  
+FROM `Wärmeanschlüsse` WHERE Standort_Adresse_ID     in (399, 673);
+                      
+                             
+UPDATE `personen` SET `Privat_Adressen_ID`     = 399 WHERE Privat_Adressen_ID     in (673);
+UPDATE `personen` SET `Geschaefts_Adressen_ID` = 399 WHERE Geschaefts_Adressen_ID in (673);
+
+DELETE FROM `adressen` WHERE ID in (673);
+
+
+SELECT * FROM `adressen` WHERE Strasse LIKE '%Zürcherstr.%';                  
 
 
 -- email/telnr

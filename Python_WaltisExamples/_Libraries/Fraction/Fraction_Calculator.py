@@ -17,6 +17,14 @@
 from waltisLibrary import *
 from Class_Fraction import *
 
+help(Fraction)
+
+print(unterstreichen("Test-Cases from Bruch_Rechner"))
+bruch1 = Fraction()
+print(bruch1)
+print(bruch1.to_decimal().__doc__)
+print(bruch1)
+
 bruch_1 = Fraction(2, 3)
 bruch_1.reciprocal()
 print(bruch_1)
