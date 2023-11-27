@@ -324,7 +324,7 @@ def AUTO_TEST_init_str(verbal=False):
             bruch_x = Fraction(bruch_str=param_3)
             bruch_1 = Fraction(bruch=bruch_x)
         elif param_4 is not None:
-            bruch_1 = Fraction(bruch_str=param_3)
+            bruch_1 = Fraction(bruch_str=param_4)
         else:
             bruch_1 = Fraction(zaehler=param_1, nenner=param_2)
 

@@ -73,14 +73,25 @@ class Fraction:
         - only Integers no floats nor string,....
         """
         if bruch is not None:
-            pass
+            zaehler = bruch.zaehler
+            nenner  = bruch.nenner
         elif bruch_str is not None:
-            pass
-        else:
-            pass
+            parts = bruch_str.strip('[]').replace(':', '/').split('/')
+            if len(parts) == 1:
+                zaehler = parts[0]
+            elif len(parts) == 2:
+                zaehler = parts[0]
+                nenner  = parts[1]
 
-        self.set_zaehler(zaehler)
-        self.set_nenner(nenner)
+        self.zaehler = zaehler
+        self.nenner = nenner
+
+        if self.zaehler < 0 and self.nenner < 0:
+            self.zaehler = abs(self.zaehler)
+            self.nenner = abs(self.nenner)
+        elif self.zaehler < 0 or self.nenner < 0:
+            self.zaehler = -abs(self.zaehler)
+            self.nenner = abs(self.nenner)
 
     def __str__(self):
         """
@@ -309,7 +320,7 @@ def AUTO_TEST_init_str(verbal=False):
             bruch_x = Fraction(bruch_str=param_3)
             bruch_1 = Fraction(bruch=bruch_x)
         elif param_4 is not None:
-            bruch_1 = Fraction(bruch_str=param_3)
+            bruch_1 = Fraction(bruch_str=param_4)
         else:
             bruch_1 = Fraction(zaehler=param_1, nenner=param_2)
 
@@ -346,7 +357,7 @@ def AUTO_TEST_compareable(verbal=False):
     tests_failed = 0
     test_cases = """
     Nr|Type    |Fraction_1 |Compareable|Fraction_2 |Expected
-    01|Compare |[1/2]      |[2/4]      |           |
+    01|Compare |[1/2]      |==         |[1/2]      |True
 
     """
 
