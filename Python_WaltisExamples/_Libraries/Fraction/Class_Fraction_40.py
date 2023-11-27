@@ -20,7 +20,12 @@
 # 21-Nov-2023   Walter Rothlin  HBU Changes
 #
 # ------------------------------------------------------------------
-from waltisLibrary import *
+def generateStringRepeats(len, aStr=" "):
+    return (aStr * len)[:len]
+
+def unterstreichen(title, aChar="=", end="\n"):
+    return title + end + generateStringRepeats(len(title), aChar)
+
 class Fraction:
     """
     Provides basic support for math operations with fractions
