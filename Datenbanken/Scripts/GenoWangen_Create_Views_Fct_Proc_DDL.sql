@@ -36,7 +36,8 @@
 -- 16-Oct-2023   Walter Rothlin		 Added View Pächter_Pachtland_Differenzen
 -- 22-Oct-2023   Walter Rothlin		 Added View Bürger_mit_Mehrfachteilen
 -- 23-Oct-2023   Walter Rothlin		 Do Formate IBAN
--- 30-Oct_2023   Walter Rothlin      Added Nutzenbudget
+-- 30-Oct-2023   Walter Rothlin      Added Nutzenbudget
+-- 28-Nov-2023   Walter Rothlin      Added Login-View
 -- -----------------------------------------
 
 -- To-Does
@@ -1113,7 +1114,7 @@ CREATE VIEW Personen_Daten AS
           P.Kategorien                                 AS Kategorien,
 		  P.Funktion                                   AS Funktion,
           P.Sex                                        AS Geschlecht,       -- Herr | Frau
-
+		  P.`Password`                                 AS `Password`,
 		  getName_With_Initial(P.Vorname, 
                                P.Vorname_2)            AS Vorname_Initial,  -- Walter M.
           getFamilieName(P.Sex, 
@@ -2649,7 +2650,20 @@ CREATE VIEW Wärmeanschlüsse_Reco AS
     LEFT OUTER JOIN Personen_Daten AS heiziger   ON heiziger.ID   = anschluss.Heizungs_Installateur_ID
     LEFT OUTER JOIN Personen_Daten AS elektriker ON elektriker.ID = anschluss.Elektro_Installateur_ID;
  */
- 
+
+-- --------------------------------------------------------------------------------    
+DROP VIEW IF EXISTS Login_Table; 
+CREATE VIEW Login_Table AS
+    SELECT
+        Personen_ID,
+        Vorname_Familienname,
+        Tel_Nr,
+        eMail,
+        `Password`
+    FROM personen_has_priviliges AS pers_priv
+    JOIN Personen_Daten AS pDaten ON  pers_priv.Personen_ID = pDaten.ID;
+    
+    
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS PD_Row_Counts; 
 CREATE VIEW PD_Row_Counts AS
