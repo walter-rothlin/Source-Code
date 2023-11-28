@@ -128,10 +128,23 @@ DELETE FROM `adressen` WHERE ID in (673);
 SELECT * FROM `adressen` WHERE Strasse LIKE '%Zürcherstr.%';                  
 
 
--- email/telnr
--- -----------
-SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1211,1212,1213,1214,1215));
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (1211,1212,1213,1214,1215,644));
+-- telnr
+-- -----
+SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 809;
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (809)) Order by Prio;
+
+DELETE FROM personen_has_telefonnummern WHERE Telefonnummern_ID = 155;
+DELETE FROM telefonnummern WHERE ID = 155;
+
+SELECT * FROM telefonnummern WHERE Nummer = '4804183';
+
+
+-- email
+-- -----
+SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1211,1212,1213,1214,1215)) Order by Prio;
+
+
+
 
 SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 120;
