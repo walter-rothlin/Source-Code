@@ -18,6 +18,7 @@
 # 12-Oct-2022   Walter Rothlin  Implemented operators * / + and -
 # 12-Oct-2022   Walter Rothlin  Simplifying automated testing
 # 21-Nov-2023   Walter Rothlin  HBU Changes
+# 04-Dec-2023   Walter Rothlin  Perform Test in try-except block
 #
 # ------------------------------------------------------------------
 from waltisLibrary import *
@@ -27,44 +28,6 @@ class Fraction:
     """
     Provides basic support for math operations with fractions
     """
-
-    # setter / getters and properties
-    # -------------------------------
-    def set_zaehler(self, zaehler_param):
-        if zaehler_param is None:
-            self.__zaehler = 1
-        elif isinstance(zaehler_param, int):
-            self.__zaehler = zaehler_param
-        else:
-            try:
-                self.__zaehler = int(zaehler_param)
-            except Exception:
-                self.__zaehler = 0
-
-        # elif re.fullmatch(r'[+-]?\d', zaehler_param):
-        #     self.__zaehler = int(zaehler_param)
-        # else:
-
-    def get_zaehler(self):
-        return self.__zaehler
-
-    zaehler = property(get_zaehler, set_zaehler)
-
-    def set_nenner(self, nenner_param):
-        if nenner_param is None:
-            self.__nenner = 1
-        elif isinstance(nenner_param, int):
-            self.__nenner = nenner_param
-        else:
-            try:
-                self.__nenner = int(nenner_param)
-            except Exception:
-                self.__nenner = 1
-
-    def get_nenner(self):
-        return self.__nenner
-
-    nenner = property(get_nenner, set_nenner)
 
     def __init__(self, zaehler=0, nenner=1, bruch=None, bruch_str=None):
         """
@@ -115,6 +78,44 @@ class Fraction:
 
     def to_string(self, sep="/", startChr="[", endChar="]"):
         return startChr + str(self.__zaehler) + sep + str(self.__nenner) + endChar
+
+    # setter / getters and properties
+    # -------------------------------
+    def set_zaehler(self, zaehler_param):
+        if zaehler_param is None:
+            self.__zaehler = 1
+        elif isinstance(zaehler_param, int):
+            self.__zaehler = zaehler_param
+        else:
+            try:
+                self.__zaehler = int(zaehler_param)
+            except Exception:
+                self.__zaehler = 0
+
+        # elif re.fullmatch(r'[+-]?\d', zaehler_param):
+        #     self.__zaehler = int(zaehler_param)
+        # else:
+
+    def get_zaehler(self):
+        return self.__zaehler
+
+    zaehler = property(get_zaehler, set_zaehler)
+
+    def set_nenner(self, nenner_param):
+        if nenner_param is None:
+            self.__nenner = 1
+        elif isinstance(nenner_param, int):
+            self.__nenner = nenner_param
+        else:
+            try:
+                self.__nenner = int(nenner_param)
+            except Exception:
+                self.__nenner = 1
+
+    def get_nenner(self):
+        return self.__nenner
+
+    nenner = property(get_nenner, set_nenner)
 
     # comparable methods (operators)
     # ------------------------------
@@ -235,6 +236,9 @@ class Fraction:
     def __idiv__(self, other):  # /=
         return self
 
+# =================
+# Automated Testing
+# =================
 
 # static test methods
 def AUTO_TEST_init_str(verbal=False):
@@ -316,38 +320,49 @@ def AUTO_TEST_init_str(verbal=False):
         expected_result = list_of_test_values[6].strip()
 
         # Perform Test
-        if param_3 is not None:
-            bruch_x = Fraction(bruch_str=param_3)
-            bruch_1 = Fraction(bruch=bruch_x)
-        elif param_4 is not None:
-            bruch_1 = Fraction(bruch_str=param_4)
-        else:
-            bruch_1 = Fraction(zaehler=param_1, nenner=param_2)
+        try:
+            if param_3 is not None:
+                bruch_x = Fraction(bruch_str=param_3)
+                bruch_1 = Fraction(bruch=bruch_x)
+            elif param_4 is not None:
+                bruch_1 = Fraction(bruch_str=param_4)
+            else:
+                bruch_1 = Fraction(zaehler=param_1, nenner=param_2)
 
-        # Compare Test-Result with expectation
-        if str(bruch_1) != expected_result:
+            # Compare Test-Result with expectation
+            if str(bruch_1) != expected_result:
+                tests_failed += 1
+                # print(f"{test_case} ({test_suite}) failed!!")
+                print(sub_title)
+                print(list_of_test_cases[1].strip())
+                print(a_test_case.strip())
+
+                if param_3 is not None:
+                    print(f"  ==> Fraction(bruch={param_3}) = {bruch_1}")
+                elif param_4 is not None:
+                    print(f"  ==> Fraction(bruch_str='{param_4}') = {bruch_1}")
+                else:
+                    print(f"  ==> Fraction(zaehler={param_1}, nenner={param_2}) = {bruch_1}")
+                print(f"      Result  :'{bruch_1}'")
+                print(f"      Expected:'{expected_result}'")
+                print()
+
+        except Exception as e:
             tests_failed += 1
-            # print(f"{test_case} ({test_suite}) failed!!")
             print(sub_title)
             print(list_of_test_cases[1].strip())
             print(a_test_case.strip())
-
-            if param_3 is not None:
-                print(f"  ==> Fraction(bruch={param_3}) = {bruch_1}")
-            elif param_4 is not None:
-                print(f"  ==> Fraction(bruch_str='{param_4}') = {bruch_1}")
-            else:
-                print(f"  ==> Fraction(zaehler={param_1}, nenner={param_2}) = {bruch_1}")
-            print(f"      Result  :'{bruch_1}'")
-            print(f"      Expected:'{expected_result}'")
+            print(f'   ==> ERROR:{e}')
             print()
 
     if verbal:
+        percent = round(100-(100 * tests_failed / tests_performed),1)
         print("\n")
         print(f"     Test performed: {tests_performed}")
         print(f"     Test failed   : {tests_failed}")
-        print(f"     Passed        : {round(100 - (100 * tests_failed / tests_performed), 1)}%")
+        print(f"     Passed        : {percent}%     Teilnote: {(percent/20) + 1:1.1f} ")
         print("\n")
+
 
 
 def AUTO_TEST_compareable(verbal=False):
