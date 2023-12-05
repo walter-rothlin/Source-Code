@@ -11,6 +11,7 @@
 # History:
 # 21-Jun-2023   Walter Rothlin      Initial Version
 # 03-Sep-2023   Walter Rothlin      Reorganized library
+# 27-Nov-2023   Walter Rothlin      Mod get_person_details_from_DB_by_ID
 # ------------------------------------------------------------------------------------------------
 from waltisLibrary import *
 import mysql.connector
@@ -22,7 +23,7 @@ import openpyxl
 
 # Lambda function to check if a x is from WAHR / FALSCH.
 ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
-ifIntEmpty = lambda x: True if (x == '' or x == 'TRUE') else False
+ifIntEmpty = lambda x: True if (x == ''     or x == 'TRUE') else False
 
 
 # =================
@@ -36,8 +37,11 @@ class Stammdaten:
     def get_version(self):
         return("V1.0.0.0")
 
-    def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*']):
+    def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
         fieldStr = (',\n            ').join(attr_list)
+        like_str = 'LIKE'
+        if case_sensitive:
+            like_str = 'LIKE Binary'
 
         if id is None:
             if search_criterium is None:
@@ -48,11 +52,34 @@ class Stammdaten:
                     Limit 0,20;
                 """
             else:
-                sql = """
+                such_kriterien = search_criterium.split(' ')
+                if False:
+                    print('1:', such_kriterien)
+                prep_such_kriterien = []
+                for a_such_kriterium in such_kriterien:
+                    print('1)', a_such_kriterium)
+                    a_such_kriterium = a_such_kriterium.replace(' - ', '-')
+                    a_such_kriterium = a_such_kriterium.replace('+', ' ')
+                    print('2)', a_such_kriterium)
+                    split_liste = a_such_kriterium.split('-')
+                    for an_item in split_liste:
+                        prep_such_kriterien.append(an_item)
+
+                where_clauses = []
+                for a_such_kriterium in prep_such_kriterien:
+                    where_clauses.append(f"Such_Begriff {like_str} '%{a_such_kriterium}%'")
+
+                where_clause_str = ' AND\n                        '.join(where_clauses)
+                if False:
+                    print(where_clause_str)
+
+
+                sql = f"""
                     SELECT
-                        """ + fieldStr + """
+                        {fieldStr}
                     FROM Personen_Daten
-                    WHERE Such_Begriff LIKE '%""" + search_criterium + """%';
+                    WHERE 
+                        {where_clause_str};
                 """
         else:
             sql = """

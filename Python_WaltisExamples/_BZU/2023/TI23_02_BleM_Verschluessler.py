@@ -32,10 +32,10 @@ while do_loop:
         chipher_text = verschluesseln(klartext, key_str)
         print(f'{klartext}   (Key:{key_str})   --> {chipher_text}')
 
-        deschiffrat = verschluesseln(chipher_text, key_str, entschluesseln=True)
-        print(f'{chipher_text}   (Key:{key_str})   --> {deschiffrat}')
+        dechiffrat = verschluesseln(chipher_text, key_str, entschluesseln=True)
+        print(f'{chipher_text}   (Key:{key_str})   --> {dechiffrat}')
 
-        if klartext == deschiffrat:
+        if klartext == dechiffrat:
             print('Verschlüsselung ok!')
         else:
             print('ERROR!!!!!')

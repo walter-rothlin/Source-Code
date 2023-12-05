@@ -77,8 +77,8 @@ SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHER
 							  (adressen.strasse = CONCAT('Falkenstr', ' ', '9')             AND adressen.orte_id = 2)
                               );
 
-SELECT * FROM personen_daten WHERE ID IN (1035); -- sonstige temp Abfragen
-SELECT * FROM personen       WHERE ID IN (1211,1212,1213,1214,1215); -- sonstige temp Abfragen
+SELECT * FROM personen_daten WHERE ID IN (1126);
+SELECT * FROM personen       WHERE ID IN (1126);
 
 SELECT * FROM personen WHERE ID IN (285, 1084);                   -- 285, 1084, Wegzug unklar; In Abklärung beim Schreiber; 285 hat Landteil noch bei Edgar Hüppin
 SELECT * FROM personen_daten WHERE Bemerkungen != '' AND Bemerkungen LIKE '%weg%';
@@ -88,14 +88,11 @@ SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen
 
 -- IBAN
 -- ----
+SELECT * FROM iban_liste WHERE Pers_ID IN (1081);
+SELECT * FROM IBAN WHERE Personen_ID IN (1081);
+SELECT ID, Vorname_Name, IBAN FROM Personen_Daten WHERE ID in (1081);
 SELECT * FROM Personen_Daten WHERE (IBAN is NULL or IBAN = '') AND  FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0; -- Nutzungsberechtigte ohne IBAN
 SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer LIKE BINARY 'c%';                        -- Schlecht formatierte IBAN
-SELECT * FROM iban       WHERE Personen_ID IN (657, 1091, 815, 1035, 483, 428);     
-SELECT * FROM iban_liste WHERE Pers_ID     IN (610,1107, 934,534,619,806,820,721,508,1101,1104,509);
-SELECT * FROM iban WHERE Personen_ID in (534,509,721,820,806,1209,202,12.10,783,1208,644);
-SELECT -- *
-   ID, Vorname_Name, IBAN
-FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428);  -- Fehler bei IBAN
 
 
 -- Mutationen
@@ -104,18 +101,47 @@ SELECT * FROM Personen_Daten WHERE ID in (534,509,721,820,806,1209,202,12.10,783
 SELECT * FROM Personen_Daten WHERE ID in (1083,204,585, 1103);                   -- Mutationen vom 15.11.23
 SELECT * FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428, 606);  -- Mutationen vom 17.11.23
 
--- Adressen
--- --------
-SELECT * FROM adressen;
-SELECT * FROM adressen
--- WHERE Strasse LIKE '%Zürcherstr.%';
-WHERE ID IN (715);                     
+-- Adressen bereinigen (double Adresses)
+-- -------------------------------------
+SELECT * FROM `adressen` WHERE ID in (399, 673);
+
+SELECT ID, 'Personen', Vorname, Ledig_Name, Privat_Adressen_ID, Geschaefts_Adressen_ID  
+FROM `personen` WHERE Privat_Adressen_ID     in (399, 673) OR
+					  Geschaefts_Adressen_ID in (399, 673)
+UNION
+SELECT ID, 'Durchleitungsrecht', '', '', Standort_Adresse_ID, ''  
+FROM `Durchleitungsrechte` WHERE Standort_Adresse_ID     in (399, 673)
+UNION
+SELECT ID, 'Wärmeanschlüsse', '', '', Standort_Adresse_ID, ''  
+FROM `Wärmeanschlüsse` WHERE Standort_Adresse_ID     in (399, 673);
+                      
+                             
+UPDATE `personen` SET `Privat_Adressen_ID`     = 399 WHERE Privat_Adressen_ID     in (673);
+UPDATE `personen` SET `Geschaefts_Adressen_ID` = 399 WHERE Geschaefts_Adressen_ID in (673);
+
+DELETE FROM `adressen` WHERE ID in (673);
 
 
--- email/telnr
--- -----------
-SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1211,1212,1213,1214,1215));
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (1211,1212,1213,1214,1215,644));
+SELECT * FROM `adressen` WHERE Strasse LIKE '%Zürcherstr.%';                  
+
+
+-- telnr
+-- -----
+SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 385;
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (385)) Order by Prio;
+
+DELETE FROM personen_has_telefonnummern WHERE Telefonnummern_ID = 155;
+DELETE FROM telefonnummern WHERE ID = 155;
+
+SELECT * FROM telefonnummern WHERE Nummer = '4804183';
+
+
+-- email
+-- -----
+SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (385)) Order by Prio;
+
+
+
 
 SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 120;

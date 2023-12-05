@@ -19,6 +19,7 @@
 -- 07-Oct_2023   Walter Rothlin		 Added   `Sich_Für_Bürgertag_definitiv_abgemeldet_Am` to Personen
 -- 16-Oct-2023   Walter Rothlin      Added Bemerkungen zu landteilen
 -- 07-Nov-2023   Walter Rothlin      Added Entschädigungs_Modelle und Durchleitungsrechte
+-- 27-Nov-2023   Walter Rothlin      Added Password to Person and Add Privilege-Table
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -151,7 +152,8 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Partner_Name`             VARCHAR(45) NULL,
   `Partner_Name_Angenommen`  BOOLEAN DEFAULT FALSE,
   `AHV_Nr`                   VARCHAR(45) NULL,
-  `SAK`                      FLOAT NULL DEFAULT NULL,           
+  `SAK`                      FLOAT NULL DEFAULT NULL,
+  `Password`                 VARCHAR(20) NULL,
   `Betriebs_Nr`              VARCHAR(45) NULL,
 
   `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt',
@@ -236,6 +238,50 @@ CREATE TABLE IF NOT EXISTS Personen (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+
+-- -----------------------------------------
+-- Table `Priviliges`
+-- -----------------------------------------
+DROP TABLE IF EXISTS Priviliges;
+CREATE TABLE IF NOT EXISTS Priviliges (
+  `ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Application`  VARCHAR(45)  NOT NULL,
+  `Privilege`    VARCHAR(45)  NOT NULL,
+  `last_update`  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  -- PK-Constraints
+  PRIMARY KEY (`ID`));
+  
+-- -----------------------------------------
+-- Table `Personen_has_Priviliges`
+-- -----------------------------------------
+DROP TABLE IF EXISTS Personen_has_Priviliges;
+CREATE TABLE IF NOT EXISTS Personen_has_Priviliges (
+  -- `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Personen_ID`       INT UNSIGNED NOT NULL,
+  `Privilige_ID`      INT UNSIGNED NOT NULL,
+  `last_update`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      
+  -- PK-Constraints
+  -- PRIMARY KEY (`ID`),
+  PRIMARY KEY (`Personen_ID`, `Privilige_ID`),
+  
+  -- Indizes
+  INDEX `fk_Personen_has_Priviliges_1_idx` (`Personen_ID` ASC)   VISIBLE,
+  INDEX `fk_Personen_has_Priviliges_2_idx` (`Privilige_ID` ASC)  VISIBLE,
+  
+  -- FK-Constraints
+  CONSTRAINT `fk_Personen_has_Priviliges_Personen1`
+    FOREIGN KEY (`Personen_ID`)
+    REFERENCES `Personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Personen_has_Priviliges_Adressen1`
+    FOREIGN KEY (`Privilige_ID`)
+    REFERENCES `Priviliges` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
 -- -----------------------------------------
 -- Table `EMail_Adressen`
 -- -----------------------------------------

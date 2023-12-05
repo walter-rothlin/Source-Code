@@ -1,4 +1,15 @@
+#!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/_HBU/2023_03_PY2/01_Classes_SubClasses/Car.py
+#
+# Description: Beispiele
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 06-Sep-2023   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 class Car:
     '''
     Diese Klasse representiert ein Auto.......

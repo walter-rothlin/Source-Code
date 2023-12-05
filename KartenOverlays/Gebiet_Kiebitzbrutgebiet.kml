@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/kml/2.2 https://developers.google.com/kml/schema/kml22gx.xsd">
    <Document>
-      <name>Zeichnung</name>
+      <name>Kiebitz-Brutgebiet im NSG</name>
       <Placemark id="linepolygon_1604912582979">
          <ExtendedData>
             <Data name="type">

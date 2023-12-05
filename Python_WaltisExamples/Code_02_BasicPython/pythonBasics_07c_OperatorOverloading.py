@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: pythonBasics_05b_OperatorOverloading.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_05b_OperatorOverloading.py
+# Name: pythonBasics_07c_OperatorOverloading.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_07c_OperatorOverloading.py
 #
 # Description: Example for Operator Overloading
 #

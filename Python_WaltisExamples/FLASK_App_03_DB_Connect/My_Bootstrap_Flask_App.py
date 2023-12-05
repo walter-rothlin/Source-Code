@@ -16,8 +16,8 @@
 # ------------------------------------------------------------------
 # from flask import Flask, redirect, url_for, render_template
 from Genossame_Common_Defs import *
-
 from flask import Flask, render_template, request, redirect, url_for, session
+
 
 app = Flask(__name__)
 app.secret_key = 'geheimnis'
@@ -61,12 +61,26 @@ def personen_details():
         else:
             pid = request.args.get("pid")
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
-        print(rs)
-        print('pid:', pid, '    Anz Rec found: ', len(rs))
+        # print(rs)
+        # print('pid:', pid, '    Anz Rec found: ', len(rs))
         return render_template("person_details.html", details=rs[0])
     else:
         return render_template("index.html")
 
+@app.route("/delete_single_person", methods=['GET', 'POST'])
+def delete_single_person():
+    print('delete_single_person() called!!!')
+    if session is not None and 'username' in session and session['username'] is not None:
+        if request.method == 'POST':
+            pid = request.form.get("pid")
+        else:
+            pid = request.args.get("pid")
+        rs = genossame.get_person_details_from_DB_by_ID(id=pid)
+        # print(rs)
+        # print('pid:', pid, '    Anz Rec found: ', len(rs))
+        return render_template("person_details.html", details=rs[0])
+    else:
+        return render_template("index.html")
 
 # Login / Logout Functions
 # ========================
