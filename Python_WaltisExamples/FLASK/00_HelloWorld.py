@@ -51,7 +51,7 @@ def index():
 @app.route('/Hallo')
 def hello():
     state.inc()
-    return 'Guten <B>Abend</B> BWI-A20'
+    return 'Guten <B>Abend</B> Studenten'
 
 @app.route('/Reihe')
 def zahlenreihe():

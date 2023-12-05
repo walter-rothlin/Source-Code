@@ -2416,6 +2416,7 @@ CREATE VIEW Paechterstatistik AS
            Paechter_Strasse              AS Strasse,
            Paechter_Priv_PLZ             AS PLZ,
            Paechter_Priv_Ort             AS Ort,
+           Pachter_Betriebs_Nr           AS Betriebs_Nr,
            ROUND(SUM(Flaeche),2)         AS Geno_Flaeche,
 		   SUM(Geno_Pachtzins_pro_Jahr)  AS Geno_Pachtzins,
            Paechter_Alter                AS `Alter`,
