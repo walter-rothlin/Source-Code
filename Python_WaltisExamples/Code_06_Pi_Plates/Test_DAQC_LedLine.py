@@ -1,23 +1,36 @@
 #!/usr/bin/python3
 
-
-# Notepad++ Spaces instead of TAB: Settings --> Preferences... --> 	
-
+# ------------------------------------------------------------------
+# Name  : Test_DAQC_LedLine.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_06_Pi_Plate/Test_DAQC_LedLine.py
+#
+# Description: Test with PiPlate: DAQC-Plate
+#
+# Notepad++ Spaces instead of TAB: Settings --> Preferences... -->
+#
 # http://pi-plates.com/daqc-users-guide/
-
-### To install the pi-plates module use:   
+#
+### To install the pi-plates module use:
 ##    Enable SPI unter einstellungen --> Interfaces
 ##    sudo pip3 install pi-plates
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 01-Dec-2023   Walter Rothlin      Initial Version
+# 04-Dec-2023   Walter Rothlin      set_pixel overwritten
+#
+# ------------------------------------------------------------------
 
 import os
 import sys
 import time
 import datetime
 import piplates.DAQCplate as DAQC
-from   CLASS_DAQC_LedLine import *
+from   Class_DAQC_LedLine import *
 
 print("Test CLASS_DAQC_LedLine (Adr=1)...")
-ledLine_1 = CLASS_DAQC_LedLine("Test-Balken", 1)
+ledLine_1 = DAQC_LedLine("Test-Balken", 1)
 ledLine_1.drawBalken(3)
 time.sleep(1)
 ledLine_1.incBalken()

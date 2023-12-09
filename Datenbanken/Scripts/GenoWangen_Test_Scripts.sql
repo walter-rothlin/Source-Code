@@ -97,7 +97,7 @@ SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer L
 
 -- Mutationen
 -- ----------
-SELECT * FROM Personen_Daten WHERE ID in (534,509,721,820,806,1209,202,12.10,783,1208);
+SELECT * FROM Personen_Daten WHERE ID in (1125,1183,877);
 SELECT * FROM Personen_Daten WHERE ID in (1083,204,585, 1103);                   -- Mutationen vom 15.11.23
 SELECT * FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428, 606);  -- Mutationen vom 17.11.23
 
@@ -127,8 +127,8 @@ SELECT * FROM `adressen` WHERE Strasse LIKE '%Zürcherstr.%';
 
 -- telnr
 -- -----
-SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 385;
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (385)) Order by Prio;
+SELECT * FROM personen_has_telefonnummern WHERE Personen_ID IN (1125,1183);
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (1125,1183)) Order by Prio;
 
 DELETE FROM personen_has_telefonnummern WHERE Telefonnummern_ID = 155;
 DELETE FROM telefonnummern WHERE ID = 155;
@@ -138,7 +138,7 @@ SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 
 -- email
 -- -----
-SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (385)) Order by Prio;
+SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (483)) Order by Prio;
 
 
 
@@ -147,7 +147,7 @@ SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 120;
 
 SELECT * FROM email_adressen WHERE email LIKE '%Rothlin%';
-SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (826);
+SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (1125,1183);
 
 
 SELECT Strassen_Adresse_Ort FROM adress_daten GROUP BY Strassen_Adresse_Ort Having count(*) > 1;  # alle doppelten Einträget
