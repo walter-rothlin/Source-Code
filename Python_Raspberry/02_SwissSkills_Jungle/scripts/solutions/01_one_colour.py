@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : 01_one_colour.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Raspberry/002_SwissSkills_Jungle/scripts/solutions/01_one_colour.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Raspberry/02_SwissSkills_Jungle/scripts/solutions/01_one_colour.py
 #
 # Description: RGB LED-Strips
 #
@@ -10,8 +10,8 @@
 # Autor: Walter Rothlin
 #
 # History:
-# 01-Jan-2018   Monike Meister   Initial Version for CS @ Swiss skills
-# 09-Dec-2023   Walter Rothlin   Integrated in Moodle course
+# 01-Jan-2018   Benjamin Raison   Initial Version for CS @ Swiss skills
+# 09-Dec-2023   Walter Rothlin    Integrated in Moodle course
 #
 # ------------------------------------------------------------------
 
