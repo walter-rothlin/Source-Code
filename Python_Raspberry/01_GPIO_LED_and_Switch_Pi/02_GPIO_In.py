@@ -1,20 +1,30 @@
 #!/usr/bin/python3
 
-#==================
-# Autohr: Dylan Egger
+# ------------------------------------------------------------------
+# Name  : 02_GPIO_In.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Raspberry/01_Gpio_out/02_GPIO_In.py
 #
-# versionen
-# 1.0.0  5.12.2023  dylan eggger  initial version
-#=========
+# Description: GPIO simple
+#
+# GPIO PIN Belegung:     http://www.peterliwiese.ch/img/GPIO_RPi.png
+# GPIO Simple Schaltung: http://www.peterliwiese.ch/img/RPi_GPIO_LED_Switch_schema.png
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 05-Dec-2023   Dylan Egger      Initial Version
+# 09-Dec-2023   Walter Rothlin   Integrated in Moodle course
+#
+# ------------------------------------------------------------------
 
 # import
 import RPi.GPIO as GPIO
 
 #gpio setup
-GPIO.setmode(GPIO.BCM) #sagt welcer gpio modus gebraucht wird
+GPIO.setmode(GPIO.BCM) # sagt welcher gpio modus gebraucht wird
 
-GPIO.setup(2, GPIO.IN) #definirt gpio pin 2 als input
+GPIO.setup(2, GPIO.IN) # definiert gpio pin 2 als input
 
 #loop
 while True:
-    print(GPIO.input(2)) # druckt den aktuellen Wert auf pin 2 ins terminal
+    print(GPIO.input(2)) # druckt den aktuellen Wert von pin 2 ins terminal
