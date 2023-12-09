@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : 01_GPIO_Out.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Raspberry/01_Gpio_out/01_GPIO_Out.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Raspberry/01_GPIO_LED_and_Switch_Pi/01_GPIO_Out.py
 #
 # Description: GPIO simple
 #
