@@ -17,4 +17,4 @@ GPIO.setup(2, GPIO.IN) #definirt gpio pin 2 als input
 
 #loop
 while True:
-    print(GPIO.input(2)) # drukt den aktuellen wärt auf pin 2 ins terminal
+    print(GPIO.input(2)) # druckt den aktuellen Wert auf pin 2 ins terminal

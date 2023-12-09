@@ -1,5 +1,19 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : 01_GPIO_out.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Raspberry/01_Gpio_out/01_GPIO_out.py
+#
+# Description: Manager für Genossame-Daten
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 01-Jan-2023   Walter Rothlin      Initial Version
+# 21-Jun-2023   Walter Rothlin      Added Commen_Defs
+#
+# ------------------------------------------------------------------
+
 #==================
 # Autohr: Dylan Egger
 #
