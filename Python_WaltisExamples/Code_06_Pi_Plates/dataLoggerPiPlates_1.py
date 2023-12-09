@@ -22,8 +22,8 @@ from waltisLibrary import *
 
 import piplates.DAQCplate      as DAQC 
 import piplates.RELAYplate     as RELAY 
-from   CLASS_DAQC_LedLine      import *
-from   CLASS_TemperaturSensor  import *
+from   Class_DAQC_LedLine      import *
+from   Class_TemperaturSensor  import *
 
 finished = False
 dataFileName = "DataFile.txt"
@@ -34,8 +34,8 @@ i = 0
 isOn = True
 DAQC.setDOUTbit(1, 0)
 
-temp1 = CLASS_TemperaturSensor("Vorlauf", 1, 0)
-temp2 = CLASS_TemperaturSensor("Aussen", 1, 1, 1, 10, 3)
+temp1 = TemperaturSensor("Vorlauf", 1, 0)
+temp2 = TemperaturSensor("Aussen", 1, 1, 1, 10, 3)
 
 dataFile = open(dataFileName, "+w")
 dataFile.write("{tm:14s}|{Temp1:10s}|{Temp2:10s}\n".format(tm="Timestamp", Temp1=temp1.getName(), Temp2=temp2.getName()))

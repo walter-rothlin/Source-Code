@@ -1,8 +1,21 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : Class_Temperatur.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_Temperatur.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 01-Dec-2023   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
+
 import piplates.DAQCplate as DAQC
 
-class CLASS_TemperaturSensor:
+class TemperaturSensor:
 
     def __init__(self, name, plateAdr, pinNr, toleranz=1, vorkomma=10, nachkomma=2):
         self.name = name

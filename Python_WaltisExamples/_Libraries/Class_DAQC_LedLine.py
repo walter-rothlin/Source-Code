@@ -1,5 +1,17 @@
 #!/usr/bin/python3
 
+# ------------------------------------------------------------------
+# Name  : Class_DAQC_LedLine.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_DAQC_LedLine.py
+#
+# Description:
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 01-Dec-2023   Walter Rothlin      Initial Version
+#
+# ------------------------------------------------------------------
 import piplates.DAQCplate as DAQC
 
 class DAQC_LedLine:
