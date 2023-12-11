@@ -38,6 +38,7 @@
 -- 23-Oct-2023   Walter Rothlin		 Do Formate IBAN
 -- 30-Oct-2023   Walter Rothlin      Added Nutzenbudget
 -- 28-Nov-2023   Walter Rothlin      Added Login-View
+-- 11-Dec-2023   Walter Rothlin      Added Double Nutzenauszahlung (gleiche IBAN)
 -- -----------------------------------------
 
 -- To-Does
@@ -2230,13 +2231,13 @@ CREATE VIEW Nutzenauszahlung AS
       Hat_35a_Teil,
       Hat_Bürger_Teil,
 	  Geschlecht, 
-	  Vorname_Initial                               AS Vorname, 
-	  Familien_Name                                 AS Familienname, 
-	  Private_Strassen_Adresse                      AS Strasse,
-	  Private_PLZ_Ort                               AS PLZ_Ort,
-      Vorname_Name                                  AS Vorname_Nachname,
-      IBAN                                          AS IBAN,
-      'Genossennutzen 2023'                         AS Grund,   
+	  Vorname_Initial                                                         AS Vorname, 
+	  Familien_Name                                                           AS Familienname, 
+	  Private_Strassen_Adresse                                                AS Strasse,
+	  Private_PLZ_Ort                                                         AS PLZ_Ort,
+      Vorname_Name                                                            AS Vorname_Nachname,
+      IBAN                                                                    AS IBAN,
+      concat('Genossennutzen ', (SELECT YEAR(NOW())))                         AS Grund,   
       ROUND(calc_nutzen_by_katset(Kategorien),2)    AS Nutzen
       
 	  -- Tel_Nr,
@@ -2249,46 +2250,90 @@ CREATE VIEW Nutzenauszahlung AS
     ORDER BY Bürger_Teile, Familienname;
 
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Nutzenstatistik;
-CREATE VIEW Nutzenstatistik AS    
+DROP VIEW IF EXISTS Double_Nutzen;
+CREATE VIEW Double_Nutzen AS
+	SELECT 
+		ID, 
+		Geschlecht,
+		Vorname_Nachname, 
+		Vorname, 
+		Familienname, 
+		Strasse, 
+		PLZ_Ort, 
+		IBAN,
+		Nutzen 
+	FROM Nutzenauszahlung 
+	WHERE iban in (SELECT 
+					   Nummer
+				   FROM IBAN
+				   GROUP BY Nummer
+				   HAVING COUNT(*) > 1)
+	ORDER BY IBAN, Geschlecht;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzenstatistik_1;
+CREATE VIEW Nutzenstatistik_1 AS    
 	SELECT
-        Count(Nutzen)           AS Anzahl,
-		Bürger_Teile            AS Bürgerteile,
-		ROUND(Sum(Nutzen),2)    AS Nutzen_Betrag
+        CONCAT('Bürger mit ', Bürger_Teile)            AS Bezeichnung,
+        Count(Nutzen)                                  AS Anzahl,
+		ROUND(Sum(Nutzen),2)                           AS Betrag
 	FROM Nutzenauszahlung 
 	GROUP BY Bürger_Teile
-	ORDER BY Nutzen_Betrag;
-    
+	ORDER BY Betrag;
+  
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Nutzenbudget;
-CREATE VIEW Nutzenbudget AS    
+DROP VIEW IF EXISTS Nutzenstatistik_2;
+CREATE VIEW Nutzenstatistik_2 AS    
 	SELECT 
+        (SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 1) AS Bezeichnung, 
 		sum(anzahl)                                                         AS Anzahl,
-		(SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 1) AS Nutzenart, 
 		sum(anzahl) * (SELECT `Value` from properties WHERE ID = 1)         AS Betrag 
-	FROM nutzenstatistik
+	FROM Nutzenstatistik_1
 	UNION
 	SELECT 
-		sum(anzahl)                                                         AS Anzahl,
-		(SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 2) AS Nutzenart, 
+		(SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 2) AS Bezeichnung, 
+        sum(anzahl)                                                         AS Anzahl,
 		sum(anzahl) * (SELECT `Value` from properties WHERE ID = 2)         AS Betrag 
-	FROM nutzenstatistik
-	WHERE Bürgerteile != 'Nur 16a_Teil' AND Bürgerteile != 'Beide Landteile'
+	FROM Nutzenstatistik_1
+	WHERE Bezeichnung != 'Bürger mit Nur 16a_Teil' AND Bezeichnung != 'Bürger mit Beide Landteile'
 	UNION
-	SELECT 
+	SELECT
+        (SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 3) AS Bezeichnung, 
 		sum(anzahl)                                                         AS Anzahl,
-		(SELECT concat(`Name`,' à ', `Value`) from properties WHERE ID = 3) AS Nutzenart, 
 		sum(anzahl) * (SELECT `Value` from properties WHERE ID = 3)         AS Betrag 
-	FROM nutzenstatistik
-	WHERE Bürgerteile != 'Nur 35a_Teil' AND Bürgerteile != 'Beide Landteile';
+	FROM Nutzenstatistik_1
+	WHERE Bezeichnung != 'Bürger mit Nur 35a_Teil' AND Bezeichnung != 'Bürger mit Beide Landteile';
     
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Nutzensumme; 
-CREATE VIEW Nutzensumme AS     
-SELECT
-	sum(Anzahl)         AS `Anzahl Auszahlungen`,
-    sum(Nutzen_Betrag)  AS `Anzahlungs Summe`
-FROM Nutzenstatistik;
+DROP VIEW IF EXISTS Nutzenstatistik_3; 
+CREATE VIEW Nutzenstatistik_3 AS     
+	SELECT
+		'        Total:'        AS Bezeichnung, 
+		sum(Anzahl)         AS `Anzahl`,
+		sum(Betrag)  AS `Betrag`
+	FROM Nutzenstatistik_1;
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Nutzenstatistik; 
+CREATE VIEW Nutzenstatistik AS     
+	SELECT * FROM Nutzenstatistik_1
+    UNION
+	SELECT 
+         '       Total:' AS Bezeichnung,
+		 (SELECT sum(Anzahl) FROM Nutzenstatistik_1) AS Anzahl,
+		 (SELECT sum(Betrag) FROM Nutzenstatistik_1) AS Betrag
+	-- UNION
+    -- SELECT '' AS Bezeichnung,
+	-- 	   '' AS Anzahl,
+    --        '' AS Betrag
+	UNION
+	SELECT * FROM Nutzenstatistik_2
+	-- UNION
+    -- SELECT '' AS Bezeichnung,
+	-- 	   '' AS Anzahl,
+    --       '' AS Betrag
+	UNION
+	SELECT * FROM Nutzenstatistik_3;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Pachtlandzuteilung; 

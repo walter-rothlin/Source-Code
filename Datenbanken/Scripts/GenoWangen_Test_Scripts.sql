@@ -100,6 +100,7 @@ SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer L
 SELECT * FROM Personen_Daten WHERE ID in (1125,1183,877);
 SELECT * FROM Personen_Daten WHERE ID in (1083,204,585, 1103);                   -- Mutationen vom 15.11.23
 SELECT * FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428, 606);  -- Mutationen vom 17.11.23
+SELECT * FROM Personen_Daten WHERE ID in (974, 437, 670, 357);  -- Mutationen vom 11.12.23
 
 -- Adressen bereinigen (double Adresses)
 -- -------------------------------------
@@ -185,6 +186,4 @@ ALTER TABLE adressen AUTO_INCREMENT = 702;
               Such_Begriff LIKE BINARY '%Na%' AND 
               Such_Begriff LIKE BINARY '%%'
         ORDER BY Familien_Name, Vorname;
-*/    
-
-
+*/

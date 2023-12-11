@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+    {{ details.Anrede_Long_Long }} {% if details.Todestag != None %} {{ details.Geburtstag }} -  {{ details.Todestag }}{% endif %} ({{ details.Alter }})<BR/>
+    {{ details.Private_Strassen_Adresse }}<BR/>
+    {{ details.Private_PLZ_International }} {{ details.Private_Ort }}<BR/><BR/>
+
+    {% if details.Zivilstand != None and details.Zivilstand != '' %}Zivilstand: <B>{{ details.Zivilstand }}</B><BR/>{% endif %}
+    {% if details.Kategorien != None and details.Kategorien != '' %}Kategorien: <B>{{ details.Kategorien }}</B><BR/>{% endif %}
+    {% if details.Funktion   != None and details.Function   != '' %}Funktion:   <B>{{ details.Funktion }}  </B><BR/>{% endif %}
+    {% if details.Hat_16a_Teil        != None and details.Hat_16a_Teil        != '' %}Hat_16a:             <B>{{ details.Hat_16a_Teil }}       </B><BR/>{% endif %}
+    {% if details.Hat_35a_Teil        != None and details.Hat_35a_Teil        != '' %}Hat_35a:             <B>{{ details.Hat_35a_Teil }}       </B><BR/>{% endif %}
+    {% if details.Ist_Pächter         != None and details.Ist_Pächter         != '' %}Ist_Pächter:         <B>{{ details.Ist_Pächter }}        </B><BR/>{% endif %}
+    {% if details.Ist_DZ_berechtigt   != None and details.Ist_DZ_berechtigt   != '' %}Ist_DZ_berechtigt:   <B>{{ details.Ist_DZ_berechtigt }}  </B><BR/>{% endif %}
+    <BR/>
+    {% if details.Tel_Nr   != None and details.Tel_Nr   != '' %} Telefon-Nr:<BR/><B>{{ details.Tel_Nr }}  </B> {{ (details.Tel_Nr_Detail_Long).split(':')[3] }}   {{ (details.Tel_Nr_Detail_Long).split(':')[4] }}  <BR/>{% endif %}
+    {% if details.Tel_Nr_1 != None and details.Tel_Nr_1 != '' %}                 <B>{{ details.Tel_Nr_1 }}</B> {{ (details.Tel_Nr_1_Detail_Long).split(':')[3] }} {{ (details.Tel_Nr_1_Detail_Long).split(':')[4] }}<BR/>{% endif %}
+    {% if details.Tel_Nr_2 != None and details.Tel_Nr_2 != '' %}                 <B>{{ details.Tel_Nr_2 }}</B> {{ (details.Tel_Nr_2_Detail_Long).split(':')[3] }} {{ (details.Tel_Nr_2_Detail_Long).split(':')[4] }}<BR/>{% endif %}
+    <BR/>
+    {% if details.eMail   != None and details.eMail   != '' %}eMail:<BR/> <B>{{ details.eMail }}  </B> {{ (details.eMail_Detail_Long).split(':')[3] }}   <BR/>{% endif %}
+    {% if details.eMail_1 != None and details.eMail_1 != '' %}            <B>{{ details.eMail_1 }}</B> {{ (details.eMail_1_Detail_Long).split(':')[3] }} <BR/>{% endif %}
+    {% if details.eMail_2 != None and details.eMail_2 != '' %}            <B>{{ details.eMail_2 }}</B> {{ (details.eMail_2_Detail_Long).split(':')[3] }} <BR/>{% endif %}
+    <BR/>
+    {% if details.IBAN        != None and details.IBAN        != '' %} IBAN:        <B>{{ details.IBAN }}       </B><BR/> {% endif %}
+    {% if details.AHV_Nr      != None and details.AHV_Nr      != '' %} AHV :        <B>{{ details.AHV_Nr }}     </B><BR/> {% endif %}
+    {% if details.SAK         != None and details.SAK         != '' %} SAK :        <B>{{ details.SAK }}        </B><BR/> {% endif %}
+    {% if details.Betriebs_Nr != None and details.Betriebs_Nr != '' %} Betriebs_Nr: <B>{{ details.Betriebs_Nr }}</B><BR/> {% endif %}
+    <BR/>
+    Life Timeline:
+    <BR/>
+    {% if details.Geburtstag                                 != None and details.Geburtstag                                 != '' %} Geboren:              <B>{{ details.Geburtstag }}                               </B><BR/> {% endif %}
+    {% if details.Angemeldet_Am                              != None and details.Angemeldet_Am                              != '' %} Angemeldet:           <B>{{ details.Angemeldet_Am }}                            </B><BR/> {% endif %}
+    {% if details.Aufgenommen_Am                             != None and details.Aufgenommen_Am                             != '' %} Aufgenommen:          <B>{{ details.Aufgenommen_Am }}                           </B><BR/> {% endif %}
+    {% if details.Sich_Für_Bürgertag_Angemeldet_Am           != None and details.Sich_Für_Bürgertag_Angemeldet_Am           != '' %} Bürgertag angemeldet: <B>{{ details.Sich_Für_Bürgertag_Angemeldet_Am }}         </B><BR/> {% endif %}
+    {% if details.Sich_Für_Bürgertag_definitiv_abgemeldet_Am != None and details.Sich_Für_Bürgertag_definitiv_abgemeldet_Am != '' %} Bürgertag abgemeldet: <B>{{ details.Sich_Für_Bürgertag_definitiv_abgemeldet_Am}}</B><BR/> {% endif %}
+    {% if details.Neubürgertag_gemacht_Am                    != None and details.Neubürgertag_gemacht_Am                    != '' %} Bürgertag gemacht:    <B>{{ details.Neubürgertag_gemacht_Am }}                  </B><BR/> {% endif %}
+    {% if details.Baulandgesuch_Eingereicht_Am               != None and details.Baulandgesuch_Eingereicht_Am               != '' %} Baulandgesuch:        <B>{{ details.Baulandgesuch_Eingereicht_Am }}             </B><BR/> {% endif %}
+    {% if details.Bauland_Gekauft_Am                         != None and details.Bauland_Gekauft_Am                         != '' %} Bauland gekauft:      <B>{{ details.Bauland_Gekauft_Am }}                       </B><BR/> {% endif %}
+    {% if details.Funktion_Uebernommen_Am                    != None and details.Funktion_Uebernommen_Am                    != '' %} Funktion übernommen:  <B>{{ details.Funktion_Uebernommen_Am }}                  </B><BR/> {% endif %}
+    {% if details.Funktion_Abgegeben_Am                      != None and details.Funktion_Abgegeben_Am                      != '' %} Funktion abgegeben:   <B>{{ details.Funktion_Abgegeben_Am }}                    </B><BR/> {% endif %}
+    {% if details.Chronik_Bezogen_Am                         != None and details.Chronik_Bezogen_Am                         != '' %} Chronik bezogen:      <B>{{ details.Chronik_Bezogen_Am }}                       </B><BR/> {% endif %}
+    {% if details.Newsletter_Abonniert_Am                    != None and details.Newsletter_Abonniert_Am                    != '' %} Newsletter abonniert: <B>{{ details.Newsletter_Abonniert_Am }}                  </B><BR/> {% endif %}
+    {% if details.Todestag                                   != None and details.Geburtstag                                 != '' %} Gestorben:            <B>{{ details.Todestag }}                                 </B><BR/> {% endif %}
+    <BR/>
+    {% if details.History      != None and details.History      != '' %} History:      <B>{{ details.History }}     </B><BR/> {% endif %}
+    {% if details.Bemerkungen  != None and details.Bemerkungen  != '' %} Bemerkungen:  <B>{{ details.Bemerkungen }} </B><BR/> {% endif %}
+    {% if details.Such_Begriff != None and details.Such_Begriff != '' %} Such-Begriff: <B>{{ details.Such_Begriff }}</B><BR/> {% endif %}
+</div>
+{% endblock %}
