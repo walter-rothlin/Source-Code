@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: Class_Fraction.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Fraction/Class_Fraction_40.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_Fraction.py
 #
 # Description: Implementiert einen Bruch (Farction) and the basics oparators
 #
