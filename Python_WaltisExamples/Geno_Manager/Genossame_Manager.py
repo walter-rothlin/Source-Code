@@ -204,6 +204,7 @@ db_attr_excel_column_mapping = [
     {'excel': 'Baulandgesuch_Eingereicht_Am'},
     {'excel': 'Bauland_Gekauft_Am'},
     {'excel': 'Angemeldet_Am'},
+    {'excel': 'Aufnahme_Gebühr_bezahlt_Am'},
     {'excel': 'Aufgenommen_Am'},
     {'excel': 'Sich_Für_Bürgertag_Angemeldet_Am'},
     {'excel': 'Sich_Für_Bürgertag_definitiv_abgemeldet_Am'},

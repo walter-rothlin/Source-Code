@@ -57,11 +57,21 @@ SELECT @max_value;   -- 701
 
 -- Personen
 -- --------
-UPDATE `personen` SET `Partner_ID`  = 644   WHERE `ID` = 1172;   -- Partner von Claudia		is 	Walti
-UPDATE `personen` SET `Partner_ID`  = '1172'  WHERE `ID` = '644';    -- Partner von Walti   	is 	Claudia
-UPDATE `personen` SET `Vater_ID`    = '644'   WHERE `ID` = '1103';   -- Vater   von Tobias     	is  Walti
-UPDATE `personen` SET `Vater_ID`    = '1172'   WHERE `ID` = '1103';   -- Mutter  von Tobias     	is  Claudia
+UPDATE `personen` SET `Partner_ID`  = 644      WHERE `ID`  = 1172;   -- Partner von Claudia		is 	Walti
+UPDATE `personen` SET `Partner_ID`  = '1172'   WHERE `ID`  = '644';    -- Partner von Walti   	is 	Claudia
+UPDATE `personen` SET `Vater_ID`    = '644'    WHERE `ID`  = '1103';   -- Vater   von Tobias     	is  Walti
+UPDATE `personen` SET `Vater_ID`    = '1172'   WHERE `ID`  = '1103';   -- Mutter  von Tobias     	is  Claudia
 UPDATE `personen` SET `Vater_ID`    = '223'    WHERE (`ID` = '644');
+SELECT * FROM Personen_Daten WHERE ID in (644, 1172, 223, 1103, 1172);
+
+
+-- Corrupted Data
+-- --------------
+SELECT * FROM personen_daten WHERE ID IN (385,840);
+SELECT * FROM personen WHERE ID IN (385,840);
+SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (385,840);
+
+
 
 
 SELECT *
@@ -88,8 +98,9 @@ SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen
 
 -- IBAN
 -- ----
-SELECT * FROM iban_liste WHERE Pers_ID IN (1081);
-SELECT * FROM IBAN WHERE Personen_ID IN (1081);
+UPDATE `IBAN` SET `Lautend_auf` = ''  WHERE `Lautend_auf` IS NULL;
+SELECT * FROM iban_liste WHERE Pers_ID IN (895, 471, 126, 1078, 644);
+SELECT * FROM IBAN WHERE Personen_ID IN (895, 471, 126, 1078, 644);
 SELECT ID, Vorname_Name, IBAN FROM Personen_Daten WHERE ID in (1081);
 SELECT * FROM Personen_Daten WHERE (IBAN is NULL or IBAN = '') AND  FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0; -- Nutzungsberechtigte ohne IBAN
 SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer LIKE BINARY 'c%';                        -- Schlecht formatierte IBAN
@@ -101,6 +112,9 @@ SELECT * FROM Personen_Daten WHERE ID in (1125,1183,877);
 SELECT * FROM Personen_Daten WHERE ID in (1083,204,585, 1103);                   -- Mutationen vom 15.11.23
 SELECT * FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428, 606);  -- Mutationen vom 17.11.23
 SELECT * FROM Personen_Daten WHERE ID in (974, 437, 670, 357);  -- Mutationen vom 11.12.23
+SELECT * FROM Personen_Daten WHERE ID in (986,1107);  -- Mutationen vom 13.12.23
+SELECT * FROM Personen_Daten WHERE ID in (385, 840);  -- Falsch mutierte Bürger
+SELECT * FROM Personen_Daten WHERE ID in (1216, 1217, 1218, 1219, 1220, 1221, 1222, 1223);  -- Neubürger 13.12.23
 
 -- Adressen bereinigen (double Adresses)
 -- -------------------------------------
@@ -129,7 +143,7 @@ SELECT * FROM `adressen` WHERE Strasse LIKE '%Zürcherstr.%';
 -- telnr
 -- -----
 SELECT * FROM personen_has_telefonnummern WHERE Personen_ID IN (1125,1183);
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (1125,1183)) Order by Prio;
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (1223)) Order by Prio;
 
 DELETE FROM personen_has_telefonnummern WHERE Telefonnummern_ID = 155;
 DELETE FROM telefonnummern WHERE ID = 155;
@@ -139,7 +153,7 @@ SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 
 -- email
 -- -----
-SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (483)) Order by Prio;
+SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1216, 1217, 1218, 1219, 1220, 1221, 1222, 1223)) Order by Prio;
 
 
 

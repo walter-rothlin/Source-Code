@@ -20,6 +20,9 @@
 -- 16-Oct-2023   Walter Rothlin      Added Bemerkungen zu landteilen
 -- 07-Nov-2023   Walter Rothlin      Added Entschädigungs_Modelle und Durchleitungsrechte
 -- 27-Nov-2023   Walter Rothlin      Added Password to Person and Add Privilege-Table
+-- 13-Dec-2023   Walter Rothlin      Added Neubürger to Kategorien
+--                                   Added Aufnahme_Gebühr_bezahlt_Am
+--                                   Added IBAN Lautend_auf
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -161,7 +164,7 @@ CREATE TABLE IF NOT EXISTS Personen (
                       'Bevormundet','Partnerschaft') 
                       DEFAULT NULL,
 
-  `Kategorien`  SET('Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
+  `Kategorien`  SET('Neubürger', 'Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
                     'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
                     'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
                     'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
@@ -178,6 +181,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Bauland_Gekauft_Am`                            DATE NULL,
   `Baulandgesuch_Details`                         VARCHAR(500) NULL,
   `Angemeldet_Am`                                 DATE NULL,
+  `Aufnahme_Gebühr_bezahlt_Am`                    DATE NULL,
   `Bezahlte_Aufnahme_Gebühr`                      FLOAT UNSIGNED NULL,
   `Aufgenommen_Am`                                DATE NULL,
   `Sich_Für_Bürgertag_Angemeldet_Am`              DATE NULL,
@@ -380,14 +384,15 @@ CREATE TABLE IF NOT EXISTS `Personen_has_Telefonnummern` (
 -- -----------------------------------------
 DROP TABLE IF EXISTS `IBAN` ;
 CREATE TABLE IF NOT EXISTS `IBAN` (
-  `ID`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Nummer`      VARCHAR(26) NOT NULL,
-  `Bezeichnung` VARCHAR(45) NULL,
-  `Bankname`    VARCHAR(45) NOT NULL DEFAULT '',
-  `Bankort`     VARCHAR(45) NOT NULL DEFAULT '',
-  `Personen_ID` INT UNSIGNED NOT NULL,
-  `Prio`        TINYINT      NOT NULL DEFAULT 0, 
-  `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ID`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Nummer`       VARCHAR(26) NOT NULL,
+  `Bezeichnung`  VARCHAR(45) NULL,
+  `Bankname`     VARCHAR(45) NOT NULL DEFAULT '',
+  `Bankort`      VARCHAR(45) NOT NULL DEFAULT '',
+  `Lautend_auf`  VARCHAR(45) NOT NULL DEFAULT '',
+  `Personen_ID`  INT UNSIGNED NOT NULL,
+  `Prio`         TINYINT      NOT NULL DEFAULT 0, 
+  `last_update`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
        
   -- PK-Constraints
   PRIMARY KEY (`ID`),

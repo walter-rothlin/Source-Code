@@ -21,6 +21,7 @@ import RPi.GPIO as GPIO
 
 #gpio setup
 GPIO.setmode(GPIO.BCM)   # sagt welcher gpio modus gebraucht wird
+GPIO.setwarnings(False)
 
 GPIO.setup(2, GPIO.IN)   # definiert gpio pin 2 als input
 

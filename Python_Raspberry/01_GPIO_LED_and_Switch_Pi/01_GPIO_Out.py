@@ -22,6 +22,7 @@ import RPi.GPIO as GPIO
 
 #gpio setup
 GPIO.setmode(GPIO.BCM) # sagt welcher gpio modus gebraucht wird
+GPIO.setwarnings(False)
 
 GPIO.setup(3, GPIO.OUT) # definiert gpio pin 3 als output
 

@@ -701,12 +701,12 @@ DELIMITER ;
 -- =========================================
 DROP FUNCTION IF EXISTS format_IBAN_with_Detail;
 DELIMITER //
-CREATE FUNCTION format_IBAN_with_Detail(p_nummer CHAR(26), p_id INT UNSIGNED, p_bezeichnung CHAR(20), p_bankname CHAR(45), p_bankort CHAR(45), p_prio TINYINT, p_short BOOLEAN) RETURNS CHAR(200)
+CREATE FUNCTION format_IBAN_with_Detail(p_nummer CHAR(26), p_id INT UNSIGNED, p_bezeichnung CHAR(20), p_bankname CHAR(45), p_bankort CHAR(45), p_lautend_auf CHAR(45), p_prio TINYINT, p_short BOOLEAN) RETURNS CHAR(200)
 BEGIN
     IF p_short = TRUE THEN
-		RETURN CONCAT(p_nummer, '  :',p_id,':  ', p_prio, ':', p_bankname);
+		RETURN CONCAT(p_nummer, '  :',p_id,':  ', p_prio, ':', p_bankname,':', p_lautend_auf);
 	ELSE
-        RETURN CONCAT(p_nummer, '  :',p_id,':  ', p_prio, ':', CONCAT(p_bankname,':',p_bankort,':',p_bezeichnung), ':');
+        RETURN CONCAT(p_nummer, '  :',p_id,':  ', p_prio, ':', CONCAT(p_bankname,':',p_bankort,':', p_lautend_auf,':',p_bezeichnung), ':');
     END IF;
 END//
 DELIMITER ;
@@ -1076,17 +1076,20 @@ CREATE VIEW IBAN_Liste AS
 		iban.Bezeichnung                             AS Bezeichnung,
 		iban.Bankname                                AS Bankname,
 		iban.Bankort                                 AS Bankort,
+        iban.`Lautend_auf`                           AS `Lautend_auf`,
         format_IBAN_with_Detail(iban.Nummer,
                    iban.ID, 
                    iban.Bezeichnung,
                    iban.Bankname,
                    iban.Bankort,
+                   iban.`Lautend_auf`,
                   iban.prio, TRUE)   				 AS IBAN_Detailed,
         format_IBAN_with_Detail(iban.Nummer,
                    iban.ID, 
                    iban.Bezeichnung,
                    iban.Bankname,
                    iban.Bankort,
+                   iban.`Lautend_auf`,
                   iban.prio, FALSE)   				 AS IBAN_Detailed_Long,
                
 		-- Personen Details
@@ -1240,6 +1243,7 @@ CREATE VIEW Personen_Daten AS
           
 		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                                        AS Angemeldet_Am,
           DATE_FORMAT(P.Angemeldet_Am,'%Y')                                              AS Angemeldet_Am_Jahr,
+          DATE_FORMAT(P.`Aufnahme_Gebühr_bezahlt_Am`,'%d.%m.%Y')                               AS `Aufnahme_Gebühr_bezahlt_Am`,
           Bezahlte_Aufnahme_Gebühr                                                       AS Bezahlte_Aufnahme_Gebühr,
           DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                                       AS Aufgenommen_Am,
           DATE_FORMAT(P.Aufgenommen_Am,'%Y')                                             AS Aufgenommen_Am_Jahr,
@@ -3731,6 +3735,9 @@ BEGIN
 				 SUBSTRING(Nummer, 21)
 				 ))
 	WHERE Nummer NOT LIKE '% %' OR Nummer LIKE BINARY 'c%';
+    
+    UPDATE `IBAN` SET `Lautend_auf` = ''  WHERE `Lautend_auf` IS NULL;
+
     
 	/* 
     DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
