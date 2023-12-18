@@ -1,5 +1,5 @@
 
-from flask import Flask, request
+from flask import Flask, request, redirect, url_for, session, render_template
 
 class State():
     def __init__(self):
@@ -15,11 +15,20 @@ class State():
 
 
 app = Flask(__name__)
-
+app.secret_key = 'geheimnis'
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route('/')
 def index():
     state.inc()
+    if session is not None and 'start_point' in session and session['start_point'] is not None:
+        local_start_point = session['start_point']
+        print('Session: local_start_point:', local_start_point)
+    else:
+        local_start_point = 'Kein start_point in Session defined'
+        print('Session: Kein Start_point defined in Seesion')
+
     return f'''
     <HTML>
     <BODY>
@@ -28,10 +37,41 @@ def index():
     <A href="/Reihe">Zahlenreihe 0..9</A><BR/><BR/>
     <A href="/Reihe?start_point=5">Zahlenreihe 5..9</A><BR/><BR/>
     
-    {state.get_reg_count()}<BR/>
+    actual: {state.get_reg_count()}<BR/>
+    start: {local_start_point}<BR/>
     </BODY>
     </HTML>
     '''
+
+@app.route('/static_index')
+def static_index():
+    return render_template('static_index.html')
+
+    '''
+    filename = 'static/html/static_index.html'
+    with open(filename) as text_file:
+        file_content = text_file.read()
+
+    return file_content
+    '''
+
+@app.route('/adress_list', methods=['GET', 'POST'])
+def adresslist():
+    # search_criteria = ''
+    if request.method == 'POST':
+        search_criteria = request.form.get('search_criteria')
+    else:
+        search_criteria = request.args.get('search_criteria')
+    if search_criteria is None:
+        search_criteria = ''
+
+    print('new_critera:', search_criteria)
+    rs = [
+        {'nachname': 'Rothlin', 'vorname': 'Walti'},
+        {'nachname': 'Roth', 'vorname': 'Tobias'},
+        {'nachname': 'Meier', 'vorname': 'Max'}
+    ]
+    return render_template('table_template.html', result_liste=rs, search_criteria=search_criteria)
 
 @app.route('/Adressen')
 def adressen():
@@ -52,6 +92,7 @@ def zahlenreihe():
     print(start_point)
     if start_point is None:
         start_point = 0
+    session['start_point'] = 'Session: start_point define!'
     response_str = 'Eine Zahlenreihe<br/>'
     response_str += '<table>'
     for i in range(int(start_point), 10):
@@ -63,10 +104,12 @@ def zahlenreihe():
 
 @app.route('/JSON', methods=['GET', 'POST'])
 def return_json():
+    state.inc()
     return {
         'Name': 'Rothlin',
         'Vorname': 'Walti',
         'Nummern': [345, 341, 321],
+        'Anzahl_Requests': state.get_reg_count()
     }
 
 

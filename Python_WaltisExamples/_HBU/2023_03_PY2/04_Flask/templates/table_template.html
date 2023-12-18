@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+$
+{% block head %}
+
+{% endblock %}
+
+
+{% block body %}
+<div class="content">
+    <h1>Person-Liste</h1>
+    Such-Kriterium: {{ search_criteria }}
+    <div class="form">
+        <form action="/adress_list" method="POST">
+            <input type="text" name="search_criteria" id="search_criteria" value="{{ search_criteria }}">
+            <input type="submit" value="suchen">
+        </form>
+        <br/>
+    </div>
+
+    <table>
+        <tr>
+            <th>Nachname</th>
+            <th>Vorname</th>
+        </tr>
+        {% for addr in result_liste %}
+           {% if search_criteria in addr.nachname -%}
+            <tr>
+                <td>{{ addr.nachname }}</td>
+                <td>{{ addr.vorname }}</td>
+            </tr>
+           {%- endif %}
+        {% endfor %}
+    </table>
+
+</div>
+
+
+{% endblock %}

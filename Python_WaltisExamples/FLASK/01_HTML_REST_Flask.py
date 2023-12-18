@@ -143,8 +143,12 @@ def adresslist(search_criterium):
 # ==========================
 @app.route('/simple_REST', methods=['GET', 'POST'])
 def simple_REST():
-    lastName = request.args.get("lastName")
-    firstName = request.args.get("firstName")
+    if request.method == 'POST':
+        lastName = request.form.get("lastName")
+        firstName = request.form.get("firstName")
+    else:
+        lastName = request.args.get("lastName")
+        firstName = request.args.get("firstName")
 
     rs = {'Title:': 'Turnverein',
           'adress_data':

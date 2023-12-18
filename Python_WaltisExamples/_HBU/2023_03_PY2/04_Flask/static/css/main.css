@@ -1,0 +1,33 @@
+/* SOURCE: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2023_03_PY2/04_Flask/static/css/main.css */
+
+body, html {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: lightblue;
+}
+
+.content {
+    margin: 0 auto;
+    width: 1000px;
+}
+
+table, td, th {
+    border: 1px solid #aaa;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    padding: 5px;
+}
+
+.form {
+    margin-top: 20px;
+}
+
+#content {
+    width: 70%;
+}
