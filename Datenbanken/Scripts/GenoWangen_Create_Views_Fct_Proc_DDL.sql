@@ -505,6 +505,27 @@ DELIMITER ;
 -- SELECT getVorname_Familienname('Herr', FALSE,  'Rothlin', 'Collet', 'Walter');   -- --> Walter Rothlin-Collet  
 
 -- -----------------------------------------
+DROP FUNCTION IF EXISTS getReferenced_Name;
+DELIMITER //
+CREATE FUNCTION getReferenced_Name(p_is_buerger BOOLEAN, p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45), p_firstname CHAR(45), p_geb_datum DATE, p_tod_datum DATE) RETURNS CHAR(50)
+BEGIN
+    IF p_is_buerger = TRUE THEN
+		IF p_tod_datum IS NULL THEN
+			RETURN  CONCAT(p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (G ', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'),')');
+		ELSE
+			RETURN  CONCAT(p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (T ', DATE_FORMAT(p_tod_datum,'%d.%m.%Y'),')');
+		END IF;
+	ELSE
+		IF p_tod_datum IS NULL THEN
+			RETURN  CONCAT('! ', p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (G ', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'),')');
+		ELSE
+			RETURN  CONCAT('! ', p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (T ', DATE_FORMAT(p_tod_datum,'%d.%m.%Y'),')');
+		END IF;
+	END IF;
+END//
+DELIMITER ;
+
+-- -----------------------------------------
 DROP FUNCTION IF EXISTS calc_yearly_pachtfee;
 DELIMITER //
 CREATE FUNCTION calc_yearly_pachtfee(flaeche_in_aren FLOAT, preis_pro_are FLOAT) RETURNS FLOAT
@@ -1220,9 +1241,33 @@ CREATE VIEW Personen_Daten AS
           -- Verwandtschaft
           -- ==============
           P.Partner_ID                                 AS Partner_ID,
+          getReferenced_Name(FIND_IN_SET('Bürger', partnerAdr.Kategorien) >  0,
+                             partnerAdr.Sex, 
+                             partnerAdr.Partner_Name_Angenommen, 
+                             partnerAdr.Ledig_Name, 
+                             partnerAdr.Partner_Name, 
+                             partnerAdr.Vorname,
+                             partnerAdr.Geburtstag,
+                             partnerAdr.Todestag)      AS Partner_Reference,
           P.Mutter_ID                                  AS Mutter_ID,
-          P.Vater_ID                                   AS Vater_ID,
-
+		  getReferenced_Name(FIND_IN_SET('Bürger', mutterAdr.Kategorien) >  0,
+							 mutterAdr.Sex, 
+                             mutterAdr.Partner_Name_Angenommen, 
+                             mutterAdr.Ledig_Name, 
+                             mutterAdr.Partner_Name, 
+                             mutterAdr.Vorname,
+                             mutterAdr.Geburtstag,
+                             mutterAdr.Todestag)        AS Mutter_Reference,
+          P.Vater_ID                                    AS Vater_ID,
+		  getReferenced_Name(FIND_IN_SET('Bürger', vaterAdr.Kategorien) >  0,
+							 vaterAdr.Sex, 
+                             vaterAdr.Partner_Name_Angenommen, 
+                             vaterAdr.Ledig_Name, 
+                             vaterAdr.Partner_Name, 
+                             vaterAdr.Vorname,
+                             vaterAdr.Geburtstag,
+                             vaterAdr.Todestag)       AS Vater_Reference,
+    
           -- ID
           -- ==
           pAdr.ID                                      AS Private_Adressen_ID,
@@ -1243,14 +1288,14 @@ CREATE VIEW Personen_Daten AS
           
 		  DATE_FORMAT(P.Angemeldet_Am,'%d.%m.%Y')                                        AS Angemeldet_Am,
           DATE_FORMAT(P.Angemeldet_Am,'%Y')                                              AS Angemeldet_Am_Jahr,
-          DATE_FORMAT(P.`Aufnahme_Gebühr_bezahlt_Am`,'%d.%m.%Y')                               AS `Aufnahme_Gebühr_bezahlt_Am`,
-          Bezahlte_Aufnahme_Gebühr                                                       AS Bezahlte_Aufnahme_Gebühr,
+          DATE_FORMAT(P.`Aufnahme_Gebühr_bezahlt_Am`,'%d.%m.%Y')                         AS `Aufnahme_Gebühr_bezahlt_Am`,
+          P.Bezahlte_Aufnahme_Gebühr                                                     AS Bezahlte_Aufnahme_Gebühr,
           DATE_FORMAT(P.Aufgenommen_Am,'%d.%m.%Y')                                       AS Aufgenommen_Am,
           DATE_FORMAT(P.Aufgenommen_Am,'%Y')                                             AS Aufgenommen_Am_Jahr,
           DATE_FORMAT(P.`Sich_Für_Bürgertag_Angemeldet_Am`,'%d.%m.%Y')                   AS `Sich_Für_Bürgertag_Angemeldet_Am`,
           DATE_FORMAT(P.`Sich_Für_Bürgertag_definitiv_abgemeldet_Am`,'%d.%m.%Y')         AS `Sich_Für_Bürgertag_definitiv_abgemeldet_Am`,
           DATE_FORMAT(P.`Neubürgertag_gemacht_Am`,'%d.%m.%Y')                            AS `Neubürgertag_gemacht_Am`,
-          Ausbezahlter_Bürgertaglohn                                                     AS Ausbezahlter_Bürgertaglohn,
+          P.Ausbezahlter_Bürgertaglohn                                                   AS Ausbezahlter_Bürgertaglohn,
           
           DATE_FORMAT(P.Baulandgesuch_Eingereicht_Am,'%d.%m.%Y')               AS Baulandgesuch_Eingereicht_Am,
           DATE_FORMAT(P.Bauland_Gekauft_Am,'%d.%m.%Y')                         AS Bauland_Gekauft_Am,
@@ -1407,7 +1452,32 @@ CREATE VIEW Personen_Daten AS
 	FROM Personen AS P
     LEFT OUTER JOIN Adress_Daten AS pAdr ON  P.Privat_Adressen_ID         = pAdr.ID
 	LEFT OUTER JOIN Adress_Daten AS gAdr ON  P.Geschaefts_Adressen_ID     = gAdr.ID
+    
+    LEFT OUTER JOIN Personen AS vaterAdr   ON  P.Vater_ID       = vaterAdr.ID
+    LEFT OUTER JOIN Personen AS mutterAdr  ON  P.Mutter_ID      = mutterAdr.ID
+    LEFT OUTER JOIN Personen AS partnerAdr ON  P.partner_ID     = partnerAdr.ID
     ORDER BY Familien_Name, Vorname_Initial;
+
+-- --------------------------------------------------------------------------------    
+DROP VIEW IF EXISTS Stammbäume; 
+CREATE VIEW Stammbäume AS
+	SELECT 
+		ID,
+		Vorname_Initial,
+		Familien_Name,
+		Geburtstag,
+		Todestag,
+		Partner_ID,
+		Partner_Reference,
+		Mutter_ID,
+		Mutter_Reference,
+		Vater_ID,
+		Vater_Reference
+	FROM Personen_Daten       
+	WHERE Partner_ID IS NOT NULL OR
+		  Mutter_ID  IS NOT NULL OR
+		  Vater_ID   IS NOT NULL
+	ORDER BY Last_Name, Vorname;  
 
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Pers_Search_List; 

@@ -195,9 +195,9 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Newsletter_Abonniert_Am`                       DATE NULL,
   
    -- FK: Verwandschaft
-  `Partner_ID` 		                   INT NULL,
-  `Vater_ID`         		           INT NULL,
-  `Mutter_ID`				           INT NULL,
+  `Partner_ID` 		                   INT UNSIGNED NULL,
+  `Vater_ID`         		           INT UNSIGNED NULL,
+  `Mutter_ID`				           INT UNSIGNED NULL,
   
   -- FK: Adressen
   `Privat_Adressen_ID`                 INT UNSIGNED NULL,

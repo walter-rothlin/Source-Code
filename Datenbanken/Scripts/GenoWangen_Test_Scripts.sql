@@ -1,4 +1,37 @@
 
+
+Select * from ERROR_Table; -- Just to produce an error when the whole script has been executed!
+
+-- Personen Verwandtschaft
+-- -----------------------
+UPDATE `personen` SET `Partner_ID`  = 644      WHERE `ID`  = 1172;   -- Partner von Claudia		is 	Walti
+SELECT ID, Vorname_Initial, Familien_Name, Partner_ID, Mutter_ID, Vater_ID 
+FROM Personen_Daten 
+WHERE ID in (644, 1172, 223, 1103,1216,1217,1218,1219,1220,1221,1222,1223,1224,1225,1226,1227);
+
+Select * FROM Personen_Daten WHERE ID = 644;
+
+SELECT 
+    ID,
+    Vorname_Initial,
+    Familien_Name,
+    Geburtstag,
+    Todestag,
+    Partner_ID,
+    Partner_Reference,
+    Mutter_ID,
+    Mutter_Reference,
+    Vater_ID,
+    Vater_Reference
+FROM Personen_Daten       
+WHERE Partner_ID IS NOT NULL OR
+	  Mutter_ID  IS NOT NULL OR
+      Vater_ID   IS NOT NULL
+ORDER BY Last_Name, Vorname;   
+
+SELECT ID, Vorname, Ledig_name, Partner_name, Partner_ID, Vater_ID, Mutter_ID FROM personen       WHERE ID IN (771,917,772,1014,224,226,227,235,221,445);
+
+
 -- Landteile
 -- ---------
 SELECT * FROM personen WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0;
@@ -38,40 +71,10 @@ FROM Pachtlandzuteilung
 WHERE Paechter_ID NOT IN (SELECT ID FROM pächter)
 ORDER BY Status, ID;
 
-UPDATE personen AS p1
-JOIN (
-    SELECT ID, removeSetValue(Kategorien, 'Hat_35a') AS replaceSetValue
-    FROM personen
-    WHERE FIND_IN_SET('Hat_35a', Kategorien) > 0
-) AS subquery
-ON p1.ID = subquery.ID
-SET p1.Kategorien = subquery.replaceSetValue;
-
 
 SELECT MAX(ID) + 1 AS MAX_ID INTO @max_value FROM landteile;
 SELECT @max_value;   -- 701
 -- ALTER TABLE landteile AUTO_INCREMENT = 702;
-
-
-
-
--- Personen
--- --------
-UPDATE `personen` SET `Partner_ID`  = 644      WHERE `ID`  = 1172;   -- Partner von Claudia		is 	Walti
-UPDATE `personen` SET `Partner_ID`  = '1172'   WHERE `ID`  = '644';    -- Partner von Walti   	is 	Claudia
-UPDATE `personen` SET `Vater_ID`    = '644'    WHERE `ID`  = '1103';   -- Vater   von Tobias     	is  Walti
-UPDATE `personen` SET `Vater_ID`    = '1172'   WHERE `ID`  = '1103';   -- Mutter  von Tobias     	is  Claudia
-UPDATE `personen` SET `Vater_ID`    = '223'    WHERE (`ID` = '644');
-SELECT * FROM Personen_Daten WHERE ID in (644, 1172, 223, 1103, 1172);
-
-
--- Corrupted Data
--- --------------
-SELECT * FROM personen_daten WHERE ID IN (385,840);
-SELECT * FROM personen WHERE ID IN (385,840);
-SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (385,840);
-
-
 
 
 SELECT *
@@ -88,7 +91,7 @@ SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHER
                               );
 
 SELECT * FROM personen_daten WHERE ID IN (1126);
-SELECT * FROM personen       WHERE ID IN (1126);
+SELECT * FROM personen       WHERE ID IN (771,917,772,1014,224,226,227,235,221,445);
 
 SELECT * FROM personen WHERE ID IN (285, 1084);                   -- 285, 1084, Wegzug unklar; In Abklärung beim Schreiber; 285 hat Landteil noch bei Edgar Hüppin
 SELECT * FROM personen_daten WHERE Bemerkungen != '' AND Bemerkungen LIKE '%weg%';
@@ -111,10 +114,12 @@ SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer L
 SELECT * FROM Personen_Daten WHERE ID in (1125,1183,877);
 SELECT * FROM Personen_Daten WHERE ID in (1083,204,585, 1103);                   -- Mutationen vom 15.11.23
 SELECT * FROM Personen_Daten WHERE ID in (657, 1091, 815, 1035, 483, 428, 606);  -- Mutationen vom 17.11.23
-SELECT * FROM Personen_Daten WHERE ID in (974, 437, 670, 357);  -- Mutationen vom 11.12.23
-SELECT * FROM Personen_Daten WHERE ID in (986,1107);  -- Mutationen vom 13.12.23
+SELECT * FROM Personen_Daten WHERE ID in (974, 437, 670, 357);                   -- Mutationen vom 11.12.23
+SELECT * FROM Personen_Daten WHERE ID in (986,1107);                             -- Mutationen vom 13.12.23
 SELECT * FROM Personen_Daten WHERE ID in (385, 840);  -- Falsch mutierte Bürger
 SELECT * FROM Personen_Daten WHERE ID in (1216, 1217, 1218, 1219, 1220, 1221, 1222, 1223);  -- Neubürger 13.12.23
+SELECT * FROM Personen_Daten WHERE ID in (1224,1225,1226,1227);                             -- Neubürger 17.12.23
+SELECT * FROM Personen_Daten WHERE ID in (840, 1058,1037,1104,615,1043,1088, 535);          -- Mutationen vom 17.12.23
 
 -- Adressen bereinigen (double Adresses)
 -- -------------------------------------
@@ -142,8 +147,8 @@ SELECT * FROM `adressen` WHERE Strasse LIKE '%Zürcherstr.%';
 
 -- telnr
 -- -----
-SELECT * FROM personen_has_telefonnummern WHERE Personen_ID IN (1125,1183);
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (1223)) Order by Prio;
+SELECT * FROM personen_has_telefonnummern WHERE Personen_ID IN (840);
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (840)) Order by Prio;
 
 DELETE FROM personen_has_telefonnummern WHERE Telefonnummern_ID = 155;
 DELETE FROM telefonnummern WHERE ID = 155;
