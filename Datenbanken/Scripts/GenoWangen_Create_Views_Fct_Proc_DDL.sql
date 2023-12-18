@@ -39,6 +39,8 @@
 -- 30-Oct-2023   Walter Rothlin      Added Nutzenbudget
 -- 28-Nov-2023   Walter Rothlin      Added Login-View
 -- 11-Dec-2023   Walter Rothlin      Added Double Nutzenauszahlung (gleiche IBAN)
+-- 18-Dec-2023   Walter Rothlin      Moved VIEWS: Pächter_Pachtland_Differenzen, PD_Row_Counts
+-- 18-Dec-2023   Walter Rothlin      Added view Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt
 -- -----------------------------------------
 
 -- To-Does
@@ -511,15 +513,15 @@ CREATE FUNCTION getReferenced_Name(p_is_buerger BOOLEAN, p_sex CHAR(5) , p_name_
 BEGIN
     IF p_is_buerger = TRUE THEN
 		IF p_tod_datum IS NULL THEN
-			RETURN  CONCAT(p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (G ', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'),')');
+			RETURN  CONCAT(p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (*', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'),')');
 		ELSE
-			RETURN  CONCAT(p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (T ', DATE_FORMAT(p_tod_datum,'%d.%m.%Y'),')');
+			RETURN  CONCAT(p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'), ' - ', DATE_FORMAT(p_tod_datum,'%d.%m.%Y'),')');
 		END IF;
 	ELSE
 		IF p_tod_datum IS NULL THEN
-			RETURN  CONCAT('! ', p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (G ', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'),')');
+			RETURN  CONCAT('! ', p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (*', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'),')');
 		ELSE
-			RETURN  CONCAT('! ', p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (T ', DATE_FORMAT(p_tod_datum,'%d.%m.%Y'),')');
+			RETURN  CONCAT('! ', p_firstname, ' ', getFamilieName(p_sex, p_name_angenommen, p_ledig_name, p_partner_name), ' (', DATE_FORMAT(p_geb_datum,'%d.%m.%Y'), ' - ', DATE_FORMAT(p_tod_datum,'%d.%m.%Y'),')');
 		END IF;
 	END IF;
 END//
@@ -761,6 +763,19 @@ DELIMITER ;
 -- SELECT get_IBAN_With_Details(644, 0, FALSE,  TRUE)   AS IBAN;      -- CH95 8080 8006 9894 2234 3  :303:  0:Raiffeisen:Lachen:Waltis:
 -- SELECT get_IBAN_With_Details(644, 0, TRUE,   TRUE)   AS IBAN;      -- CH95 8080 8006 9894 2234 3  :303:  0:Raiffeisen
 
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS get_IBAN_Lautend_Auf;
+DELIMITER //
+CREATE FUNCTION get_IBAN_Lautend_Auf(p_id INT, p_prio TINYINT) RETURNS CHAR(45)
+BEGIN
+    DECLARE ret_val CHAR(45) DEFAULT '';
+	SET ret_val = (SELECT Lautend_auf FROM IBAN_liste WHERE Pers_ID = p_id AND Prio=p_prio LIMIT 1);
+    RETURN ret_val;
+END//
+DELIMITER ;
+
+-- SELECT get_IBAN_Lautend_Auf(1078, 0)  AS IBAN;      -- CH95 8080 8006 9894 2234 3
+ 
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS getPrio_0_IBAN_ID;
 DELIMITER //
@@ -1207,6 +1222,7 @@ CREATE VIEW Personen_Daten AS
           get_Email_With_Details(P.ID, 2, FALSE, TRUE)                   AS eMail_2_Detail_Long,
           
 		  get_IBAN_With_Details(P.ID, 0, TRUE,  FALSE)                   AS IBAN,
+          get_IBAN_Lautend_Auf(P.ID, 0)                                  AS Lautend_Auf,
           get_IBAN_With_Details(P.ID, 0, FALSE, TRUE)                    AS IBAN_Detail_Long,
 
                    
@@ -1461,15 +1477,12 @@ CREATE VIEW Personen_Daten AS
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Stammbäume; 
 CREATE VIEW Stammbäume AS
-	SELECT 
-		ID,
-		Vorname_Initial,
-		Familien_Name,
-		Geburtstag,
-		Todestag,
-		Partner_ID,
-		Partner_Reference,
-		Mutter_ID,
+	SELECT ID,
+        Vorname_Initial,
+        Familien_Name,
+        Partner_ID,
+        Partner_Reference,
+        Mutter_ID,
 		Mutter_Reference,
 		Vater_ID,
 		Vater_Reference
@@ -1893,7 +1906,16 @@ CREATE VIEW Bürger_Nicht_Nutzungsberechtigt AS
     FROM Personen_Daten
     WHERE Todestag IS NULL AND FIND_IN_SET('Bürger', Kategorien) >  0 AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) =  0
     ORDER BY Familien_Name, Vorname;
-    
+
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt; 
+CREATE VIEW Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt AS
+    SELECT
+        *
+    FROM Personen_Daten
+    WHERE Todestag IS NULL AND FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0 AND FIND_IN_SET('Verwaltungsberechtigt', Kategorien) =  0
+    ORDER BY Familien_Name, Vorname; 
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Einladungsliste_Geno_Gemeinde; 
 CREATE VIEW Einladungsliste_Geno_Gemeinde AS
@@ -2015,20 +2037,6 @@ CREATE VIEW Pächter AS
 	FROM Personen_Daten
     WHERE FIND_IN_SET('Pächter',        Kategorien) >  0
 	ORDER BY `ID`;
-
--- -----------------------------------------------------
-DROP VIEW IF EXISTS Pächter_Pachtland_Differenzen; 
-CREATE VIEW Pächter_Pachtland_Differenzen AS
-	-- Pächter ohne Pachtland
-	SELECT 'Pächter ohne Pachtland' AS Status, ID AS ID, Kategorien, Vorname, Name, Adresse, Ort
-	FROM pächter
-	WHERE ID NOT IN (SELECT DISTINCT Paechter_ID FROM Pachtlandzuteilung)
-	UNION
-	-- Haben Pachtland ohne den Pächter-Status zu haben
-	SELECT 'Nicht Pächter-Status' AS Status, Paechter_ID  AS ID, Paechter_Kategorien, Paechter_Vorname, Paechter_Name, Paechter_Strasse, Paechter_PLZ_Ort
-	FROM Pachtlandzuteilung
-	WHERE Paechter_ID NOT IN (SELECT ID FROM pächter)
-	ORDER BY Status, ID;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Verpächter; 
@@ -2306,10 +2314,14 @@ CREATE VIEW Nutzenauszahlung AS
       Hat_Bürger_Teil,
 	  Geschlecht, 
 	  Vorname_Initial                                                         AS Vorname, 
-	  Familien_Name                                                           AS Familienname, 
+	  Familien_Name                                                           AS Familienname,
+      Vorname_Name                                                            AS Vorname_Nachname,
 	  Private_Strassen_Adresse                                                AS Strasse,
 	  Private_PLZ_Ort                                                         AS PLZ_Ort,
-      Vorname_Name                                                            AS Vorname_Nachname,
+	  CASE 
+		 WHEN Lautend_Auf IS NULL OR Lautend_Auf = '' THEN Vorname_Name
+			  ELSE Lautend_Auf
+	  END AS Lautend_Auf,
       IBAN                                                                    AS IBAN,
       concat('Genossennutzen ', (SELECT YEAR(NOW())))                         AS Grund,   
       ROUND(calc_nutzen_by_katset(Kategorien),2)    AS Nutzen
@@ -2785,6 +2797,45 @@ CREATE VIEW Login_Table AS
     
     
 -- --------------------------------------------------------------------------------    
+/*
+
+*/
+
+
+-- --------------------------------------------------------------------------------  
+DROP VIEW IF EXISTS ENUM_SET_Values; 
+CREATE VIEW ENUM_SET_Values AS
+	SELECT
+		CONCAT(`TABLE_NAME`,'__',
+			   `COLUMN_NAME`)         AS `Full_Attr_Name`,
+		REPLACE(
+			REPLACE(
+				REPLACE(
+				  REPLACE(`COLUMN_TYPE`,')',''),
+				'enum(',''),
+			'set(',''),
+		'\'','')        AS `Attr_Type_Values_Str`,
+        
+		`TABLE_SCHEMA`   AS `Schema`,
+		`TABLE_NAME`     AS `Table`,
+		`COLUMN_NAME`    AS `Attribute`,
+
+		`DATA_TYPE`      AS `Attr_Type`,
+		`COLUMN_TYPE`    AS `Attr_Type_Values`
+
+	FROM
+		`INFORMATION_SCHEMA`.`COLUMNS`
+	WHERE
+		`TABLE_SCHEMA` = 'genossame_wangen' AND
+		(`DATA_TYPE` = 'set' OR `DATA_TYPE` = 'enum') AND
+		TABLE_NAME IN (SELECT TABLE_NAME 
+					   FROM `INFORMATION_SCHEMA`.`TABLES`
+					   WHERE
+						   `TABLE_SCHEMA` = 'genossame_wangen' AND
+						   `TABLE_TYPE`   = 'BASE TABLE') -- 'Personen'
+	ORDER BY `TABLE_SCHEMA` , `TABLE_NAME` , `COLUMN_NAME`;
+
+-- --------------------------------------------------------------------------------      
 DROP VIEW IF EXISTS PD_Row_Counts; 
 CREATE VIEW PD_Row_Counts AS
 	SELECT
@@ -2983,55 +3034,23 @@ CREATE VIEW PD_Row_Counts AS
 	SELECT
 		'Wärmeverbund Vollanschlüsse'                        AS `Table Name`,
 		(SELECT count(*) FROM Wärmeanschlüsse_View)          AS `Row Count`
-	;
+	;   
 
-
-/*	SELECT 
-		(select COUNT(*) FROM land) rc_land,
-		(select COUNT(*) FROM orte) rc_orte,
-		(select COUNT(*) FROM adressen) rc_adressen,
-		(select COUNT(*) FROM personen) rc_personen,
-		(select COUNT(*) FROM iban) rc_iban,
-		(select COUNT(*) FROM email_adressen) rc_email_adressen,
-		(select COUNT(*) FROM personen_has_email_adressen) rc_personen_has_email_adressen,
-		(select COUNT(*) FROM telefonnummern) rc_telefonnummern,
-		(select COUNT(*) FROM personen_has_telefonnummern) rc_personen_has_telefonnummern;
-*/
-
-DROP VIEW IF EXISTS ENUM_SET_Values; 
-CREATE VIEW ENUM_SET_Values AS
-	SELECT
-		CONCAT(`TABLE_NAME`,'__',
-			   `COLUMN_NAME`)         AS `Full_Attr_Name`,
-		REPLACE(
-			REPLACE(
-				REPLACE(
-				  REPLACE(`COLUMN_TYPE`,')',''),
-				'enum(',''),
-			'set(',''),
-		'\'','')        AS `Attr_Type_Values_Str`,
-        
-		`TABLE_SCHEMA`   AS `Schema`,
-		`TABLE_NAME`     AS `Table`,
-		`COLUMN_NAME`    AS `Attribute`,
-
-		`DATA_TYPE`      AS `Attr_Type`,
-		`COLUMN_TYPE`    AS `Attr_Type_Values`
-
-	FROM
-		`INFORMATION_SCHEMA`.`COLUMNS`
-	WHERE
-		`TABLE_SCHEMA` = 'genossame_wangen' AND
-		(`DATA_TYPE` = 'set' OR `DATA_TYPE` = 'enum') AND
-		TABLE_NAME IN (SELECT TABLE_NAME 
-					   FROM `INFORMATION_SCHEMA`.`TABLES`
-					   WHERE
-						   `TABLE_SCHEMA` = 'genossame_wangen' AND
-						   `TABLE_TYPE`   = 'BASE TABLE') -- 'Personen'
-	ORDER BY `TABLE_SCHEMA` , `TABLE_NAME` , `COLUMN_NAME`;
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Pächter_Pachtland_Differenzen; 
+CREATE VIEW Pächter_Pachtland_Differenzen AS
+	-- Pächter ohne Pachtland
+	SELECT 'Pächter ohne Pachtland' AS Status, ID AS ID, Kategorien, Vorname, Name, Adresse, Ort
+	FROM pächter
+	WHERE ID NOT IN (SELECT DISTINCT Paechter_ID FROM Pachtlandzuteilung)
+	UNION
+	-- Haben Pachtland ohne den Pächter-Status zu haben
+	SELECT 'Nicht Pächter-Status' AS Status, Paechter_ID  AS ID, Paechter_Kategorien, Paechter_Vorname, Paechter_Name, Paechter_Strasse, Paechter_PLZ_Ort
+	FROM Pachtlandzuteilung
+	WHERE Paechter_ID NOT IN (SELECT ID FROM pächter)
+	ORDER BY Status, ID;
     
-    
-    
+-- --------------------------------------------------------------------------------      
 DROP VIEW IF EXISTS Table_Meta_Data; 
 CREATE VIEW Table_Meta_Data AS
     SELECT
