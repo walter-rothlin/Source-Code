@@ -20,6 +20,7 @@
 #  ev muss vorher pip updated werden (via Terminal):
 #  python -m pip install --upgrade pip oder
 #    pyCharm --> File --> Settings --> Project:Source Code --> Python Interpreter
+#
 #  pip install opencv-python
 #
 import cv2

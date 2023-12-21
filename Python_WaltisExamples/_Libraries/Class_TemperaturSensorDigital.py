@@ -22,7 +22,7 @@ import piplates.DAQCplate as DAQC
 
 class TemperaturSensorDigital:
 
-    def __init__(self,name,plateAdr,pinNr,toleranz=1,vorkomma=10,nachkomma=2):
+    def __init__(self, name, plateAdr,pinNr, toleranz=1, vorkomma=10, nachkomma=2):
         self.name             = name
         self.plateAdr         = plateAdr
         self.pinNr            = pinNr
@@ -33,7 +33,7 @@ class TemperaturSensorDigital:
         self.formatStr        = "{temperatur:"+str(self.vorkomma)+"."+str(self.nachkomma)+"f}"
 
     def getCurrentValue(self):
-        currentTemp = DAQC.getTEMP(self.plateAdr,self.pinNr,'c')
+        currentTemp = DAQC.getTEMP(self.plateAdr, self.pinNr, 'c')
         return self.formatStr.format(temperatur=currentTemp)
 
     def getName(self):

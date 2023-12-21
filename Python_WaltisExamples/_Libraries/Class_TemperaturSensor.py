@@ -28,14 +28,14 @@ class TemperaturSensor:
         self.formatStr        = "{temperatur:"+str(self.vorkomma)+"."+str(self.nachkomma)+"f}"
 
     def getCurrentValue(self):
-        currentTemp = DAQC.getTEMP(self.plateAdr,self.pinNr,'c')
+        currentTemp = DAQC.getTEMP(self.plateAdr, self.pinNr, 'c')
         return self.formatStr.format(temperatur=currentTemp)
 
     def getName(self):
         return self.name
 
     def getValueIfOverToleranz(self,returnValueIfNotChanged=False):
-        currentTemp = DAQC.getTEMP(self.plateAdr,self.pinNr,'c')
+        currentTemp = DAQC.getTEMP(self.plateAdr, self.pinNr, 'c')
         # print(self.name + ": currentTemp:", currentTemp)
         # print(self.name + ": pastTemp   :", self.pastTemp)
         deltaTemp   = abs(abs(self.pastTemp - currentTemp) * 100 / self.pastTemp)
