@@ -52,6 +52,7 @@
 # 04-Oct-2023   Walter Rothlin      Added format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True)
 #                                         get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=[], as_json=True, take_action=True, verbal=False)
 # 16-Oct-2023   Walter Rothlin      Added remove_all_enum_value_in_set()
+# 23_Dec-2023   Walter Rothlin      Added convert_str_to_int_float_str
 # ------------------------------------------------------------------
 
 
@@ -69,12 +70,12 @@ import datetime
 from pathlib import Path
 import re
 from rich import print
+import openpyxl
+import mysql.connector
 import json
 from lxml import etree
 import xml.etree.ElementTree as ET
 import urllib.parse
-import openpyxl
-import mysql.connector
 import locale
 
 # Add dir to PYTHONPATH in a program
@@ -268,6 +269,28 @@ def convert_str_to_int(int_str, default_value=None):
     except Exception:
         ret_value = default_value
     return ret_value
+
+
+def convert_str_to_int_float_str(a_string_to_cast, default=''):
+    if a_string_to_cast == '':
+        a_string_to_cast = default
+
+    if isinstance(a_string_to_cast, str) and (a_string_to_cast.startswith('"') or a_string_to_cast.startswith("'")):
+        a_string_to_cast = a_string_to_cast.replace('"', '')
+        a_string_to_cast = a_string_to_cast.replace("'", '')
+        ret_val = a_string_to_cast
+    else:
+        try:
+            ret_val = int(a_string_to_cast)
+        except Exception as e:
+            try:
+                ret_val = float(a_string_to_cast)
+            except Exception as e:
+                try:
+                    ret_val = bool(a_string_to_cast)
+                except Exception as e:
+                    ret_val = a_string_to_cast
+    return ret_val
 
 def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
     error = True

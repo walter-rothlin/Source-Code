@@ -1,9 +1,21 @@
+#!/usr/bin/python3
 
-
-# https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
-
-from SwissQRInvoiceGenerator_Old import *
-
+# ------------------------------------------------------------------
+# Name: FirstTest.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Waltis/ExamplesQR_Codes_QR_Rechnung/QR_Rechnung_Tobias/FirstTest.py
+#
+# Description: Produces QR-Rechnungen using Library from Tobias
+#              https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 17-Jun_2022   Walter Rothlin      Initial Version
+# 31-Dec-2022   Walter Rothlin      Neuste Library: https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
+# 21-Dec-2023   Walter Rothlin      Modified for latest version of library
+# ------------------------------------------------------------------
+from waltisLibrary import *
+from SwissQRInvoiceGenerator import *
 
 if __name__ == '__main__':
     addr_leer = {
@@ -30,35 +42,11 @@ if __name__ == '__main__':
         "country": "CH",
     }
 
-    addr_remo = {
-        "name": "Remo Collet",
-        "address": "Kapellstr. 5",
-        "zip_code": "8854",
-        "city": "Siebnen",
-        "country": "CH",
-    }
-
-    addr_fw = {
-        "name": "Feuerwehrverein",
-        "address": "Wangen-Nuolen",
-        "zip_code": "8855",
-        "city": "Wangen SZ",
-        "country": "CH",
-    }
-
     addr_FG_Aberen = {
         "name": "Flurgenossenschaft",
         "address": "'Aberen'",
         "zip_code": "8858",
         "city": "Innerthal",
-        "country": "",
-    }
-
-    addr_Sabine_Marty = {
-        "name": "Sabine Marty Knobel",
-        "address": "Zeughausstr. 14b",
-        "zip_code": "8853",
-        "city": "Lachen",
         "country": "",
     }
 
@@ -77,23 +65,6 @@ if __name__ == '__main__':
         "Sabine_Marty": "CH95 0873 1001 5681 2203 4"
     }
 
-    pdfName = "GeneratedInvoices/Sabine_Marty"
-    htmlName = "GeneratedInvoices/Sabine_Marty.html"
-    createQRInvoice(
-        generateQRInvoiceData(
-            ibanNr["Sabine_Marty"],
-            addr_Sabine_Marty,
-            addr_leer,
-            amount="0.00",
-            additional_information=""),
-        invoice_text_html="",
-        pdfName=pdfName,
-        htmlName=htmlName)
-
-    print("Produced following files:")
-    print("    --> ", pdfName)
-    print("    --> ", htmlName)
-
     pdfName = "GeneratedInvoices/FG_Aberen"
     htmlName = "GeneratedInvoices/FG_Aberen.html"
     createQRInvoice(
@@ -111,23 +82,6 @@ if __name__ == '__main__':
     print("    --> ", pdfName)
     print("    --> ", htmlName)
 
-
-    pdfName = "GeneratedInvoices/Remo_Liegenschaft"
-    htmlName = "GeneratedInvoices/Remo_Liegenschaft.html"
-    createQRInvoice(
-        generateQRInvoiceData(
-            ibanNr["szkb_liegenschaft_remo"],
-            addr_remo,
-            addr_leer,
-            amount="0.00",
-            additional_information=""),
-        invoice_text_html="",
-        pdfName=pdfName,
-        htmlName=htmlName)
-
-    print("Produced following files:")
-    print("    --> ", pdfName)
-    print("    --> ", htmlName)
 
     pdfName = "GeneratedInvoices/Test_Invoice_OnlyEZ"
     htmlName = "GeneratedInvoices/Test_Invoice_OnlyEZ.html"
@@ -155,43 +109,6 @@ if __name__ == '__main__':
             addr_walti,
             amount="20.00",
             additional_information="Trinkgeld Genossengemeinde"),
-        invoice_text_html="",
-        pdfName=pdfName,
-        htmlName=htmlName)
-
-    print("Produced following files:")
-    print("    --> ", pdfName)
-    print("    --> ", htmlName)
-
-
-    pdfName = "GeneratedInvoices/NeuerEZ_Oktoberfest"
-    htmlName = "GeneratedInvoices/NeuerEZ_Oktoberfest.html"
-    createQRInvoice(
-        generateQRInvoiceData(
-            ibanNr["feuerwehr_wangen_oktoberfest"],
-            addr_fw,
-            addr_leer,
-            amount="0.00",
-            additional_information="Tickets: Ihre Nummer angeben!"),
-        invoice_text_html="",
-        pdfName=pdfName,
-        htmlName=htmlName)
-
-    print("Produced following files:")
-    print("    --> ", pdfName)
-    print("    --> ", htmlName)
-
-
-
-    pdfName = "GeneratedInvoices/Remo_Privat"
-    htmlName = "GeneratedInvoices/Remo_Privat.html"
-    createQRInvoice(
-        generateQRInvoiceData(
-            ibanNr["szkb_privat_remo"],
-            addr_remo,
-            addr_leer,
-            amount="0.00",
-            additional_information=""),
         invoice_text_html="",
         pdfName=pdfName,
         htmlName=htmlName)

@@ -14,7 +14,7 @@
 # ------------------------------------------------------------------
 from SwissQRInvoiceGenerator import *
 from Genossame_Common_Defs import *
-from waltisLibrary import *
+
 
 if __name__ == '__main__':
     base_directory = './Rechnungen_2023/'
@@ -66,4 +66,4 @@ if __name__ == '__main__':
             htmlName=html_name)
 
         print(getFilename(full_pdf_name + '.pdf'))
-print ('EZ produced:', count_of_ez)
+print('EZ produced:', count_of_ez)

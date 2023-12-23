@@ -18,6 +18,6 @@
 import qrcode
 
 # Simple-Text
-img = qrcode.make('BZU 007')
+img = qrcode.make('Schoene Weihnachten 2023')
 img.save('../QR-Codes_Images/01a_01_helloWorld.png')
 print('../QR-Codes_Images/01a_01_helloWorld.png')
