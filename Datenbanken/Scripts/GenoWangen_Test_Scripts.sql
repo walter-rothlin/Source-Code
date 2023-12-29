@@ -91,7 +91,10 @@ SELECT * FROM Personen_Daten WHERE ID in (1216, 1217, 1218, 1219, 1220, 1221, 12
 SELECT * FROM Personen_Daten WHERE ID in (1224,1225,1226,1227);                             -- Neubürger 17.12.23
 SELECT * FROM Personen_Daten WHERE ID in (840, 1058,1037,1104,615,1043,1088, 535);          -- Mutationen vom 17.12.23
 SELECT * FROM Personen_Daten WHERE ID in (1228, 585, 226);                                  -- Mutationen vom 18.12.23
-
+SELECT * FROM Personen_Daten WHERE ID in (838, 1096, 1036, 1029, 523, 606, 757);                                  -- Mutationen vom 26.12.23
+SELECT * FROM Personen_Daten       WHERE ID in (1029);  -- 1029 Rückkehrer 2023 aber zu spät angemeldet
+SELECT * FROM Personen       WHERE ID in (1109);  -- 1029 Rückkehrer 2023 aber zu spät angemeldet
+SELECT * FROM Personen_Daten WHERE ID in (644);
 
 -- Adressen bereinigen (double Adresses)
 -- -------------------------------------
@@ -115,13 +118,13 @@ UPDATE `personen` SET `Geschaefts_Adressen_ID` = 399 WHERE Geschaefts_Adressen_I
 DELETE FROM `adressen` WHERE ID in (673);
 
 
-SELECT * FROM `adressen` WHERE Strasse LIKE '%Zürcherstr.%';                  
+SELECT * FROM `adressen` WHERE Strasse LIKE '%Althof%';                  
 
 
 -- telnr
 -- -----
 SELECT * FROM personen_has_telefonnummern WHERE Personen_ID IN (585);
-SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (585)) Order by Prio;
+SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (757)) Order by Prio;
 
 DELETE FROM personen_has_telefonnummern WHERE Telefonnummern_ID = 155;
 DELETE FROM telefonnummern WHERE ID = 155;

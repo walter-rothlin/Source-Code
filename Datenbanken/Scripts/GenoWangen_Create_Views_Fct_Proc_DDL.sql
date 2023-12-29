@@ -40,7 +40,7 @@
 -- 28-Nov-2023   Walter Rothlin      Added Login-View
 -- 11-Dec-2023   Walter Rothlin      Added Double Nutzenauszahlung (gleiche IBAN)
 -- 18-Dec-2023   Walter Rothlin      Moved VIEWS: Pächter_Pachtland_Differenzen, PD_Row_Counts
--- 18-Dec-2023   Walter Rothlin      Added view Bürger_Nutzungsberechtigt_nicht_Verwaltungsberechtigt
+-- 29-Dec-2023   Walter Rothlin      Added DROP Section for ALL fct, views and procedures
 -- -----------------------------------------
 
 -- To-Does
@@ -59,6 +59,17 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- == Create Funtions used in Joins                                                             ==
 -- ===============================================================================================
 SET GLOBAL log_bin_trust_function_creators = 1;
+
+-- ===============================================================================================
+-- == DROP ALL Functions, Views and Procedures                                                          ==
+-- ===============================================================================================
+DROP FUNCTION IF EXISTS getRowCount;
+DROP FUNCTION IF EXISTS addSetValue;
+DROP FUNCTION IF EXISTS removeSetValue;
+DROP FUNCTION IF EXISTS removeSetValue_New;
+DROP FUNCTION IF EXISTS getOlder;
+DROP FUNCTION IF EXISTS getYounger;
+DROP FUNCTION IF EXISTS getAge;
 
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS getRowCount;

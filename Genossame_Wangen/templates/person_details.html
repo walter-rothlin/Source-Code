@@ -23,7 +23,7 @@
     {% if details.eMail_1 != None and details.eMail_1 != '' %}            <B>{{ details.eMail_1 }}</B> {{ (details.eMail_1_Detail_Long).split(':')[3] }} <BR/>{% endif %}
     {% if details.eMail_2 != None and details.eMail_2 != '' %}            <B>{{ details.eMail_2 }}</B> {{ (details.eMail_2_Detail_Long).split(':')[3] }} <BR/>{% endif %}
     <BR/>
-    {% if details.IBAN        != None and details.IBAN        != '' %} IBAN:        <B>{{ details.IBAN }}       </B><BR/> {% endif %}
+    {% if details.IBAN        != None and details.IBAN        != '' %} IBAN:        <B>{{ details.IBAN }}       </B>      {% endif %} {% if details.Lautend_Auf        != None and details.Lautend_Auf        != '' %} (Lautend_Auf:        <B>{{ details.Lautend_Auf }})      </B><BR/> {% endif %}
     {% if details.AHV_Nr      != None and details.AHV_Nr      != '' %} AHV :        <B>{{ details.AHV_Nr }}     </B><BR/> {% endif %}
     {% if details.SAK         != None and details.SAK         != '' %} SAK :        <B>{{ details.SAK }}        </B><BR/> {% endif %}
     {% if details.Betriebs_Nr != None and details.Betriebs_Nr != '' %} Betriebs_Nr: <B>{{ details.Betriebs_Nr }}</B><BR/> {% endif %}
@@ -43,6 +43,9 @@
     {% if details.Chronik_Bezogen_Am                         != None and details.Chronik_Bezogen_Am                         != '' %} Chronik bezogen:      <B>{{ details.Chronik_Bezogen_Am }}                       </B><BR/> {% endif %}
     {% if details.Newsletter_Abonniert_Am                    != None and details.Newsletter_Abonniert_Am                    != '' %} Newsletter abonniert: <B>{{ details.Newsletter_Abonniert_Am }}                  </B><BR/> {% endif %}
     {% if details.Todestag                                   != None and details.Geburtstag                                 != '' %} Gestorben:            <B>{{ details.Todestag }}                                 </B><BR/> {% endif %}
+    <BR/>
+    {% if details.Nach_Wangen_Gezogen                        != None and details.Nach_Wangen_Gezogen                        != '' %} Nach_Wangen_Gezogen:  <B>{{ details.Nach_Wangen_Gezogen }}                      </B><BR/> {% endif %}
+    {% if details.Von_Wangen_Weggezogen                      != None and details.Von_Wangen_Weggezogen                      != '' %} Von_Wangen_Weggezogen:<B>{{ details.Von_Wangen_Weggezogen }}                    </B><BR/> {% endif %}
     <BR/>
     {% if details.History      != None and details.History      != '' %} History:      <B>{{ details.History }}     </B><BR/> {% endif %}
     {% if details.Bemerkungen  != None and details.Bemerkungen  != '' %} Bemerkungen:  <B>{{ details.Bemerkungen }} </B><BR/> {% endif %}

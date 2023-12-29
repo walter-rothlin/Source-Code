@@ -50,6 +50,14 @@ if __name__ == '__main__':
         "country": "",
     }
 
+    addr_Mieter_P33 = {
+        "name": "Fredi Kistler",
+        "address": "Peterliwiese 33",
+        "zip_code": "8855",
+        "city": "Wangen",
+        "country": "CH",
+    }
+
     ibanNr = {
         "raiffeisen_walti": "CH9580808006989422343",
         "csuh_walti":       "CH8704835041184041000",
@@ -64,6 +72,24 @@ if __name__ == '__main__':
         "FG_Abern": "CH90 0077 7003 2922 1166 7",
         "Sabine_Marty": "CH95 0873 1001 5681 2203 4"
     }
+
+    pdfName = "GeneratedInvoices/Miete_Peterliwiese"
+    htmlName = "GeneratedInvoices/Miete_Peterliwiese.html"
+    createQRInvoice(
+        generateQRInvoiceData(
+            ibanNr["raiffeisen_walti"],
+            addr_walti,
+            addr_Mieter_P33,
+            amount="900.00",
+            additional_information="Miete Peterliwiese"),
+        invoice_text_html="",
+        pdfName=pdfName,
+        htmlName=htmlName)
+
+    print("Produced following files:")
+    print("    --> ", pdfName)
+    print("    --> ", htmlName)
+
 
     pdfName = "GeneratedInvoices/FG_Aberen"
     htmlName = "GeneratedInvoices/FG_Aberen.html"
