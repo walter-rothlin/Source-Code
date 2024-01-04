@@ -238,7 +238,7 @@ if __name__ == '__main__':
         initial_load_pachtland(geno_schema, r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte.xlsx', verbal=True)
 
 
-    if True:
+    if False:
         # Process Aenderungen from Excel
         # ==============================
         print('\n\n')
@@ -251,7 +251,7 @@ if __name__ == '__main__':
         db_attr_excel_column_mapping_1 = [{'excel': 'Private_Strassen_Adresse'}]
         pre_process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', db_attr_excel_column_mapping=db_attr_excel_column_mapping_1, verbal=True, take_action=True)
 
-    if True:
+    if False:
         print('\n\n')
         print('==================')
         print('Processing changes')
@@ -262,10 +262,22 @@ if __name__ == '__main__':
 
     # Cleanup Date
     # ============
-    if True:
+    if False:
         print('\n\n')
         print('==================')
         print('Cleanup DB        ')
         print('==================')
         execute_important_sql_queries(geno_schema)
 
+
+    # Check Passord
+    # =============
+    if True:
+        personen_db = Stammdaten()
+        password = 'PWD_Hallo'
+        print(personen_db.is_password_correct('walter@rothlin.com', password))
+        login_details = personen_db.is_password_correct('landwirtschaft@genossame-wangen.ch', password)
+        print(login_details)
+
+        priviliges = personen_db.get_priviliges_for_pers_ID(644)
+        print(priviliges)

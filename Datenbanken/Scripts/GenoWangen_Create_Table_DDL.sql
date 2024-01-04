@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS Personen (
   `Partner_Name_Angenommen`  BOOLEAN DEFAULT FALSE,
   `AHV_Nr`                   VARCHAR(45) NULL,
   `SAK`                      FLOAT NULL DEFAULT NULL,
-  `Password`                 VARCHAR(20) NULL,
+  `Password`                 VARCHAR(70) NULL,
   `Betriebs_Nr`              VARCHAR(45) NULL,
 
   `Zivilstand`  ENUM('Unbestimmt', 'Leer', 'Ledig','Verheiratet','Getrennt',

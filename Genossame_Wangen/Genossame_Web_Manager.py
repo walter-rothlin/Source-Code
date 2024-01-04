@@ -142,8 +142,9 @@ def login():
     if request.method == 'POST':
         username = request.form['email']
         password = request.form['password']
-        # Hier könnten Sie den Code einfügen, das Passwort für einen Benutzer zu überprüfen
-        if len(password) > 5:
+        #  password = 'PWD_Hallo'
+
+        if genossame.is_password_correct(username, password)[0]:
             session['username'] = username
             return render_template("index.html")
     return render_template("index.html")

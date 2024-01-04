@@ -42,6 +42,7 @@
 -- 18-Dec-2023   Walter Rothlin      Moved VIEWS: Pächter_Pachtland_Differenzen, PD_Row_Counts
 -- 29-Dec-2023   Walter Rothlin      Added DROP Section for ALL fct, views and procedures
 -- 04-Jan-2024   Walter Rothlin      Added get_IDs_from_Kommissionen
+-- 04-Jan-2024   Walter Rothlin      Added View App_Priviliges
 -- -----------------------------------------
 
 -- To-Does
@@ -2971,10 +2972,19 @@ CREATE VIEW Login_Table AS
     
     
 -- --------------------------------------------------------------------------------    
-/*
-
-*/
-
+DROP VIEW IF EXISTS App_Priviliges; 
+CREATE VIEW App_Priviliges AS
+	SELECT
+		 pers_priv.Personen_ID       AS Pers_ID,
+		 pers_priv.Privilige_ID      AS Priv_ID,
+		 priv.Application            AS Application,
+		 priv.Privilege              AS Privilige,
+		 pDaten.Vorname_Familienname AS Vorname_Familienname,
+		 pDaten.Tel_Nr               As Tel_Nr,
+		 pDaten.eMail                As eMail
+	FROM Personen_has_Priviliges AS pers_priv
+	JOIN Personen_Daten AS pDaten ON  pers_priv.Personen_ID = pDaten.ID
+	LEFT OUTER JOIN Priviliges AS priv ON priv.ID = pers_priv.Privilige_ID;
 
 -- --------------------------------------------------------------------------------  
 DROP VIEW IF EXISTS ENUM_SET_Values; 

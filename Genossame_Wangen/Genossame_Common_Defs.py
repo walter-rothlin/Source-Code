@@ -20,6 +20,7 @@ import csv
 import json
 import pandas as pd
 import openpyxl
+import hashlib
 
 # Lambda function to check if a x is from WAHR / FALSCH.
 ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
@@ -93,10 +94,62 @@ class Stammdaten:
         mycursor.execute(sql)
         return mycursor.fetchall()
 
+    def is_password_correct(self, username, password, password_is_hash=False):
+        hashed_password = hash_password(password)
+
+        # print("Original Password:", password)
+        # print("Hashed Password:", hashed_password, len(hashed_password))
+
+        sql = f"""
+        SELECT Password FROM Personen_Daten WHERE ID IN (
+            SELECT
+                Pers_id
+            FROM email_liste 
+            WHERE eMail_Adresse = '{username}');
+        """
+        sql = f"""
+        SELECT Personen_ID, Password 
+        FROM login_table
+        WHERE eMail = '{username}';
+        """
+        # print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        try:
+            mycursor.execute(sql)
+            rs = mycursor.fetchall()[0]
+            print('rs:', rs)
+            password_found = rs['Password']
+            if password_found == password or password_found == hashed_password:
+                return True, rs['Personen_ID']
+            else:
+                return False, rs['Personen_ID']
+        except Exception:
+            return False, None
+
+    def get_priviliges_for_pers_ID(self, pers_id):
+        sql = f"""
+        SELECT * 
+        FROM App_Priviliges
+        WHERE Pers_ID = '{pers_id}';
+        """
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        try:
+            mycursor.execute(sql)
+            rs = mycursor.fetchall()
+            print('rs:', rs)
+            return rs
+        except Exception:
+            return None
 
 # =================
 # Geno DB-Functions
 # =================
+
+
+
+
+
 def db_connect(connect_to_prod=True, trace=False):
     if connect_to_prod:
         stammdaten_schema = mysql_db_connect(db_host='192.168.253.24',
@@ -1612,7 +1665,17 @@ def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, v
                 db_connection.commit()
     return records_changed
 
+def hash_password(password):
+    # Create a new SHA-256 hash object
+    sha256 = hashlib.sha256()
 
+    # Update the hash object with the password bytes
+    sha256.update(password.encode('utf-8'))
+
+    # Get the hexadecimal representation of the hash
+    hashed_password = sha256.hexdigest()
+
+    return hashed_password
 
 
 # -------------------------------------------
