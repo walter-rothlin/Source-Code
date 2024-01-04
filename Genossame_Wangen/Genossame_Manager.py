@@ -279,5 +279,5 @@ if __name__ == '__main__':
         login_details = personen_db.is_password_correct('landwirtschaft@genossame-wangen.ch', password)
         print(login_details)
 
-        priviliges = personen_db.get_priviliges_for_pers_ID(644)
+        priviliges = personen_db.get_priviliges_for_pers_ID(login_details[1])
         print(priviliges)

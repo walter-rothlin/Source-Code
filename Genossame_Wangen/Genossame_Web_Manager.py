@@ -38,7 +38,7 @@ def profile():
 @app.route("/adress_liste", methods=['GET', 'POST'])
 def adress_liste():
     print('adress_liste() called!!!')
-    if session is not None and 'username' in session and session['username'] is not None:
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
         if request.method == 'POST':
             s_criteria = request.form.get("search_criteria")
         else:
@@ -55,7 +55,7 @@ def adress_liste():
 @app.route("/personen_details", methods=['GET', 'POST'])
 def personen_details():
     print('personen_details() called!!!')
-    if session is not None and 'username' in session and session['username'] is not None:
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
         if request.method == 'POST':
             pid = request.form.get("pid")
         else:
@@ -70,7 +70,7 @@ def personen_details():
 @app.route("/delete_single_person", methods=['GET', 'POST'])
 def delete_single_person():
     print('delete_single_person() called!!!')
-    if session is not None and 'username' in session and session['username'] is not None:
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
         if request.method == 'POST':
             pid = request.form.get("pid")
         else:
@@ -81,6 +81,22 @@ def delete_single_person():
         return render_template("person_details.html", details=rs[0])
     else:
         return render_template("index.html")
+
+@app.route("/modify_single_person", methods=['GET', 'POST'])
+def modify_single_person():
+    print('modify_single_person() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        if request.method == 'POST':
+            pid = request.form.get("pid")
+        else:
+            pid = request.args.get("pid")
+        rs = genossame.get_person_details_from_DB_by_ID(id=pid)
+        print(rs)
+        print('pid:', pid, '    Anz Rec found: ', len(rs))
+        return render_template("person_Change.html", details=rs[0])
+    else:
+        return render_template("index.html")
+
 
 # Login / Logout Functions
 # ========================
@@ -144,8 +160,13 @@ def login():
         password = request.form['password']
         #  password = 'PWD_Hallo'
 
-        if genossame.is_password_correct(username, password)[0]:
-            session['username'] = username
+        password_is_correct, user_id = genossame.is_password_correct(username, password)
+        # print('password_is_correct:', password_is_correct, '   user_id:', user_id)
+        if password_is_correct:
+            session['user_name'] = username
+            session['user_id'] = user_id
+            session['user_priv'] = genossame.get_priviliges_for_pers_ID(user_id)
+            print('session:', session)
             return render_template("index.html")
     return render_template("index.html")
 
@@ -155,7 +176,9 @@ def logout():
         if 'stay_logged_in' in request.form:
             return render_template("index.html")
         else:
-            session.pop('username', None)
+            session.pop('user_name', None)
+            session.pop('user_id', None)
+            session.pop('user_priv', None)
             return render_template("index.html")
     return render_template("index.html")
 

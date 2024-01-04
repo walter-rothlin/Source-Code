@@ -117,7 +117,7 @@ class Stammdaten:
         try:
             mycursor.execute(sql)
             rs = mycursor.fetchall()[0]
-            print('rs:', rs)
+            # print('rs:', rs)
             password_found = rs['Password']
             if password_found == password or password_found == hashed_password:
                 return True, rs['Personen_ID']
@@ -128,16 +128,16 @@ class Stammdaten:
 
     def get_priviliges_for_pers_ID(self, pers_id):
         sql = f"""
-        SELECT * 
+        SELECT Application, Privilige 
         FROM App_Priviliges
         WHERE Pers_ID = '{pers_id}';
         """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         try:
             mycursor.execute(sql)
             rs = mycursor.fetchall()
-            print('rs:', rs)
+            ## print('rs:', rs)
             return rs
         except Exception:
             return None
