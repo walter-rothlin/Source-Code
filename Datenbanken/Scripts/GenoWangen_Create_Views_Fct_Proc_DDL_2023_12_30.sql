@@ -41,7 +41,6 @@
 -- 11-Dec-2023   Walter Rothlin      Added Double Nutzenauszahlung (gleiche IBAN)
 -- 18-Dec-2023   Walter Rothlin      Moved VIEWS: Pächter_Pachtland_Differenzen, PD_Row_Counts
 -- 29-Dec-2023   Walter Rothlin      Added DROP Section for ALL fct, views and procedures
--- 04-Jan-2024   Walter Rothlin      Added get_IDs_from_Kommissionen
 -- -----------------------------------------
 
 -- To-Does
@@ -105,7 +104,6 @@ DROP FUNCTION IF EXISTS getPrio_0_IBAN_ID;
 DROP FUNCTION IF EXISTS getStrassenAdresse;
 DROP FUNCTION IF EXISTS calc_nutzen_by_katset;
 DROP FUNCTION IF EXISTS calc_nutzen;
-DROP FUNCTION IF EXISTS get_IDs_from_Kommissionen;
 
 DROP VIEW IF EXISTS Länder;
 DROP VIEW IF EXISTS Ort_Land;
@@ -156,20 +154,6 @@ DROP VIEW IF EXISTS Nutzenstatistik_2;
 DROP VIEW IF EXISTS Nutzenstatistik_3;
 DROP VIEW IF EXISTS Nutzenstatistik;
 DROP VIEW IF EXISTS Pachtlandzuteilung;
-DROP VIEW IF EXISTS Paechterstatistik;
-DROP VIEW IF EXISTS Buergerteile;
-DROP VIEW IF EXISTS Buergerteile_Speziell;
-DROP VIEW IF EXISTS Wärmeanschlüsse_View;
-DROP VIEW IF EXISTS Bürger_mit_Mehrfachteilen;
-DROP VIEW IF EXISTS Login_Table;
-DROP VIEW IF EXISTS ENUM_SET_Values;
-DROP VIEW IF EXISTS Pächter_Pachtland_Differenzen;
-DROP VIEW IF EXISTS Table_Meta_Data;
-
-DROP PROCEDURE IF EXISTS addIBAN;
-DROP PROCEDURE IF EXISTS updateIBAN;
-DROP PROCEDURE IF EXISTS deleteIBAN;
-DROP PROCEDURE IF EXISTS getLandId;
 
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS getRowCount;
@@ -941,9 +925,6 @@ DELIMITER ;
 
 -- -----------------------------------------
 
-
-
-
 -- =========================================
 --          Nutzen                        --
 -- =========================================
@@ -1006,27 +987,6 @@ DELIMITER ;
 -- select calc_nutzen(true, true, false);   -- --> 1870.00
 -- select calc_nutzen(true, false, false);  -- --> 2000.00
 
-
--- =========================================
---          Kommissionen                  --
--- =========================================
-DROP FUNCTION IF EXISTS get_IDs_from_Kommissionen;
-DELIMITER //
-CREATE FUNCTION get_IDs_from_Kommissionen(p_Kommissionsname VARCHAR(45)) RETURNS VARCHAR(255)
-BEGIN
-    DECLARE result_ids VARCHAR(255) DEFAULT '';
-
-    SELECT GROUP_CONCAT(id) INTO result_ids
-    FROM Kommissionen
-    WHERE (Kommissionsname      LIKE CONCAT('%', p_Kommissionsname, '%') OR
-           Kommissionsabkürzung LIKE CONCAT('%', p_Kommissionsname, '%')) AND Member_Bis IS NULL;
-
-    RETURN result_ids;
-END//
-DELIMITER ;
-
--- SELECT get_IDs_from_Kommissionen('Genossenrat');
--- SELECT * FROM Personen_daten WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0;
 -- ===============================================================================================
 -- == Create Views                                                                              ==
 -- ===============================================================================================
@@ -1726,50 +1686,10 @@ CREATE VIEW Mitarbeiter_Geburtstage AS
         DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%m%d') AS Sorter
     FROM Personen_Daten
     WHERE (FIND_IN_SET('Angestellter', Kategorien) >  0 OR
-           FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR
-           FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0 ) AND 
+           FIND_IN_SET('Genossenrat', Kategorien) >  0  OR
+           FIND_IN_SET('GPK', Kategorien) >  0 ) AND 
            Todestag IS NULL
 	ORDER BY Sorter ASC;
-
-
--- -----------------------------------------------------
-DROP VIEW IF EXISTS Kommissionen; 
-CREATE VIEW Kommissionen AS
-SELECT
-	pers.ID                        AS ID,
-	kom.Bezeichnung	 			   AS Kommissionsname,
-	gk.Funktion                    AS Funktion,
-	pers.Geschlecht                AS Geschlecht,
-    pers.Vorname_Initial           AS Vorname_Initial,
-    pers.Familien_Name             AS Familienname,
-    pers.Last_Name                 AS Last_Name,
-    pers.Private_Strassen_Adresse  AS Private_Strassen_Adresse,
-    pers.Private_PLZ_Ort           AS Private_PLZ_Ort,
-    pers.Tel_Nr                    AS Tel_Nr,
-    pers.eMail                     AS eMail,
-    pers.IBAN                      AS IBAN,
-    pers.Geburtstag                AS Geburtstag,
-    pers.Alter_in_diesem_Jahr      AS Alter_in_diesem_Jahr,
-    pers.AHV_Nr                    AS AHV_Nr,
-    pers.Brief_Anrede              AS Brief_Anrede,
-	pers.Vorname_Familienname      AS Vorname_Familienname,
-
-	kom.ID                      AS K_ID,
-    kom.Abkürzung               AS Kommissionsabkürzung,
-    kom.Vorsitzender_ID         AS Kommissionsvorsitzender,
-    kom.Ins_Leben_gerufen_Am    AS Kommission_Gegründet_Ab,
-    kom.Aktiv_Ab                AS Kommission_Aktiv_Ab,
-
-
-    gk.Aktiv_Ab                 AS Member_Ab,
-    gk.Aktiv_Bis                AS Member_Bis
-    -- pers.*,
-    -- gk.*
-FROM            Gehört_zu_Kommissionen AS gk
-LEFT OUTER JOIN Personen_Daten         AS pers ON  pers.ID = gk.Personen_ID
-LEFT OUTER JOIN Kommissionen_Gruppen   AS kom  ON  kom.ID  = gk.Kommissionen_ID
-WHERE gk.Aktiv_Bis IS NULL
-ORDER BY K_ID, Familienname, Vorname_Initial, Funktion;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Genossenrat; 
@@ -1777,13 +1697,13 @@ CREATE VIEW Genossenrat AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR -- FIND_IN_SET('Genossenrat', Kategorien) >  0 OR
-          FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0     -- FIND_IN_SET('GPK', Kategorien) >  0
+    WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0 OR
+          FIND_IN_SET('GPK', Kategorien) >  0
     ORDER BY Funktion, Familien_Name, Vorname;
-    
+
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Kommissionen_OLD; 
-CREATE VIEW Kommissionen_OLD AS
+DROP VIEW IF EXISTS Kommissionen; 
+CREATE VIEW Kommissionen AS
     SELECT
         ID,
         'LWK'         AS `Kommission`,
@@ -2039,7 +1959,8 @@ CREATE VIEW Geno_Reisende AS
         Kategorien,
         Brief_Anrede_PerDu
     FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR
+    WHERE FIND_IN_SET('Genossenrat', Kategorien) >  0  OR
+          -- FIND_IN_SET('GPK', Kategorien) >  0          OR
           FIND_IN_SET('Angestellter', Kategorien) >  0 OR
           ID IN (488, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188)   -- Partner
     ORDER BY Familien_Name, Vorname;

@@ -52,7 +52,7 @@ SELECT *
 	-- eMail_Detail_Long, Tel_Nr_Detail_Long, IBAN_Detail_Long 
 FROM personen_daten 
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
-WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Steiner%' AND Such_Begriff LIKE Binary '%%'))
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Edgar%' AND Such_Begriff LIKE Binary '%Schättin%'))
 ORDER BY Familien_Name;
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
@@ -95,6 +95,13 @@ SELECT * FROM Personen_Daten WHERE ID in (838, 1096, 1036, 1029, 523, 606, 757);
 SELECT * FROM Personen_Daten       WHERE ID in (1029);  -- 1029 Rückkehrer 2023 aber zu spät angemeldet
 SELECT * FROM Personen       WHERE ID in (1109);  -- 1029 Rückkehrer 2023 aber zu spät angemeldet
 SELECT * FROM Personen_Daten WHERE ID in (644);
+
+
+SELECT * FROM Personen       WHERE ID in (1058, 1045, 1108, 877, 1037, 1104, 546, 1083);  -- Wegzüger 2023
+SELECT * FROM Personen       WHERE ID in (934, 1029);   -- Rückkehrer 2023
+SELECT * FROM Personen       WHERE ID in (1216, 1225, 1220, 1223, 1226, 1219, 1222, 1221, 1228, 1217, 1224, 1227, 1218); -- Neubürger 2024
+SELECT * FROM Personen       WHERE ID in (609, 1035);  -- Waisen Timi Vogt fehlt noch! Was ist mit behindertem Sohn von Marianne + Marcel?
+
 
 -- Adressen bereinigen (double Adresses)
 -- -------------------------------------
@@ -169,3 +176,8 @@ SELECT MAX(ID) INTO @max_value FROM adressen;
 SELECT @max_value;   -- 701
 ALTER TABLE adressen AUTO_INCREMENT = 702;
 */
+
+SELECT * FROM personen WHERE FIND_IN_SET('GPK', Kategorien) >  0 OR
+							 FIND_IN_SET('Genossenrat', Kategorien) >  0 OR
+							 FIND_IN_SET('LWK', Kategorien) >  0 OR
+							 FIND_IN_SET('Forst_Komm', Kategorien) >  0;

@@ -23,6 +23,8 @@
 -- 13-Dec-2023   Walter Rothlin      Added Neubürger to Kategorien
 --                                   Added Aufnahme_Gebühr_bezahlt_Am
 --                                   Added IBAN Lautend_auf
+-- 01-Jan-2024   Walter Rothlin      Added Kommissionen_Gruppen und Gehört_zu_Kommission
+-- 04-Jan-2024   Walter Rothlin      Removed GPK, Genossenrat, LWK, Forst_Komm from Kategorien
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -165,8 +167,8 @@ CREATE TABLE IF NOT EXISTS Personen (
                       DEFAULT NULL,
 
   `Kategorien`  SET('Neubürger', 'Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
-                    'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
-                    'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
+                    'Firma', 'Angestellter', 'Auftragnehmer',
+                    'Grauer Panter', 'Bewirtschafter', 
                     'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
                     'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
                     'Betriebsgemeinschaft', 'Generationengemeinschaft') 
@@ -409,6 +411,66 @@ CREATE TABLE IF NOT EXISTS `IBAN` (
 
 -- ALTER TABLE `iban` 
 -- ADD UNIQUE INDEX `Nummer_UNIQUE` (`Nummer` ASC) VISIBLE;
+
+
+-- -----------------------------------------
+-- Table `Kommissionen_Gruppen`
+-- -----------------------------------------
+DROP TABLE IF EXISTS `Kommissionen_Gruppen` ;
+CREATE TABLE IF NOT EXISTS `Kommissionen_Gruppen` (
+  `ID`                           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Bezeichnung`                  VARCHAR(45) NULL,
+  `Abkürzung`                    VARCHAR(5) NULL,
+  `Vorsitzender_ID`              INT UNSIGNED NOT NULL,
+  `Ins_Leben_gerufen_am`         DATE NULL,
+  `Aktiv_Ab`                     DATE NULL,
+  `last_update`                  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+       
+  -- PK-Constraints
+  PRIMARY KEY (`ID`),
+  
+  -- Indizes
+  INDEX `fk_Vorsitzender_ID_idx` (`Vorsitzender_ID` ASC) VISIBLE,
+  
+  -- FK-Constraints
+  CONSTRAINT `fk_Vorsitzender_ID`
+     FOREIGN KEY (`Vorsitzender_ID`)
+     REFERENCES `personen` (`ID`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION);
+
+-- -----------------------------------------
+-- Table `Gehört_zu_Kommissionen`
+-- -----------------------------------------
+DROP TABLE IF EXISTS Gehört_zu_Kommissionen;
+CREATE TABLE IF NOT EXISTS Gehört_zu_Kommissionen (
+  -- `ID`                INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Personen_ID`       INT UNSIGNED NOT NULL,
+  `Kommissionen_ID`   INT UNSIGNED NOT NULL,
+  `Funktion`          VARCHAR(45) NULL,
+  `Aktiv_Ab`          DATE NULL,
+  `Aktiv_Bis`         DATE NULL,
+  `last_update`       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      
+  -- PK-Constraints
+  -- PRIMARY KEY (`ID`),
+  PRIMARY KEY (`Personen_ID`, `Kommissionen_ID`),
+  
+  -- Indizes
+  INDEX `fk_Gehört_zu_Kommissionen_1_idx` (`Kommissionen_ID` ASC) VISIBLE,
+  INDEX `fk_Gehört_zu_Kommissionen_2_idx` (`Personen_ID` ASC)       VISIBLE,
+  
+  -- FK-Constraints
+  CONSTRAINT `fk_Gehört_zu_Kommissionen_1`
+    FOREIGN KEY (`Personen_ID`)
+    REFERENCES `Personen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Gehört_zu_Kommissionen_2`
+    FOREIGN KEY (`Kommissionen_ID`)
+    REFERENCES `Kommissionen_Gruppen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------
