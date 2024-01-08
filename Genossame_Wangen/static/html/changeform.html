@@ -7,6 +7,11 @@
     <title>Update Values</title>
     <!-- Add Bootstrap CSS link -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .changed {
+            background-color: #FFFFA2;
+        }
+    </style>
 </head>
 
 <body class="container">
@@ -18,7 +23,7 @@
             <div class="form-group col-md-1">
                 <label for="anrede" class="col-form-label">Anrede:</label>
                 <div class="input-group">
-                    <select class="form-control" id="anrede" name="anrede" required>
+                    <select class="form-control" id="anrede" name="anrede" onchange="markChangedFields(this)" required>
                         <option value="Herr">Herr</option>
                         <option value="Frau">Frau</option>
                         <option value="Familie">Familie</option>
@@ -29,33 +34,33 @@
             <div class="form-group col-md-2">
                 <label for="firstName" class="col-form-label">Vorname:</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="firstName" name="firstName" maxlength="45" value="Walter" required>
+                    <input type="text" class="form-control" id="firstName" name="firstName" maxlength="45" value="Walter" onchange="markChangedFields()" required>
                 </div>
             </div>
 
             <div class="form-group col-md-2">
                 <label for="ledigName" class="col-form-label">Ledig Name:</label>
-                <input type="text" class="form-control" id="ledigName" name="ledigName" maxlength="45" value="Rothlin" required>
+                <input type="text" class="form-control" id="ledigName" name="ledigName" maxlength="45" value="Rothlin" onchange="markChangedFields()" required>
             </div>
 
             <div class="form-group col-md-4">
                 <label for="partnerName" class="col-form-label">Partner Name:</label>
-                <input type="text" class="form-control" id="partnerName" name="partnerName" pattern="^[A-Z][a-zA-Z]{5,}$" maxlength="20" value="Collet" required>
+                <input type="text" class="form-control" id="partnerName" name="partnerName" pattern="^[A-Z][a-zA-Z]{5,}$" maxlength="20" value="Collet" onchange="markChangedFields()" required>
                 <small id="lastNameHelp" class="form-text text-muted">Must start with an uppercase letter and have a minimum of 6 characters.</small>
             </div>
 
             <div class="form-group col-md-3">
                 <label for="partnerNameAngenommen" class="col-form-label">Angenommen:</label>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="partnerNameAngenommenYes" name="partnerNameAngenommen" value="Yes">
-                    <label class="form-check-label" for="partnerNameAngenommenYes">Partner Name angenommen</label>
+                    <input type="checkbox" class="form-check-input" id="partnerNameAngenommen" name="partnerNameAngenommen" value="Yes" onchange="markChangedFields()">
+                    <label class="form-check-label" for="partnerNameAngenommen">Partner Name angenommen</label>
                 </div>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-3">
-                <label for="Kategorien" class="col-form-label">Kategorien:</label>
+                <label class="col-form-label">Kategorien:</label>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="Kategorie_Buerger" name="Kategorien" value="Bürger">
                     <label class="form-check-label" for="Kategorie_Buerger">Bürger</label>
@@ -117,21 +122,25 @@
             markChangedFields();
         }
 
-        function markChangedFields() {
+        var defaultValues = {};
+
+        function markChangedFields(element) {
             // Get all input elements in the form
+            var fieldId = element.id;
             var inputElements = document.querySelectorAll('#updateForm input');
+            console.log(inputElements)
 
             // Loop through each input element
             inputElements.forEach(function (element) {
-                // Check if the value has changed
+                console.log(element, element.defaultValue, '-->', element.value)
                 if (element.defaultValue !== element.value) {
-                    // Add the 'changed' class to mark the field as changed
                     element.classList.add('changed');
+                } else {
+                    element.classList.remove('changed');
                 }
             });
         }
     </script>
-
 </body>
 
 </html>

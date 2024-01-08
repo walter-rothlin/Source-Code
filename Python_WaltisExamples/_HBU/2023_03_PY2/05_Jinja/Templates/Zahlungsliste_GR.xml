@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>547362488991</MsgId>
+            <CreDtTm>2023-11-17T14:48:04.485+01:00</CreDtTm>
+            <NbOfTxs>6</NbOfTxs>
+            <CtrlSum>11210.00</CtrlSum>
+            <InitgPty>
+                <Nm>Genossame Wangen</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>235805253558</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs>6</NbOfTxs>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt>2023-11-20</ReqdExctnDt>
+            <Dbtr>
+                <Nm>Genossame Wangen</Nm>
+                <PstlAdr>
+                    <Ctry>CH</Ctry>
+                </PstlAdr>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>CH5100777001561771945</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>KBSZCH22XXX</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>1</InstrId>
+                    <EndToEndId>472107230214</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">1650.00</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Hugo Bruhin</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH6400777000005824005</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Genossennutzen 2023</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>2</InstrId>
+                    <EndToEndId>145136167765</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">1780.00</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Hansjoerg Hueppin</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH1600777000598301257</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Genossennutzen 2023</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>3</InstrId>
+                    <EndToEndId>548250320803</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">2000.00</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Walter Rothlin</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH9580808006989422343</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Genossennutzen 2023</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>4</InstrId>
+                    <EndToEndId>307737177847</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">2000.00</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Edgar Schaettin</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH1208731001729312017</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Genossennutzen 2023</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>5</InstrId>
+                    <EndToEndId>343546931447</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">2000.00</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Andreas Vogt</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH0800777003535941842</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Genossennutzen 2023</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>6</InstrId>
+                    <EndToEndId>306874028458</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">1780.00</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Paul Vogt</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH1700777000031751205</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Genossennutzen 2023</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>

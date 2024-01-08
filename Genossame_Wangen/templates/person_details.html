@@ -28,6 +28,16 @@
     {% if details.SAK         != None and details.SAK         != '' %} SAK :        <B>{{ details.SAK }}        </B><BR/> {% endif %}
     {% if details.Betriebs_Nr != None and details.Betriebs_Nr != '' %} Betriebs_Nr: <B>{{ details.Betriebs_Nr }}</B><BR/> {% endif %}
     <BR/>
+    <BR/>
+    Stammbaum:
+    <BR/>
+    <table>
+        {% if details.Partner_ID  != None and details.Partner_ID  != '' %}<tr><td>Partner:</td><td> <B>{{ details.Partner_ID }}</B></td>{% endif %} {% if details.Partner_Reference  != None and details.Partner_Reference    != '' %} <td>&nbsp;&nbsp;<B>{{ details.Partner_Reference }}</B></td> {% endif %}</tr>
+        {% if details.Vater_ID    != None and details.Vater_ID    != '' %}<tr><td>Vater:  </td><td> <B>{{ details.Vater_ID }}  </B></td>{% endif %} {% if details.Vater_Reference    != None and details.Vater_Reference      != '' %} <td>&nbsp;&nbsp;<B>{{ details.Vater_Reference }}  </B></td> {% endif %}</tr>
+        {% if details.Mutter_ID   != None and details.Mutter_ID   != '' %}<tr><td>Mutter: </td><td> <B>{{ details.Mutter_ID }} </B></td>{% endif %} {% if details.Mutter_Reference   != None and details.Mutter_Reference     != '' %} <td>&nbsp;&nbsp;<B>{{ details.Mutter_Reference }} </B></td> {% endif %}</tr>
+    </table>
+    <BR/>
+    <BR/>
     Life Timeline:
     <BR/>
     {% if details.Geburtstag                                 != None and details.Geburtstag                                 != '' %} Geboren:              <B>{{ details.Geburtstag }}                               </B><BR/> {% endif %}

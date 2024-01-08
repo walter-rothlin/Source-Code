@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>{{ Debitor_Info.Header_ID }}</MsgId>
+            <CreDtTm>{{ Debitor_Info.Creation_Time }}</CreDtTm>
+            <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
+            <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
+            <InitgPty>
+                <Nm>{{ Debitor_Info.Name }}</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>235805253558</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt>{{ Debitor_Info.Valuta }}</ReqdExctnDt>
+            <Dbtr>
+                <Nm>{{ Debitor_Info.Name }}</Nm>
+                <PstlAdr>
+                    <Ctry>{{ Debitor_Info.Country_Code }}</Ctry>
+                </PstlAdr>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>{{ Debitor_Info.IBAN }}</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>{{ Debitor_Info.BIC }}</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+
+            {% for a_payment in Zahlungs_liste %}
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>1</InstrId>
+                    <EndToEndId>472107230214</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="{{ a_payment.Ccy }}">{{ a_payment.Amount }}</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>{{ a_payment.Receiver_Name }}</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>{{ a_payment.IBAN }}</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>{{ a_payment.Reason }}</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            {% endfor %}
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>

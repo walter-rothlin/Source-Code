@@ -3,70 +3,114 @@
 {% block content %}
 <div class="container">
     <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
-        <form id="updateForm">
+
+
+    <form id="updateForm" method="post" action="{{ url_for('update_person_details') }}">
         <div class="form-row">
             <div class="form-group col-md-1">
-                <label for="anrede" class="col-form-label">Anrede:</label>
+                <label for="geschlecht" class="col-form-label">Geschlecht:</label>
                 <div class="input-group">
-                    <select class="form-control" id="anrede" name="anrede" required>
-                        <option value="Herr">Herr</option>
-                        <option value="Frau">Frau</option>
-                        <option value="Familie">Familie</option>
-                    </select>
+                    <input type="text" class="form-control" id="geschlecht" name="geschlecht" maxlength="5" value="{{ details.Geschlecht }}" onchange="markChangedFields()" required>
                 </div>
             </div>
-
-            <div class="form-group col-md-2">
-                <label for="firstName" class="col-form-label">Vorname:</label>
+            <div class="form-group col-md-1">
+                <label for="vorname" class="col-form-label">Vorname:</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="firstName" name="firstName" maxlength="45" value="Walter" required>
+                    <input type="text" class="form-control" id="vorname" name="vorname" maxlength="45" value="{{ details.Vorname }}" onchange="markChangedFields()" required>
                 </div>
             </div>
-
+            <div class="form-group col-md-1">
+                <label for="vorname_2" class="col-form-label">2.Vorname:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="vorname_2" name="vorname_2" maxlength="45" value="{{ details.Vorname_2 }}" onchange="markChangedFields()" required>
+                </div>
+            </div>
             <div class="form-group col-md-2">
-                <label for="ledigName" class="col-form-label">Ledig Name:</label>
-                <input type="text" class="form-control" id="ledigName" name="ledigName" maxlength="45" value="Rothlin" required>
+                <label for="ledig_name" class="col-form-label">Ledig Name:</label>
+                <input type="text" class="form-control" id="ledig_name" name="ledig_name" maxlength="45" value="{{ details.Ledig_Name }}" onchange="markChangedFields()" required>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="partner_name" class="col-form-label">Partner Name:</label>
+                <input type="text" class="form-control" id="partner_name" name="partner_name" maxlength="45" value="{{ details.Partner_Name }}" onchange="markChangedFields()" required>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="partner_name_angenommen" class="col-form-label">Partner Name angenommen:</label>
+                <input type="text" class="form-control" id="partner_name_angenommen" name="partner_name_angenommen" maxlength="1" value="{{ details.Partner_Name_Angenommen }}" onchange="markChangedFields()" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="history" class="col-form-label">History:</label>
+                <input type="text" class="form-control" id="history" name="history" maxlength="500" value="{{ details.History }}" onchange="markChangedFields()" required>
             </div>
 
             <div class="form-group col-md-4">
-                <label for="partnerName" class="col-form-label">Partner Name:</label>
-                <input type="text" class="form-control" id="partnerName" name="partnerName" pattern="^[A-Z][a-zA-Z]{5,}$" maxlength="20" value="Collet" required>
-                <small id="lastNameHelp" class="form-text text-muted">Must start with an uppercase letter and have a minimum of 6 characters.</small>
+                <label for="bemerkungen" class="col-form-label">Bemerkungen:</label>
+                <input type="text" class="form-control" id="bemerkungen" name="bemerkungen" maxlength="500" value="{{ details.Bemerkungen }}" onchange="markChangedFields()" required>
             </div>
 
-            <div class="form-group col-md-3">
-                <label for="partnerNameAngenommen" class="col-form-label">Angenommen:</label>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="partnerNameAngenommenYes" name="partnerNameAngenommen" value="Yes">
-                    <label class="form-check-label" for="partnerNameAngenommenYes">Partner Name angenommen</label>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="kategorien" class="col-form-label">Kategorien:</label>
+                <input type="text" class="form-control" id="kategorien" name="history" maxlength="500" value="{{ details.Kategorien }}" onchange="markChangedFields()" required>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="zivilstand" class="col-form-label">Zivilstand:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="zivilstand" name="zivilstand" maxlength="50" value="{{ details.Zivilstand }}" onchange="markChangedFields()" required>
                 </div>
             </div>
         </div>
 
         <div class="form-row">
-            <div class="form-group col-md-3">
-                <label for="Kategorien" class="col-form-label">Kategorien:</label>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="Kategorie_Buerger" name="Kategorien" value="Bürger">
-                    <label class="form-check-label" for="Kategorie_Buerger">Bürger</label>
+            <div class="form-group col-md-2">
+                <label for="geburtstag" class="col-form-label">Geburtsdatum:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="geburtstag" name="geburtstag" maxlength="10" value="{{ details.Geburtstag }}" onchange="markChangedFields()" required>
                 </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="Kategorie_Nutzungsberechtigt" name="Kategorien" value="Nutzungsberechtigt" checked>
-                    <label class="form-check-label" for="Kategorie_Nutzungsberechtigt">Nutzungsberechtigt</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="Kategorie_Verwaltungsberechtigt" name="Kategorien" value="Verwaltungsberechtigt">
-                    <label class="form-check-label" for="Kategorie_Verwaltungsberechtigt">Verwaltungsberechtigt</label>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="todestag" class="col-form-label">Todestag:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="todestag" name="todestag" maxlength="10" value="{{ details.Todestag }}" onchange="markChangedFields()" required>
                 </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="dob" class="col-form-label">Geburtsdatum:</label>
-            <input type="date" class="form-control" id="dob" name="dob" required>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="partner_id" class="col-form-label">Partner_ID {% if details.Partner_Reference  != None and details.Partner_Reference  != '' %} [<B>{{ details.Partner_Reference }}</B>]{% endif %}:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="partner_id" name="partner_id" maxlength="5" value="{{ details.Partner_ID }}" onchange="markChangedFields()" required>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="vater_id" class="col-form-label">Vater_ID {% if details.Vater_Reference  != None and details.Vater_Reference  != '' %} [<B>{{ details.Vater_Reference }}</B>]{% endif %}:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="vater_id" name="vater_id" maxlength="5" value="{{ details.Vater_ID }}" onchange="markChangedFields()" required>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="mutter_id" class="col-form-label">Mutter_ID {% if details.Mutter_Reference  != None and details.Mutter_Reference  != '' %} [<B>{{ details.Mutter_Reference }}</B>]{% endif %}:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="mutter_id" name="mutter_id" maxlength="5" value="{{ details.Mutter_ID }}" onchange="markChangedFields()" required>
+                </div>
+            </div>
         </div>
 
-        <button type="button" class="btn btn-primary" onclick="updateValues()">Aenderungen Speichern</button>
+        <button type="submit" class="btn btn-primary">&Auml;nderungen speichern</button>
+        <!-- <button type="button" class="btn btn-primary" onclick="updateValues()">&Auml;nderungen speichern</button> -->
         <button type="reset" class="btn btn-secondary">Reset</button>
     </form>
 
@@ -102,22 +146,63 @@
             console.log("Geburtsdatum: " + dob);
 
             // You can add further logic here to update values in the database or perform other actions
+            submitForm()
 
             // Mark changed input fields with a red background
-            markChangedFields();
+            // markChangedFields();
         }
 
-        function markChangedFields() {
+        var defaultValues = {};
+
+        function markChangedFields(element) {
             // Get all input elements in the form
+            var fieldId = element.id;
             var inputElements = document.querySelectorAll('#updateForm input');
+            console.log(inputElements)
 
             // Loop through each input element
             inputElements.forEach(function (element) {
-                // Check if the value has changed
+                console.log(element, element.defaultValue, '-->', element.value)
                 if (element.defaultValue !== element.value) {
-                    // Add the 'changed' class to mark the field as changed
                     element.classList.add('changed');
+                } else {
+                    element.classList.remove('changed');
                 }
+            });
+        }
+
+        function submitForm() {
+            // Get values from the form
+            var anrede = document.getElementById("anrede").value;
+            var vorname = document.getElementById("vorname").value;
+            // Add other fields as needed...
+
+            // Prepare the data to be sent in the PUT request
+            var data = {
+                anrede: anrede,
+                vorname: vorname,
+                // Add other fields as needed...
+            };
+
+            // Make a PUT request using the fetch API
+            fetch('/update/details', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Update successful:', data);
+            })
+            .catch(error => {
+                console.error('Error during update:', error);
             });
         }
     </script>

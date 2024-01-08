@@ -67,6 +67,11 @@ def personen_details():
     else:
         return render_template("index.html")
 
+@app.route("/update_person_details", methods=['GET', 'POST',])
+def update_person_details():
+    print('update_person_details() called!!!')
+    return render_template("index.html")
+
 @app.route("/delete_single_person", methods=['GET', 'POST'])
 def delete_single_person():
     print('delete_single_person() called!!!')
@@ -84,15 +89,15 @@ def delete_single_person():
 
 @app.route("/modify_single_person", methods=['GET', 'POST'])
 def modify_single_person():
-    print('modify_single_person() called!!!')
+    # print('modify_single_person() called!!!')
     if session is not None and 'user_name' in session and session['user_name'] is not None:
         if request.method == 'POST':
             pid = request.form.get("pid")
         else:
             pid = request.args.get("pid")
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
-        print(rs)
-        print('pid:', pid, '    Anz Rec found: ', len(rs))
+        # print(rs)
+        # print('pid:', pid, '    Anz Rec found: ', len(rs))
         return render_template("person_Change.html", details=rs[0])
     else:
         return render_template("index.html")
@@ -129,6 +134,7 @@ def registration():
         return render_template('index.html')
     return render_template('registration.html')
 
+
 @app.route('/password_reset', methods=['GET', 'POST'])
 def password_reset():
     print('password_reset() called!!!')
@@ -141,7 +147,6 @@ def password_reset():
         body = "Dein neues Passwort lautet neuwsPW"
 
         ### message = Message(subject=subject, recipients=[recipient], body=body, sender='info@blabla.ch')
-
         try:
             ### mail.send(message)  # E-Mail senden
             return redirect("/")
