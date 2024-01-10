@@ -2940,6 +2940,26 @@ def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
         }
     return ret_val
 
+
+def update_db_attributes(db=None,
+                         db_tbl_name=None,
+                         id_attr_name='ID', id=None,
+                         name_values_to_update=None,
+                         take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+            --> Calling update_db_attributes(db,
+                           db_tbl_name                 = {db_tbl_name}, 
+
+                           id_attr_name     = {id_attr_name}, 
+                           id               = {id},
+
+                           name_values_to_update= {name_values_to_update},
+
+                           take_action      = {take_action},
+                           verbal           = {verbal})''')
+
+    return {'dataset_changed': 1, 'attributes_changed': 7}
 def update_db_attribute(db=None,
                         db_tbl_name=None, db_attr_name=None, db_attr_type='varchar', db_attr_set_enum_values='',
                         id_attr_name='ID', id=None,

@@ -38,6 +38,17 @@ class Stammdaten:
     def get_version(self):
         return("V1.0.0.0")
 
+    def get_person_detail_from_DB_by_ID(self, id=None):
+        if id is not None:
+            sql = f"""SELECT * FROM Personen WHERE ID={id};"""
+            # print(sql)
+            mycursor = self.__db_connection.cursor(dictionary=True)
+            mycursor.execute(sql)
+            return mycursor.fetchall()[0]
+        else:
+            return {}
+
+
     def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
         fieldStr = (',\n            ').join(attr_list)
         like_str = 'LIKE'
@@ -89,7 +100,7 @@ class Stammdaten:
             FROM Personen_Daten 
             WHERE ID = """ + str(id) + """;
             """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -142,13 +153,111 @@ class Stammdaten:
         except Exception:
             return None
 
-# =================
+    def update_pers_details_by_ID(self, new_name_values, verbal=False):
+        if verbal:
+            print(f'''
+            update_pers_details_by_ID
+            -------------------------
+            ''')
+        pers_id = new_name_values['ID']
+        table_name = 'Personen'
+        attr_types = self.get_Attribute_Types(table_name=table_name)
+        old_name_values = self.get_person_detail_from_DB_by_ID(pers_id)
+        if False:
+            print('ATTR_TYPES:\n', attr_types)
+            print('OLD_VALUES:\n', old_name_values)
+            print('NEW_VALUES:\n', new_name_values)
+
+        # geänderte Werte
+        changed_values = {}
+        for a_key in new_name_values:
+            # old_value = old_name_values[a_key]
+            # new_value = new_name_values[a_key]
+            # print(f'{a_key}: {old_value}  --> {new_value}')
+            if str(new_name_values[a_key]) != str(old_name_values[a_key]):
+                # print(f'{a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
+                if attr_types[a_key] == 'set':
+                    if verbal:
+                        print(f'Set: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
+                    changed_values[a_key + ' (set)'] = new_name_values[a_key]
+                elif attr_types[a_key] == 'enum':
+                    if verbal:
+                        print(f'Enum: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
+                    changed_values[a_key + ' (enum)'] = new_name_values[a_key]
+                elif attr_types[a_key] == 'date':
+                    if old_name_values[a_key] is not None:
+                        o_year, o_month, o_day = str(old_name_values[a_key]).split('-')
+                        if new_name_values[a_key] is not None and new_name_values[a_key] != '':
+                            n_day, n_month, n_year = str(new_name_values[a_key]).split('.')
+                            if o_year != n_year or o_month != n_month or o_day != n_day:
+                                if verbal:
+                                    print(f'Date: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
+                                changed_values[a_key + ' (date)'] = new_name_values[a_key]
+                        else:
+                            changed_values[a_key + ' (date)'] = new_name_values[a_key]
+                    else:
+                        changed_values[a_key + ' (date)'] = new_name_values[a_key]
+                else:
+                    if verbal:
+                        print(f'ELSE: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
+                    changed_values[a_key] = new_name_values[a_key]
+        print(f'VALUES_To_Update for ID={pers_id}:\n{changed_values}\n\n')
+
+        sql_update = f"""
+        UPDATE
+            `{table_name}`
+        SET
+        """
+
+        set_fields = []
+        for a_key in changed_values:
+            if '(set)' in a_key:
+                a_key_clean = a_key.replace('(set)', '').strip()
+                new_kategorien_value = changed_values[a_key].replace('{', '').replace('}', '').replace("', '", ',')
+                set_fields.append(f"`Is_Set: {a_key_clean}` = {new_kategorien_value}")
+            if '(enum)' in a_key:
+                a_key_clean = a_key.replace('(enum)', '').strip()
+                new_kategorien_value = changed_values[a_key].replace('{', '').replace('}', '').replace("', '", ',')
+                set_fields.append(f"`Is_Enum {a_key_clean}` = {new_kategorien_value}")
+            elif '(date)' in a_key:
+                a_key_clean = a_key.replace('(date)', '').strip()
+                if changed_values[a_key] == '':
+                    set_fields.append(f"`{a_key_clean}` = NULL")
+                else:
+                    set_fields.append(f"`{a_key_clean}` = STR_TO_DATE('{changed_values[a_key]}', '%d.%m.%Y')")
+            else:
+                set_fields.append(f"`{a_key}` = '{changed_values[a_key]}'")
+
+        sql_update += ',\n'.join(set_fields)
+        sql_update += f"""
+        WHERE(`ID` = {pers_id});
+        """
+        print(sql_update)
+
+
+    def get_Attribute_Types(self, table_name=None):
+        ret_dict = {}
+        if table_name is not None:
+            sql = f"""
+            SELECT
+                Attribute,
+                Attr_Type
+            FROM table_meta_data 
+            WHERE `Schema` = 'genossame_wangen' AND 
+                  `Table`  = '{table_name}';
+            """
+            # print(sql)
+            mycursor = self.__db_connection.cursor(dictionary=False)
+            mycursor.execute(sql)
+            for a_tuple in mycursor.fetchall():
+                ret_dict[a_tuple[0]] = str(a_tuple[1]).replace("b'", "").replace("'", "")
+            return ret_dict
+        else:
+            return {}
+
+        # =================
 # Geno DB-Functions
 # =================
-
-
-
-
 
 def db_connect(connect_to_prod=True, trace=False):
     if connect_to_prod:
