@@ -5,7 +5,7 @@
     <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
 
 
-    <form id="updateForm" method="post" action="{{ url_for('update_person_details') }}">
+    <form id="updateForm" method="post" action="{{ url_for('execute_update_person_details') }}">
         <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ details.ID }}">
         <div class="form-row">
             <div class="form-group col-md-1">

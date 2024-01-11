@@ -180,6 +180,11 @@ class Stammdaten:
                     if verbal:
                         print(f'Set: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
                     changed_values[a_key + ' (set)'] = new_name_values[a_key]
+                    changed_values[a_key + ' (set)'] = new_name_values[a_key]
+                elif attr_types[a_key] == 'int':
+                    if verbal:
+                        print(f'Int: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
+                    changed_values[a_key + ' (int)'] = new_name_values[a_key]
                 elif attr_types[a_key] == 'enum':
                     if verbal:
                         print(f'Enum: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
@@ -203,37 +208,52 @@ class Stammdaten:
                     changed_values[a_key] = new_name_values[a_key]
         print(f'VALUES_To_Update for ID={pers_id}:\n{changed_values}\n\n')
 
-        sql_update = f"""
-        UPDATE
-            `{table_name}`
-        SET
-        """
+        count_of_attr_changed = len(changed_values)
+        if count_of_attr_changed > 0:
+            sql_update = f"""
+            UPDATE
+                `{table_name}`
+            SET
+            """
 
-        set_fields = []
-        for a_key in changed_values:
-            if '(set)' in a_key:
-                a_key_clean = a_key.replace('(set)', '').strip()
-                new_kategorien_value = changed_values[a_key].replace('{', '').replace('}', '').replace("', '", ',')
-                set_fields.append(f"`Is_Set: {a_key_clean}` = {new_kategorien_value}")
-            if '(enum)' in a_key:
-                a_key_clean = a_key.replace('(enum)', '').strip()
-                new_kategorien_value = changed_values[a_key].replace('{', '').replace('}', '').replace("', '", ',')
-                set_fields.append(f"`Is_Enum {a_key_clean}` = {new_kategorien_value}")
-            elif '(date)' in a_key:
-                a_key_clean = a_key.replace('(date)', '').strip()
-                if changed_values[a_key] == '':
-                    set_fields.append(f"`{a_key_clean}` = NULL")
+            set_fields = []
+            for a_key in changed_values:
+                if '(set)' in a_key:
+                    a_key_clean = a_key.replace('(set)', '').strip()
+                    new_kategorien_value = changed_values[a_key].replace('{', '').replace('}', '').replace("', '", ',')
+                    set_fields.append(f"`{a_key_clean}` = {new_kategorien_value}")
+                elif '(enum)' in a_key:
+                    a_key_clean = a_key.replace('(enum)', '').strip()
+                    new_kategorien_value = changed_values[a_key].replace('{', '').replace('}', '').replace("', '", ',')
+                    set_fields.append(f"`{a_key_clean}` = '{new_kategorien_value}'")
+                elif '(int)' in a_key:
+                    a_key_clean = a_key.replace('(int)', '').strip()
+                    if changed_values[a_key] == '':
+                        set_fields.append(f"`{a_key_clean}` = NULL")
+                    else:
+                        set_fields.append(f"`{a_key_clean}` = {changed_values[a_key]}")
+                elif '(date)' in a_key:
+                    a_key_clean = a_key.replace('(date)', '').strip()
+                    if changed_values[a_key] == '':
+                        set_fields.append(f"`{a_key_clean}` = NULL")
+                    else:
+                        set_fields.append(f"`{a_key_clean}` = STR_TO_DATE('{changed_values[a_key]}', '%d.%m.%Y')")
                 else:
-                    set_fields.append(f"`{a_key_clean}` = STR_TO_DATE('{changed_values[a_key]}', '%d.%m.%Y')")
-            else:
-                set_fields.append(f"`{a_key}` = '{changed_values[a_key]}'")
+                    set_fields.append(f"`{a_key}` = '{changed_values[a_key]}'")
 
-        sql_update += ',\n'.join(set_fields)
-        sql_update += f"""
-        WHERE(`ID` = {pers_id});
-        """
-        print(sql_update)
-
+            sql_update += ',\n'.join(set_fields)
+            sql_update += f"""
+            WHERE(`ID` = {pers_id});
+            """
+            print(sql_update)
+            myCursor = self.__db_connection.cursor(dictionary=True)
+            myCursor.execute(sql_update)
+            self.__db_connection.commit()
+            result_set = myCursor.fetchall()
+            print('result_set:', result_set)
+        else:
+            print('Nichts geändert')
+        return {'Record_changed': 1, 'Attribute_changed': count_of_attr_changed}
 
     def get_Attribute_Types(self, table_name=None):
         ret_dict = {}
