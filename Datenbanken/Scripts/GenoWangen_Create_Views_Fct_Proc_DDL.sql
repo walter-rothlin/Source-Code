@@ -1327,7 +1327,7 @@ CREATE VIEW Personen_Daten AS
                       P.Partner_Name,
                       P.Vorname)                      AS Vorname_Familienname,      -- Walter Rothlin-Collet   
 		
-		  pAdr.ID                                     AS Priv_Adr_ID,      
+		  pAdr.ID                                     AS Priv_Adr_ID,  
 		  getStrassenAdresse(pAdr.Strasse, 
                              pAdr.Hausnummer, 
 							 pAdr.Postfachnummer)      AS Private_Strassen_Adresse,
@@ -1423,6 +1423,7 @@ CREATE VIEW Personen_Daten AS
           -- ID
           -- ==
           pAdr.ID                                      AS Private_Adressen_ID,
+		  pAdr.ID                                      AS Privat_Adressen_ID,
           pAdr.Ort_ID                                  AS Private_Ort_ID,
           pAdr.Land_ID                                 AS Private_Land_ID,
           

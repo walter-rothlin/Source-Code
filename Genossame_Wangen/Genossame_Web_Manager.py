@@ -45,7 +45,7 @@ def adress_liste():
             s_criteria = request.args.get("search_criteria")
         s_criteria = s_criteria.replace("'", "")
         rs = genossame.get_person_details_from_DB_by_ID(search_criterium=s_criteria)
-        print(rs)
+        # print(rs)
         rec_found = len(rs)
         print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
         return render_template("adress_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
@@ -90,6 +90,7 @@ def show_modify_single_person():
         else:
             pid = request.args.get("pid")
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
+        print(rs)
         return render_template("person_Change.html", details=rs[0])
     else:
         return render_template("index.html")
@@ -108,6 +109,13 @@ def delete_single_person():
         return render_template("person_details.html", details=rs[0])
     else:
         return render_template("index.html")
+
+@app.route("/excec_important_pers_updates", methods=['GET', 'POST'])
+def exec_important_db_updates():
+    print('exec_important_db_updates() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        execute_important_sql_queries(genossame.get_db_connection())
+    return render_template("index.html")
 
 
 # Login / Logout Functions

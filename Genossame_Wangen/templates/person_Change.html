@@ -4,9 +4,10 @@
 <div class="container">
     <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
 
-
+    <br/>
     <form id="updateForm" method="post" action="{{ url_for('execute_update_person_details') }}">
         <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ details.ID }}">
+        <br/><hr/><h3>Grunddaten:</h3>
         <div class="form-row">
             <div class="form-group col-md-1">
                 <label for="geschlecht" class="col-form-label">Geschlecht:</label>
@@ -40,17 +41,14 @@
             </div>
         </div>
 
+
         <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="history" class="col-form-label">History:</label>
-                <input type="text" class="form-control" id="history" name="History" maxlength="500" value="{{ details.History }}" onchange="markChangedFields()" >
+            <div class="form-group col-md-6">
+                <label for="Privat_Adressen_ID" class="col-form-label">Private Adressen ID: {% if details.Privat_Adressen_ID  != None and details.Privat_Adressen_ID  != '' %} [<B>{{ details.Private_Strasse }}, {{ details.Private_PLZ_International }} {{ details.Private_Ort }}</B>]{% endif %}:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Privat_Adressen_ID" name="Privat_Adressen_ID" maxlength="5" value="{{ details.Privat_Adressen_ID }}" onchange="markChangedFields()" >
+                </div>
             </div>
-
-            <div class="form-group col-md-4">
-                <label for="bemerkungen" class="col-form-label">Bemerkungen:</label>
-                <input type="text" class="form-control" id="bemerkungen" name="Bemerkungen" maxlength="500" value="{{ details.Bemerkungen }}" onchange="markChangedFields()" >
-            </div>
-
         </div>
 
         <div class="form-row">
@@ -60,7 +58,6 @@
             </div>
         </div>
 
-
         <div class="form-row">
             <div class="form-group col-md-2">
                 <label for="zivilstand" class="col-form-label">Zivilstand:</label>
@@ -68,9 +65,12 @@
                     <input type="text" class="form-control" id="zivilstand" name="Zivilstand" maxlength="50" value="{{ details.Zivilstand }}" onchange="markChangedFields()" >
                 </div>
             </div>
-        </div>
-
-        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="AHV_Nr" class="col-form-label">AHV_Nr:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="AHV_Nr" name="AHV_Nr" maxlength="50" value="{{ details.AHV_Nr }}" onchange="markChangedFields()" >
+                </div>
+            </div>
             <div class="form-group col-md-2">
                 <label for="geburtstag" class="col-form-label">Geburtsdatum:</label>
                 <div class="input-group">
@@ -85,6 +85,148 @@
             </div>
         </div>
 
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="history" class="col-form-label">History:</label>
+                <input type="text" class="form-control" id="history" name="History" maxlength="500" value="{{ details.History }}" onchange="markChangedFields()" >
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="bemerkungen" class="col-form-label">Bemerkungen:</label>
+                <input type="text" class="form-control" id="bemerkungen" name="Bemerkungen" maxlength="500" value="{{ details.Bemerkungen }}" onchange="markChangedFields()" >
+            </div>
+
+        </div>
+
+        <br/><hr/><h3>Umzüge:</h3>
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="Nach_Wangen_Gezogen" class="col-form-label">Zuzug nach Wangen:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Nach_Wangen_Gezogen" name="Nach_Wangen_Gezogen" maxlength="10" value="{{ details.Nach_Wangen_Gezogen }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="Von_Wangen_Weggezogen" class="col-form-label">Wegzug von Wangen:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Von_Wangen_Weggezogen" name="Von_Wangen_Weggezogen" maxlength="10" value="{{ details.Von_Wangen_Weggezogen }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+        </div>
+
+        <br/><hr/><h3>Bestellungen:</h3>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="Chronik_Bezogen_Am" class="col-form-label">Chronik bezogen am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Chronik_Bezogen_Am" name="Chronik_Bezogen_Am" maxlength="10" value="{{ details.Chronik_Bezogen_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Newsletter_Abonniert_Am" class="col-form-label">Newsletter abonniert am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Newsletter_Abonniert_Am" name="Newsletter_Abonniert_Am" maxlength="10" value="{{ details.Newsletter_Abonniert_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+        </div>
+
+        <br/><hr/><h3>Bewirtschafter Details:</h3>
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="Betriebs_Nr" class="col-form-label">Betriebs_Nr:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Betriebs_Nr" name="Betriebs_Nr" maxlength="50" value="{{ details.Betriebs_Nr }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="SAK" class="col-form-label">SAK:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="SAK" name="SAK" maxlength="50" value="{{ details.SAK }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+        </div>
+
+        <br/><hr/><h3>Bürger Aufnahme:</h3>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="Baulandgesuch_Eingereicht_Am" class="col-form-label">Baulandgesuch eingereicht:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Baulandgesuch_Eingereicht_Am" name="Baulandgesuch_Eingereicht_Am" maxlength="10" value="{{ details.Baulandgesuch_Eingereicht_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Bauland_Gekauft_Am" class="col-form-label">Bauland gekauft:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Bauland_Gekauft_Am" name="Bauland_Gekauft_Am" maxlength="10" value="{{ details.Bauland_Gekauft_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="Baulandgesuch_Details" class="col-form-label">Bauland Details:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Baulandgesuch_Details" name="Baulandgesuch_Details" maxlength="10" value="{{ details.Baulandgesuch_Details }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="Angemeldet_Am" class="col-form-label">Angemeldet am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Angemeldet_Am" name="Angemeldet_Am" maxlength="10" value="{{ details.Angemeldet_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Aufnahme_Gebühr_bezahlt_Am" class="col-form-label">Aufnahmegebür bezahlt am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Aufnahme_Gebühr_bezahlt_Am" name="Aufnahme_Gebühr_bezahlt_Am" maxlength="10" value="{{ details.Aufnahme_Gebühr_bezahlt_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Bezahlte_Aufnahme_Gebühr" class="col-form-label">Bezahlte Aufnahme Gebühr:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Bezahlte_Aufnahme_Gebühr" name="Bezahlte_Aufnahme_Gebühr" maxlength="10" value="{{ details.Bezahlte_Aufnahme_Gebühr }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="Aufgenommen_Am" class="col-form-label">Aufgenommen am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Aufgenommen_Am" name="Aufgenommen_Am" maxlength="10" value="{{ details.Aufgenommen_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Sich_Für_Bürgertag_Angemeldet_Am" class="col-form-label">Für Bürgertag angemeldet am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Sich_Für_Bürgertag_Angemeldet_Am" name="Sich_Für_Bürgertag_Angemeldet_Am" maxlength="10" value="{{ details.Sich_Für_Bürgertag_Angemeldet_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Sich_Für_Bürgertag_definitiv_abgemeldet_am" class="col-form-label">Für Bürgertag abgemeldet am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Sich_Für_Bürgertag_definitiv_abgemeldet_am" name="Sich_Für_Bürgertag_definitiv_abgemeldet_am" maxlength="10" value="{{ details.Sich_Für_Bürgertag_definitiv_abgemeldet_am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <label for="Neubürgertag_gemacht_Am" class="col-form-label">Neubürgertag gemacht am:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Neubürgertag_gemacht_Am" name="Neubürgertag_gemacht_Am" maxlength="10" value="{{ details.Neubürgertag_gemacht_Am }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="Ausbezahlter_Bürgertaglohn" class="col-form-label">Ausbezahlter Bürgerlohn:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="Ausbezahlter_Bürgertaglohn" name="Ausbezahlter_Bürgertaglohn" maxlength="10" value="{{ details.Ausbezahlter_Bürgertaglohn }}" onchange="markChangedFields()" >
+                </div>
+            </div>
+        </div>
+
+
+        <br/><hr/><h3>Stammbaum:</h3>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="partner_id" class="col-form-label">Partner_ID {% if details.Partner_Reference  != None and details.Partner_Reference  != '' %} [<B>{{ details.Partner_Reference }}</B>]{% endif %}:</label>
@@ -109,7 +251,7 @@
                 </div>
             </div>
         </div>
-
+        <br/><hr/>
         <button type="submit" class="btn btn-primary">&Auml;nderungen speichern</button>
         <!-- <button type="button" class="btn btn-primary" onclick="updateValues()">&Auml;nderungen speichern</button> -->
         <button type="reset" class="btn btn-secondary">Reset</button>

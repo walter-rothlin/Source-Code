@@ -34,6 +34,8 @@ class Stammdaten:
     def __init__(self):
         self.__db_connection = db_connect(connect_to_prod=True, trace=True)
 
+    def get_db_connection(self):
+        return self.__db_connection
 
     def get_version(self):
         return("V1.0.0.0")
@@ -64,12 +66,17 @@ class Stammdaten:
                     Limit 0,20;
                 """
             else:
+                search_criterium = search_criterium.replace(' =', '=').replace('= ', '=')
                 such_kriterien = search_criterium.split(' ')
                 if False:
                     print('1:', such_kriterien)
                 prep_such_kriterien = []
+                add_where_clauses = []
                 for a_such_kriterium in such_kriterien:
                     print('1)', a_such_kriterium)
+                    if '=' in a_such_kriterium:
+                        add_where_clauses.append(a_such_kriterium)
+                        continue
                     a_such_kriterium = a_such_kriterium.replace(' - ', '-')
                     a_such_kriterium = a_such_kriterium.replace('+', ' ')
                     print('2)', a_such_kriterium)
@@ -80,6 +87,8 @@ class Stammdaten:
                 where_clauses = []
                 for a_such_kriterium in prep_such_kriterien:
                     where_clauses.append(f"Such_Begriff {like_str} '%{a_such_kriterium}%'")
+                for a_such_kriterium in add_where_clauses:
+                    where_clauses.append(f"{a_such_kriterium}")
 
                 where_clause_str = ' AND\n                        '.join(where_clauses)
                 if False:
@@ -163,7 +172,7 @@ class Stammdaten:
         table_name = 'Personen'
         attr_types = self.get_Attribute_Types(table_name=table_name)
         old_name_values = self.get_person_detail_from_DB_by_ID(pers_id)
-        if False:
+        if True:
             print('ATTR_TYPES:\n', attr_types)
             print('OLD_VALUES:\n', old_name_values)
             print('NEW_VALUES:\n', new_name_values)
@@ -243,7 +252,7 @@ class Stammdaten:
 
             sql_update += ',\n'.join(set_fields)
             sql_update += f"""
-            WHERE(`ID` = {pers_id});
+            WHERE (`ID` = {pers_id});
             """
             print(sql_update)
             myCursor = self.__db_connection.cursor(dictionary=True)
