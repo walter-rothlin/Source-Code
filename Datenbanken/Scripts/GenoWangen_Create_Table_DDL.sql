@@ -25,6 +25,7 @@
 --                                   Added IBAN Lautend_auf
 -- 01-Jan-2024   Walter Rothlin      Added Kommissionen_Gruppen und Gehört_zu_Kommission
 -- 04-Jan-2024   Walter Rothlin      Removed GPK, Genossenrat, LWK, Forst_Komm from Kategorien
+-- 17-Jan-2024   Walter Rothlin      Removed Grauer Panter, Angestellter from Kategorien
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -167,8 +168,8 @@ CREATE TABLE IF NOT EXISTS Personen (
                       DEFAULT NULL,
 
   `Kategorien`  SET('Neubürger', 'Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
-                    'Firma', 'Angestellter', 'Auftragnehmer',
-                    'Grauer Panter', 'Bewirtschafter', 
+                    'Firma', 'Auftragnehmer',
+                    'Bewirtschafter', 
                     'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
                     'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
                     'Betriebsgemeinschaft', 'Generationengemeinschaft') 

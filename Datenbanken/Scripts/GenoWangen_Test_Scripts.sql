@@ -4,6 +4,11 @@ Select * from ERROR_Table; -- Just to produce an error when the whole script has
 
 SELECT * FROM table_meta_data WHERE `Table` = 'Personen' AND Attr_Type in ('enum','set');
 
+SELECT * 
+FROM personen 
+WHERE FIND_IN_SET(Kategorien, 'Angestellter') >  0;
+      
+
 -- Landteile
 -- ---------
 SELECT * FROM personen WHERE FIND_IN_SET('Hat_16a', Kategorien) >  0;

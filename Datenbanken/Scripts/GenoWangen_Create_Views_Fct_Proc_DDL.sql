@@ -952,8 +952,8 @@ DELIMITER ;
 DROP FUNCTION IF EXISTS calc_nutzen_by_katset;
 DELIMITER //
 CREATE FUNCTION calc_nutzen_by_katset(p_kategorien SET('Bürger', 'Nutzungsberechtigt',  'Verwaltungsberechtigt', 'Hat_16a', 'Hat_35a',
-                    'Firma', 'Angestellter', 'Auftragnehmer', 'Genossenrat', 'GPK',
-                    'LWK', 'Forst_Komm', 'Grauer Panter', 'Bewirtschafter', 
+                    'Firma', 'Auftragnehmer',
+                    'Bewirtschafter', 
                     'Pächter', 'Landwirt_EFZ', 'DZ betrechtigt', 
                     'Wohnungsmieter', 'Bootsplatzmieter', 'Waermebezüger',  
                     'Betriebsgemeinschaft', 'Generationengemeinschaft')) RETURNS FLOAT
@@ -1611,6 +1611,45 @@ CREATE VIEW Personen_Daten AS
     LEFT OUTER JOIN Personen AS partnerAdr ON  P.partner_ID     = partnerAdr.ID
     ORDER BY Familien_Name, Vorname_Initial;
 
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS Kommissionen; 
+CREATE VIEW Kommissionen AS
+SELECT
+	pers.ID                        AS ID,
+	kom.Bezeichnung	 			   AS Kommissionsname,
+	gk.Funktion                    AS Funktion,
+	pers.Geschlecht                AS Geschlecht,
+    pers.Vorname_Initial           AS Vorname_Initial,
+    pers.Familien_Name             AS Familienname,
+    pers.Last_Name                 AS Last_Name,
+    pers.Private_Strassen_Adresse  AS Private_Strassen_Adresse,
+    pers.Private_PLZ_Ort           AS Private_PLZ_Ort,
+    pers.Tel_Nr                    AS Tel_Nr,
+    pers.eMail                     AS eMail,
+    pers.IBAN                      AS IBAN,
+    pers.Geburtstag                AS Geburtstag,
+    pers.Alter_in_diesem_Jahr      AS Alter_in_diesem_Jahr,
+    pers.AHV_Nr                    AS AHV_Nr,
+    pers.Brief_Anrede              AS Brief_Anrede,
+	pers.Vorname_Familienname      AS Vorname_Familienname,
+
+	kom.ID                      AS K_ID,
+    kom.Abkürzung               AS Kommissionsabkürzung,
+    kom.Vorsitzender_ID         AS Kommissionsvorsitzender,
+    kom.Ins_Leben_gerufen_Am    AS Kommission_Gegründet_Ab,
+    kom.Aktiv_Ab                AS Kommission_Aktiv_Ab,
+
+
+    gk.Aktiv_Ab                 AS Member_Ab,
+    gk.Aktiv_Bis                AS Member_Bis
+    -- pers.*,
+    -- gk.*
+FROM            Gehört_zu_Kommissionen AS gk
+LEFT OUTER JOIN Personen_Daten         AS pers ON  pers.ID = gk.Personen_ID
+LEFT OUTER JOIN Kommissionen_Gruppen   AS kom  ON  kom.ID  = gk.Kommissionen_ID
+WHERE gk.Aktiv_Bis IS NULL
+ORDER BY K_ID, Familienname, Vorname_Initial, Funktion;
+
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS Stammbäume; 
 CREATE VIEW Stammbäume AS
@@ -1727,51 +1766,11 @@ CREATE VIEW Mitarbeiter_Geburtstage AS
 		Kategorien,
         DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%m%d') AS Sorter
     FROM Personen_Daten
-    WHERE (FIND_IN_SET('Angestellter', Kategorien) >  0 OR
-           FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR
+    WHERE (FIND_IN_SET(ID, get_IDs_from_Kommissionen('Mitarbeiter')) >  0 OR
+           FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0 OR
            FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0 ) AND 
            Todestag IS NULL
 	ORDER BY Sorter ASC;
-
-
--- -----------------------------------------------------
-DROP VIEW IF EXISTS Kommissionen; 
-CREATE VIEW Kommissionen AS
-SELECT
-	pers.ID                        AS ID,
-	kom.Bezeichnung	 			   AS Kommissionsname,
-	gk.Funktion                    AS Funktion,
-	pers.Geschlecht                AS Geschlecht,
-    pers.Vorname_Initial           AS Vorname_Initial,
-    pers.Familien_Name             AS Familienname,
-    pers.Last_Name                 AS Last_Name,
-    pers.Private_Strassen_Adresse  AS Private_Strassen_Adresse,
-    pers.Private_PLZ_Ort           AS Private_PLZ_Ort,
-    pers.Tel_Nr                    AS Tel_Nr,
-    pers.eMail                     AS eMail,
-    pers.IBAN                      AS IBAN,
-    pers.Geburtstag                AS Geburtstag,
-    pers.Alter_in_diesem_Jahr      AS Alter_in_diesem_Jahr,
-    pers.AHV_Nr                    AS AHV_Nr,
-    pers.Brief_Anrede              AS Brief_Anrede,
-	pers.Vorname_Familienname      AS Vorname_Familienname,
-
-	kom.ID                      AS K_ID,
-    kom.Abkürzung               AS Kommissionsabkürzung,
-    kom.Vorsitzender_ID         AS Kommissionsvorsitzender,
-    kom.Ins_Leben_gerufen_Am    AS Kommission_Gegründet_Ab,
-    kom.Aktiv_Ab                AS Kommission_Aktiv_Ab,
-
-
-    gk.Aktiv_Ab                 AS Member_Ab,
-    gk.Aktiv_Bis                AS Member_Bis
-    -- pers.*,
-    -- gk.*
-FROM            Gehört_zu_Kommissionen AS gk
-LEFT OUTER JOIN Personen_Daten         AS pers ON  pers.ID = gk.Personen_ID
-LEFT OUTER JOIN Kommissionen_Gruppen   AS kom  ON  kom.ID  = gk.Kommissionen_ID
-WHERE gk.Aktiv_Bis IS NULL
-ORDER BY K_ID, Familienname, Vorname_Initial, Funktion;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Genossenrat; 
@@ -1779,11 +1778,12 @@ CREATE VIEW Genossenrat AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR -- FIND_IN_SET('Genossenrat', Kategorien) >  0 OR
-          FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0     -- FIND_IN_SET('GPK', Kategorien) >  0
+    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR
+          FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0
     ORDER BY Funktion, Familien_Name, Vorname;
     
 -- -----------------------------------------------------
+/*
 DROP VIEW IF EXISTS Kommissionen_OLD; 
 CREATE VIEW Kommissionen_OLD AS
     SELECT
@@ -1900,32 +1900,10 @@ CREATE VIEW Kommissionen_OLD AS
     FROM Personen_Daten
     WHERE ID IN (357,644,524,483,100,336,1211,1212,1213,1214,1215)
 	ORDER BY Kommission, Last_Name, Vorname_Initial;
-    
+
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Projekt_Personen_Listen; 
 CREATE VIEW Projekt_Personen_Listen AS
-    SELECT
-        ID,
-        'GPK_Kandidaten'         AS `Projekt`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        Tel_Nr_1,
-        eMail,
-        ''                       AS `Diverses`,
-        ''                       AS `Diverses_2`,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (992, 995, 1077, 840)
-	UNION
 	SELECT
         ID,
         'Gebrauchsleihe: Marienhöfli'         AS `Projekt`,
@@ -2014,16 +1992,16 @@ CREATE VIEW Projekt_Personen_Listen AS
     FROM Personen_Daten
     WHERE ID IN (493,693,202,495,637)
 	ORDER BY Projekt, Last_Name, Vorname_Initial;
-    
+*/    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Mitarbeiter;
 CREATE VIEW Mitarbeiter AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET('Angestellter', Kategorien) >  0
+    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Mitarbeiter')) >  0 
     ORDER BY Funktion, Familien_Name, Vorname;
-
+    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Geno_Reisende; 
 CREATE VIEW Geno_Reisende AS
@@ -2042,7 +2020,7 @@ CREATE VIEW Geno_Reisende AS
         Brief_Anrede_PerDu
     FROM Personen_Daten
     WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR
-          FIND_IN_SET('Angestellter', Kategorien) >  0 OR
+          FIND_IN_SET(ID, get_IDs_from_Kommissionen('Mitarbeiter')) >  0  OR
           ID IN (488, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188)   -- Partner
     ORDER BY Familien_Name, Vorname;
 
@@ -2052,7 +2030,7 @@ CREATE VIEW Graue_Panter AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET('Grauer Panter', Kategorien) >  0
+    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Graue Panter')) >  0  -- FIND_IN_SET('Grauer Panter', Kategorien) >  0
     ORDER BY Funktion, Familien_Name, Vorname;
 
 -- -----------------------------------------------------
