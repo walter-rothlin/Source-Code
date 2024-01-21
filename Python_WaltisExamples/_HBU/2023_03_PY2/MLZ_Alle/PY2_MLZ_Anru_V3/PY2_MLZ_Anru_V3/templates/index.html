@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Startseite - Sense Hat Service</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+    <body>
+    <div class="container">
+    <h1>Sense Hat Service Navigation</h1>
+    <div class="grid">
+        <a href="{{ url_for('data') }}" class="card">
+        <div class="card-content">
+            <h2>Data</h2>
+            <p>IMU Daten von Sense Hat</p>
+        </div>
+        </a>
+        <a href="{{ url_for('led_status') }}" class="card">
+        <div class="card-content">
+            <h2>LED Status</h2>
+            <p>Welche LED leuchten auf dem Sense Hat</p>
+        </div>
+        </a>
+        <a href="{{ url_for('set_led') }}" class="card">
+        <div class="card-content">
+            <h2>LED Setzen</h2>
+            <p>Farben setzen auf Sense Hat</p>
+        </div>
+        </a>
+        <a href="{{ url_for('text') }}" class="card">
+            <div class="card-content">
+                <h2>Schreibe eine Nachricht</h2>
+                <p>Schreibe einen Text auf Sense Hat</p>
+            </div>
+        </a>
+        <a href="{{ url_for('meteo') }}" class="card">
+        <div class="card-content">
+            <h2>Meteo</h2>
+            <p>Temperatur von Sense Hat</p>
+        </div>
+        </a>
+        <a href="{{ url_for('status') }}" class="card">
+            <div class="card-content">
+                <h2>Status</h2>
+                <p>Abfrage Status Hostname</p>
+            </div>
+        </a>
+
+        <a href="{{ url_for('loeschen') }}" class="card">
+            <div class="card-content">
+                <h2>Alle Pixeln löschen</h2>
+                <p>alle Pixel beleuchtung auf Sense Hat ausschalten</p>
+            </div>
+        </a>
+        
+    </div>
+    </body>
+</html>

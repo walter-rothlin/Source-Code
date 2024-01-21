@@ -1,0 +1,26 @@
+ .underline-title {
+    text-decoration: underline;}
+.error-message {
+    color: red;}
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    border-top: 1px solid #eaeaea;
+    color: #777;}
+.error-message {
+    color: white;
+    background-color: red;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+    border-radius: 5px;}
+.led-on {
+    color: white;
+    background-color: green;
+    padding: 5px;}
+
+.center-checkbox {
+    text-align: center;
+    vertical-align: middle}
+

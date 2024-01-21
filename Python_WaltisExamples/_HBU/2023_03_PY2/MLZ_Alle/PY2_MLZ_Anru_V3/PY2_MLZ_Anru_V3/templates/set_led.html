@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Led setzen!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <div class="content-container">
+        <h1>Led setzen!</h1>
+        <main class="flexbox-container">
+            <a>Wähle Farbe</a>
+            <input type="color" id="color-picker" value="#ffffff">
+            
+            <div id="matrix">
+                {% for row in range(8) %}
+                    <div class="matrix-row">
+                        {% for col in range(8) %}
+                            <button class="matrix-btn" data-x="{{ row }}" data-y="{{ col }}"></button>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>    
+        </main>
+
+        <div class="back-button-container">
+            <button class="back-button" id="finish">Fertig</button> 
+            <a href="#" class="back-button" onclick="history.back()">Zurück</a>
+        </div>
+
+        <script> //meiste von ChatGPT
+            document.addEventListener('DOMContentLoaded', function() {
+                const colorPicker = document.getElementById('color-picker');
+                const matrixButtons = document.querySelectorAll('.matrix-btn');
+                let selectedColor = colorPicker.value;
+
+                colorPicker.addEventListener('change', function() {
+                    selectedColor = colorPicker.value;
+                });
+
+                matrixButtons.forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        if (btn.style.backgroundColor === selectedColor) {
+                            btn.style.backgroundColor = '';
+                        } else {
+                            btn.style.backgroundColor = selectedColor;
+                        }
+                    });
+                });
+
+                document.getElementById('finish').addEventListener('click', function() {
+                    const ledColors = Array.from(matrixButtons).map(btn => {
+                        const x = btn.getAttribute('data-x');
+                        const y = btn.getAttribute('data-y');
+                        const color = btn.style.backgroundColor ? btn.style.backgroundColor : 'clear';
+                        return { x, y, color };
+                    });
+
+                    fetch('/set-color', {  // Ändern Sie diese Zeile
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(ledColors)
+                    }).then(() => {
+                        window.location.href = '/led-status';
+                    });
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Index</title>
+    </head>
+    <body>
+        <h1>Index</h1>
+        <h2>EndPoint für Status Abfrage: JSON mit z.B. Hostname, User, IP,  ...</h2>
+        <a href="/status" target="_blank">Status</a><br/>
+        
+        <h2>EndPoint für LED-Status Abfrage: JSON mit allen RGB Werten der LED Matrix (get_pixels())</h2>
+        <p>Eine Liste mit 64 kleineren Listen von [R, G, B] Pixeln (rot, grün, blau), die das aktuell angezeigte Bild darstellen.</p>
+        <a href="/getpixels" target="_blank">Get Pixels</a><br/>
+        
+        <h2>Endpoint für einzelnes LED in der Matrix in gewünschter Farbe zu setzen, Response LED-Status JSON</h2>
+        <a href="/setpixel" target="_blank">Set Pixel</a><br/>
+        
+        <h2>Endpoint um LED-Matrix zu löschen (Alle LEDs mit gewünschter Farbe setzen). Response LED-Status JSON</h2>
+        <a href="/clearpixels" target="_blank">Clear Pixels</a><br/>
+        
+        <h2>Endpoint um Nachricht auf dem LED-Display mit den gewünschten Attributen anzeigen (scrollen)</h2>
+        <a href="/message">Enter Message</a><br/>
+        
+        <h2>Endpoint mit Meteo-Infos</h2>
+        <a href="/weather">Get Weather Info</a><br/>
+        
+        <h2>Endpoint mit den IMU Daten</h2>
+        <a href="/imu">Get IMU Info</a><br/>
+    </body>
+</html>

@@ -28,7 +28,7 @@ class TestInit(TestF1):
         self.assertEqual(self.f1.previousOwner.__name, "Hamilton")
 
     def test_InitPreviousOwnerFirstName(self):
-        self.assertEqual(self.f1.previousOwner.firstName, "Lewis")
+        self.assertEqual(self.f1.previousOwner.first_name, "Lewis")
 
 class TestSetMarke(TestF1):
     def test_SetMarkeCorrectly(self):

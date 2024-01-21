@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pixel Designer</title>
+    <!-- Fügen Sie die Bootstrap-Styles und -Scripts hinzu (CDN) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+    td {
+    width: 30px;
+    height: 30px;
+    }
+    </style>
+    
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                        <a class="nav-link" href="/display_status">2. Status JSON</a>
+                    </li>
+                    <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                        <a class="nav-link" href="/display_rgb_data">3. RGB Matrix JSON</a>
+                    </li>
+                    <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                        <a class="nav-link" href="/pixel_designer">4. Pixel auswählen JSON</a>
+                    </li>
+                    <li class="nav-item {% if active_page == 'choose_color' %}active{% endif %}">
+                        <a class="nav-link" href="/choose_color">5. Grundfarben anzeigen, reseten</a>
+                    </li>
+                    <li class="nav-item {% if active_page == 'display_textinput' %}active{% endif %}">
+                        <a class="nav-link" href="/display_textinput">6. Textanzeige und Steuerung</a>
+                    </li>
+                    <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                        <a class="nav-link" href="/display_sensordata">7.+ 8. Sensordaten Meteo / Bewegung anzeigen</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <h1>Pixel Designer</h1>
+        <br>
+        <h3>Wähle rote(r) Pixel im Sensehat Raster (8x8)</h3>
+        <form method="post">
+             <table border="1">
+                {% for row_num in range(grid|length) %}
+                <tr>
+                    {% for col_num in range(grid[row_num]|length) %}
+                    <td class="center-checkbox" style="background-color: rgb({{ grid[row_num][col_num]|join(', ') }});">
+                        <input type="checkbox" name="pixel_{{ row_num }}_{{ col_num }}" value="on" {% if grid[row_num][col_num] == (255, 0, 0) %}checked{% endif %}>
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+            <button type="submit">gewählte Pixel auf Rasperry anzeigen</button>
+            <br>
+            <br>
+            <a href="/export_pixels" class="btn btn-primary">Export als JSON</a>
+        </form>  
+</body>
+</html>

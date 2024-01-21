@@ -3,10 +3,6 @@
 Select * from ERROR_Table; -- Just to produce an error when the whole script has been executed!
 
 SELECT * FROM table_meta_data WHERE `Table` = 'Personen' AND Attr_Type in ('enum','set');
-
-SELECT * 
-FROM personen 
-WHERE FIND_IN_SET(Kategorien, 'Angestellter') >  0;
       
 
 -- Landteile
@@ -61,6 +57,15 @@ FROM personen_daten
 -- WHERE ID IN (1176, 1177, 804, 996, 348, 1179) OR ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Vogt%' AND Such_Begriff LIKE Binary '%Urs%'))
 WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Isabella%' AND Such_Begriff LIKE Binary '%Vogt%'))
 ORDER BY Familien_Name;
+
+
+SELECT * 
+FROM personen 
+WHERE FIND_IN_SET(Kategorien, 'Angestellter') >  0;
+
+SELECT * FROM personen WHERE ID >= (SELECT max(id) FROM personen) - 10;
+SELECT * FROM personen_daten WHERE Such_Begriff LIKE Binary '%Muster%' OR ID >= (SELECT max(id) FROM personen) - 10;
+
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
                                adressen.strasse  = 'Falkenstr' AND adressen.hausnummer = '9' AND adressen.orte_id = 2) OR

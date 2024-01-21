@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IMU Data</title>
+</head>
+<body>
+    <h1>IMU Data</h1>
+    <h2>Orientation:</h2>
+    <p>Pitch: {{ orientation['pitch'] }}</p>
+    <p>Roll: {{ orientation['roll'] }}</p>
+    <p>Yaw: {{ orientation['yaw'] }}</p>
+    
+    <h2>Acceleration:</h2>
+    <p>X: {{ acceleration['x'] }}</p>
+    <p>Y: {{ acceleration['y'] }}</p>
+    <p>Z: {{ acceleration['z'] }}</p>
+    
+    <h2>Gyroscope:</h2>
+    <p>X: {{ gyroscope['x'] }}</p>
+    <p>Y: {{ gyroscope['y'] }}</p>
+    <p>Z: {{ gyroscope['z'] }}</p>
+    
+    <a href="/">Back</a>
+</body>
+</html>

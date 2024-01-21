@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MLZ Michael Bertschi</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>MLZ Michael Bertschi  Hier sind meine Endpoints</h1>
+    <table class="table">
+        <tr>
+            <th>Endpoint</th>
+            <th>Beschreibung</th>
+        </tr>
+        <tr>
+            <td><a href="/status">User informations</a></td>
+            <td>Benutzerinformationen vom Raspy</td>
+        </tr>
+        <tr>
+            <td><a href="/jsonStatus">User informations as Json</a></td>
+            <td>Benutzerinformationen vom Raspy as json</td>
+        </tr>
+        <tr>
+            <td><a href="/rgbWerte">RGB Werte</a></td>
+            <td>Alle RGB Werte von Senshat as Json</td>
+        </tr>
+        <tr>
+            <td><a href="/rgbWertSetzen">RGB Wert setzen</a></td>
+            <td>Setze ein LED mit der Farb deiner wahl</td>
+        </tr>
+        <tr>
+            <td><a href="/allRGBOverride">RGB Werte überschreiben</a></td>
+            <td>Überschreiben die LDS mit deiner Farbe</td>
+        </tr>
+        <tr>
+            <td><a href="/writeRgbMessage">Text Schreiben</a></td>
+            <td>Schreiben sie einen Text für auf das Raspy </td>
+        </tr>
+        <tr>
+            <td><a href="/getMeteoInfosByPLZ">MeteoDataOerlikonAsJsons</a></td>
+            <td>Zeige die Metheodaten von örlikon an</td>
+        </tr>
+        <tr>
+            <td><a href="/imu">Imudaten anzeigen</a></td>
+            <td>Zeige die imudaten von dem Sensehat an.</td>
+        </tr>
+    </table>
+</body>
+</html>

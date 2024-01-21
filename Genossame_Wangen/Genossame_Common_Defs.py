@@ -50,6 +50,14 @@ class Stammdaten:
         else:
             return {}
 
+    def get_last_ID_for_table(self, table_name='Person', id_name='ID'):
+        sql = f"""SELECT * from {table_name} WHERE ID=(SELECT max({id_name}) FROM {table_name});"""
+        # print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        mycursor.execute(sql)
+        rs = mycursor.fetchall()[0][id_name]
+        print('rs:', rs)
+        return rs
 
     def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
         fieldStr = (',\n            ').join(attr_list)
@@ -117,8 +125,8 @@ class Stammdaten:
     def is_password_correct(self, username, password, password_is_hash=False):
         hashed_password = hash_password(password)
 
-        # print("Original Password:", password)
-        # print("Hashed Password:", hashed_password, len(hashed_password))
+        print("Original Password:", password)
+        print("Hashed Password:", hashed_password, len(hashed_password))
 
         sql = f"""
         SELECT Password FROM Personen_Daten WHERE ID IN (
@@ -132,12 +140,12 @@ class Stammdaten:
         FROM login_table
         WHERE eMail = '{username}';
         """
-        # print(sql)
+        print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         try:
             mycursor.execute(sql)
             rs = mycursor.fetchall()[0]
-            # print('rs:', rs)
+            print('rs:', rs)
             password_found = rs['Password']
             if password_found == password or password_found == hashed_password:
                 return True, rs['Personen_ID']
@@ -158,6 +166,29 @@ class Stammdaten:
             mycursor.execute(sql)
             rs = mycursor.fetchall()
             ## print('rs:', rs)
+            return rs
+        except Exception:
+            return None
+
+    def insert_new_person(self, new_name_values, verbal=True):
+        if verbal:
+            print(f'''
+            insert_new_person
+            -----------------
+            {new_name_values}
+            ''')
+
+        sql = f"""
+        INSERT INTO `personen` (`Vorname`, `Ledig_Name`, `Partner_Name`, `Privat_Adressen_ID`) VALUES 
+              ('{new_name_values["Vorname"]}', '{new_name_values["Ledig_Name"]}', '{new_name_values["Partner_Name"]}', 701);
+        """
+        # print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        try:
+            mycursor.execute(sql)
+            self.__db_connection.commit()
+            rs = self.get_last_ID_for_table('Personen')
+            # print('rs:', rs)
             return rs
         except Exception:
             return None
@@ -284,7 +315,9 @@ class Stammdaten:
         else:
             return {}
 
-        # =================
+
+
+# =================
 # Geno DB-Functions
 # =================
 

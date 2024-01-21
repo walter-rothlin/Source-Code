@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <div class="content-container">
+        <h1>Data</h1>
+        <main class="flexbox-container">
+            <p>Neigen: {{ pitch_data }}</p>
+            <p>Rollen: {{ roll_data }}</p>
+            <p>Gieren: {{ yaw_data}}</p>
+        </main>
+
+         <div class="back-button-container">
+                <a href="#" class="back-button" onclick="history.back()">Zurück</a>
+        </div>
+
+    </div>
+</body>
+</html>

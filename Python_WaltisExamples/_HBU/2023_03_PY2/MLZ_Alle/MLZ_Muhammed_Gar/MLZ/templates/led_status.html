@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LED Status Page</title>
+</head>
+<body>
+    <h1>LED Status Information</h1>
+    <ul>
+        {% for led in led_status_info %}
+            <li>LED {{ loop.index }}: {{ led }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Back</a>
+</body>
+</html>

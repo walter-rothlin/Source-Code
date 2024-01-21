@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text eingeben</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <div class="content-container">
+        <h1>Text eingeben</h1>
+        <main class="flexbox-container">
+            <form action="/text" method="post">
+                <input type="text" id="text" name="text" placeholder="Text eingeben">
+                <input type="submit" value="Senden">
+            </form>            
+        </main>
+
+         <div class="back-button-container">
+                <a href="#" class="back-button" onclick="history.back()">Zurück</a>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Meine Style-->
+    <link rel="stylesheet" type="text/css" href="static\styles.css">
+    <title>{{ title }}</title>
+    <!-- Bootstrap-Styles-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+    <!-- Navigation oben-->
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">1. Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_status">2. Status JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_rgb_data">3. RGB Matrix JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/pixel_designer">4. Pixel auswählen JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'choose_color' %}active{% endif %}">
+                    <a class="nav-link" href="/choose_color">5. Grundfarben anzeigen, reseten</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_textinput' %}active{% endif %}">
+                    <a class="nav-link" href="/display_textinput">6. Textanzeige und Steuerung</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_sensordata">7.+ 8. Sensordaten Meteo / Bewegung anzeigen</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+     <!-- Navigation/Inhalt/Thema-->
+</br>
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <h3 class="underline-title">MLZ Aufgaben:</h3>
+    </br>
+        <ul>
+            <li><a href="display_status">Aufgabe 2: Status Raspberry abfragen (JSON-Format)</a></li>
+            <li><a href="display_rgb_data">Aufgabe 3: Abfrage RGB Matrix Raspberry (JSON-Format)</a></li>
+            <li><a href="pixel_designer">Aufgabe 4: Pixel zeichnen, exportieren (JSON-Format)</a></li>
+            <li><a href="choose_color">Aufgabe 5: Grundfarben anzeigen, Farben reseten</a></li>
+            <li><a href="display_textinput">Aufgabe 6: Textanzeige mit Geschwindigkeit/Wiederholung</a></li>
+            <li><a href="display_sensordata">Aufgabe 7 und 8: Anzeige Sensordaten</a></li>
+         </ul>
+    </div>
+</body>
+<footer class="footer">
+    <hr>
+    <p>{{ current_time }}</p>
+    <p>Created by Emanuel Wettstein</p>
+</footer>
+</html>
+

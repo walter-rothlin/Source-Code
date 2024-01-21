@@ -95,6 +95,29 @@ def show_modify_single_person():
     else:
         return render_template("index.html")
 
+@app.route("/do_insert_new_person", methods=['GET', 'POST',])
+def execute_insert_person():
+    print('execute_insert_person() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        all_parameters = dict(request.args.items())  # Query string parameters
+        all_parameters.update(request.form.to_dict())  # Form data parameters
+        # print('all_parameters:', all_parameters)
+
+        id = genossame.insert_new_person(new_name_values=all_parameters)
+        # print('execute_insert_person for ', id)
+        rs = genossame.get_person_details_from_DB_by_ID(id=id)
+
+        return render_template("person_Change.html", details=rs[0])
+    else:
+        return render_template("index.html")
+@app.route("/new_person", methods=['GET', 'POST'])
+def show_new_single_person():
+    # print('show_new_single_person() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        return render_template("person_New.html", details={})
+    else:
+        return render_template("index.html")
+
 @app.route("/delete_single_person", methods=['GET', 'POST'])
 def delete_single_person():
     print('delete_single_person() called!!!')
@@ -181,7 +204,7 @@ def login():
         #  password = 'PWD_Hallo'
 
         password_is_correct, user_id = genossame.is_password_correct(username, password)
-        # print('password_is_correct:', password_is_correct, '   user_id:', user_id)
+        print('login():: password_is_correct:', password_is_correct, '   user_id:', user_id)
         if password_is_correct:
             session['user_name'] = username
             session['user_id'] = user_id
@@ -204,5 +227,5 @@ def logout():
 
 if __name__ == "__main__":
     genossame = Stammdaten()
-    app.run(debug=True, port=5002)
+    app.run(debug=True, host='0.0.0.0', port=8080)
 

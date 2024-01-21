@@ -1,0 +1,114 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+  }
+  
+  .container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+  }
+  
+  h1 {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+    padding: 20px;
+  }
+  
+  .card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .card-content {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .card-content h2 {
+    margin: 0 0 10px 0;
+    color: #333;
+  }
+  
+  .card-content p {
+    color: #666;
+  }
+  
+  /* Responsive grid items */
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .content-container {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    min-height: 60vh;
+    justify-content: space-between;
+}
+
+
+main.flexbox-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-button-container {
+text-align: center; 
+margin-top: 20px; 
+}
+
+.back-button {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 10px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #2980b9;
+}
+
+
+#color-picker {
+    width: 40px; 
+    height: 40px;
+    margin: 10px 0; 
+}
+  
+.matrix-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px; /* Abstand zwischen den Reihen */
+  }
+  
+.matrix-btn {
+    width: 40px; /* Größe des Buttons */
+    height: 40px;
+    margin: 5px;
+    background-color: transparent;
+    border: gray; 
+    border-radius: 20%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15); 
+}

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Benutzerinformationen</title>
+    <link rel="stylesheet
+" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <h1>Benutzerinformationen</h1>
+    <table class="info-table">
+        <tr>
+            <th>Attribut</th>
+            <th>Wert</th>
+        </tr>
+        {% for key, value in data.items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

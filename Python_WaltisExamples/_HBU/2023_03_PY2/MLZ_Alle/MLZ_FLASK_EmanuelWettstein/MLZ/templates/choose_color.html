@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farben wählen</title>
+    <link rel="stylesheet" type="text/css" href="static/styles.css">
+    <!-- Bootstrap-Styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_status">2. Status JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_rgb_data">3. RGB Matrix JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/pixel_designer">4. Pixel auswählen JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'choose_color' %}active{% endif %}">
+                    <a class="nav-link" href="/choose_color">5. Grundfarben anzeigen, reseten</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_textinput' %}active{% endif %}">
+                    <a class="nav-link" href="/display_textinput">6. Textanzeige und Steuerung</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_sensordata">7.+ 8. Sensordaten Meteo / Bewegung anzeigen</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <h2>{{ title }}</h2>
+    
+    <!-- Bootstrap-Switches -->
+    <form method="post">
+        <input type="checkbox" id="red" name="red" data-toggle="toggle" data-on="ON" data-off="OFF" {{ 'checked' if ledRed == 'ON' else '' }}>
+        <label for="red">Roter LED</label><br>
+        
+        <input type="checkbox" id="yellow" name="yellow" data-toggle="toggle" data-on="ON" data-off="OFF" {{ 'checked' if ledYellow == 'ON' else '' }}>
+        <label for="yellow">Gelber LED</label><br>
+        
+        <input type="checkbox" id="green" name="green" data-toggle="toggle" data-on="ON" data-off="OFF" {{ 'checked' if ledGreen == 'ON' else '' }}>
+        <label for="green">Grüner LED</label><br>
+        
+        <button type="submit" class="btn btn-primary">Aktualisieren</button>
+    </form>
+    <br>
+    {% if message %}
+        <div class="error-message">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+   
+<br>
+<h3>Aktueller Led Status</h3>
+<br>
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+
+    <!-- Hier können Sie den aktuellen Status der LEDs anzeigen -->
+    <p class="{{ 'led-on' if ledRed == 'ON' else '' }}">Roter LED Status: {{ ledRed }}</p>
+    <p class="{{ 'led-on' if ledYellow == 'ON' else '' }}">Gelber LED Status: {{ ledYellow }}</p>
+    <p class="{{ 'led-on' if ledGreen == 'ON' else '' }}">Grüner LED Status: {{ ledGreen }}</p>
+
+<br>
+<a href="/export_pixels_color" class="btn btn-primary">Export als JSON</a>
+</body>
+</html>

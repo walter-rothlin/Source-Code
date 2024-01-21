@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sensordaten anzeigen</title>
+    <link rel="stylesheet" type="text/css" href="static\styles.css">
+    <!-- Bootstrap-Styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_status">2. Status JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_rgb_data">3. RGB Matrix JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/pixel_designer">4. Pixel auswählen JSON</a>
+                </li>
+                <li class="nav-item {% if active_page == 'choose_color' %}active{% endif %}">
+                    <a class="nav-link" href="/choose_color">5. Grundfarben anzeigen, reseten</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_textinput' %}active{% endif %}">
+                    <a class="nav-link" href="/display_textinput">6. Textanzeige und Steuerung</a>
+                </li>
+                <li class="nav-item {% if active_page == 'display_sensordata' %}active{% endif %}">
+                    <a class="nav-link" href="/display_sensordata">7.+ 8. Sensordaten Meteo / Bewegung anzeigen</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <h2>{{ title }}</h2>
+    
+    <!-- Formular zur Auswahl von Sensordaten -->
+<form method="post">
+    <div class="form-group">
+        <label for="sensor">Sensordaten Sensehat auswählen:</label>
+        <select class="form-control" id="sensor" name="sensor">
+            <option value="">-- Auswählen --</option> <!-- Leere Standardoption -->
+            <option value="temperatur">Meteo - Temperatur</option>
+            <option value="luftfeuchtigkeit">Meteo - Luftfeuchtigkeit</option>
+            <option value="druck">Meteo - Luftdruck</option>
+            <option value="beschleunigung">Bewegung - Beschleunigung</option>
+            <option value="drehgeschwindigkeit">Bewegung - Drehgeschwindigkeit</option>
+            <option value="orientierung">Bewegung - Orientierung</option>
+            <option value="neigung">Bewegung - Neigung</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <input type="checkbox" id="display_switch" name="display_switch" data-toggle="toggle" data-on="Anzeigen" data-off="Ausblenden" {{ 'checked' if display_enabled else '' }}>
+        <label for="display_switch">Sensordaten auf dem Senshat anzeigen</label><br>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Daten anzeigen</button>
+</form>
+    <br><br>
+
+    <!-- Hier können Sie die Sensordaten anzeigen -->
+    {% if sensor_data %}
+    <h3>Aktuelle Sensordaten</h3>
+    <p>{{ sensor_name }}: {{ sensor_data }}</p>
+    <p>Zeitstempel: {{ timestamp }}</p> <!-- Fügt den Zeitstempel hinzu -->
+    {% endif %}
+</body>
+</html>

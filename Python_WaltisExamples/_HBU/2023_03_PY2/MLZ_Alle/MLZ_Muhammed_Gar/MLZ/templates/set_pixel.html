@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Set Pixel Status Page</title>
+</head>
+<body>
+    <h1>Set Pixel Status Information</h1>
+    <p>Pixel at ({{ x }}, {{ y }}) set to color ({{ r }}, {{ g }}, {{ b }})</p>
+
+    <form method="POST" action="/set_pixel">
+        <input type="number" name="x" placeholder="X Coordinate" required>
+        <input type="number" name="y" placeholder="Y Coordinate" required>
+        <input type="number" name="r" placeholder="Red" required>
+        <input type="number" name="g" placeholder="Green" required>
+        <input type="number" name="b" placeholder="Blue" required>
+        <button type="submit">Set Pixel</button>
+    </form>
+
+    <h2>Updated LED Status Information</h2>
+    <ul>
+        {% for led in led_status_info %}
+            <li>LED {{ loop.index }}: {{ led }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Back</a>
+</body>
+</html>
+

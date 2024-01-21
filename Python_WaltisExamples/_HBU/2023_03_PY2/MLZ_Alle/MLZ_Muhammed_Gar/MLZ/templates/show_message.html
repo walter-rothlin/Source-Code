@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Message</title>
+</head>
+<body>
+    <h1>Show Message on LED Display</h1>
+    
+    <form method="POST" action="/show_message">
+        <label for="text">Message:</label>
+        <input type="text" id="text" name="text" required><br>
+        <label for="scroll_speed">Scroll Speed:</label>
+        <input type="number" id="scroll_speed" name="scroll_speed" step="0.01" value="0.1"><br>
+        <label for="text_color">Text Color (R,G,B):</label>
+        <input type="text" id="text_color" name="text_color" placeholder="e.g., 255,255,255"><br>
+        <label for="back_color">Background Color (R,G,B):</label>
+        <input type="text" id="back_color" name="back_color" placeholder="e.g., 0,0,0"><br>
+        <input type="submit" value="Show Message">
+    </form>
+
+    {% if message %}
+        <h2>Result:</h2>
+        <p>{{ message }}</p>
+    {% endif %}
+
+    <a href="/">Back</a>
+</body>
+</html>
