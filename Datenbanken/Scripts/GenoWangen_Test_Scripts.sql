@@ -64,7 +64,9 @@ FROM personen
 WHERE FIND_IN_SET(Kategorien, 'Angestellter') >  0;
 
 SELECT * FROM personen WHERE ID >= (SELECT max(id) FROM personen) - 10;
+SELECT * FROM personen WHERE ID >= 1236;
 SELECT * FROM personen_daten WHERE Such_Begriff LIKE Binary '%Muster%' OR ID >= (SELECT max(id) FROM personen) - 10;
+SELECT * FROM personen_daten WHERE Such_Begriff LIKE Binary '%Muster%';
 
 
 SELECT * from personen WHERE Privat_Adressen_ID IN (SELECT ID FROM adressen WHERE (
@@ -118,7 +120,7 @@ SELECT * FROM Personen       WHERE ID in (609, 1035);  -- Waisen Timi Vogt fehlt
 -- Adressen bereinigen (double Adresses)
 -- -------------------------------------
 SELECT * FROM `adressen` WHERE ID in (399, 673);
-
+SELECT * FROM `adressen`  WHERE Strasse LIKE Binary '%Zürcherstr.%' AND Orte_ID=2;
 
 SELECT ID, 'Personen', Vorname, Ledig_Name, Privat_Adressen_ID, Geschaefts_Adressen_ID  
 FROM `personen` WHERE Privat_Adressen_ID     in (399, 673) OR

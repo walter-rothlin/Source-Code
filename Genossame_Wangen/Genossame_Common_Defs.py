@@ -179,8 +179,8 @@ class Stammdaten:
             ''')
 
         sql = f"""
-        INSERT INTO `personen` (`Vorname`, `Ledig_Name`, `Partner_Name`, `Privat_Adressen_ID`) VALUES 
-              ('{new_name_values["Vorname"]}', '{new_name_values["Ledig_Name"]}', '{new_name_values["Partner_Name"]}', 701);
+        INSERT INTO `personen` (`Sex`, `Vorname`, `Ledig_Name`, `Partner_Name`, `Privat_Adressen_ID`) VALUES 
+              ('{new_name_values["Sex"]}','{new_name_values["Vorname"]}', '{new_name_values["Ledig_Name"]}', '{new_name_values["Partner_Name"]}', 701);
         """
         # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)

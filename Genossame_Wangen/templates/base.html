@@ -45,20 +45,16 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Menüpunkt 1</a>
+                <a class="nav-link" href="https://www.genossame-wangen.ch/" target="_new">Internet Genossame Wangen</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Menüpunkt 2
+                    Körperschaften von Wangen
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Untermenüpunkt 1</a>
-                    <a class="dropdown-item" href="#">Untermenüpunkt 2</a>
-                    <a class="dropdown-item" href="#">Untermenüpunkt 3</a>
+                    <a class="dropdown-item" href="https://www.wangensz.ch"  target="_new">Gemeinde Wangen</a>
+                    <a class="dropdown-item" href="https://www.korporation-wangen.ch/"  target="_new">Korporation Wangen</a>
                 </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Menüpunkt 3</a>
             </li>
             {% if 'user_name' in session %}
             <li class="nav-item dropdown">
@@ -67,7 +63,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarIntern">
                     <a class="nav-link" href="{{ url_for('exec_important_db_updates') }}">Exec_DB_verifications</a>
-                    <a class="nav-link" href="{{ url_for('adress_liste') }}?search_criteria='Hunger'">Adressliste</a>
+                    <a class="nav-link" href="{{ url_for('adress_liste') }}?search_criteria='Hunger'">Personen</a>
                 </div>
             </li>
             {% endif %}
