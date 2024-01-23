@@ -114,6 +114,7 @@ SELECT * FROM Personen_Daten WHERE ID in (644);
 SELECT * FROM Personen       WHERE ID in (1058, 1045, 1108, 877, 1037, 1104, 546, 1083);  -- Wegzüger 2023
 SELECT * FROM Personen       WHERE ID in (934, 1029);   -- Rückkehrer 2023
 SELECT * FROM Personen       WHERE ID in (1216, 1225, 1220, 1223, 1226, 1219, 1222, 1221, 1228, 1217, 1224, 1227, 1218); -- Neubürger 2024
+SELECT * FROM Personen       WHERE ID in (1216, 1241, 1242); -- Nachgemeldete Neubürger 2024
 SELECT * FROM Personen       WHERE ID in (609, 1035);  -- Waisen Timi Vogt fehlt noch! Was ist mit behindertem Sohn von Marianne + Marcel?
 
 
