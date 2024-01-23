@@ -32,7 +32,7 @@ def home():
 
 @app.route("/profile")
 def profile():
-    print('profile() called!!!')
+    print('profile() called!')
     return render_template("contact.html")
 
 @app.route("/adress_liste", methods=['GET', 'POST'])
