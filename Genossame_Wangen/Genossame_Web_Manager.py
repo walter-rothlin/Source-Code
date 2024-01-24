@@ -63,7 +63,12 @@ def personen_details():
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
         # print(rs)
         # print('pid:', pid, '    Anz Rec found: ', len(rs))
-        return render_template("person_details.html", details=rs[0])
+
+        iban_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=644)
+        email_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=644, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
+        telnr_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=644, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
+
+        return render_template("person_details.html", details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
     else:
         return render_template("index.html")
 

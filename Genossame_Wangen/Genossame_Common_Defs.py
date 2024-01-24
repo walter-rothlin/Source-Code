@@ -122,6 +122,24 @@ class Stammdaten:
         mycursor.execute(sql)
         return mycursor.fetchall()
 
+    def get_Pers_Details_for_Pers_ID(self, pers_id=None, table_name='IBAN', id_name='Personen_ID', attr_liste=['*']):
+        ret_values = {}
+        attr_liste_str = ', '.join(attr_liste)
+        if pers_id is not None:
+            sql = f"""
+                SELECT {attr_liste_str}
+                FROM {table_name}
+                WHERE {id_name} = {pers_id};
+            """
+            # print(sql)
+            mycursor = self.__db_connection.cursor(dictionary=True)
+            mycursor.execute(sql)
+            ret_values = mycursor.fetchall()
+        return ret_values
+
+    # def get_IBAN_Details_for_Pers_ID(self, pers_id=None):
+    #    return
+
     def is_password_correct(self, username, password, password_is_hash=False):
         hashed_password = hash_password(password)
 
