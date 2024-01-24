@@ -86,8 +86,8 @@ SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen
 -- IBAN
 -- ----
 UPDATE `IBAN` SET `Lautend_auf` = ''  WHERE `Lautend_auf` IS NULL;
-SELECT * FROM iban_liste WHERE Pers_ID IN (895, 471, 126, 1078, 644);
-SELECT * FROM IBAN WHERE Personen_ID IN (895, 471, 126, 1078, 644);
+SELECT * FROM iban_liste WHERE Pers_ID IN (644);
+SELECT * FROM IBAN WHERE Personen_ID IN (644);
 SELECT ID, Vorname_Name, IBAN FROM Personen_Daten WHERE ID in (1081);
 SELECT * FROM Personen_Daten WHERE (IBAN is NULL or IBAN = '') AND  FIND_IN_SET('Nutzungsberechtigt', Kategorien) >  0; -- Nutzungsberechtigte ohne IBAN
 SELECT ID, Personen_ID, Nummer FROM iban WHERE Nummer NOT LIKE '% %' OR Nummer LIKE BINARY 'c%';                        -- Schlecht formatierte IBAN
@@ -151,12 +151,15 @@ DELETE FROM personen_has_telefonnummern WHERE Telefonnummern_ID = 155;
 DELETE FROM telefonnummern WHERE ID = 155;
 
 SELECT * FROM telefonnummern WHERE Nummer = '4804183';
+SELECT * FROM telnr_liste WHERE Pers_ID IN (644);
 
 
 -- email
 -- -----
 SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1216, 1217, 1218, 1219, 1220, 1221, 1222, 1223)) Order by Prio;
-
+SELECT * FROM email_liste WHERE Pers_ID IN (644);
+SELECT * FROM personen_has_email_adressen WHERE Personen_ID IN (644);
+SELECT * FROM email_adressen WHERE ID IN (319,320,321,510);
 
 
 
