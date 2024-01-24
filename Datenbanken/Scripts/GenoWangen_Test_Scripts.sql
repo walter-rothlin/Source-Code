@@ -109,6 +109,7 @@ SELECT * FROM Personen_Daten WHERE ID in (838, 1096, 1036, 1029, 523, 606, 757);
 SELECT * FROM Personen_Daten       WHERE ID in (1029);  -- 1029 Rückkehrer 2023 aber zu spät angemeldet
 SELECT * FROM Personen       WHERE ID in (1109);  -- 1029 Rückkehrer 2023 aber zu spät angemeldet
 SELECT * FROM Personen_Daten WHERE ID in (644);
+SELECT * FROM Personen WHERE ID in (533, 644);
 
 
 SELECT * FROM Personen       WHERE ID in (1058, 1045, 1108, 877, 1037, 1104, 546, 1083);  -- Wegzüger 2023
@@ -157,7 +158,11 @@ SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 -- email
 -- -----
 SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1216, 1217, 1218, 1219, 1220, 1221, 1222, 1223)) Order by Prio;
-
+SELECT Pers_id
+FROM email_liste 
+-- WHERE eMail_Adresse = 'isabella.vogt@bluewin.ch';
+WHERE eMail_Adresse = 'walter@rothlin.com';
+-- WHERE eMail_Adresse = 'landwirtschaft@genossame-wangen.ch';
 
 
 

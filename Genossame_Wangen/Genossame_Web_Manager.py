@@ -201,10 +201,16 @@ def login():
     if request.method == 'POST':
         username = request.form['email']
         password = request.form['password']
-        #  password = 'PWD_Hallo'
+        '''
+        isabella.vogt@bluewin.ch
+        walter@rothlin.com
+        landwirtschaft@genossame-wangen.ch
+        
+        PWD_Hallo
+        '''
 
         password_is_correct, user_id = genossame.is_password_correct(username, password)
-        print('login():: password_is_correct:', password_is_correct, '   user_id:', user_id)
+        # print('login():: password_is_correct:', password_is_correct, '   user_id:', user_id)
         if password_is_correct:
             session['user_name'] = username
             session['user_id'] = user_id

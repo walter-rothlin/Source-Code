@@ -125,8 +125,8 @@ class Stammdaten:
     def is_password_correct(self, username, password, password_is_hash=False):
         hashed_password = hash_password(password)
 
-        print("Original Password:", password)
-        print("Hashed Password:", hashed_password, len(hashed_password))
+        # print("Original Password:", password)
+        # print("Hashed Password:", hashed_password, len(hashed_password))
 
         sql = f"""
         SELECT Password FROM Personen_Daten WHERE ID IN (
