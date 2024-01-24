@@ -160,8 +160,8 @@ SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 SELECT * FROM email_adressen WHERE ID in (SELECT EMail_Adressen_ID FROM personen_has_email_adressen WHERE Personen_ID IN (1216, 1217, 1218, 1219, 1220, 1221, 1222, 1223)) Order by Prio;
 SELECT Pers_id
 FROM email_liste 
--- WHERE eMail_Adresse = 'isabella.vogt@bluewin.ch';
-WHERE eMail_Adresse = 'walter@rothlin.com';
+WHERE eMail_Adresse = 'isabella.vogt@bluewin.ch';
+-- WHERE eMail_Adresse = 'walter@rothlin.com';
 -- WHERE eMail_Adresse = 'landwirtschaft@genossame-wangen.ch';
 
 

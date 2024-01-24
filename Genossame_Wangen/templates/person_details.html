@@ -22,6 +22,7 @@
     {% if details.eMail   != None and details.eMail   != '' %}eMail:<BR/> <B>{{ details.eMail }}  </B> {{ (details.eMail_Detail_Long).split(':')[3] }}   <BR/>{% endif %}
     {% if details.eMail_1 != None and details.eMail_1 != '' %}            <B>{{ details.eMail_1 }}</B> {{ (details.eMail_1_Detail_Long).split(':')[3] }} <BR/>{% endif %}
     {% if details.eMail_2 != None and details.eMail_2 != '' %}            <B>{{ details.eMail_2 }}</B> {{ (details.eMail_2_Detail_Long).split(':')[3] }} <BR/>{% endif %}
+
     <BR/>
     {% if details.IBAN        != None and details.IBAN        != '' %} IBAN:        <B>{{ details.IBAN }}       </B>      {% endif %} {% if details.Lautend_Auf        != None and details.Lautend_Auf        != '' %} (Lautend_Auf:        <B>{{ details.Lautend_Auf }})      </B>{% endif %}<BR/>
     {% if details.AHV_Nr      != None and details.AHV_Nr      != '' %} AHV :        <B>{{ details.AHV_Nr }}     </B><BR/> {% endif %}

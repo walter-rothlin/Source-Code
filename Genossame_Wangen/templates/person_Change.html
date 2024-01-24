@@ -40,8 +40,25 @@
                 <input type="text" class="form-control" id="partner_name_angenommen" name="Partner_Name_Angenommen" maxlength="1" value="{{ details.Partner_Name_Angenommen }}" onchange="markChangedFields()" required>
             </div>
         </div>
-
-
+        <BR/><BR/>
+        <table>
+        {% for a_email_detail in email_details %}
+            <tr><td>{{ a_email_detail["ID"] }}</td><td>{{ a_email_detail["email"] }}</td><td>{{ a_email_detail["Prio"] }}</td><td>{{ a_email_detail["Type"] }}</td></tr>
+        {% endfor %}
+        </table>
+        <BR/><BR/>
+        <table>
+        {% for a_telnr_detail in telnr_details %}
+            <tr><td>{{ a_telnr_detail["ID"] }}</td><td>{{ a_telnr_detail["Laendercode"] }}</td><td>{{ a_telnr_detail["Vorwahl"] }}</td><td>{{ a_telnr_detail["Nummer"] }}</td><td>{{ a_telnr_detail["Prio"] }}</td><td>{{ a_telnr_detail["Type"] }}</td><td>{{ a_telnr_detail["Endgeraet"] }}</td></tr>
+        {% endfor %}
+        </table>
+        <BR/><BR/>
+        <table>
+        {% for a_iban_detail in iban_details %}
+            <tr><td>{{ a_iban_detail["ID"] }}</td><td>{{ a_iban_detail["Nummer"] }}</td><td>{{ a_iban_detail["Bezeichnung"] }}</td><td>{{ a_iban_detail["Bankname"] }}</td><td>{{ a_iban_detail["Bankort"] }}</td><td>{{ a_iban_detail["Lautend_auf"] }}</td><td>{{ a_iban_detail["Prio"] }}</td></tr>
+        {% endfor %}
+        </table>
+        <BR/><BR/>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="Privat_Adressen_ID" class="col-form-label">Private Adressen ID: {% if details.Privat_Adressen_ID  != None and details.Privat_Adressen_ID  != '' %} [<B>{{ details.Private_Strasse }}, {{ details.Private_PLZ_International }} {{ details.Private_Ort }}</B>]{% endif %}:</label>
