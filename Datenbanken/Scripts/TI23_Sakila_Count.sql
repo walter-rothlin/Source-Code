@@ -1,5 +1,8 @@
-    select count(*) from ACTOR;
-    select count(*) from address;
+     select count(*) from actor;
+     
+     
+    
+    
     
     select 'actor'    AS `Table`, count(*) AS count from actor   UNION
 	select 'address'  AS `Table`, count(*) AS count from address   UNION
