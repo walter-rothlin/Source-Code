@@ -40,24 +40,71 @@
                 <input type="text" class="form-control" id="partner_name_angenommen" name="Partner_Name_Angenommen" maxlength="1" value="{{ details.Partner_Name_Angenommen }}" onchange="markChangedFields()" required>
             </div>
         </div>
+
+
         <BR/><BR/>
-        <table>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">eMail Adresse</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Type</th>
+                <th scope="col"><a href="{{ url_for('show_modify_iban_telnr_email') }}?change_type=email&pid={{ details.ID }}" class="btn btn-danger">Modify</a></th>
+            </tr>
+            </thead>
+            <tbody>
         {% for a_email_detail in email_details %}
             <tr><td>{{ a_email_detail["ID"] }}</td><td>{{ a_email_detail["email"] }}</td><td>{{ a_email_detail["Prio"] }}</td><td>{{ a_email_detail["Type"] }}</td></tr>
         {% endfor %}
+            </tbody>
         </table>
+
+
         <BR/><BR/>
-        <table>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Landcode</th>
+                <th scope="col">Type</th>
+                <th scope="col">Vorwahl</th>
+                <th scope="col">Nummer</th>
+                <th scope="col">Priorität</th>
+                <th scope="col">Endgerät</th>
+                <th scope="col"><a href="{{ url_for('show_modify_iban_telnr_email') }}?change_type=telnr&pid={{ details.ID }}" class="btn btn-danger">Modify</a></th>
+            </tr>
+            </thead>
+            <tbody>
         {% for a_telnr_detail in telnr_details %}
             <tr><td>{{ a_telnr_detail["ID"] }}</td><td>{{ a_telnr_detail["Laendercode"] }}</td><td>{{ a_telnr_detail["Vorwahl"] }}</td><td>{{ a_telnr_detail["Nummer"] }}</td><td>{{ a_telnr_detail["Prio"] }}</td><td>{{ a_telnr_detail["Type"] }}</td><td>{{ a_telnr_detail["Endgeraet"] }}</td></tr>
         {% endfor %}
+            </tbody>
         </table>
+
+
         <BR/><BR/>
-        <table>
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">IBAN</th>
+                <th scope="col">Bezeichnung</th>
+                <th scope="col">Bankname</th>
+                <th scope="col">Bankort</th>
+                <th scope="col">Lautend auf</th>
+                <th scope="col">Priorität</th>
+                <th scope="col"><a href="{{ url_for('show_modify_iban_telnr_email') }}?change_type=iban&pid={{ details.ID }}" class="btn btn-danger">Modify</a></th>
+            </tr>
+            </thead>
+            <tbody>
         {% for a_iban_detail in iban_details %}
             <tr><td>{{ a_iban_detail["ID"] }}</td><td>{{ a_iban_detail["Nummer"] }}</td><td>{{ a_iban_detail["Bezeichnung"] }}</td><td>{{ a_iban_detail["Bankname"] }}</td><td>{{ a_iban_detail["Bankort"] }}</td><td>{{ a_iban_detail["Lautend_auf"] }}</td><td>{{ a_iban_detail["Prio"] }}</td></tr>
         {% endfor %}
+            </tbody>
         </table>
+
+
         <BR/><BR/>
         <div class="form-row">
             <div class="form-group col-md-6">
