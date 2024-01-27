@@ -9,12 +9,12 @@
             <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th scope="col">Id</th>
+                <th scope="col"><a href="{{ url_for('show_modify_single_person') }}?pid={{ details.ID }}">Back</a></th>
                 <th scope="col">eMail Adresse</th>
                 <th scope="col">Priority</th>
                 <th scope="col">Type</th>
                 <th scope="col">Action</th>
-                <th scope="col"><a href="{{ url_for('show_modify_iban_telnr_email') }}?change_type=email&pid={{ details.ID }}" class="btn btn-danger">New</a></th>
+                <th scope="col"><a href="{{ url_for('execute_insert_iban_telnr_email') }}?change_type=email&pid={{ details.ID }}" class="btn btn-danger">New</a></th>
             </tr>
             </thead>
             <tbody>
@@ -30,7 +30,7 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th scope="col">Id</th>
+                <th scope="col"><a href="{{ url_for('show_modify_single_person') }}?pid={{ details.ID }}">Back</a></th>
                 <th scope="col">Landcode</th>
                 <th scope="col">Vorwahl</th>
                 <th scope="col">Nummer</th>
@@ -38,7 +38,7 @@
                 <th scope="col">Type</th>
                 <th scope="col">Endgerät</th>
                 <th scope="col">Action</th>
-                <th scope="col"><a href="{{ url_for('show_modify_iban_telnr_email') }}?change_type=telnr&pid={{ details.ID }}" class="btn btn-danger">New</a></th>
+                <th scope="col"><a href="{{ url_for('execute_insert_iban_telnr_email') }}?change_type=telnr&pid={{ details.ID }}" class="btn btn-danger">New</a></th>
             </tr>
             </thead>
             <tbody>
@@ -54,7 +54,7 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th scope="col">Id</th>
+                <th scope="col"><a href="{{ url_for('show_modify_single_person') }}?pid={{ details.ID }}">Back</a></th>
                 <th scope="col">IBAN</th>
                 <th scope="col">Bezeichnung</th>
                 <th scope="col">Bankname</th>
@@ -62,7 +62,7 @@
                 <th scope="col">Lautend auf</th>
                 <th scope="col">Priorität</th>
                 <th scope="col">Action</th>
-                <th scope="col"><a href="{{ url_for('show_modify_iban_telnr_email') }}?change_type=iban&pid={{ details.ID }}" class="btn btn-danger">New</a></th>
+                <th scope="col"><a href="{{ url_for('execute_insert_iban_telnr_email') }}?change_type=iban&pid={{ details.ID }}" class="btn btn-danger">New</a></th>
             </tr>
             </thead>
             <tbody>
