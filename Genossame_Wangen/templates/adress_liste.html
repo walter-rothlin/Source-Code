@@ -58,7 +58,7 @@
                     <td>{{ addr.Private_Strassen_Adresse }}</td>
                     <td>{{ addr.Private_PLZ_Ort }}</td>
             {% endif %}
-                    <td><a href="{{ url_for('delete_single_person') }}?pid={{ addr.ID }}" class="btn btn-danger">Delete</a></td>
+                    <td><a href="{{ url_for('delete_single_person') }}?pid={{ addr.ID }}" class="btn btn-danger">>Delete<</a></td>
                     <td><a href="{{ url_for('show_modify_single_person') }}?pid={{ addr.ID }}" class="btn btn-danger">Modify</a></td>
             </tr>
         {% endfor %}

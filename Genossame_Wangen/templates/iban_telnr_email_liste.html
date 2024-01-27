@@ -20,7 +20,7 @@
             <tbody>
         {% for a_email_detail in email_details %}
             <tr><td>{{ a_email_detail["ID"] }}</td><td>{{ a_email_detail["email"] }}</td><td>{{ a_email_detail["Prio"] }}</td><td>{{ a_email_detail["Type"] }}</td>
-                <td><a href="" class="btn btn-danger">Delete</a></td><td><a href="" class="btn btn-danger">Aendern</a></td></tr>
+                <td><a href="" class="btn btn-danger">Delete</a></td><td><a href="{{ url_for('iban_telnr_email_Change') }}?change_type=email&pid={{ details.ID }}&id={{ a_email_detail['ID'] }}" class="btn btn-danger">Aendern</a></td></tr>
         {% endfor %}
             </tbody>
         </table>
@@ -44,7 +44,7 @@
             <tbody>
         {% for a_telnr_detail in telnr_details %}
             <tr><td>{{ a_telnr_detail["ID"] }}</td><td>{{ a_telnr_detail["Laendercode"] }}</td><td>{{ a_telnr_detail["Vorwahl"] }}</td><td>{{ a_telnr_detail["Nummer"] }}</td><td>{{ a_telnr_detail["Prio"] }}</td><td>{{ a_telnr_detail["Type"] }}</td><td>{{ a_telnr_detail["Endgeraet"] }}</td>
-                <td><a href="" class="btn btn-danger">Delete</a></td><td><a href="" class="btn btn-danger">Aendern</a></td></tr>
+                <td><a href="" class="btn btn-danger">Delete</a></td><td><a href="{{ url_for('iban_telnr_email_Change') }}?change_type=telnr&pid={{ details.ID }}&id={{ a_telnr_detail['ID'] }}" class="btn btn-danger">Aendern</a></td></tr>
         {% endfor %}
             </tbody>
         </table>
@@ -68,7 +68,7 @@
             <tbody>
         {% for a_iban_detail in iban_details %}
             <tr><td>{{ a_iban_detail["ID"] }}</td><td>{{ a_iban_detail["Nummer"] }}</td><td>{{ a_iban_detail["Bezeichnung"] }}</td><td>{{ a_iban_detail["Bankname"] }}</td><td>{{ a_iban_detail["Bankort"] }}</td><td>{{ a_iban_detail["Lautend_auf"] }}</td><td>{{ a_iban_detail["Prio"] }}</td>
-                <td><a href="" class="btn btn-danger">Delete</a></td><td><a href="" class="btn btn-danger">Aendern</a></td></tr>
+                <td><a href="" class="btn btn-danger">Delete</a></td><td><a href="{{ url_for('iban_telnr_email_Change') }}?change_type=iban&pid={{ details.ID }}&id={{ a_iban_detail['ID'] }}" class="btn btn-danger">Aendern</a></td></tr>
         {% endfor %}
             </tbody>
         </table>

@@ -64,9 +64,9 @@ def personen_details():
         # print(rs)
         # print('pid:', pid, '    Anz Rec found: ', len(rs))
 
-        iban_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=644)
-        email_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=644, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
-        telnr_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=644, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
+        iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
+        email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
+        telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
 
         return render_template("person_details.html", details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
     else:
@@ -83,17 +83,45 @@ def show_modify_iban_telnr_email():
             pid = request.args.get("pid")
             change_type = request.args.get("change_type")
 
-        # print('pid        :', pid)
-        # print('change_type:', change_type)
+        print('pid        :', pid)
+        print('change_type:', change_type)
 
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
         # print(rs)
 
-        iban_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=pid)
-        email_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
-        telnr_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
+        iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
+        email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
+        telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
 
         return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+    else:
+        return render_template("index.html")
+
+@app.route("/iban_telnr_email_Change", methods=['GET', 'POST'])
+def iban_telnr_email_Change():
+    print('iban_telnr_email_Change() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        if request.method == 'POST':
+            pid = request.form.get("pid")
+            id = request.form.get("id")
+            change_type = request.form.get("change_type")
+        else:
+            pid = request.args.get("pid")
+            id = request.args.get("id")
+            change_type = request.args.get("change_type")
+
+        print('pid        :', pid)
+        print('id         :', id)
+        print('change_type:', change_type)
+
+        rs = genossame.get_person_details_from_DB_by_ID(id=pid)
+        # print(rs)
+
+        iban_details = genossame.get_Pers_Details_for_Pers_ID(id=id, table_name='iban', id_name='ID', attr_liste=['*'])
+        email_details = genossame.get_Pers_Details_for_Pers_ID(id=id, table_name='email_adressen', id_name='ID', attr_liste=['*'])
+        telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=id, table_name='telefonnummern', id_name='ID', attr_liste=['*'])
+
+        return render_template("iban_telnr_email_liste_Change.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
     else:
         return render_template("index.html")
 
@@ -102,8 +130,12 @@ def execute_update_iban_telnr_email():
     print('execute_update_iban_telnr_email() called!!!')
     if session is not None and 'user_name' in session and session['user_name'] is not None:
         all_parameters = dict(request.args.items())  # Query string parameters
+        all_parameters.update(request.form.to_dict())
         print('all_parameters:', all_parameters)
-        return render_template("person_details.html", details={'id': '644'})
+        print("Request_Parameter:", request.args.items())
+        ## rs = genossame.get_person_details_from_DB_by_ID(id=644)
+        ## return render_template("person_details.html", details=rs)
+        return "Hallo"
     else:
         return render_template("index.html")
 
@@ -123,7 +155,7 @@ def execute_update_person_details():
 
 @app.route("/modify_single_person", methods=['GET', 'POST'])
 def show_modify_single_person():
-    # print('modify_single_person() called!!!')
+    print('modify_single_person() called!!!')
     if session is not None and 'user_name' in session and session['user_name'] is not None:
         if request.method == 'POST':
             pid = request.form.get("pid")
@@ -132,9 +164,9 @@ def show_modify_single_person():
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
         print(rs)
 
-        iban_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=pid)
-        email_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
-        telnr_details = genossame.get_Pers_Details_for_Pers_ID(pers_id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
+        iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
+        email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
+        telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
 
         return render_template("person_Change.html", details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
     else:
@@ -157,7 +189,7 @@ def execute_insert_person():
         return render_template("index.html")
 @app.route("/new_person", methods=['GET', 'POST'])
 def show_new_single_person():
-    # print('show_new_single_person() called!!!')
+    print('show_new_single_person() called!!!')
     if session is not None and 'user_name' in session and session['user_name'] is not None:
         return render_template("person_New.html", details={})
     else:

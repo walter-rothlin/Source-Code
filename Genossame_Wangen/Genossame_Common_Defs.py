@@ -81,13 +81,13 @@ class Stammdaten:
                 prep_such_kriterien = []
                 add_where_clauses = []
                 for a_such_kriterium in such_kriterien:
-                    print('1)', a_such_kriterium)
+                    # print('1)', a_such_kriterium)
                     if '=' in a_such_kriterium:
                         add_where_clauses.append(a_such_kriterium)
                         continue
                     a_such_kriterium = a_such_kriterium.replace(' - ', '-')
                     a_such_kriterium = a_such_kriterium.replace('+', ' ')
-                    print('2)', a_such_kriterium)
+                    # print('2)', a_such_kriterium)
                     split_liste = a_such_kriterium.split('-')
                     for an_item in split_liste:
                         prep_such_kriterien.append(an_item)
@@ -99,9 +99,7 @@ class Stammdaten:
                     where_clauses.append(f"{a_such_kriterium}")
 
                 where_clause_str = ' AND\n                        '.join(where_clauses)
-                if False:
-                    print(where_clause_str)
-
+                # print(where_clause_str)
 
                 sql = f"""
                     SELECT
@@ -122,14 +120,14 @@ class Stammdaten:
         mycursor.execute(sql)
         return mycursor.fetchall()
 
-    def get_Pers_Details_for_Pers_ID(self, pers_id=None, table_name='IBAN', id_name='Personen_ID', attr_liste=['*']):
+    def get_Pers_Details_for_Pers_ID(self, id=None, table_name='IBAN', id_name='Personen_ID', attr_liste=['*']):
         ret_values = {}
         attr_liste_str = ', '.join(attr_liste)
-        if pers_id is not None:
+        if id is not None:
             sql = f"""
                 SELECT {attr_liste_str}
                 FROM {table_name}
-                WHERE {id_name} = {pers_id};
+                WHERE {id_name} = {id};
             """
             # print(sql)
             mycursor = self.__db_connection.cursor(dictionary=True)
