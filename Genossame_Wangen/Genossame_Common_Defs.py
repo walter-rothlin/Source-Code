@@ -59,6 +59,28 @@ class Stammdaten:
         print('rs:', rs)
         return rs
 
+
+    def get_addr_ort_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
+        if id is None:
+            sql = f"""
+            SELECT
+                *
+            FROM Adress_Daten
+            WHERE Strasse LIKE '%{search_criterium}%'
+            ORDER BY Strasse;
+            """
+        else:
+            sql = f"""
+            SELECT
+                *
+            FROM Adress_Daten
+            WHERE ID = {id};
+            """
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        mycursor.execute(sql)
+        return mycursor.fetchall()
+
     def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
         fieldStr = (',\n            ').join(attr_list)
         like_str = 'LIKE'
@@ -208,6 +230,105 @@ class Stammdaten:
             return rs
         except Exception:
             return None
+
+    def delete_iban_telnr_email(self, pid=None, change_type=None, id=None, verbal=True):
+        if verbal:
+            print(f'''
+            delete_iban_telnr_email
+            -------------------------
+                pid:{pid}
+                id:{id}
+                change_type:{change_type}
+            ''')
+        myCursor = self.__db_connection.cursor(dictionary=False)
+        if change_type == 'iban':
+
+            args = (pid, id)
+            if verbal:
+                print(f"""...call proc .... deleteIBAN{args}""")
+            result_args = myCursor.callproc('deleteIBAN', args)
+
+        elif change_type == 'telnr':
+            args = (pid, id)
+            if verbal:
+                print(f"""...call proc .... deleteTelnrFull{args}""")
+            result_args = myCursor.callproc('deleteTelnrFull', args)
+
+        elif change_type == 'email':
+            args = (pid, id)
+            if verbal:
+                print(f"""...call proc .... deleteEmailAdrFull{args}""")
+            result_args = myCursor.callproc('deleteEmailAdrFull', args)
+
+        self.__db_connection.commit()
+        return id
+
+    def new_iban_telnr_email(self, pid=None, change_type=None, new_name_values={}, verbal=False):
+        if verbal:
+            print(f'''
+            new_iban_telnr_email
+            -------------------------
+                pid:{pid}
+                values:{new_name_values}
+            ''')
+
+        myCursor = self.__db_connection.cursor(dictionary=False)
+        if change_type == 'iban':
+            # args = (pid, new_name_values['Nummer'], new_name_values['Bezeichnung'], new_name_values['Bankname'], new_name_values['Bankort'], new_name_values['Prio'], id, new_name_values['Lautend_auf'], 'x')
+            args = (pid, 'CH12 1234 1234 1234 1234 1', 'Privatkonto', 'SZKB', 'Wangen', 9, 'Lautend auf', 'x')
+            if verbal:
+                print(f"""...call proc .... addIBAN{args}""")
+            result_args = myCursor.callproc('addIBAN', args)
+
+        elif change_type == 'telnr':
+            args = (pid, '0041', '055', '1234567', 'Privat', 'Mobile', 9, 'x')
+            if verbal:
+                print(f"""...call proc .... addTelNr{args}""")
+            result_args = myCursor.callproc('addTelNr', args)
+
+        elif change_type == 'email':
+            args = (pid, 'abc.def@ertz.ch', 'Privat', 9, 'x')
+            if verbal:
+                print(f"""...call proc .... addEmailAdr{args}""")
+            result_args = myCursor.callproc('addEmailAdr', args)
+
+        self.__db_connection.commit()
+        if verbal:
+            print(f'callproc:new_iban_telnr_email{args}')
+            print(f'        :return value{result_args}')
+        return result_args[-1]
+
+    def update_iban_telnr_email(self, pid=None, id=None, new_name_values={}, verbal=False):
+        if verbal:
+            print(f'''
+            update_iban_telnr_email
+            -------------------------
+                pid:{pid}
+                id:{id}
+                values:{new_name_values}
+            ''')
+
+        myCursor = self.__db_connection.cursor(dictionary=True)
+        if new_name_values['Change_Type'] == 'iban':
+            args = (pid, new_name_values['Nummer'], new_name_values['Bezeichnung'], new_name_values['Bankname'], new_name_values['Bankort'], new_name_values['Prio'], id, new_name_values['Lautend_auf'])
+            if verbal:
+                print(f"""...call proc .... updateIBAN{args}""")
+            result_args = myCursor.callproc('updateIBAN', args)
+
+        elif new_name_values['Change_Type'] == 'telnr':
+            args = (id, new_name_values['Laendercode'], new_name_values['Vorwahl'], new_name_values['Nummer'], new_name_values['Type'], new_name_values['Endgeraet'], new_name_values['Prio'])
+            if verbal:
+                print(f"""...call proc .... updateTelnr{args}""")
+            result_args = myCursor.callproc('updateTelnr', args)
+
+        elif new_name_values['Change_Type'] == 'email':
+            args = (id, new_name_values['eMail'], new_name_values['Type'], new_name_values['Prio'])
+            if verbal:
+                print(f"""...call proc .... updateEmailAdr{args}""")
+            result_args = myCursor.callproc('updateEmailAdr', args)
+
+        self.__db_connection.commit()
+
 
     def update_pers_details_by_ID(self, new_name_values, verbal=False):
         if verbal:

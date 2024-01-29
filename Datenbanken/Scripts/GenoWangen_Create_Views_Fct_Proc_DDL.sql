@@ -43,6 +43,8 @@
 -- 29-Dec-2023   Walter Rothlin      Added DROP Section for ALL fct, views and procedures
 -- 04-Jan-2024   Walter Rothlin      Added get_IDs_from_Kommissionen
 -- 04-Jan-2024   Walter Rothlin      Added View App_Priviliges
+-- 28-Jan-2024   Walter Rothlin      Added LautendAuf to Proc IBAN
+-- 29-Jan-2024   Walter Rothlin      Added deleteEmailAdrFull, deleteTelnrFull
 -- -----------------------------------------
 
 -- To-Does
@@ -3323,6 +3325,7 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- ------------------------------------------------------
 DROP PROCEDURE IF EXISTS deleteEmailAdr;
 DELIMITER $$
 CREATE PROCEDURE deleteEmailAdr(IN pers_id      SMALLINT(5),
@@ -3334,6 +3337,17 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS deleteEmailAdrFull;
+DELIMITER $$
+CREATE PROCEDURE deleteEmailAdrFull(IN pers_id     SMALLINT(5),
+		                            IN email_id    SMALLINT(5))
+BEGIN
+	DELETE FROM `personen_has_email_adressen` WHERE `Personen_ID` = pers_id AND `EMail_Adressen_ID` = email_id;
+    DELETE FROM `email_adressen` WHERE `ID` = email_id;
+    COMMIT;
+END$$
+DELIMITER ;
 -- ------------------------------------------------------
 -- Telefonnummer
 -- ------------------------------------------------------
@@ -3436,7 +3450,17 @@ BEGIN
 END$$
 DELIMITER ;
 
-
+-- ------------------------------------------------------
+DROP PROCEDURE IF EXISTS deleteTelnrFull;
+DELIMITER $$
+CREATE PROCEDURE deleteTelnrFull(IN pers_id      SMALLINT(5),
+								 IN telnr_id    SMALLINT(5))
+BEGIN
+	DELETE FROM `personen_has_telefonnummern` WHERE `Personen_ID` = pers_id AND `Telefonnummern_ID` = telnr_id;
+    DELETE FROM `telefonnummern` WHERE `ID` = telnr_id;
+    COMMIT;
+END$$
+DELIMITER ;
 -- ------------------------------------------------------
 -- IBAN
 -- ------------------------------------------------------
@@ -3477,6 +3501,7 @@ CREATE PROCEDURE addIBAN(IN   pers_id          SMALLINT,
                          IN   bankname         VARCHAR(45),
                          IN   bankort          VARCHAR(45),
                          IN   prio             TINYINT,
+                         IN   LautendAuf       VARCHAR(45),
 						 OUT  iban_id          SMALLINT)
 BEGIN
     IF ((SELECT count(*) 
@@ -3484,7 +3509,7 @@ BEGIN
          WHERE IBAN.Personen_ID = pers_id AND
                IBAN.Nummer = iban_nummer  AND
                IBAN.Prio = prio) = 0) THEN
-					INSERT INTO IBAN (`Personen_ID`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `prio`) VALUES (pers_id, iban_nummer, bezeichnung, bankname, bankort, prio);
+					INSERT INTO IBAN (`Personen_ID`, `Nummer`, `Bezeichnung`, `Bankname`, `Bankort`, `prio`, `Lautend_auf`) VALUES (pers_id, iban_nummer, bezeichnung, bankname, bankort, prio, LautendAuf);
 					COMMIT;
     END IF;
     SELECT ID 
@@ -3504,9 +3529,10 @@ CREATE PROCEDURE updateIBAN(IN   pers_id          SMALLINT,
                             IN   bankname         VARCHAR(45),
                             IN   bankort          VARCHAR(45),
                             IN   prio             TINYINT,
-						    IN   iban_id          SMALLINT)
+						    IN   iban_id          SMALLINT,
+                            IN   LautendAuf       VARCHAR(45))
 BEGIN
-	UPDATE `iban` SET `Nummer` = iban_nummer, `Bezeichnung` = bezeichnung, `Bankname` = bankname, `Bankort` = bankort, `Prio` = Prio WHERE `ID` = `iban_id` AND  `Personen_ID` = `pers_id`;
+	UPDATE `iban` SET `Nummer` = iban_nummer, `Bezeichnung` = bezeichnung, `Bankname` = bankname, `Bankort` = bankort, `Prio` = Prio, `Lautend_auf` = LautendAuf WHERE `ID` = `iban_id` AND  `Personen_ID` = `pers_id`;
     COMMIT;
 END$$
 DELIMITER ;

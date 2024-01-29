@@ -35,6 +35,41 @@ def profile():
     print('profile() called!')
     return render_template("contact.html")
 
+
+@app.route("/adress_orte_liste", methods=['GET', 'POST'])
+def adress_orte_liste():
+    print('adress_orte_liste() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        if request.method == 'POST':
+            s_criteria = request.form.get("search_criteria")
+        else:
+            s_criteria = request.args.get("search_criteria")
+        s_criteria = s_criteria.replace("'", "")
+
+        rs = genossame.get_addr_ort_details_from_DB_by_ID(search_criterium=s_criteria)
+        print(rs)
+        rec_found = len(rs)
+        # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
+        return render_template("adress_ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
+    else:
+        return render_template("index.html")
+
+@app.route("/adresse_orte_details", methods=['GET', 'POST'])
+def adresse_orte_details():
+    print('adresse_orte_details() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        if request.method == 'POST':
+            id = request.form.get("id")
+        else:
+            id = request.args.get("id")
+
+        rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id)
+        print(rs)
+        return render_template("adresse_orte_details.html", details=rs[0])
+    else:
+        return render_template("index.html")
+
+
 @app.route("/adress_liste", methods=['GET', 'POST'])
 def adress_liste():
     print('adress_liste() called!!!')
@@ -121,6 +156,36 @@ def iban_telnr_email_Change():
     else:
         return render_template("index.html")
 
+@app.route("/iban_telnr_email_Delete", methods=['GET', 'POST'])
+def iban_telnr_email_Delete():
+    print('iban_telnr_email_Delete() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        if request.method == 'POST':
+            pid = request.form.get("pid")
+            id = request.form.get("id")
+            change_type = request.form.get("change_type")
+        else:
+            pid = request.args.get("pid")
+            id = request.args.get("id")
+            change_type = request.args.get("change_type")
+
+        # print('pid        :', pid)
+        # print('id         :', id)
+        # print('change_type:', change_type)
+
+        genossame.delete_iban_telnr_email(pid=pid, change_type=change_type, id=id)
+
+        rs = genossame.get_person_details_from_DB_by_ID(id=pid)
+        # print(rs)
+        iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
+        email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
+        telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
+        return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+    else:
+        return render_template("index.html")
+
+
+
 @app.route("/update_iban_telnr_email", methods=['GET', 'POST',])
 def execute_update_iban_telnr_email():
     print('execute_update_iban_telnr_email() called!!!')
@@ -134,18 +199,16 @@ def execute_update_iban_telnr_email():
         change_type = all_parameters['Change_Type']
 
         # Update DB
-
+        genossame.update_iban_telnr_email(pid=pid, id=id, new_name_values=all_parameters)
 
         # Show modified List
-        print('pid        :', pid)
-        print('id         :', id)
-        print('change_type:', change_type)
-
+        # print('pid        :', pid)
+        # print('id         :', id)
+        # print('change_type:', change_type)
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
         telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
-
         return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
     else:
         return render_template("index.html")
@@ -157,19 +220,22 @@ def execute_insert_iban_telnr_email():
     if session is not None and 'user_name' in session and session['user_name'] is not None:
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())  # Form data parameters
-        print('all_parameters:', all_parameters)
+        # print('all_parameters:', all_parameters)
+
+        pid = all_parameters['pid']
+        change_type = all_parameters['change_type']
 
         # create new data set
-        new_id = None
-        if all_parameters['change_type'] == 'iban':
-            new_id = 303
-        elif all_parameters['change_type'] == 'telnr':
-            new_id = 510
-        elif all_parameters['change_type'] == 'email':
-            new_id = 510
+        id = genossame.new_iban_telnr_email(pid=pid, change_type=change_type, new_name_values=all_parameters)
+
+        # Show inserted record in GUI for modify
+        # print('pid        :', pid)
+        # print('id         :', id)
+        # print('change_type:', change_type)
 
         # redirect to change screen
-        return redirect(f"{url_for('iban_telnr_email_Change')}?change_type={all_parameters['change_type']}&pid={all_parameters['pid']}&id={new_id}")
+        ## nops = redirect(f"{url_for('iban_telnr_email_Change')}?change_type={change_type}&pid={all_parameters['pid']}&id={id}")
+        return redirect(f"{url_for('show_modify_iban_telnr_email')}?change_type={change_type}&pid={all_parameters['pid']}")
     else:
         return render_template("index.html")
 @app.route("/update_person_details", methods=['GET', 'POST'])

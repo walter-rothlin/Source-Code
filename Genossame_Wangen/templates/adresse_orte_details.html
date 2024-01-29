@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ details.ID }} {{ details.Strassen_Adresse_Ort }}</h1>
+    {{ details.Strasse }} {{ details.Hausnummer }}<BR/>
+    {% if details.Postfachnummer != None and details.Postfachnummer != '' %} Postfachnummer: {{ details.Postfachnummer }}<br/>{% endif %}
+    {% if details.Adresszusatz != None and details.Adresszusatz != '' %} Adresszusatz: {{ details.Adresszusatz }}<br/>{% endif %}
+    {% if details.Wohnung != None and details.Wohnung != '' %} Wohnung: {{ details.Wohnung }}<br/>{% endif %}
+    {% if details.Kataster_Nr != None and details.Kataster_Nr != '' %} Kataster_Nr: {{ details.Kataster_Nr }}<br/>{% endif %}
+    <BR/>
+    Koordinaten: ({{ details.x_CH1903 }} / {{ details.y_CH1903 }})<BR/>
+    <BR/>
+    {% if details.Politisch_Wangen != 1 %}
+    Gehört nicht zur politischen Gemeinde Wangen
+    {% else %}
+    Ist eine Genossen-Adresse!!
+    {% endif %}
+    <BR/><BR/>
+    {{ details.Ort_ID }} {{ details.PLZ_International }} {{ details.Ort }}<BR/>
+    {{ details.Land_ID }} {{ details.Land }}
+</div>
+{% endblock %}

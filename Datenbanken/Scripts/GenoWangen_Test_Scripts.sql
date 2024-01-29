@@ -163,9 +163,16 @@ FROM email_liste
 WHERE eMail_Adresse = 'isabella.vogt@bluewin.ch';
 -- WHERE eMail_Adresse = 'walter@rothlin.com';
 -- WHERE eMail_Adresse = 'landwirtschaft@genossame-wangen.ch';
+select * from email_adressen WHERE id >= 535;
 
 
+-- IBAN
+-- ----
+select * from iban WHERE id >= 776;
+DELETE FROM `iban` WHERE `ID` = '776';
 
+-- TelNr
+-- -----
 SELECT * FROM telefonnummern WHERE Nummer = '4804183';
 SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 120;
 
