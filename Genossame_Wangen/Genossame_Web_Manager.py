@@ -35,6 +35,23 @@ def profile():
     print('profile() called!')
     return render_template("contact.html")
 
+@app.route("/orte_liste", methods=['GET', 'POST'])
+def orte_liste():
+    print('orte_liste() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        if request.method == 'POST':
+            s_criteria = request.form.get("search_criteria")
+        else:
+            s_criteria = request.args.get("search_criteria")
+        s_criteria = s_criteria.replace("'", "")
+
+        rs = genossame.get_ort_details_from_DB_by_ID(search_criterium=s_criteria)
+        print(rs)
+        rec_found = len(rs)
+        # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
+        return render_template("ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
+    else:
+        return render_template("index.html")
 
 @app.route("/adress_orte_liste", methods=['GET', 'POST'])
 def adress_orte_liste():
@@ -46,13 +63,14 @@ def adress_orte_liste():
             s_criteria = request.args.get("search_criteria")
         s_criteria = s_criteria.replace("'", "")
 
-        rs = genossame.get_addr_ort_details_from_DB_by_ID(search_criterium=s_criteria)
+        rs = genossame.get_addr_ort_details_from_DB_by_ID(search_criterium=s_criteria, tabel_name='Adress_Daten')
         print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
         return render_template("adress_ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
     else:
         return render_template("index.html")
+
 
 @app.route("/adresse_orte_details", methods=['GET', 'POST'])
 def adresse_orte_details():
@@ -63,12 +81,46 @@ def adresse_orte_details():
         else:
             id = request.args.get("id")
 
-        rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id)
-        print(rs)
+        rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id, tabel_name='Adress_Daten')
+        # print(rs)
         return render_template("adresse_orte_details.html", details=rs[0])
     else:
         return render_template("index.html")
 
+@app.route("/show_modify_single_address_ort", methods=['GET', 'POST'])
+def show_modify_single_address_ort():
+    print('show_modify_single_address_ort() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        if request.method == 'POST':
+            id = request.form.get("id")
+        else:
+            id = request.args.get("id")
+
+        rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id, tabel_name='Adress_Daten')
+        # print(rs)
+        return render_template("adress_ort_Change.html", details=rs[0])
+    else:
+        return render_template("index.html")
+
+@app.route("/execute_update_address_ort", methods=['GET', 'POST',])
+def execute_update_address_ort():
+    print('execute_update_address_ort() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        all_parameters = dict(request.args.items())  # Query string parameters
+        all_parameters.update(request.form.to_dict())
+        print('all_parameters:', all_parameters)
+
+        id = all_parameters['ID']
+        # Update DB
+        genossame.update_adress_ort(id=id, new_name_values=all_parameters)
+
+        # Show modified List
+        print('id         :', id)
+        rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id, tabel_name='Adress_Daten')
+        # print(rs)
+        return render_template("adresse_orte_details.html", details=rs[0])
+    else:
+        return render_template("index.html")
 
 @app.route("/adress_liste", methods=['GET', 'POST'])
 def adress_liste():

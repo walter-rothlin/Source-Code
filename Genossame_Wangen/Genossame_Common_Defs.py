@@ -59,13 +59,33 @@ class Stammdaten:
         print('rs:', rs)
         return rs
 
-
-    def get_addr_ort_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
+    def get_ort_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
         if id is None:
             sql = f"""
             SELECT
                 *
-            FROM Adress_Daten
+            FROM Orte
+            WHERE Name LIKE '%{search_criterium}%' OR Kanton = '{search_criterium}'
+            ORDER BY ID;
+            """
+        else:
+            sql = f"""
+            SELECT
+                *
+            FROM Orte
+            WHERE ID = {id};
+            """
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        mycursor.execute(sql)
+        return mycursor.fetchall()
+
+    def get_addr_ort_details_from_DB_by_ID(self, id=None, search_criterium=None, tabel_name='Adress_Daten', attr_list=['*'], case_sensitive=False):
+        if id is None:
+            sql = f"""
+            SELECT
+                *
+            FROM {tabel_name}
             WHERE Strasse LIKE '%{search_criterium}%'
             ORDER BY Strasse;
             """
@@ -73,10 +93,10 @@ class Stammdaten:
             sql = f"""
             SELECT
                 *
-            FROM Adress_Daten
+            FROM {tabel_name}
             WHERE ID = {id};
             """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -297,6 +317,36 @@ class Stammdaten:
             print(f'callproc:new_iban_telnr_email{args}')
             print(f'        :return value{result_args}')
         return result_args[-1]
+
+    def update_adress_ort(self, id=None, new_name_values={}, verbal=True):
+        if verbal:
+            print(f'''
+            update_adress_ort
+            -------------------------
+                id:{id}
+                values:{new_name_values}
+            ''')
+
+        sql_update = f"""
+        UPDATE adressen SET 
+              Strasse           = '{new_name_values['Strasse']}', 
+              Hausnummer        = '{new_name_values['Hausnummer']}', 
+              Postfachnummer    = '{new_name_values['Postfachnummer']}', 
+              Adresszusatz      = '{new_name_values['Adresszusatz']}', 
+              Wohnung           = '{new_name_values['Wohnung']}', 
+              Kataster_Nr       = '{new_name_values['Kataster_Nr']}', 
+              x_CH1903          = '{new_name_values['x_CH1903']}', 
+              y_CH1903          = '{new_name_values['y_CH1903']}', 
+              Politisch_Wangen  =  {new_name_values['Politisch_Wangen']}, 
+              orte_id           =  {new_name_values['Ort_ID']}
+        WHERE id={id};
+        """
+        print(sql_update)
+
+        myCursor = self.__db_connection.cursor(dictionary=True)
+        myCursor.execute(sql_update)
+        self.__db_connection.commit()
+
 
     def update_iban_telnr_email(self, pid=None, id=None, new_name_values={}, verbal=False):
         if verbal:

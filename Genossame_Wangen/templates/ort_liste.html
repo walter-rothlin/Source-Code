@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Orte</h1>
+    <div class="form">
+        <form action="{{ url_for('orte_liste') }}" method="POST">
+            <input type="text" name="search_criteria" id="search_criteria" value="{{ search_criterium }}">
+            <input type="submit" value="suchen"> ({{ rec_found }})
+        </form>
+        <br/>
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">PLZ</th>
+            <th scope="col">Name</th>
+            <th scope="col">Kanton</th>
+            <!--<th scope="col">Land_ID</th>-->
+        </tr>
+        </thead>
+                <tbody>
+        {% for ort in result_liste %}
+        {% if ort.Land_ID != 1 %}
+            <tr class="dead_person">
+            {% else %}
+            <tr>
+            {% endif %}
+                <td>{{ ort.ID }}</td>
+                <td>{{ ort.PLZ }}</td>
+                <td>{{ ort.Name }}</td>
+                <td>{{ ort.Kanton }}</td>
+                <!--<td>{{ ort.Land_ID }}</td>-->
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

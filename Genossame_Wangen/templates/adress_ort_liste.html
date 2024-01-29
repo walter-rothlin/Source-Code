@@ -19,7 +19,6 @@
             <th scope="col">Ort_ID</th>
             <th scope="col">PLZ</th>
             <th scope="col">Ort</th>
-            <!-- <th scope="col">Action</th> -->
             <th scope="col"><a href="{{ url_for('show_new_single_person') }}" class="btn btn-danger">>New></a></th>
         </tr>
         </thead>
@@ -31,12 +30,12 @@
             <tr>
             {% endif %}
                 <td><a href="{{ url_for('adresse_orte_details') }}?id={{ addr_ort.ID }}">{{ addr_ort.ID }}</a></td>
+                <!-- <td>{{ addr_ort.ID }}</a></td> -->
                 <td>{{ addr_ort.Strassen_Adresse }}</td>
                 <td>{{ addr_ort.Ort_ID }}</td>
                 <td>{{ addr_ort.PLZ }}</td>
                 <td>{{ addr_ort.Ort }}</td>
-                <!-- <td><a href="{{ url_for('show_modify_single_person') }}?id={{ addr_ort.ID }}" class="btn btn-danger">Modify</a></td> -->
-                <td><a href="" class="btn btn-danger">>Modify></a></td>
+                <td><a href="{{ url_for('show_modify_single_address_ort') }}?id={{ addr_ort.ID }}" class="btn btn-danger">Modify</a></td>
             </tr>
         {% endfor %}
         </tbody>

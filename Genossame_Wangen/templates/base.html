@@ -64,7 +64,8 @@
                 <div class="dropdown-menu" aria-labelledby="navbarIntern">
                     <a class="nav-link" href="{{ url_for('exec_important_db_updates') }}">Exec_DB_verifications</a>
                     <a class="nav-link" href="{{ url_for('adress_liste') }}?search_criteria='Hunger'">Personen</a>
-                    <a class="nav-link" href="{{ url_for('adress_orte_liste') }}?search_criteria='Peterli'">Adressen-Orte</a>
+                    <a class="nav-link" href="{{ url_for('adress_orte_liste') }}?search_criteria='Peterli'" target="_new">Adressen-Orte</a>
+                    <a class="nav-link" href="{{ url_for('orte_liste') }}?search_criteria='SZ'" target="_new">Orte</a>
                 </div>
             </li>
             {% endif %}
