@@ -26,6 +26,9 @@ import hashlib
 ifTrue     = lambda x: True if (x == 'WAHR' or x == 'TRUE') else False
 ifIntEmpty = lambda x: True if (x == ''     or x == 'TRUE') else False
 
+session_attr_scriteria_addr_list = 'adress_s_criteria'
+session_attr_scriteria_addr_orte_list = 'adress_orte_s_criteria'
+session_attr_scriteria_orte_list = 'orte_s_criteria'
 
 # =================
 # Class Stammdaten

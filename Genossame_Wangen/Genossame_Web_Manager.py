@@ -43,7 +43,19 @@ def orte_liste():
             s_criteria = request.form.get("search_criteria")
         else:
             s_criteria = request.args.get("search_criteria")
-        s_criteria = s_criteria.replace("'", "")
+
+        print(f'session:{session}')
+        if s_criteria is None or s_criteria == '':
+            if session[session_attr_scriteria_orte_list] is not None:
+                s_criteria = session[session_attr_scriteria_orte_list]
+                print(f"s_criteria := {session[session_attr_scriteria_orte_list]}")
+            else:
+                s_criteria = 'SZ'
+        else:
+            s_criteria = s_criteria.replace("'", "")
+            session[session_attr_scriteria_orte_list] = s_criteria
+            print(f"session['{session_attr_scriteria_orte_list}'] := {session[session_attr_scriteria_orte_list]}")
+        print(f's_criteria:{s_criteria}')
 
         rs = genossame.get_ort_details_from_DB_by_ID(search_criterium=s_criteria)
         print(rs)
@@ -61,7 +73,19 @@ def adress_orte_liste():
             s_criteria = request.form.get("search_criteria")
         else:
             s_criteria = request.args.get("search_criteria")
-        s_criteria = s_criteria.replace("'", "")
+
+        print(f'session:{session}')
+        if s_criteria is None or s_criteria == '':
+            if session[session_attr_scriteria_addr_orte_list] is not None:
+                s_criteria = session[session_attr_scriteria_addr_orte_list]
+                print(f"s_criteria := {session[session_attr_scriteria_addr_orte_list]}")
+            else:
+                s_criteria = 'Peterliwiese'
+        else:
+            s_criteria = s_criteria.replace("'", "")
+            session[session_attr_scriteria_addr_orte_list] = s_criteria
+            print(f"session['{session_attr_scriteria_addr_orte_list}'] := {session[session_attr_scriteria_addr_orte_list]}")
+        print(f's_criteria:{s_criteria}')
 
         rs = genossame.get_addr_ort_details_from_DB_by_ID(search_criterium=s_criteria, tabel_name='Adress_Daten')
         print(rs)
@@ -130,7 +154,19 @@ def adress_liste():
             s_criteria = request.form.get("search_criteria")
         else:
             s_criteria = request.args.get("search_criteria")
-        s_criteria = s_criteria.replace("'", "")
+
+        print(f'session:{session}')
+        if s_criteria is None or s_criteria == '':
+            if session[session_attr_scriteria_addr_list] is not None:
+                s_criteria = session[session_attr_scriteria_addr_list]
+                print(f"s_criteria := {session[session_attr_scriteria_addr_list]}")
+            else:
+                s_criteria = 'Rothlin Walter'
+        else:
+            s_criteria = s_criteria.replace("'", "")
+            session[session_attr_scriteria_addr_list] = s_criteria
+            print(f"session['{session_attr_scriteria_addr_list}'] := {session[session_attr_scriteria_addr_list]}")
+        print(f's_criteria:{s_criteria}')
 
         rs = genossame.get_person_details_from_DB_by_ID(search_criterium=s_criteria)
         # print(rs)
@@ -236,8 +272,6 @@ def iban_telnr_email_Delete():
     else:
         return render_template("index.html")
 
-
-
 @app.route("/update_iban_telnr_email", methods=['GET', 'POST',])
 def execute_update_iban_telnr_email():
     print('execute_update_iban_telnr_email() called!!!')
@@ -264,7 +298,6 @@ def execute_update_iban_telnr_email():
         return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
     else:
         return render_template("index.html")
-
 
 @app.route("/do_insert_new_iban_telnr_email", methods=['GET', 'POST'])
 def execute_insert_iban_telnr_email():
@@ -343,6 +376,7 @@ def execute_insert_person():
         return render_template("person_Change.html", details=rs[0])
     else:
         return render_template("index.html")
+
 @app.route("/new_person", methods=['GET', 'POST'])
 def show_new_single_person():
     print('show_new_single_person() called!!!')
@@ -372,7 +406,6 @@ def exec_important_db_updates():
     if session is not None and 'user_name' in session and session['user_name'] is not None:
         execute_important_sql_queries(genossame.get_db_connection())
     return render_template("index.html")
-
 
 # Login / Logout Functions
 # ========================
@@ -404,7 +437,6 @@ def registration():
 
         return render_template('index.html')
     return render_template('registration.html')
-
 
 @app.route('/password_reset', methods=['GET', 'POST'])
 def password_reset():
@@ -444,6 +476,9 @@ def login():
 
         password_is_correct, user_id = genossame.is_password_correct(username, password)
         # print('login():: password_is_correct:', password_is_correct, '   user_id:', user_id)
+        session[session_attr_scriteria_addr_list] = 'Walter'
+        session[session_attr_scriteria_addr_orte_list] = 'Peterliwiese'
+        session[session_attr_scriteria_orte_list] = 'SZ'
         if password_is_correct:
             session['user_name'] = username
             session['user_id'] = user_id
@@ -454,17 +489,21 @@ def login():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    print('logout() called!!!')
     if request.method == 'POST':
         if 'stay_logged_in' in request.form:
             return render_template("index.html")
         else:
-            session.pop('user_name', None)
-            session.pop('user_id', None)
-            session.pop('user_priv', None)
+            print('session löschen!!')
+            print('session:', session)
+            session.clear()
+            print('session:', session)
+
             return render_template("index.html")
     return render_template("index.html")
 
 if __name__ == "__main__":
     genossame = Stammdaten()
+
     app.run(debug=True, host='0.0.0.0', port=8080)
 
