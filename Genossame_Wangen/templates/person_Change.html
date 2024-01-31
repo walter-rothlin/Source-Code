@@ -2,10 +2,11 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
 
-    <br/>
     <form id="updateForm" method="post" action="{{ url_for('execute_update_person_details') }}">
+        <button type="submit" class="btn btn-primary"><-- Back</button>
+        <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+        <br/>
         <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ details.ID }}">
         <br/><hr/><h3>Grunddaten:</h3>
         <div class="form-row">
@@ -316,7 +317,7 @@
             </div>
         </div>
         <br/><hr/>
-        <button type="submit" class="btn btn-primary">Back to Liste</button>
+        <button type="submit" class="btn btn-primary"><-- Back</button>
         <button type="submit" class="btn btn-primary">&Auml;nderungen speichern</button>
         <button type="reset" class="btn btn-secondary">Reset</button>
     </form>

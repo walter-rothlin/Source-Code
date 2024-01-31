@@ -323,6 +323,7 @@ def execute_insert_iban_telnr_email():
         return redirect(f"{url_for('show_modify_iban_telnr_email')}?change_type={change_type}&pid={all_parameters['pid']}")
     else:
         return render_template("index.html")
+
 @app.route("/update_person_details", methods=['GET', 'POST'])
 def execute_update_person_details():
     print('update_person_details() called!!!')
@@ -374,6 +375,33 @@ def execute_insert_person():
         # show changed data-set
         rs = genossame.get_person_details_from_DB_by_ID(id=id)
         return render_template("person_Change.html", details=rs[0])
+    else:
+        return render_template("index.html")
+
+@app.route("/execute_insert_adresse", methods=['GET', 'POST',])
+def execute_insert_adresse():
+    print('execute_insert_adresse() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        all_parameters = dict(request.args.items())  # Query string parameters
+        all_parameters.update(request.form.to_dict())  # Form data parameters
+        print('all_parameters:', all_parameters)
+
+        # insert into DB
+        id = genossame.insert_new_adresse(new_name_values=all_parameters)
+        print('execute_insert_adresse for ', id)
+
+        # show changed data-set
+        rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id)
+        print(rs)
+        return render_template("adress_ort_Change.html", details=rs[0])
+    else:
+        return render_template("index.html")
+
+@app.route("/new_adresse", methods=['GET', 'POST'])
+def show_new_single_adresse():
+    print('show_new_single_adresse() called!!!')
+    if session is not None and 'user_name' in session and session['user_name'] is not None:
+        return render_template("adresse_New.html", details={'Ort_ID': '4797', 'Politisch_Wangen': 0})
     else:
         return render_template("index.html")
 

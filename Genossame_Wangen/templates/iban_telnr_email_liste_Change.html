@@ -11,7 +11,7 @@
 
     {% if change_type == 'email' %}
         <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ email_details[0]['ID'] }}">
-         eMail_ID: {{ email_details[0]['ID'] }}
+        <!-- eMail_ID: {{ email_details[0]['ID'] }} -->
         <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="eMail" class="col-form-label">e-Mail Adresse:</label>
@@ -30,7 +30,7 @@
 
     {% if change_type == 'telnr' %}
         <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ telnr_details[0]['ID'] }}">
-         TelNr_ID: {{ telnr_details[0]['ID'] }}
+        <!-- TelNr_ID: {{ telnr_details[0]['ID'] }} -->
         <div class="form-row">
             <div class="form-group col-md-1">
                 <label for="Laendercode" class="col-form-label">Laendercode:</label>
@@ -63,7 +63,7 @@
 
     {% if change_type == 'iban' %}
         <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ iban_details[0]['ID'] }}">
-        IBAN_ID: {{ iban_details[0]['ID'] }}
+        <!-- IBAN_ID: {{ iban_details[0]['ID'] }} -->
         <div class="form-row">
             <div class="form-group col-md-3">
                 <label for="Nummer" class="col-form-label">Nummer:</label>
@@ -111,5 +111,5 @@
         function updateValues() {
             submitForm()
         }
-
+    </script>
     {% endblock %}

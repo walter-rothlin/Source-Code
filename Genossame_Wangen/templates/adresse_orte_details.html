@@ -2,22 +2,28 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ details.ID }} {{ details.Strassen_Adresse_Ort }}</h1>
-    {{ details.Strasse }} {{ details.Hausnummer }}<BR/>
-    {% if details.Postfachnummer != None and details.Postfachnummer != '' %} Postfachnummer: {{ details.Postfachnummer }}<br/>{% endif %}
-    {% if details.Adresszusatz != None and details.Adresszusatz != '' %} Adresszusatz: {{ details.Adresszusatz }}<br/>{% endif %}
-    {% if details.Wohnung != None and details.Wohnung != '' %} Wohnung: {{ details.Wohnung }}<br/>{% endif %}
-    {% if details.Kataster_Nr != None and details.Kataster_Nr != '' %} Kataster_Nr: {{ details.Kataster_Nr }}<br/>{% endif %}
-    <BR/>
-    Koordinaten: ({{ details.x_CH1903 }} / {{ details.y_CH1903 }})<BR/>
-    <BR/>
+    <h1>{{ details.ID }} {{ (details.Strassen_Adresse_Ort).replace(':',' ') }}</h1>
     {% if details.Politisch_Wangen != 1 %}
     Gehört nicht zur politischen Gemeinde Wangen
     {% else %}
     Ist eine Genossen-Adresse!!
     {% endif %}
     <BR/><BR/>
-    {{ details.Ort_ID }} {{ details.PLZ_International }} {{ details.Ort }}<BR/>
-    {{ details.Land_ID }} {{ details.Land }}
+    Strasse:<b>{{ details.Strasse }}</b> <BR/>
+    Nr:<b>{{ details.Hausnummer }}</b>
+    <HR/>
+    {% if details.Postfachnummer != None and details.Postfachnummer != '' %} Postfachnummer: {{ details.Postfachnummer }}<br/>{% endif %}
+    {% if details.Adresszusatz != None and details.Adresszusatz != '' %} Adresszusatz: {{ details.Adresszusatz }}<br/>{% endif %}
+    {% if details.Wohnung != None and details.Wohnung != '' %} Wohnung: {{ details.Wohnung }}<br/>{% endif %}
+    {% if details.Kataster_Nr != None and details.Kataster_Nr != '' %} Kataster_Nr: {{ details.Kataster_Nr }}<br/>{% endif %}
+
+    {% if (details.x_CH1903 != None and details.x_CH1903 != '') or (details.y_CH1903 != None and details.y_CH1903 != '') %}
+    <HR/>
+    Koordinaten: ({{ details.x_CH1903 }} / {{ details.y_CH1903 }})<BR/>
+    <HR/>
+    {% endif %}
+
+    Ort_id: <b>{{ details.Ort_ID }}</b> --> {{ details.PLZ_International }} {{ details.Ort }}<BR/>
+    Land_id: <b>{{ details.Land_ID }}</b> -->  {{ details.Land }}
 </div>
 {% endblock %}

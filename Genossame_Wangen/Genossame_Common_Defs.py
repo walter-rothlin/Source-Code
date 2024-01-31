@@ -231,7 +231,30 @@ class Stammdaten:
         except Exception:
             return None
 
-    def insert_new_person(self, new_name_values, verbal=True):
+    def insert_new_adresse(self, new_name_values, verbal=False):
+        if verbal:
+            print(f'''
+            insert_new_adresse
+            ------------------
+            {new_name_values}
+            ''')
+
+        sql = f"""
+        INSERT INTO `adressen` (`Strasse`, `Hausnummer`, `Orte_ID`, `Politisch_Wangen`) VALUES 
+              ('{new_name_values["Strasse"]}','{new_name_values["Hausnummer"]}', '{new_name_values["Ort_ID"]}', '{new_name_values["Politisch_Wangen"]}');
+        """
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        try:
+            mycursor.execute(sql)
+            self.__db_connection.commit()
+            rs = self.get_last_ID_for_table('Adressen')
+            # print('rs:', rs)
+            return rs
+        except Exception:
+            return None
+
+    def insert_new_person(self, new_name_values, verbal=False):
         if verbal:
             print(f'''
             insert_new_person
