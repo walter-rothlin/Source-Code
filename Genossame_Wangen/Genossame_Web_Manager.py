@@ -38,27 +38,24 @@ def profile():
 @app.route("/orte_liste", methods=['GET', 'POST'])
 def orte_liste():
     print('orte_liste() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             s_criteria = request.form.get("search_criteria")
         else:
             s_criteria = request.args.get("search_criteria")
 
-        print(f'session:{session}')
+
+        # print(f'session:{session}')
         if s_criteria is None or s_criteria == '':
-            if session[session_attr_scriteria_orte_list] is not None:
-                s_criteria = session[session_attr_scriteria_orte_list]
-                print(f"s_criteria := {session[session_attr_scriteria_orte_list]}")
-            else:
-                s_criteria = 'SZ'
+            s_criteria = session.get(session_attr_scriteria_orte_list, 'Peterliwiese')
         else:
             s_criteria = s_criteria.replace("'", "")
             session[session_attr_scriteria_orte_list] = s_criteria
-            print(f"session['{session_attr_scriteria_orte_list}'] := {session[session_attr_scriteria_orte_list]}")
-        print(f's_criteria:{s_criteria}')
+        # print(f's_criteria:{s_criteria}')
+
 
         rs = genossame.get_ort_details_from_DB_by_ID(search_criterium=s_criteria)
-        print(rs)
+        # print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
         return render_template("ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
@@ -68,27 +65,22 @@ def orte_liste():
 @app.route("/adress_orte_liste", methods=['GET', 'POST'])
 def adress_orte_liste():
     print('adress_orte_liste() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             s_criteria = request.form.get("search_criteria")
         else:
             s_criteria = request.args.get("search_criteria")
 
-        print(f'session:{session}')
+        # print(f'session:{session}')
         if s_criteria is None or s_criteria == '':
-            if session[session_attr_scriteria_addr_orte_list] is not None:
-                s_criteria = session[session_attr_scriteria_addr_orte_list]
-                print(f"s_criteria := {session[session_attr_scriteria_addr_orte_list]}")
-            else:
-                s_criteria = 'Peterliwiese'
+            s_criteria = session.get(session_attr_scriteria_addr_orte_list, 'SZ')
         else:
             s_criteria = s_criteria.replace("'", "")
             session[session_attr_scriteria_addr_orte_list] = s_criteria
-            print(f"session['{session_attr_scriteria_addr_orte_list}'] := {session[session_attr_scriteria_addr_orte_list]}")
-        print(f's_criteria:{s_criteria}')
+        # print(f's_criteria:{s_criteria}')
 
         rs = genossame.get_addr_ort_details_from_DB_by_ID(search_criterium=s_criteria, tabel_name='Adress_Daten')
-        print(rs)
+        # print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
         return render_template("adress_ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
@@ -99,7 +91,7 @@ def adress_orte_liste():
 @app.route("/adresse_orte_details", methods=['GET', 'POST'])
 def adresse_orte_details():
     print('adresse_orte_details() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             id = request.form.get("id")
         else:
@@ -114,7 +106,7 @@ def adresse_orte_details():
 @app.route("/show_modify_single_address_ort", methods=['GET', 'POST'])
 def show_modify_single_address_ort():
     print('show_modify_single_address_ort() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             id = request.form.get("id")
         else:
@@ -129,7 +121,7 @@ def show_modify_single_address_ort():
 @app.route("/execute_update_address_ort", methods=['GET', 'POST',])
 def execute_update_address_ort():
     print('execute_update_address_ort() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())
         print('all_parameters:', all_parameters)
@@ -139,7 +131,7 @@ def execute_update_address_ort():
         genossame.update_adress_ort(id=id, new_name_values=all_parameters)
 
         # Show modified List
-        print('id         :', id)
+        # print('id         :', id)
         rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id, tabel_name='Adress_Daten')
         # print(rs)
         return render_template("adresse_orte_details.html", details=rs[0])
@@ -149,24 +141,19 @@ def execute_update_address_ort():
 @app.route("/adress_liste", methods=['GET', 'POST'])
 def adress_liste():
     print('adress_liste() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             s_criteria = request.form.get("search_criteria")
         else:
             s_criteria = request.args.get("search_criteria")
 
-        print(f'session:{session}')
+        # print(f'session:{session}')
         if s_criteria is None or s_criteria == '':
-            if session[session_attr_scriteria_addr_list] is not None:
-                s_criteria = session[session_attr_scriteria_addr_list]
-                print(f"s_criteria := {session[session_attr_scriteria_addr_list]}")
-            else:
-                s_criteria = 'Rothlin Walter'
+            s_criteria = session.get(session_attr_scriteria_addr_list, 'Rothlin Walter')
         else:
             s_criteria = s_criteria.replace("'", "")
             session[session_attr_scriteria_addr_list] = s_criteria
-            print(f"session['{session_attr_scriteria_addr_list}'] := {session[session_attr_scriteria_addr_list]}")
-        print(f's_criteria:{s_criteria}')
+        # print(f's_criteria:{s_criteria}')
 
         rs = genossame.get_person_details_from_DB_by_ID(search_criterium=s_criteria)
         # print(rs)
@@ -179,7 +166,7 @@ def adress_liste():
 @app.route("/personen_details", methods=['GET', 'POST'])
 def personen_details():
     print('personen_details() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             pid = request.form.get("pid")
         else:
@@ -198,7 +185,7 @@ def personen_details():
 @app.route("/modify_iban_telnr_email", methods=['GET', 'POST'])
 def show_modify_iban_telnr_email():
     print('show_modify_iban_telnr_email() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             pid = request.form.get("pid")
             change_type = request.form.get("change_type")
@@ -221,7 +208,7 @@ def show_modify_iban_telnr_email():
 @app.route("/iban_telnr_email_Change", methods=['GET', 'POST'])
 def iban_telnr_email_Change():
     print('iban_telnr_email_Change() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             pid = request.form.get("pid")
             id = request.form.get("id")
@@ -247,7 +234,7 @@ def iban_telnr_email_Change():
 @app.route("/iban_telnr_email_Delete", methods=['GET', 'POST'])
 def iban_telnr_email_Delete():
     print('iban_telnr_email_Delete() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             pid = request.form.get("pid")
             id = request.form.get("id")
@@ -275,10 +262,10 @@ def iban_telnr_email_Delete():
 @app.route("/update_iban_telnr_email", methods=['GET', 'POST',])
 def execute_update_iban_telnr_email():
     print('execute_update_iban_telnr_email() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())
-        print('all_parameters:', all_parameters)
+        # print('all_parameters:', all_parameters)
 
         pid = all_parameters['Pers_ID']
         id = all_parameters['ID']
@@ -302,7 +289,7 @@ def execute_update_iban_telnr_email():
 @app.route("/do_insert_new_iban_telnr_email", methods=['GET', 'POST'])
 def execute_insert_iban_telnr_email():
     print('execute_insert_iban_telnr_email() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())  # Form data parameters
         # print('all_parameters:', all_parameters)
@@ -327,7 +314,7 @@ def execute_insert_iban_telnr_email():
 @app.route("/update_person_details", methods=['GET', 'POST'])
 def execute_update_person_details():
     print('update_person_details() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())  # Form data parameters
 
@@ -344,7 +331,7 @@ def execute_update_person_details():
 @app.route("/modify_single_person", methods=['GET', 'POST'])
 def show_modify_single_person():
     print('modify_single_person() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             pid = request.form.get("pid")
         else:
@@ -363,7 +350,7 @@ def show_modify_single_person():
 @app.route("/do_insert_new_person", methods=['GET', 'POST',])
 def execute_insert_person():
     print('execute_insert_person() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())  # Form data parameters
         # print('all_parameters:', all_parameters)
@@ -381,18 +368,18 @@ def execute_insert_person():
 @app.route("/execute_insert_adresse", methods=['GET', 'POST',])
 def execute_insert_adresse():
     print('execute_insert_adresse() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())  # Form data parameters
         print('all_parameters:', all_parameters)
 
         # insert into DB
         id = genossame.insert_new_adresse(new_name_values=all_parameters)
-        print('execute_insert_adresse for ', id)
+        # print('execute_insert_adresse for ', id)
 
         # show changed data-set
         rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id)
-        print(rs)
+        # print(rs)
         return render_template("adress_ort_Change.html", details=rs[0])
     else:
         return render_template("index.html")
@@ -400,7 +387,7 @@ def execute_insert_adresse():
 @app.route("/new_adresse", methods=['GET', 'POST'])
 def show_new_single_adresse():
     print('show_new_single_adresse() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         return render_template("adresse_New.html", details={'Ort_ID': '4797', 'Politisch_Wangen': 0})
     else:
         return render_template("index.html")
@@ -408,7 +395,7 @@ def show_new_single_adresse():
 @app.route("/new_person", methods=['GET', 'POST'])
 def show_new_single_person():
     print('show_new_single_person() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         return render_template("person_New.html", details={})
     else:
         return render_template("index.html")
@@ -416,7 +403,7 @@ def show_new_single_person():
 @app.route("/delete_single_person", methods=['GET', 'POST'])
 def delete_single_person():
     print('delete_single_person() called!!!')
-    if session is not None and 'user_name' in session and session['user_name'] is not None:
+    if session and session.get('user_name'):
         if request.method == 'POST':
             pid = request.form.get("pid")
         else:
@@ -532,6 +519,5 @@ def logout():
 
 if __name__ == "__main__":
     genossame = Stammdaten()
-
     app.run(debug=True, host='0.0.0.0', port=8080)
 

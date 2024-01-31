@@ -16,131 +16,6 @@
 from Genossame_Common_Defs import *
 
 
-def initial_load_pachtland(db_connection, filename,  verbal=False):
-    print('initial_load_pachtland...reading', filename)
-    gt_landteil_count = 0
-    gt_streu_count = 0
-    gt_geno_landteil_count = 0
-    gt_buerger_landteil_count = 0
-    gt_buerger_16a_count = 0
-    gt_buerger_35a_count = 0
-
-    # Deleting left overs in DB from Landteile
-    # ----------------------------------------
-    myCursor = db_connection.cursor()
-
-
-    sql = """DELETE FROM `landteile`;"""    # sql = """TRUNCATE `landteile`;"""  # needs user rights
-    myCursor.execute(sql)
-    db_connection.commit()
-    print(f'{myCursor.rowcount} Landteile wurden gelöscht ')
-
-    if verbal:
-        print('--> Calling stored-proc reset_table_autoincrement_landteile...', end='')
-    args = ('landteile', 'x')
-    result_args = myCursor.callproc('reset_table_autoincrement_landteile', args)
-    print(result_args, end='')
-    if verbal:
-        print('....done\n')
-
-
-    # Prcessing Info-Tables in Excel and load the Landteile
-    # -----------------------------------------------------
-    info_tabellen_landwirte = openpyxl.load_workbook(filename, data_only=True)
-    paechter_sheets = [x for x in info_tabellen_landwirte.sheetnames if "_" in x]
-    # print('paechter_sheets:', paechter_sheets)
-
-    for aPaechter_sheet_name in paechter_sheets:
-        if aPaechter_sheet_name in ['Bürgerteile_Speziell']:
-            print(f'Not processing {aPaechter_sheet_name:20s}', end='\n')
-            continue
-        else:
-            # print(f'Processing       {aPaechter_sheet_name:20s}', end='\n')
-            pass
-
-        if True:    # aPaechter_sheet_name in ['Müller_Urs']:
-            aPaechter_sheet = info_tabellen_landwirte[aPaechter_sheet_name]
-            paechter_name = aPaechter_sheet["L3"].value
-            Paechter_id = aPaechter_sheet["M3"].value
-            print(f'Processing {Paechter_id:5d} {aPaechter_sheet_name:30s} {paechter_name:30s}', end='')
-
-
-            row_index = 11
-            landteil_count = 0
-            streu_count = 0
-            geno_landteil_count = 0
-            buerger_landteil_count = 0
-            while True:
-                flurname = aPaechter_sheet["B"+str(row_index)].value
-                if flurname is None:
-                    break
-                elif flurname == 'Total Aren:':
-                    row_index += 1
-                    continue
-                else:
-                    landteil_count += 1
-                    gt_landteil_count += 1
-                    gis_id = aPaechter_sheet["A" + str(row_index)].value
-                    geno_id = aPaechter_sheet["C" + str(row_index)].value
-                    flaeche_in_aren = 0
-                    flaeche_geno = aPaechter_sheet["D" + str(row_index)].value
-                    if flaeche_geno is None:
-                        flaeche_bürger = aPaechter_sheet["E" + str(row_index)].value
-                        if flaeche_bürger is None:
-                            flaeche_in_aren = '0'
-                        else:
-                            flaeche_in_aren = flaeche_bürger
-                    else:
-                        flaeche_in_aren = flaeche_geno
-                    bemerkungen = aPaechter_sheet["F" + str(row_index)].value
-                    zins_pro_are = aPaechter_sheet["G" + str(row_index)].value
-                    if zins_pro_are is None:
-                        zins_pro_are = 0
-                    fix_pacht_zins = aPaechter_sheet["H" + str(row_index)].value
-                    if zins_pro_are > 0:
-                        fix_pacht_zins = 0
-
-
-                    verpächter_id = aPaechter_sheet["I" + str(row_index)].value
-                    if verpächter_id is None:
-                        verpächter_name = (aPaechter_sheet["J" + str(row_index)].value).replace(' ', '')
-                        verpächter_vorname = (aPaechter_sheet["K" + str(row_index)].value)
-                        verpächter_id = get_personen_id(db_connection, such_kriterien=[verpächter_name, verpächter_vorname], verbal=False)
-
-                    vorheriger_pächter_id = aPaechter_sheet["Q" + str(row_index)].value
-                    vorheriger_verpächter_id = aPaechter_sheet["R" + str(row_index)].value
-
-                    if verpächter_id == 625:
-                        if flurname == 'Streue':
-                            streu_count += 1
-                            gt_streu_count += 1
-                        else:
-                            geno_landteil_count += 1
-                            gt_geno_landteil_count += 1
-
-                    else:
-                        buerger_landteil_count += 1
-                        gt_buerger_landteil_count += 1
-                        if flaeche_bürger == 16:
-                            gt_buerger_16a_count += 1
-                        elif flaeche_bürger == 35:
-                            gt_buerger_35a_count += 1
-                        else:
-                            print(f'WARNING: Bürgerlandteil nicht 16a oder 35a!!')
-
-                    sql = """INSERT INTO landteile (AV_Parzellen_Nr, GENO_Parzellen_Nr, Flur_Bezeichnung, Flaeche_In_Aren, Bemerkungen, Pachtzins_Pro_Are, Fix_Pachtzins, Paechter_ID, Verpaechter_ID, Vorheriger_Paechter_ID, Vorheriger_Verpaechter_ID) 
-                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-                    val = (gis_id, geno_id, flurname, flaeche_in_aren, bemerkungen, zins_pro_are, fix_pacht_zins, Paechter_id, verpächter_id, vorheriger_pächter_id, vorheriger_verpächter_id)
-                    if False and geno_id in ['126.200.1', '126.200.2']:
-                        print(val)
-                    myCursor.execute(sql, val)
-                    db_connection.commit()
-
-                row_index += 1
-            print(f'   -> {landteil_count:2d} (Geno:{geno_landteil_count:2d} + Bürger:{buerger_landteil_count:2d} + Streue:{streu_count:2d})')
-    print(f'  Total:{gt_landteil_count:2d} (Geno:{gt_geno_landteil_count:2d} + Bürger:{gt_buerger_landteil_count:2d} + Streue:{gt_streu_count:2d})')
-    print(f'  Detail Bürgerteile:{gt_buerger_landteil_count:2d} = 16a:{gt_buerger_16a_count:2d} + 35a:{gt_buerger_35a_count:2d})')
-
 # -------------------------------------------
 # ++++++++++++ Main Main Main +++++++++++++++
 # -------------------------------------------
@@ -272,7 +147,7 @@ if __name__ == '__main__':
 
     # Check Passord
     # =============
-    if True:
+    if False:
         personen_db = Stammdaten()
         password = 'PWD_Hallo'
         print(personen_db.is_password_correct('walter@rothlin.com', password))
@@ -281,3 +156,51 @@ if __name__ == '__main__':
 
         priviliges = personen_db.get_priviliges_for_pers_ID(login_details[1])
         print(priviliges)
+
+    # Dict Tests
+    # ==========
+    if False:
+        dict = {'attr1': 'value1'}
+        print(dict.get('attr1', ''))
+        print(dict.get('attr2', None))
+        print(dict)
+        dict['attr3'] = 'value3'
+        print(dict)
+        dict.clear()
+        print(dict)
+
+
+    if False:
+        import getpass
+        username = getpass.getuser()
+        print("Logged-in username:", username)
+
+
+    if True:
+        from ldap3 import Server, Connection, SUBTREE
+
+        # Replace these values with your Active Directory server details
+        ad_server = 'ldap://your_ad_server'
+        ad_user = 'your_username'
+        ad_password = 'your_password'
+
+        # Create an LDAP server object
+        server = Server(ad_server)
+
+        # Create an LDAP connection object
+        with Connection(server, user=ad_user, password=ad_password, auto_bind=True) as conn:
+            # Perform a simple search
+            search_base = 'DC=your_domain,DC=com'  # Replace with your Active Directory base
+            search_filter = '(objectClass=user)'
+            attributes = ['cn', 'sAMAccountName', 'mail']
+
+            conn.search(search_base, search_filter, attributes=attributes, search_scope=SUBTREE)
+
+            # Retrieve search results
+            for entry in conn.entries:
+                print("CN:", entry.cn)
+                print("Username:", entry.sAMAccountName)
+                print("Email:", entry.mail)
+                print("----------------------")
+
+

@@ -41,7 +41,7 @@ class Stammdaten:
         return self.__db_connection
 
     def get_version(self):
-        return("V1.0.0.0")
+        return("V1.0.0.1")
 
     def get_person_detail_from_DB_by_ID(self, id=None):
         if id is not None:
@@ -59,7 +59,7 @@ class Stammdaten:
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         rs = mycursor.fetchall()[0][id_name]
-        print('rs:', rs)
+        # print('rs:', rs)
         return rs
 
     def get_ort_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
@@ -78,7 +78,7 @@ class Stammdaten:
             FROM Orte
             WHERE ID = {id};
             """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -201,7 +201,7 @@ class Stammdaten:
         FROM login_table
         WHERE eMail = '{username}';
         """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         try:
             mycursor.execute(sql)
@@ -243,7 +243,7 @@ class Stammdaten:
         INSERT INTO `adressen` (`Strasse`, `Hausnummer`, `Orte_ID`, `Politisch_Wangen`) VALUES 
               ('{new_name_values["Strasse"]}','{new_name_values["Hausnummer"]}', '{new_name_values["Ort_ID"]}', '{new_name_values["Politisch_Wangen"]}');
         """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         try:
             mycursor.execute(sql)
@@ -277,7 +277,7 @@ class Stammdaten:
         except Exception:
             return None
 
-    def delete_iban_telnr_email(self, pid=None, change_type=None, id=None, verbal=True):
+    def delete_iban_telnr_email(self, pid=None, change_type=None, id=None, verbal=False):
         if verbal:
             print(f'''
             delete_iban_telnr_email
@@ -344,7 +344,7 @@ class Stammdaten:
             print(f'        :return value{result_args}')
         return result_args[-1]
 
-    def update_adress_ort(self, id=None, new_name_values={}, verbal=True):
+    def update_adress_ort(self, id=None, new_name_values={}, verbal=False):
         if verbal:
             print(f'''
             update_adress_ort
@@ -367,7 +367,7 @@ class Stammdaten:
               orte_id           =  {new_name_values['Ort_ID']}
         WHERE id={id};
         """
-        print(sql_update)
+        # print(sql_update)
 
         myCursor = self.__db_connection.cursor(dictionary=True)
         myCursor.execute(sql_update)
@@ -416,7 +416,7 @@ class Stammdaten:
         table_name = 'Personen'
         attr_types = self.get_Attribute_Types(table_name=table_name)
         old_name_values = self.get_person_detail_from_DB_by_ID(pers_id)
-        if True:
+        if verbal:
             print('ATTR_TYPES:\n', attr_types)
             print('OLD_VALUES:\n', old_name_values)
             print('NEW_VALUES:\n', new_name_values)
@@ -459,7 +459,7 @@ class Stammdaten:
                     if verbal:
                         print(f'ELSE: {a_key} ({attr_types[a_key]}): {old_name_values[a_key]} --> {new_name_values[a_key]}')
                     changed_values[a_key] = new_name_values[a_key]
-        print(f'VALUES_To_Update for ID={pers_id}:\n{changed_values}\n\n')
+        # print(f'VALUES_To_Update for ID={pers_id}:\n{changed_values}\n\n')
 
         count_of_attr_changed = len(changed_values)
         if count_of_attr_changed > 0:
@@ -498,12 +498,12 @@ class Stammdaten:
             sql_update += f"""
             WHERE (`ID` = {pers_id});
             """
-            print(sql_update)
+            # print(sql_update)
             myCursor = self.__db_connection.cursor(dictionary=True)
             myCursor.execute(sql_update)
             self.__db_connection.commit()
             result_set = myCursor.fetchall()
-            print('result_set:', result_set)
+            # print('result_set:', result_set)
         else:
             print('Nichts geändert')
         return {'Record_changed': 1, 'Attribute_changed': count_of_attr_changed}
@@ -569,7 +569,6 @@ def get_person_details_for_id(db_connection, pers_id, verbal=False, db_table='pe
 
 
 def get_personen_ids(db_connection, such_kriterien, verbal=False, db_table='personen_daten', search_attr='Such_Begriff', select_attributes=['ID', 'Vorname_Initial', 'Familien_Name', 'Private_Strassen_Adresse', 'Private_PLZ_Ort']):
-    verbal = False
     myCursor = db_connection.cursor()
 
     prep_such_kriterien = []
@@ -2061,6 +2060,130 @@ def hash_password(password):
 
     return hashed_password
 
+def initial_load_pachtland(db_connection, filename,  verbal=False):
+    print('initial_load_pachtland...reading', filename)
+    gt_landteil_count = 0
+    gt_streu_count = 0
+    gt_geno_landteil_count = 0
+    gt_buerger_landteil_count = 0
+    gt_buerger_16a_count = 0
+    gt_buerger_35a_count = 0
+
+    # Deleting left overs in DB from Landteile
+    # ----------------------------------------
+    myCursor = db_connection.cursor()
+
+
+    sql = """DELETE FROM `landteile`;"""    # sql = """TRUNCATE `landteile`;"""  # needs user rights
+    myCursor.execute(sql)
+    db_connection.commit()
+    print(f'{myCursor.rowcount} Landteile wurden gelöscht ')
+
+    if verbal:
+        print('--> Calling stored-proc reset_table_autoincrement_landteile...', end='')
+    args = ('landteile', 'x')
+    result_args = myCursor.callproc('reset_table_autoincrement_landteile', args)
+    print(result_args, end='')
+    if verbal:
+        print('....done\n')
+
+
+    # Prcessing Info-Tables in Excel and load the Landteile
+    # -----------------------------------------------------
+    info_tabellen_landwirte = openpyxl.load_workbook(filename, data_only=True)
+    paechter_sheets = [x for x in info_tabellen_landwirte.sheetnames if "_" in x]
+    # print('paechter_sheets:', paechter_sheets)
+
+    for aPaechter_sheet_name in paechter_sheets:
+        if aPaechter_sheet_name in ['Bürgerteile_Speziell']:
+            print(f'Not processing {aPaechter_sheet_name:20s}', end='\n')
+            continue
+        else:
+            # print(f'Processing       {aPaechter_sheet_name:20s}', end='\n')
+            pass
+
+        if True:    # aPaechter_sheet_name in ['Müller_Urs']:
+            aPaechter_sheet = info_tabellen_landwirte[aPaechter_sheet_name]
+            paechter_name = aPaechter_sheet["L3"].value
+            Paechter_id = aPaechter_sheet["M3"].value
+            print(f'Processing {Paechter_id:5d} {aPaechter_sheet_name:30s} {paechter_name:30s}', end='')
+
+
+            row_index = 11
+            landteil_count = 0
+            streu_count = 0
+            geno_landteil_count = 0
+            buerger_landteil_count = 0
+            while True:
+                flurname = aPaechter_sheet["B"+str(row_index)].value
+                if flurname is None:
+                    break
+                elif flurname == 'Total Aren:':
+                    row_index += 1
+                    continue
+                else:
+                    landteil_count += 1
+                    gt_landteil_count += 1
+                    gis_id = aPaechter_sheet["A" + str(row_index)].value
+                    geno_id = aPaechter_sheet["C" + str(row_index)].value
+                    flaeche_in_aren = 0
+                    flaeche_geno = aPaechter_sheet["D" + str(row_index)].value
+                    if flaeche_geno is None:
+                        flaeche_bürger = aPaechter_sheet["E" + str(row_index)].value
+                        if flaeche_bürger is None:
+                            flaeche_in_aren = '0'
+                        else:
+                            flaeche_in_aren = flaeche_bürger
+                    else:
+                        flaeche_in_aren = flaeche_geno
+                    bemerkungen = aPaechter_sheet["F" + str(row_index)].value
+                    zins_pro_are = aPaechter_sheet["G" + str(row_index)].value
+                    if zins_pro_are is None:
+                        zins_pro_are = 0
+                    fix_pacht_zins = aPaechter_sheet["H" + str(row_index)].value
+                    if zins_pro_are > 0:
+                        fix_pacht_zins = 0
+
+
+                    verpächter_id = aPaechter_sheet["I" + str(row_index)].value
+                    if verpächter_id is None:
+                        verpächter_name = (aPaechter_sheet["J" + str(row_index)].value).replace(' ', '')
+                        verpächter_vorname = (aPaechter_sheet["K" + str(row_index)].value)
+                        verpächter_id = get_personen_id(db_connection, such_kriterien=[verpächter_name, verpächter_vorname], verbal=False)
+
+                    vorheriger_pächter_id = aPaechter_sheet["Q" + str(row_index)].value
+                    vorheriger_verpächter_id = aPaechter_sheet["R" + str(row_index)].value
+
+                    if verpächter_id == 625:
+                        if flurname == 'Streue':
+                            streu_count += 1
+                            gt_streu_count += 1
+                        else:
+                            geno_landteil_count += 1
+                            gt_geno_landteil_count += 1
+
+                    else:
+                        buerger_landteil_count += 1
+                        gt_buerger_landteil_count += 1
+                        if flaeche_bürger == 16:
+                            gt_buerger_16a_count += 1
+                        elif flaeche_bürger == 35:
+                            gt_buerger_35a_count += 1
+                        else:
+                            print(f'WARNING: Bürgerlandteil nicht 16a oder 35a!!')
+
+                    sql = """INSERT INTO landteile (AV_Parzellen_Nr, GENO_Parzellen_Nr, Flur_Bezeichnung, Flaeche_In_Aren, Bemerkungen, Pachtzins_Pro_Are, Fix_Pachtzins, Paechter_ID, Verpaechter_ID, Vorheriger_Paechter_ID, Vorheriger_Verpaechter_ID) 
+                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                    val = (gis_id, geno_id, flurname, flaeche_in_aren, bemerkungen, zins_pro_are, fix_pacht_zins, Paechter_id, verpächter_id, vorheriger_pächter_id, vorheriger_verpächter_id)
+                    if False and geno_id in ['126.200.1', '126.200.2']:
+                        print(val)
+                    myCursor.execute(sql, val)
+                    db_connection.commit()
+
+                row_index += 1
+            print(f'   -> {landteil_count:2d} (Geno:{geno_landteil_count:2d} + Bürger:{buerger_landteil_count:2d} + Streue:{streu_count:2d})')
+    print(f'  Total:{gt_landteil_count:2d} (Geno:{gt_geno_landteil_count:2d} + Bürger:{gt_buerger_landteil_count:2d} + Streue:{gt_streu_count:2d})')
+    print(f'  Detail Bürgerteile:{gt_buerger_landteil_count:2d} = 16a:{gt_buerger_16a_count:2d} + 35a:{gt_buerger_35a_count:2d})')
 
 # -------------------------------------------
 # ++++++++++++ Main Main Main +++++++++++++++
