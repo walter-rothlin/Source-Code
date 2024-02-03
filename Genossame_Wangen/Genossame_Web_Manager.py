@@ -1,18 +1,15 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name  : Flask_Session.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK_App_02/My_Bootstrap_Flask_App.py
-#
-# Description: FLASK Web-Applikation with Sessions (Login)
-# https://www.geeksforgeeks.org/how-to-use-flask-session-in-python-flask/
-#
+# Name  : Genossame_Web_Manager.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Genossame_Wangen/Genossame_Web_Manager.py
 #
 # Autor: Walter Rothlin
 #
 # History:
 # 17-Apr-2023   Walter Rothlin      Initial Version
-#
+# 03-Feb-2024   Walter Rothlin      Added DB reconnect
+# 03-Feb-2024   Walter Rothlin      Deployment to Test-Server
 # ------------------------------------------------------------------
 # from flask import Flask, redirect, url_for, render_template
 from Genossame_Common_Defs import *
