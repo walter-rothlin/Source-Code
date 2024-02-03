@@ -43,6 +43,21 @@ class Stammdaten:
     def get_version(self):
         return("V1.0.0.1")
 
+    def check_and_reconnect_db(self):
+        sql = f"""SELECT count(*) from properties;"""
+        # print(sql)
+        try:
+            mycursor = self.__db_connection.cursor(dictionary=True)
+            mycursor.execute(sql)
+            rs = mycursor.fetchall()[0]
+            # print('rs:', rs, 'len(rs):', len(rs))
+            connection_lost = False
+        except:
+            connection_lost = True
+            print(f'{getTimestamp()}: check_and_reconnect_db()  --> Try to reconneced!!!')
+            self.__db_connection = db_connect(connect_to_prod=True, trace=True)
+        return not connection_lost
+
     def get_person_detail_from_DB_by_ID(self, id=None):
         if id is not None:
             sql = f"""SELECT * FROM Personen WHERE ID={id};"""
@@ -89,8 +104,8 @@ class Stammdaten:
             SELECT
                 *
             FROM {tabel_name}
-            WHERE Strasse LIKE '%{search_criterium}%'
-            ORDER BY Strasse;
+            WHERE Strassen_Adresse_Ort LIKE '%{search_criterium}%'
+            ORDER BY Strasse, Hausnummer;
             """
         else:
             sql = f"""
@@ -1998,7 +2013,11 @@ def process_CUD(stammdaten_schema, reco_data_fn, reco_sheetname, excel_db_field_
 # END: Functions for Common use
 # ---------------------------------------------
 
-
+def get_session_attibute(session, attribute_name='user_name'):
+    if session and session.get(attribute_name):
+        return session.get(attribute_name)
+    else:
+        return 'None'
 
 def update_if_neccessary(db_connection, tbl_name, id, field_name, field_value, verbal=True, take_action=False):
 
