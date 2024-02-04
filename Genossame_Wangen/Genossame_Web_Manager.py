@@ -24,11 +24,13 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route("/")
 def home():
+    genossame.check_and_reconnect_db()
     print(f'{getTimestamp()}: home() called!!!')
     return render_template("index.html")
 
 @app.route("/profile")
 def profile():
+    genossame.check_and_reconnect_db()
     print(f'{getTimestamp()}: profile() called!')
     return render_template("contact.html")
 
@@ -503,6 +505,7 @@ def login():
         PWD_Hallo
         '''
 
+        genossame.check_and_reconnect_db()
         password_is_correct, user_id = genossame.is_password_correct(username, password)
         # print('login():: password_is_correct:', password_is_correct, '   user_id:', user_id)
         session[session_attr_scriteria_addr_list] = 'Walter'
