@@ -82,7 +82,26 @@ SELECT * FROM personen_daten WHERE Bemerkungen != '' AND Bemerkungen LIKE '%weg%
     
 SELECT * FROM telefonnummern WHERE ID in (SELECT Telefonnummern_ID FROM personen_has_telefonnummern WHERE Personen_ID IN (289));
 
+-- Passwords
+-- ---------
 
+SELECT *
+FROM personen_daten 
+WHERE ID IN ((SELECT ID FROM personen_daten WHERE Such_Begriff LIKE Binary '%Hansjörg%' AND Such_Begriff LIKE Binary '%Hüppin%'));
+
+
+SELECT
+   Pers_ID,
+   eMail_adresse,
+   Prio
+FROM email_liste 
+WHERE Pers_ID IN (644, 533, 202);
+
+SELECT Pers_id FROM email_liste WHERE email_adresse = 'walter@rothlin.com';
+SELECT ID, `Password` FROM personen WHERE ID=644;
+
+
+        
 -- IBAN
 -- ----
 UPDATE `IBAN` SET `Lautend_auf` = ''  WHERE `Lautend_auf` IS NULL;

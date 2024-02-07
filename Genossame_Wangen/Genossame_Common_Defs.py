@@ -35,8 +35,8 @@ session_attr_scriteria_orte_list = 'orte_s_criteria'
 # Class Stammdaten
 # =================
 class Stammdaten:
-    def __init__(self):
-        self.__db_connection = db_connect(connect_to_prod=True, trace=True)
+    def __init__(self, use_prod=True):
+        self.__db_connection = db_connect(connect_to_prod=use_prod, trace=True)
 
     def get_db_connection(self):
         return self.__db_connection
@@ -120,7 +120,7 @@ class Stammdaten:
         mycursor.execute(sql)
         return mycursor.fetchall()
 
-    def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
+    def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, with_password=None, attr_list=['*'], case_sensitive=False):
         fieldStr = (',\n            ').join(attr_list)
         like_str = 'LIKE'
         if case_sensitive:
@@ -128,12 +128,21 @@ class Stammdaten:
 
         if id is None:
             if search_criterium is None:
-                sql = """
-                    SELECT
-                        """ + fieldStr + """
-                    FROM Personen_Daten
-                    Limit 0,20;
-                """
+                if with_password is None:
+                    sql = """
+                        SELECT
+                            """ + fieldStr + """
+                        FROM Personen_Daten
+                        Limit 0,20;
+                    """
+                else:
+                    sql = f"""
+                        SELECT
+                            *
+                        FROM Personen_Daten
+                        WHERE Password is not NULL
+                        ORDER BY Last_Name, Vorname_Initial;
+                    """
             else:
                 search_criterium = search_criterium.replace(' =', '=').replace('= ', '=')
                 such_kriterien = search_criterium.split(' ')
@@ -176,7 +185,7 @@ class Stammdaten:
             FROM Personen_Daten 
             WHERE ID = """ + str(id) + """;
             """
-        # print(sql)
+        print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -199,31 +208,55 @@ class Stammdaten:
     # def get_IBAN_Details_for_Pers_ID(self, pers_id=None):
     #    return
 
-    def is_password_correct(self, username, password, password_is_hash=False):
-        hashed_password = hash_password(password)
-
-        # print("Original Password:", password)
-        # print("Hashed Password:", hashed_password, len(hashed_password))
-
+    def get_user_id_for_email(self, email_adresse):
         sql = f"""
-        SELECT Password FROM Personen_Daten WHERE ID IN (
             SELECT
                 Pers_id
             FROM email_liste 
-            WHERE eMail_Adresse = '{username}');
-        """
-        sql = f"""
-        SELECT Personen_ID, Password 
-        FROM login_table
-        WHERE eMail = '{username}';
+            WHERE eMail_Adresse = '{email_adresse}';
         """
         # print(sql)
+
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        try:
+            mycursor.execute(sql)
+            rs = mycursor.fetchall()
+            # print(rs)
+            if len(rs) != 1:
+                return 0
+            else:
+                return rs[0]['Pers_ID']
+        except Exception:
+            return None
+
+    def is_password_correct(self, username, password, password_is_hash=False, verbal=False):
+        hashed_password = hash_password(password)
+
+        if verbal:
+            print("Original Password:", password)
+            print("Hashed Password:", hashed_password, len(hashed_password))
+
+        id = self.get_user_id_for_email(username)
+
+        sql = f"""
+        SELECT 
+            ID          AS Personen_ID,
+            Password    AS Password
+        FROM Personen
+        WHERE ID = '{id}';
+        """
+        if verbal:
+            print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         try:
             mycursor.execute(sql)
             rs = mycursor.fetchall()[0]
-            print('rs:', rs)
+            if verbal:
+                print('rs:', rs)
             password_found = rs['Password']
+            if verbal:
+                print('password_found :', password_found)
+                print('hashed_password:', hashed_password)
             if password_found == password or password_found == hashed_password:
                 return True, rs['Personen_ID']
             else:
@@ -290,6 +323,29 @@ class Stammdaten:
             rs = self.get_last_ID_for_table('Personen')
             # print('rs:', rs)
             return rs
+        except Exception:
+            return None
+
+    def insert_new_password(self, new_name_values, verbal=False):
+        if verbal:
+            print(f'''
+            insert_new_password
+            -----------------
+            {new_name_values}
+            ''')
+        password = new_name_values["Password"]
+        # print(f'password:{password}')
+
+        sql = f"""
+        UPDATE `personen` SET `Password` = '{hash_password(password)}'
+        WHERE ID = {new_name_values["Personen_ID"]};
+        """
+        # print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        try:
+            mycursor.execute(sql)
+            self.__db_connection.commit()
+            return new_name_values["Personen_ID"]
         except Exception:
             return None
 

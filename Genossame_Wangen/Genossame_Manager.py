@@ -103,12 +103,8 @@ db_attr_excel_column_mapping = [
 
 if __name__ == '__main__':
 
-    geno_schema = db_connect(connect_to_prod=True, trace=True)
-
-    # Initial Load
-    # ============
-    # initial_load_buerger(geno_schema, r'V:\Geno_Wangen_Daten.xlsx', verbal=True)
-    #
+    use_production_db = True
+    geno_schema = db_connect(connect_to_prod=use_production_db, trace=True)
     if False:
         initial_load_pachtland(geno_schema, r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte.xlsx', verbal=True)
 
@@ -145,29 +141,33 @@ if __name__ == '__main__':
         execute_important_sql_queries(geno_schema)
 
 
-    # Check Passord
-    # =============
-    if False:
-        personen_db = Stammdaten()
+    # Check Password
+    # ==============
+    if True:
+        print('Password Tests')
+        personen_db = Stammdaten(use_prod=use_production_db)
+        user_name = 'walter@rothlin.com'
+        print(user_name, ' --> ', personen_db.get_user_id_for_email(user_name))
+        user_name = 'landwirtschaft@genossame-wangen.ch'
+        print(user_name, ' -->', personen_db.get_user_id_for_email(user_name))
+        user_name = 'i.vogt@genossame-wangen.ch'
+        print(user_name, ' -->', personen_db.get_user_id_for_email(user_name))
+        user_name = 'isabella.vogt@bluewin.ch'
+        print(user_name, ' -->', personen_db.get_user_id_for_email(user_name))
+
         password = 'PWD_Hallo'
-        print(personen_db.is_password_correct('walter@rothlin.com', password))
+        login_details = personen_db.is_password_correct('walter@rothlin.com', password)
+        print(login_details)
         login_details = personen_db.is_password_correct('landwirtschaft@genossame-wangen.ch', password)
         print(login_details)
+        login_details = personen_db.is_password_correct('i.vogt@genossame-wangen.ch', password)
+        print(login_details)
+        login_details = personen_db.is_password_correct('isabella.vogt@bluewin.ch', password)
+        print(login_details)
 
-        priviliges = personen_db.get_priviliges_for_pers_ID(login_details[1])
-        print(priviliges)
+        print('644 --> ', personen_db.get_priviliges_for_pers_ID(644))
+        print('533 --> ', personen_db.get_priviliges_for_pers_ID(533))
 
-    # Dict Tests
-    # ==========
-    if False:
-        dict = {'attr1': 'value1'}
-        print(dict.get('attr1', ''))
-        print(dict.get('attr2', None))
-        print(dict)
-        dict['attr3'] = 'value3'
-        print(dict)
-        dict.clear()
-        print(dict)
 
 
     if False:
@@ -176,7 +176,7 @@ if __name__ == '__main__':
         print("Logged-in username:", username)
 
 
-    if True:
+    if False:
         from ldap3 import Server, Connection, SUBTREE
 
         # Replace these values with your Active Directory server details

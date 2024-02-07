@@ -45,6 +45,7 @@
 -- 04-Jan-2024   Walter Rothlin      Added View App_Priviliges
 -- 28-Jan-2024   Walter Rothlin      Added LautendAuf to Proc IBAN
 -- 29-Jan-2024   Walter Rothlin      Added deleteEmailAdrFull, deleteTelnrFull
+-- 07-Feb-2024   Walter Rothlin      Removed Login_Table
 -- -----------------------------------------
 
 -- To-Does
@@ -2940,17 +2941,18 @@ CREATE VIEW Wärmeanschlüsse_Reco AS
  */
 
 -- --------------------------------------------------------------------------------    
+/*
 DROP VIEW IF EXISTS Login_Table; 
 CREATE VIEW Login_Table AS
     SELECT
         Personen_ID,
         Vorname_Familienname,
         Tel_Nr,
-        eMail,
+        -- eMail,
         `Password`
-    FROM personen_has_priviliges AS pers_priv
+    FROM Personen_has_Priviliges AS pers_priv
     JOIN Personen_Daten AS pDaten ON  pers_priv.Personen_ID = pDaten.ID;
-    
+*/
     
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS App_Priviliges; 

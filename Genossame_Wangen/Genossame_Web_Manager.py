@@ -166,6 +166,48 @@ def adress_liste():
     else:
         return render_template("index.html")
 
+@app.route("/passwort_liste", methods=['GET', 'POST'])
+def passwort_liste():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: passwort_liste()')
+    if get_session_attibute(session, "user_name") != 'None':
+
+        genossame.check_and_reconnect_db()
+        rs = genossame.get_person_details_from_DB_by_ID(with_password=True)
+        # print(rs)
+        rec_found = len(rs)
+        return render_template("password_liste.html", result_liste=rs, rec_found=rec_found)
+    else:
+        return render_template("index.html")
+
+@app.route("/show_new_password", methods=['GET', 'POST'])
+def show_new_password():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: show_new_password()')
+    if get_session_attibute(session, "user_name") != 'None':
+        return render_template("password_New.html", details={})
+    else:
+        return render_template("index.html")
+
+@app.route("/execute_insert_password", methods=['GET', 'POST',])
+def execute_insert_password():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: execute_insert_password()')
+    if get_session_attibute(session, "user_name") != 'None':
+        all_parameters = dict(request.args.items())  # Query string parameters
+        all_parameters.update(request.form.to_dict())  # Form data parameters
+        print('all_parameters:', all_parameters)
+
+        # insert into DB
+        genossame.check_and_reconnect_db()
+        id = genossame.insert_new_password(new_name_values=all_parameters)
+
+
+        # show changed data-set
+        rs = genossame.get_person_details_from_DB_by_ID(with_password=True)
+        # print(rs)
+        rec_found = len(rs)
+        return render_template("password_liste.html", result_liste=rs, rec_found=rec_found)
+    else:
+        return render_template("index.html")
+
 @app.route("/personen_details", methods=['GET', 'POST'])
 def personen_details():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: personen_details()')
@@ -177,7 +219,7 @@ def personen_details():
 
         genossame.check_and_reconnect_db()
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
-        # print(rs)
+        print(rs)
         # print('pid:', pid, '    Anz Rec found: ', len(rs))
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
@@ -535,6 +577,7 @@ def logout():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    genossame = Stammdaten()
+    use_production_db = True
+    genossame = Stammdaten(use_prod=use_production_db)
     app.run(debug=True, host='0.0.0.0', port=8080)
 
