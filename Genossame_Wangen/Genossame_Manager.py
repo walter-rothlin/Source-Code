@@ -105,35 +105,16 @@ if __name__ == '__main__':
 
     use_production_db = True
     geno_schema = db_connect(connect_to_prod=use_production_db, trace=True)
-    if False:
+
+    # Landteile von Excel laden
+    # =========================
+    if True:
         initial_load_pachtland(geno_schema, r'V:\Landwirtschaft\Pachtland\Infotabellen_Landwirte.xlsx', verbal=True)
-
-
-    if False:
-        # Process Aenderungen from Excel
-        # ==============================
-        print('\n\n')
-        print('======================')
-        print('Pre-Processing changes')
-        print('======================')
-        db_attr_excel_column_mapping_1 = [{'excel': 'Familien_Name'}, {'excel': 'Private_PLZ_Ort'}]
-        pre_process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', db_attr_excel_column_mapping=db_attr_excel_column_mapping_1, verbal=True, take_action=True)
-
-        db_attr_excel_column_mapping_1 = [{'excel': 'Private_Strassen_Adresse'}]
-        pre_process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', db_attr_excel_column_mapping=db_attr_excel_column_mapping_1, verbal=True, take_action=True)
-
-    if False:
-        print('\n\n')
-        print('==================')
-        print('Processing changes')
-        print('==================')
-        process_CUD(geno_schema, reco_data_fn=r'V:\Geno_Reco_Personen_Daten.xlsx', reco_sheetname='Reco_Personen_Daten', excel_db_field_mapping=db_attr_excel_column_mapping, verbal=True, take_action=True)
-
 
 
     # Cleanup Date
     # ============
-    if False:
+    if True:
         print('\n\n')
         print('==================')
         print('Cleanup DB        ')
@@ -143,7 +124,7 @@ if __name__ == '__main__':
 
     # Check Password
     # ==============
-    if True:
+    if False:
         print('Password Tests')
         personen_db = Stammdaten(use_prod=use_production_db)
         user_name = 'walter@rothlin.com'

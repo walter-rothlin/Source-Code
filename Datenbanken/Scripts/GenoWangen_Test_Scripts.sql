@@ -95,10 +95,16 @@ SELECT
    eMail_adresse,
    Prio
 FROM email_liste 
-WHERE Pers_ID IN (644, 533, 202);
+WHERE Pers_ID IN (644, 533, 202, 1125, 1120, 1121);
 
 SELECT Pers_id FROM email_liste WHERE email_adresse = 'walter@rothlin.com';
 SELECT ID, `Password` FROM personen WHERE ID=644;
+
+SELECT * FROM priviliges;
+SELECT * FROM personen_has_priviliges;
+
+SELECT * FROM app_priviliges;
+
 
 
         
