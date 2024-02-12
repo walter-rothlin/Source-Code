@@ -59,6 +59,28 @@ class Stammdaten:
             self.__db_connection = db_connect(connect_to_prod=True, trace=True)
         return not connection_lost
 
+    def has_user_granted_for_right(self, application, requested_rights, user_id, priviliges=None, verbal=True):
+        if verbal:
+            print(f'''
+            Calling ...
+has_user_granted_for_right('{application}',
+                           '{requested_rights}',
+                            '{user_id}',
+                            {priviliges})
+            .... ''')
+
+        ret_value = False
+        set_priv_for_this_application = priviliges.get(application, priviliges.get('*', None))
+        if verbal:
+            print(f'set_priv_for_this_application:{set_priv_for_this_application}')
+
+        if requested_rights in set_priv_for_this_application:
+            ret_value = True
+
+        if verbal:
+            print(f'...returning {ret_value}')
+        return ret_value
+
     def get_person_detail_from_DB_by_ID(self, id=None):
         if id is not None:
             sql = f"""SELECT * FROM Personen WHERE ID={id};"""
@@ -185,7 +207,7 @@ class Stammdaten:
             FROM Personen_Daten 
             WHERE ID = """ + str(id) + """;
             """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -264,7 +286,7 @@ class Stammdaten:
         except Exception:
             return False, None
 
-    def get_priviliges_for_pers_ID(self, pers_id):
+    def get_priviliges_for_pers_ID(self, pers_id, as_list=True):
         sql = f"""
         SELECT Application, Privilige 
         FROM App_Priviliges
@@ -276,7 +298,13 @@ class Stammdaten:
             mycursor.execute(sql)
             rs = mycursor.fetchall()
             ## print('rs:', rs)
-            return rs
+            ret_values = rs
+            if not as_list:
+                ret_values = {}
+                for a_rs in rs:
+                    ret_values[a_rs['Application']] = a_rs['Privilige']
+
+            return ret_values
         except Exception:
             return None
 
@@ -2266,7 +2294,9 @@ def initial_load_pachtland(db_connection, filename,  verbal=False):
 # -------------------------------------------
 if __name__ == '__main__':
     connect_to_prod = True
-    AUTO_TEST__split_email_detailed_long(verbal=True)
+    genossame = Stammdaten(use_prod=connect_to_prod)
 
+    # AUTO_TEST__split_email_detailed_long(verbal=True)
+    genossame.has_user_granted_for_right(application='Admin', user_id='644', requested_rights='wx')
 
 

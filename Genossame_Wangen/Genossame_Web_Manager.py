@@ -26,13 +26,13 @@ app.config["SESSION_TYPE"] = "filesystem"
 def home():
     genossame.check_and_reconnect_db()
     print(f'{getTimestamp()}: home() called!!!')
-    return render_template("index.html")
+    return render_template("index.html", db=genossame)
 
 @app.route("/profile")
 def profile():
     genossame.check_and_reconnect_db()
     print(f'{getTimestamp()}: profile() called!')
-    return render_template("contact.html")
+    return render_template("contact.html", db=genossame)
 
 @app.route("/orte_liste", methods=['GET', 'POST'])
 def orte_liste():
@@ -56,9 +56,9 @@ def orte_liste():
         # print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
-        return render_template("ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
+        return render_template("ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/adress_orte_liste", methods=['GET', 'POST'])
 def adress_orte_liste():
@@ -82,9 +82,9 @@ def adress_orte_liste():
         # print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
-        return render_template("adress_ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
+        return render_template("adress_ort_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 
 @app.route("/adresse_orte_details", methods=['GET', 'POST'])
@@ -99,9 +99,9 @@ def adresse_orte_details():
         genossame.check_and_reconnect_db()
         rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id, tabel_name='Adress_Daten')
         # print(rs)
-        return render_template("adresse_orte_details.html", details=rs[0])
+        return render_template("adresse_orte_details.html", details=rs[0], db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/show_modify_single_address_ort", methods=['GET', 'POST'])
 def show_modify_single_address_ort():
@@ -115,9 +115,9 @@ def show_modify_single_address_ort():
         genossame.check_and_reconnect_db()
         rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id, tabel_name='Adress_Daten')
         # print(rs)
-        return render_template("adress_ort_Change.html", details=rs[0])
+        return render_template("adress_ort_Change.html", details=rs[0], db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/execute_update_address_ort", methods=['GET', 'POST',])
 def execute_update_address_ort():
@@ -136,9 +136,9 @@ def execute_update_address_ort():
         # print('id         :', id)
         rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id, tabel_name='Adress_Daten')
         # print(rs)
-        return render_template("adresse_orte_details.html", details=rs[0])
+        return render_template("adresse_orte_details.html", details=rs[0], db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/adress_liste", methods=['GET', 'POST'])
 def adress_liste():
@@ -162,9 +162,9 @@ def adress_liste():
         # print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
-        return render_template("adress_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found)
+        return render_template("adress_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/passwort_liste", methods=['GET', 'POST'])
 def passwort_liste():
@@ -175,17 +175,17 @@ def passwort_liste():
         rs = genossame.get_person_details_from_DB_by_ID(with_password=True)
         # print(rs)
         rec_found = len(rs)
-        return render_template("password_liste.html", result_liste=rs, rec_found=rec_found)
+        return render_template("password_liste.html", result_liste=rs, rec_found=rec_found, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/show_new_password", methods=['GET', 'POST'])
 def show_new_password():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: show_new_password()')
     if get_session_attibute(session, "user_name") != 'None':
-        return render_template("password_New.html", details={})
+        return render_template("password_New.html", details={}, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/execute_insert_password", methods=['GET', 'POST',])
 def execute_insert_password():
@@ -204,9 +204,9 @@ def execute_insert_password():
         rs = genossame.get_person_details_from_DB_by_ID(with_password=True)
         # print(rs)
         rec_found = len(rs)
-        return render_template("password_liste.html", result_liste=rs, rec_found=rec_found)
+        return render_template("password_liste.html", result_liste=rs, rec_found=rec_found, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/personen_details", methods=['GET', 'POST'])
 def personen_details():
@@ -224,9 +224,9 @@ def personen_details():
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
         telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
-        return render_template("person_details.html", details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+        return render_template("person_details.html", details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/modify_iban_telnr_email", methods=['GET', 'POST'])
 def show_modify_iban_telnr_email():
@@ -248,9 +248,9 @@ def show_modify_iban_telnr_email():
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
         telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
-        return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+        return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/iban_telnr_email_Change", methods=['GET', 'POST'])
 def iban_telnr_email_Change():
@@ -275,9 +275,9 @@ def iban_telnr_email_Change():
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=id, table_name='iban', id_name='ID', attr_liste=['*'])
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=id, table_name='email_adressen', id_name='ID', attr_liste=['*'])
         telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=id, table_name='telefonnummern', id_name='ID', attr_liste=['*'])
-        return render_template("iban_telnr_email_liste_Change.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+        return render_template("iban_telnr_email_liste_Change.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/iban_telnr_email_Delete", methods=['GET', 'POST'])
 def iban_telnr_email_Delete():
@@ -304,9 +304,9 @@ def iban_telnr_email_Delete():
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
         telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
-        return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+        return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/update_iban_telnr_email", methods=['GET', 'POST',])
 def execute_update_iban_telnr_email():
@@ -332,9 +332,9 @@ def execute_update_iban_telnr_email():
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
         telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
-        return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+        return render_template("iban_telnr_email_liste.html", change_type=change_type, details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/do_insert_new_iban_telnr_email", methods=['GET', 'POST'])
 def execute_insert_iban_telnr_email():
@@ -358,9 +358,9 @@ def execute_insert_iban_telnr_email():
 
         # redirect to change screen
         ## nops = redirect(f"{url_for('iban_telnr_email_Change')}?change_type={change_type}&pid={all_parameters['pid']}&id={id}")
-        return redirect(f"{url_for('show_modify_iban_telnr_email')}?change_type={change_type}&pid={all_parameters['pid']}")
+        return redirect(f"{url_for('show_modify_iban_telnr_email')}?change_type={change_type}&pid={all_parameters['pid']}", db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/update_person_details", methods=['GET', 'POST'])
 def execute_update_person_details():
@@ -376,9 +376,9 @@ def execute_update_person_details():
         # Show updated details
         genossame.check_and_reconnect_db()
         rs = genossame.get_person_details_from_DB_by_ID(id=all_parameters['ID'])
-        return render_template("person_details.html", details=rs[0])
+        return render_template("person_details.html", details=rs[0], db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/modify_single_person", methods=['GET', 'POST'])
 def show_modify_single_person():
@@ -396,9 +396,9 @@ def show_modify_single_person():
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
         telnr_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='telnr_liste', id_name='Pers_ID', attr_liste=['Tel_ID AS ID', 'Laendercode', 'Vorwahl', 'Nummer', 'Prio', 'Type', 'Endgeraet'])
-        return render_template("person_Change.html", details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details)
+        return render_template("person_Change.html", details=rs[0], iban_details=iban_details, email_details=email_details, telnr_details=telnr_details, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/do_insert_new_person", methods=['GET', 'POST',])
 def execute_insert_person():
@@ -415,9 +415,9 @@ def execute_insert_person():
 
         # show changed data-set
         rs = genossame.get_person_details_from_DB_by_ID(id=id)
-        return render_template("person_Change.html", details=rs[0])
+        return render_template("person_Change.html", details=rs[0], db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/execute_insert_adresse", methods=['GET', 'POST',])
 def execute_insert_adresse():
@@ -435,25 +435,25 @@ def execute_insert_adresse():
         # show changed data-set
         rs = genossame.get_addr_ort_details_from_DB_by_ID(id=id)
         # print(rs)
-        return render_template("adress_ort_Change.html", details=rs[0])
+        return render_template("adress_ort_Change.html", details=rs[0], db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/new_adresse", methods=['GET', 'POST'])
 def show_new_single_adresse():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: show_new_single_adresse()')
     if get_session_attibute(session, "user_name") != 'None':
-        return render_template("adresse_New.html", details={'Ort_ID': '4797', 'Politisch_Wangen': 0})
+        return render_template("adresse_New.html", details={'Ort_ID': '4797', 'Politisch_Wangen': 0}, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/new_person", methods=['GET', 'POST'])
 def show_new_single_person():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: show_new_single_person()')
     if get_session_attibute(session, "user_name") != 'None':
-        return render_template("person_New.html", details={})
+        return render_template("person_New.html", details={}, db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/delete_single_person", methods=['GET', 'POST'])
 def delete_single_person():
@@ -468,9 +468,9 @@ def delete_single_person():
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
         # print(rs)
         # print('pid:', pid, '    Anz Rec found: ', len(rs))
-        return render_template("person_details.html", details=rs[0])
+        return render_template("person_details.html", details=rs[0], db=genossame)
     else:
-        return render_template("index.html")
+        return render_template("index.html", db=genossame)
 
 @app.route("/excec_important_pers_updates", methods=['GET', 'POST'])
 def exec_important_db_updates():
@@ -478,7 +478,7 @@ def exec_important_db_updates():
     if get_session_attibute(session, "user_name") != 'None':
         genossame.check_and_reconnect_db()
         execute_important_sql_queries(genossame.get_db_connection())
-    return render_template("index.html")
+    return render_template("index.html", db=genossame)
 
 # Login / Logout Functions
 # ========================
@@ -508,8 +508,8 @@ def registration():
         except Exception as e:
             return str(e)
 
-        return render_template('index.html')
-    return render_template('registration.html')
+        return render_template('index.html', db=genossame)
+    return render_template('registration.html', db=genossame)
 
 @app.route('/password_reset', methods=['GET', 'POST'])
 def password_reset():
@@ -530,8 +530,8 @@ def password_reset():
             return str(e)
 
 
-        return render_template('index.html')
-    return render_template('password_reset.html')
+        return render_template('index.html', db=genossame)
+    return render_template('password_reset.html', db=genossame)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -539,13 +539,6 @@ def login():
     if request.method == 'POST':
         username = request.form['email']
         password = request.form['password']
-        '''
-        isabella.vogt@bluewin.ch
-        walter@rothlin.com
-        landwirtschaft@genossame-wangen.ch
-        
-        PWD_Hallo
-        '''
 
         genossame.check_and_reconnect_db()
         password_is_correct, user_id = genossame.is_password_correct(username, password)
@@ -556,25 +549,25 @@ def login():
         if password_is_correct:
             session['user_name'] = username
             session['user_id'] = user_id
-            session['user_priv'] = genossame.get_priviliges_for_pers_ID(user_id)
+            session['user_priv'] = genossame.get_priviliges_for_pers_ID(user_id, as_list=False)
             print('session:', session)
-            return render_template("index.html")
-    return render_template("index.html")
+            return render_template("index.html", db=genossame)
+    return render_template("index.html", db=genossame)
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     print(f'{getTimestamp()}: logout() called!!!')
     if request.method == 'POST':
         if 'stay_logged_in' in request.form:
-            return render_template("index.html")
+            return render_template("index.html", db=genossame)
         else:
             print('session löschen!!')
             print('session:', session)
             session.clear()
             print('session:', session)
 
-            return render_template("index.html")
-    return render_template("index.html")
+            return render_template("index.html", db=genossame)
+    return render_template("index.html", db=genossame)
 
 if __name__ == "__main__":
     use_production_db = True

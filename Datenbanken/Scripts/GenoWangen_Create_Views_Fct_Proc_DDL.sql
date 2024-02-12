@@ -2966,7 +2966,7 @@ CREATE VIEW App_Priviliges AS
 		 pDaten.Tel_Nr               As Tel_Nr,
 		 pDaten.eMail                As eMail
 	FROM Personen_has_Priviliges AS pers_priv
-	JOIN Personen_Daten AS pDaten ON  pers_priv.Personen_ID = pDaten.ID
+	LEFT OUTER JOIN Personen_Daten AS pDaten ON  pers_priv.Personen_ID = pDaten.ID
 	LEFT OUTER JOIN Priviliges AS priv ON priv.ID = pers_priv.Privilige_ID;
 
 -- --------------------------------------------------------------------------------  

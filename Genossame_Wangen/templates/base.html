@@ -62,8 +62,10 @@
                     Intranet
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarIntern">
+                    {% if db.has_user_granted_for_right(application='Admin', requested_rights='x', user_id=session['user_id'], priviliges=session['user_priv']) %}
                     <a class="nav-link" href="{{ url_for('exec_important_db_updates') }}">Exec_DB_verifications</a>
                     <a class="nav-link" href="{{ url_for('passwort_liste') }}">Berechtigungen</a>
+                    {% endif %}
                     <a class="nav-link" href="{{ url_for('adress_liste') }}">Personen</a>
                     <a class="nav-link" href="{{ url_for('adress_orte_liste') }}" target="_new">Adressen-Orte</a>
                     <a class="nav-link" href="{{ url_for('orte_liste') }}" target="_new">Orte</a>
