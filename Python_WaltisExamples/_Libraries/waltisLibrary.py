@@ -52,9 +52,9 @@
 # 04-Oct-2023   Walter Rothlin      Added format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True)
 #                                         get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=[], as_json=True, take_action=True, verbal=False)
 # 16-Oct-2023   Walter Rothlin      Added remove_all_enum_value_in_set()
-# 23_Dec-2023   Walter Rothlin      Added convert_str_to_int_float_str
+# 23-Dec-2023   Walter Rothlin      Added convert_str_to_int_float_str
+# 10-Feb-2024   Walter Rothlin      Added read_text_file_into_list_of_lines, remove_empty_line
 # ------------------------------------------------------------------
-
 
 # toDo:
 #  def File_readWithInludes returns noting
@@ -1205,6 +1205,15 @@ def remove_set_value(set_values, value_to_remove, verbal=True):
 
 # String Functions
 # ================
+def remove_empty_line(lines, comment_str='#'):
+    ret_list = []
+    for a_line in lines:
+        a_line = a_line.rstrip()
+        a_line = a_line.lstrip()
+        if len(a_line) > 0 and not a_line.startswith(comment_str):
+            ret_list.append(a_line)
+    return ret_list
+
 def format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True):
     locale.setlocale(locale.LC_ALL, '')
     return locale.format_string("%" + str(vorkommastellen) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
@@ -1952,7 +1961,7 @@ def format_IBAN(IBAN):
     IBAN_str = IBAN_str[:4] + ' ' + IBAN_str[4:8] + ' ' + IBAN_str[8:12] + ' ' + IBAN_str[12:16] + ' ' + IBAN_str[16:20] + ' ' + IBAN_str[20:]
     return IBAN_str
 
-def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, currecny='CHF', reference=None, additional_information=""):
+def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, currency='CHF', reference=None, additional_information=""):
     invoice_data = {
         "creditor_iban": creditor_iban,
         "creditor_name": creditor_addr["name"],
@@ -1968,7 +1977,7 @@ def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, c
         "debtor_country": debitor_addr["country"],
 
         "amount": amount,
-        "currency": currecny,
+        "currency": currency,
 
         "reference_type": "NON",
         "reference_number": "",
@@ -2136,6 +2145,15 @@ def File_getFileContent(sourceFileFN, returnType="String", lineEnd="\n"):
         return lineEnd.join(lines)
     else:
         return "ERROR: File_getFileContent unknown format!"
+
+def read_text_file_into_list_of_lines(filename):
+    try:
+        with open(filename, 'r') as file:
+            lines = file.readlines()
+            return lines
+    except FileNotFoundError:
+        print(f"ERROR: File '{filename}' not found.")
+        return []
 
 def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFooter="", aContent=""):
     aTestFile = open(aFileFN, "w")
