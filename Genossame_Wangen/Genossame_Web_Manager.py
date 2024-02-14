@@ -357,8 +357,7 @@ def execute_insert_iban_telnr_email():
         # print('change_type:', change_type)
 
         # redirect to change screen
-        ## nops = redirect(f"{url_for('iban_telnr_email_Change')}?change_type={change_type}&pid={all_parameters['pid']}&id={id}")
-        return redirect(f"{url_for('show_modify_iban_telnr_email')}?change_type={change_type}&pid={all_parameters['pid']}", db=genossame)
+        return redirect(f"{url_for('show_modify_iban_telnr_email')}?change_type={change_type}&pid={all_parameters['pid']}")
     else:
         return render_template("index.html", db=genossame)
 

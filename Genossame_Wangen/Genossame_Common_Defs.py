@@ -59,7 +59,7 @@ class Stammdaten:
             self.__db_connection = db_connect(connect_to_prod=True, trace=True)
         return not connection_lost
 
-    def has_user_granted_for_right(self, application, requested_rights, user_id, priviliges=None, verbal=True):
+    def has_user_granted_for_right(self, application, requested_rights, user_id, priviliges=None, verbal=False):
         if verbal:
             print(f'''
             Calling ...
