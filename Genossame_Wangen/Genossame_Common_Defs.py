@@ -13,6 +13,7 @@
 # 03-Sep-2023   Walter Rothlin      Reorganized library
 # 27-Nov-2023   Walter Rothlin      Mod get_person_details_from_DB_by_ID
 # 03-Feb-2024   Walter Rothlin      Deployment to Test-Server
+# 15-Feb-2024   Walter Rothlin      Implemented Gruppen und Kommissionen
 # ------------------------------------------------------------------------------------------------
 from waltisLibrary import *
 import mysql.connector
@@ -30,6 +31,7 @@ ifIntEmpty = lambda x: True if (x == ''     or x == 'TRUE') else False
 session_attr_scriteria_addr_list = 'adress_s_criteria'
 session_attr_scriteria_addr_orte_list = 'adress_orte_s_criteria'
 session_attr_scriteria_orte_list = 'orte_s_criteria'
+session_attr_scriteria_grpdivision_list = 'grpdivision_s_criteria'
 
 # =================
 # Class Stammdaten
@@ -142,6 +144,143 @@ has_user_granted_for_right('{application}',
         mycursor.execute(sql)
         return mycursor.fetchall()
 
+    def get_grpdivision_details_from_DB_by_ID(self, id=None, k_id=None, search_criterium=None, attr_list=['*'], case_sensitive=True):
+        fieldStr = (',\n            ').join(attr_list)
+        like_str = 'LIKE'
+        if case_sensitive:
+            like_str = 'LIKE Binary'
+
+        if id is None:
+            if search_criterium is None:
+                sql = f"""
+                    SELECT
+                        {fieldStr}
+                    FROM Kommissionen
+                    Limit 0,20;
+                """
+            else:
+                search_criterium = search_criterium.replace(' =', '=').replace('= ', '=')
+                such_kriterien = search_criterium.split(' ')
+                if False:
+                    print('1:', such_kriterien)
+                prep_such_kriterien = []
+                add_where_clauses = []
+                for a_such_kriterium in such_kriterien:
+                    # print('1)', a_such_kriterium)
+                    if '=' in a_such_kriterium:
+                        add_where_clauses.append(a_such_kriterium)
+                        continue
+                    a_such_kriterium = a_such_kriterium.replace(' - ', '-')
+                    a_such_kriterium = a_such_kriterium.replace('+', ' ')
+                    # print('2)', a_such_kriterium)
+                    split_liste = a_such_kriterium.split('-')
+                    for an_item in split_liste:
+                        prep_such_kriterien.append(an_item)
+
+                where_clauses = []
+                for a_such_kriterium in prep_such_kriterien:
+                    where_clauses.append(f"""
+                        (Kommissionsname {like_str} '%{a_such_kriterium}%' OR 
+                        Funktion {like_str} '%{a_such_kriterium}%'        OR 
+                        Vorname_Familienname {like_str} '%{a_such_kriterium}%')
+                        """)
+                for a_such_kriterium in add_where_clauses:
+                    where_clauses.append(f"{a_such_kriterium}")
+
+                where_clause_str = ' AND\n                        '.join(where_clauses)
+                # print(where_clause_str)
+
+                sql = f"""
+                    SELECT
+                        {fieldStr}
+                    FROM Kommissionen
+                    WHERE 
+                        {where_clause_str};
+                """
+        elif k_id is None:
+            sql = f"""
+            SELECT
+                {fieldStr}
+            FROM Kommissionen 
+            WHERE ID = {str(id)};
+            """
+        else:
+            sql = f"""
+            SELECT
+                {fieldStr}
+            FROM Kommissionen 
+            WHERE ID = {str(id)} AND K_ID = {str(k_id)};
+            """
+        # print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        mycursor.execute(sql)
+        return mycursor.fetchall()
+
+    def get_komm_details_from_DB_by_ID(self, id=None, search_criterium=None, attr_list=['*'], case_sensitive=False):
+        fieldStr = (',\n            ').join(attr_list)
+        like_str = 'LIKE'
+        if case_sensitive:
+            like_str = 'LIKE Binary'
+
+        if id is None:
+            if search_criterium is None:
+                sql = f"""
+                    SELECT
+                        {fieldStr}
+                    FROM kommissionen
+                    Limit 0,20;
+                """
+            else:
+                search_criterium = search_criterium.replace(' =', '=').replace('= ', '=')
+                such_kriterien = search_criterium.split(' ')
+                if False:
+                    print('1:', such_kriterien)
+                prep_such_kriterien = []
+                add_where_clauses = []
+                for a_such_kriterium in such_kriterien:
+                    # print('1)', a_such_kriterium)
+                    if '=' in a_such_kriterium:
+                        add_where_clauses.append(a_such_kriterium)
+                        continue
+                    a_such_kriterium = a_such_kriterium.replace(' - ', '-')
+                    a_such_kriterium = a_such_kriterium.replace('+', ' ')
+                    # print('2)', a_such_kriterium)
+                    split_liste = a_such_kriterium.split('-')
+                    for an_item in split_liste:
+                        prep_such_kriterien.append(an_item)
+
+                where_clauses = []
+                for a_such_kriterium in prep_such_kriterien:
+                    where_clauses.append(f"""
+                        (Kommissionsname {like_str} '%{a_such_kriterium}%' OR 
+                        Funktion {like_str} '%{a_such_kriterium}%'        OR 
+                        Vorname_Familienname {like_str} '%{a_such_kriterium}%')
+                        """)
+                for a_such_kriterium in add_where_clauses:
+                    where_clauses.append(f"{a_such_kriterium}")
+
+                where_clause_str = ' AND\n                        '.join(where_clauses)
+                # print(where_clause_str)
+
+                sql = f"""
+                    SELECT
+                        {fieldStr}
+                    FROM kommissionen
+                    WHERE 
+                        {where_clause_str};
+                """
+        else:
+            sql = f"""
+            SELECT
+                {fieldStr}
+            FROM kommissionen
+            WHERE K_ID = {str(id)};
+            """
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        mycursor.execute(sql)
+        return mycursor.fetchall()
+
     def get_person_details_from_DB_by_ID(self, id=None, search_criterium=None, with_password=None, attr_list=['*'], case_sensitive=False):
         fieldStr = (',\n            ').join(attr_list)
         like_str = 'LIKE'
@@ -151,9 +290,9 @@ has_user_granted_for_right('{application}',
         if id is None:
             if search_criterium is None:
                 if with_password is None:
-                    sql = """
+                    sql = f"""
                         SELECT
-                            """ + fieldStr + """
+                            {fieldStr}
                         FROM Personen_Daten
                         Limit 0,20;
                     """
@@ -201,11 +340,11 @@ has_user_granted_for_right('{application}',
                         {where_clause_str};
                 """
         else:
-            sql = """
+            sql = f"""
             SELECT
-                """ + fieldStr + """
+                {fieldStr}
             FROM Personen_Daten 
-            WHERE ID = """ + str(id) + """;
+            WHERE ID = {str(id)};
             """
         # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
@@ -354,6 +493,29 @@ has_user_granted_for_right('{application}',
         except Exception:
             return None
 
+    def insert_new_grpdivision(self, new_name_values, verbal=False):
+        if verbal:
+            print(f'''
+            insert_new_grpdivision
+            ----------------------
+            {new_name_values}
+            ''')
+
+        sql = f"""
+        INSERT INTO `gehört_zu_kommissionen` 
+              (`Personen_id`, `Kommissionen_ID`) 
+        VALUES 
+              ({new_name_values["PID"]}, {new_name_values["KID"]});
+        """
+        print(sql)
+        mycursor = self.__db_connection.cursor(dictionary=True)
+        try:
+            mycursor.execute(sql)
+            self.__db_connection.commit()
+            return {'KID': new_name_values["KID"], 'PID': new_name_values["PID"]}
+        except Exception:
+            return {'KID': 1, 'PID': 644}
+
     def insert_new_password(self, new_name_values, verbal=False):
         if verbal:
             print(f'''
@@ -472,6 +634,40 @@ has_user_granted_for_right('{application}',
         myCursor = self.__db_connection.cursor(dictionary=True)
         myCursor.execute(sql_update)
         self.__db_connection.commit()
+
+    def update_grpdivision(self, id=None, kid=None, new_name_values={}, verbal=False):
+        if verbal:
+            print(f'''
+            update_grpdivision
+            ------------------
+                id:{id}
+                kid:{kid}
+                values:{new_name_values}
+            ''')
+
+        aktiv_ab = get_sql_datums_update_value(attr_name='Aktiv_Ab', new_value=new_name_values['Member_ab'])
+        # print(f'aktiv_ab:{aktiv_ab}')
+
+        aktiv_bis = get_sql_datums_update_value(attr_name='Aktiv_Bis', new_value=new_name_values['Member_Bis'])
+        # print(f'aktiv_bis:{aktiv_bis}')
+
+
+        sql_update = f"""
+        UPDATE gehört_zu_kommissionen SET
+              Personen_ID         =  {new_name_values['pid']},
+              Kommissionen_ID    =  {new_name_values['K_ID']},
+              {aktiv_ab},
+              {aktiv_bis},
+              Funktion           = '{new_name_values['Funktion']}'
+
+        WHERE Personen_ID={id} AND Kommissionen_ID={kid};
+        """
+        # print(sql_update)
+
+        myCursor = self.__db_connection.cursor(dictionary=True)
+        myCursor.execute(sql_update)
+        self.__db_connection.commit()
+
 
 
     def update_iban_telnr_email(self, pid=None, id=None, new_name_values={}, verbal=False):

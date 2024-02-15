@@ -54,6 +54,7 @@
 # 16-Oct-2023   Walter Rothlin      Added remove_all_enum_value_in_set()
 # 23-Dec-2023   Walter Rothlin      Added convert_str_to_int_float_str
 # 10-Feb-2024   Walter Rothlin      Added read_text_file_into_list_of_lines, remove_empty_line
+# 15-Feb-2024   Walter Rothlin      Added get_sql_datums_update_value
 # ------------------------------------------------------------------
 
 # toDo:
@@ -2849,6 +2850,13 @@ def dictify(context, names):
 # ---------------------
 # Reusable DB-Functions
 # ---------------------
+def get_sql_datums_update_value(attr_name, new_value, date_str_format='%d.%m.%Y'):
+    if new_value is None or str(new_value) == 'None' or new_value == '':
+       ret_val = f"{attr_name} = NULL"
+    else:
+        ret_val = f"{attr_name} = STR_TO_DATE('{new_value}', '{date_str_format}')"
+    return ret_val
+
 def remove_all_enum_value_in_set(db, table, attribute_name, enum_val_to_remove, key_attr_name='ID', take_action=False, verbal=False):
     myCursor = db.cursor(dictionary=True)
     records_affected = 0

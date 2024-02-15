@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Kommissionen und Gruppen Zugehörigkeit</h1>
+    <div class="form">
+        <form action="{{ url_for('grpdivision_liste') }}" method="POST">
+            <input type="text" name="search_criteria" id="search_criteria" value="{{ search_criterium }}">
+            <input type="submit" value="suchen"> ({{ rec_found }})
+        </form>
+        <br/>
+    </div>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">K ID</th>
+            <th scope="col">Kommission/Gruppe</th>
+            <th scope="col">Funktion</th>
+            <th scope="col">P ID</th>
+            <th scope="col">Mitglied</th>
+            <th scope="col">Seit</th>
+            <th scope="col">Bis</th>
+            <!-- <th scope="col">Action</th> -->
+            <th scope="col"><a href="{{ url_for('execute_insert_grpdivision') }}" class="btn btn-danger">New</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for addr in result_liste %}
+        <tr>
+            <td>{{ addr.K_ID }}</td>
+            <td><a href="{{ url_for('kommissions_details') }}?k_id={{ addr.K_ID }}">{{ addr.Kommissionsname }}</a></td>
+            <td>{{ addr.Funktion }}</td>
+            <td>{{ addr.ID }}</td>
+            <td><a href="{{ url_for('personen_details') }}?pid={{ addr.ID }}">{{ addr.Geschlecht }} {{ addr.Vorname_Initial }} {{ addr.Familienname }}</a></td>
+            <td>{{ addr.Member_Ab }}</td>
+            {% if addr.Member_Bis != None %}
+                <td>{{ addr.Member_Bis }}</td>
+            {% else %}
+                 <td>Aktiv</td>
+            {% endif %}
+            <!-- <td><a href="{{ url_for('show_modify_single_person') }}?pid={{ addr.ID }}&k_id={{ addr.K_ID }}" class="btn btn-danger">Remove</a></td> -->
+            <td><a href="{{ url_for('show_modify_single_grpdivision') }}?pid={{ addr.ID }}&k_id={{ addr.K_ID }}" class="btn btn-danger">Modify</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

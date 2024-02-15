@@ -1636,21 +1636,22 @@ SELECT
     pers.Brief_Anrede              AS Brief_Anrede,
 	pers.Vorname_Familienname      AS Vorname_Familienname,
 
-	kom.ID                      AS K_ID,
-    kom.Abkürzung               AS Kommissionsabkürzung,
-    kom.Vorsitzender_ID         AS Kommissionsvorsitzender,
-    kom.Ins_Leben_gerufen_Am    AS Kommission_Gegründet_Ab,
-    kom.Aktiv_Ab                AS Kommission_Aktiv_Ab,
+	kom.ID                         AS K_ID,
+    kom.Abkürzung                  AS Kommissionsabkürzung,
+    kom.Vorsitzender_ID            AS Kommissionsvorsitzender_ID,
+    pers_1.Vorname_Familienname    AS Kommissionsvorsitzender,
+    DATE_FORMAT(kom.Ins_Leben_gerufen_Am,'%d.%m.%Y')    AS Kommission_Gegründet_Ab,
+    DATE_FORMAT(kom.Aktiv_Ab,'%d.%m.%Y')                AS Kommission_Aktiv_Ab,
 
-
-    gk.Aktiv_Ab                 AS Member_Ab,
-    gk.Aktiv_Bis                AS Member_Bis
+    DATE_FORMAT(gk.Aktiv_Ab,'%d.%m.%Y')                 AS Member_Ab,
+    DATE_FORMAT(gk.Aktiv_Bis,'%d.%m.%Y')                AS Member_Bis
     -- pers.*,
     -- gk.*
 FROM            Gehört_zu_Kommissionen AS gk
-LEFT OUTER JOIN Personen_Daten         AS pers ON  pers.ID = gk.Personen_ID
-LEFT OUTER JOIN Kommissionen_Gruppen   AS kom  ON  kom.ID  = gk.Kommissionen_ID
-WHERE gk.Aktiv_Bis IS NULL
+LEFT OUTER JOIN Personen_Daten         AS pers   ON  pers.ID   = gk.Personen_ID
+LEFT OUTER JOIN Kommissionen_Gruppen   AS kom    ON  kom.ID    = gk.Kommissionen_ID
+LEFT OUTER JOIN Personen_Daten         AS pers_1 ON  pers_1.ID = kom.Vorsitzender_ID
+-- WHERE gk.Aktiv_Bis IS NULL
 ORDER BY K_ID, Familienname, Vorname_Initial, Funktion;
 
 -- --------------------------------------------------------------------------------    

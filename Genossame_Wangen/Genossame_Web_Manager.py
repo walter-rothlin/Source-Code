@@ -10,6 +10,7 @@
 # 17-Apr-2023   Walter Rothlin      Initial Version
 # 03-Feb-2024   Walter Rothlin      Added DB reconnect
 # 03-Feb-2024   Walter Rothlin      Deployment to Test-Server
+# 15-Feb-2024   Walter Rothlin      Implemented Gruppen und Kommissionen
 # ------------------------------------------------------------------
 # from flask import Flask, redirect, url_for, render_template
 from Genossame_Common_Defs import *
@@ -119,7 +120,34 @@ def show_modify_single_address_ort():
     else:
         return render_template("index.html", db=genossame)
 
-@app.route("/execute_update_address_ort", methods=['GET', 'POST',])
+
+@app.route("/execute_update_grpdivision", methods=['GET', 'POST'])
+def execute_update_grpdivision():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: execute_update_grpdivision()')
+    if get_session_attibute(session, "user_name") != 'None':
+        all_parameters = dict(request.args.items())  # Query string parameters
+        all_parameters.update(request.form.to_dict())
+        # print('all_parameters:', all_parameters)
+        s_criteria = session.get(session_attr_scriteria_grpdivision_list, 'Genossenrat')
+
+        old_id = all_parameters['OLD_ID']
+        old_k_id = all_parameters['OLD_K_ID']
+        # Update DB
+        genossame.check_and_reconnect_db()
+        genossame.update_grpdivision(id=old_id, kid=old_k_id, new_name_values=all_parameters)
+
+        # Show modified List
+        genossame.check_and_reconnect_db()
+        rs = genossame.get_grpdivision_details_from_DB_by_ID(search_criterium=s_criteria)
+        # print(rs)
+        rec_found = len(rs)
+        # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
+        return render_template("grpdivision_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found, db=genossame)
+
+    else:
+        return render_template("index.html", db=genossame)
+
+@app.route("/execute_update_address_ort", methods=['GET', 'POST'])
 def execute_update_address_ort():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: execute_update_address_ort()')
     if get_session_attibute(session, "user_name") != 'None':
@@ -139,6 +167,7 @@ def execute_update_address_ort():
         return render_template("adresse_orte_details.html", details=rs[0], db=genossame)
     else:
         return render_template("index.html", db=genossame)
+
 
 @app.route("/adress_liste", methods=['GET', 'POST'])
 def adress_liste():
@@ -163,6 +192,32 @@ def adress_liste():
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
         return render_template("adress_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found, db=genossame)
+    else:
+        return render_template("index.html", db=genossame)
+
+@app.route("/grpdivision_liste", methods=['GET', 'POST'])
+def grpdivision_liste():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: grpdivision_liste()')
+    if get_session_attibute(session, "user_name") != 'None':
+        if request.method == 'POST':
+            s_criteria = request.form.get("search_criteria")
+        else:
+            s_criteria = request.args.get("search_criteria")
+
+        # print(f'session:{session}')
+        if s_criteria is None or s_criteria == '':
+            s_criteria = session.get(session_attr_scriteria_grpdivision_list, '')
+        else:
+            s_criteria = s_criteria.replace("'", "")
+            session[session_attr_scriteria_grpdivision_list] = s_criteria
+        # print(f's_criteria:{s_criteria}')
+
+        genossame.check_and_reconnect_db()
+        rs = genossame.get_grpdivision_details_from_DB_by_ID(search_criterium=s_criteria)
+        # print(rs)
+        rec_found = len(rs)
+        # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
+        return render_template("grpdivision_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found, db=genossame)
     else:
         return render_template("index.html", db=genossame)
 
@@ -205,6 +260,24 @@ def execute_insert_password():
         # print(rs)
         rec_found = len(rs)
         return render_template("password_liste.html", result_liste=rs, rec_found=rec_found, db=genossame)
+    else:
+        return render_template("index.html", db=genossame)
+
+@app.route("/kommissions_details", methods=['GET', 'POST'])
+def kommissions_details():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: kommissions_details()')
+    if get_session_attibute(session, "user_name") != 'None':
+        if request.method == 'POST':
+            k_id = request.form.get("k_id")
+        else:
+            k_id = request.args.get("k_id")
+
+        genossame.check_and_reconnect_db()
+        rs = genossame.get_komm_details_from_DB_by_ID(id=k_id)
+        print(rs)
+        # print('pid:', pid, '    Anz Rec found: ', len(rs))
+        return render_template("komm_details.html", details=rs[0], db=genossame)
+        # return 'Kommissions-Details'
     else:
         return render_template("index.html", db=genossame)
 
@@ -336,6 +409,30 @@ def execute_update_iban_telnr_email():
     else:
         return render_template("index.html", db=genossame)
 
+@app.route("/execute_insert_grpdivision", methods=['GET', 'POST'])
+def execute_insert_grpdivision():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: execute_insert_grpdivision()')
+    if get_session_attibute(session, "user_name") != 'None':
+        all_parameters = dict(request.args.items())  # Query string parameters
+        all_parameters.update(request.form.to_dict())  # Form data parameters
+
+        all_parameters = {
+            'PID': 1245,
+            'KID': 13
+        }
+        print('all_parameters:', all_parameters)
+
+        # create new data set
+        genossame.check_and_reconnect_db()
+        ret_val = genossame.insert_new_grpdivision(new_name_values=all_parameters)
+        print(f'ret_val:{ret_val}')
+
+        # redirect to change screen
+        # return f'execute_insert_grpdivision: {ret_val}'
+        return redirect(f"{url_for('show_modify_single_grpdivision')}?pid={all_parameters['PID']}&k_id={all_parameters['KID']}")
+    else:
+        return render_template("index.html", db=genossame)
+
 @app.route("/do_insert_new_iban_telnr_email", methods=['GET', 'POST'])
 def execute_insert_iban_telnr_email():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: execute_insert_iban_telnr_email()')
@@ -399,6 +496,23 @@ def show_modify_single_person():
     else:
         return render_template("index.html", db=genossame)
 
+@app.route("/show_modify_single_grpdivision", methods=['GET', 'POST'])
+def show_modify_single_grpdivision():
+    print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: show_modify_single_grpdivision()')
+    if get_session_attibute(session, "user_name") != 'None':
+        if request.method == 'POST':
+            pid = request.form.get("pid")
+            k_id = request.form.get("k_id")
+        else:
+            pid = request.args.get("pid")
+            k_id = request.args.get("k_id")
+
+        genossame.check_and_reconnect_db()
+        rs = genossame.get_grpdivision_details_from_DB_by_ID(id=pid, k_id=k_id)
+        # print(rs)
+        return render_template("grpdivision_Change.html", details=rs[0], db=genossame)
+    else:
+        return render_template("index.html", db=genossame)
 @app.route("/do_insert_new_person", methods=['GET', 'POST',])
 def execute_insert_person():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: execute_insert_person()')
@@ -545,6 +659,7 @@ def login():
         session[session_attr_scriteria_addr_list] = 'Walter'
         session[session_attr_scriteria_addr_orte_list] = 'Peterliwiese'
         session[session_attr_scriteria_orte_list] = 'SZ'
+        session[session_attr_scriteria_orte_list] = 'Genossenrat'
         if password_is_correct:
             session['user_name'] = username
             session['user_id'] = user_id
