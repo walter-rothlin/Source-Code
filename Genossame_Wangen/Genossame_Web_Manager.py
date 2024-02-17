@@ -247,7 +247,7 @@ def execute_insert_password():
     if get_session_attibute(session, "user_name") != 'None':
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())  # Form data parameters
-        print('all_parameters:', all_parameters)
+        # print('all_parameters:', all_parameters)
 
         # insert into DB
         genossame.check_and_reconnect_db()
@@ -273,7 +273,7 @@ def kommissions_details():
 
         genossame.check_and_reconnect_db()
         rs = genossame.get_komm_details_from_DB_by_ID(id=k_id)
-        print(rs)
+        # print(rs)
         # print('pid:', pid, '    Anz Rec found: ', len(rs))
         return render_template("komm_details.html", details=rs[0], db=genossame)
         # return 'Kommissions-Details'
@@ -291,7 +291,7 @@ def personen_details():
 
         genossame.check_and_reconnect_db()
         rs = genossame.get_person_details_from_DB_by_ID(id=pid)
-        print(rs)
+        # print(rs)
         # print('pid:', pid, '    Anz Rec found: ', len(rs))
         iban_details = genossame.get_Pers_Details_for_Pers_ID(id=pid)
         email_details = genossame.get_Pers_Details_for_Pers_ID(id=pid, table_name='eMail_liste', id_name='Pers_ID', attr_liste=['Email_ID AS ID', 'eMail_adresse AS email', 'Prio AS Prio', 'Type AS Type'])
@@ -419,12 +419,12 @@ def execute_insert_grpdivision():
             'PID': 1245,
             'KID': 13
         }
-        print('all_parameters:', all_parameters)
+        # print('all_parameters:', all_parameters)
 
         # create new data set
         genossame.check_and_reconnect_db()
         ret_val = genossame.insert_new_grpdivision(new_name_values=all_parameters)
-        print(f'ret_val:{ret_val}')
+        # print(f'ret_val:{ret_val}')
 
         # redirect to change screen
         # return f'execute_insert_grpdivision: {ret_val}'
@@ -510,7 +510,7 @@ def show_modify_single_grpdivision():
 
         genossame.check_and_reconnect_db()
         rs = genossame.get_grpdivision_details_from_DB_by_ID(id=id, p_id=p_id, k_id=k_id)
-        print(rs)
+        # print(rs)
         return render_template("grpdivision_Change.html", details=rs[0], db=genossame)
     else:
         return render_template("index.html", db=genossame)
@@ -539,7 +539,7 @@ def execute_insert_adresse():
     if get_session_attibute(session, "user_name") != 'None':
         all_parameters = dict(request.args.items())  # Query string parameters
         all_parameters.update(request.form.to_dict())  # Form data parameters
-        print('all_parameters:', all_parameters)
+        # print('all_parameters:', all_parameters)
 
         # insert into DB
         genossame.check_and_reconnect_db()
@@ -665,7 +665,7 @@ def login():
             session['user_name'] = username
             session['user_id'] = user_id
             session['user_priv'] = genossame.get_priviliges_for_pers_ID(user_id, as_list=False)
-            print('session:', session)
+            # print('session:', session)
             return render_template("index.html", db=genossame)
     return render_template("index.html", db=genossame)
 

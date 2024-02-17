@@ -219,7 +219,7 @@ has_user_granted_for_right('{application}',
             FROM Kommissionen 
             WHERE P_ID = {str(p_id)} AND K_ID = {str(k_id)} AND ID = {str(id)};
             """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -284,7 +284,7 @@ has_user_granted_for_right('{application}',
             FROM kommissionen
             WHERE K_ID = {str(id)};
             """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -515,7 +515,7 @@ has_user_granted_for_right('{application}',
         VALUES 
               ({new_name_values["PID"]}, {new_name_values["KID"]});
         """
-        print(sql)
+        # print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         try:
             mycursor.execute(sql)
