@@ -130,16 +130,15 @@ def execute_update_grpdivision():
         # print('all_parameters:', all_parameters)
         s_criteria = session.get(session_attr_scriteria_grpdivision_list, 'Genossenrat')
 
-        old_id = all_parameters['OLD_ID']
-        old_k_id = all_parameters['OLD_K_ID']
+        id = all_parameters['ID']
         # Update DB
         genossame.check_and_reconnect_db()
-        genossame.update_grpdivision(id=old_id, kid=old_k_id, new_name_values=all_parameters)
+        genossame.update_grpdivision(id=id, new_name_values=all_parameters)
 
         # Show modified List
         genossame.check_and_reconnect_db()
         rs = genossame.get_grpdivision_details_from_DB_by_ID(search_criterium=s_criteria)
-        # print(rs)
+        print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)
         return render_template("grpdivision_liste.html", result_liste=rs, search_criterium=s_criteria, rec_found=rec_found, db=genossame)
@@ -501,15 +500,17 @@ def show_modify_single_grpdivision():
     print(f'{getTimestamp()}: {get_session_attibute(session, "user_name"):40s}: show_modify_single_grpdivision()')
     if get_session_attibute(session, "user_name") != 'None':
         if request.method == 'POST':
-            pid = request.form.get("pid")
+            id = request.form.get("id")
+            p_id = request.form.get("pid")
             k_id = request.form.get("k_id")
         else:
-            pid = request.args.get("pid")
+            id = request.args.get("id")
+            p_id = request.args.get("pid")
             k_id = request.args.get("k_id")
 
         genossame.check_and_reconnect_db()
-        rs = genossame.get_grpdivision_details_from_DB_by_ID(id=pid, k_id=k_id)
-        # print(rs)
+        rs = genossame.get_grpdivision_details_from_DB_by_ID(id=id, p_id=p_id, k_id=k_id)
+        print(rs)
         return render_template("grpdivision_Change.html", details=rs[0], db=genossame)
     else:
         return render_template("index.html", db=genossame)

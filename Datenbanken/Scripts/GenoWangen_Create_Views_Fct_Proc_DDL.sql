@@ -46,6 +46,7 @@
 -- 28-Jan-2024   Walter Rothlin      Added LautendAuf to Proc IBAN
 -- 29-Jan-2024   Walter Rothlin      Added deleteEmailAdrFull, deleteTelnrFull
 -- 07-Feb-2024   Walter Rothlin      Removed Login_Table
+-- 17-Feb-2024   Walter Rothlin      Removed Geno_Reisende
 -- -----------------------------------------
 
 -- To-Does
@@ -1618,8 +1619,10 @@ CREATE VIEW Personen_Daten AS
 DROP VIEW IF EXISTS Kommissionen; 
 CREATE VIEW Kommissionen AS
 SELECT
-	pers.ID                        AS ID,
+    gk.ID                          AS ID,
+	pers.ID                        AS P_ID,
 	kom.Bezeichnung	 			   AS Kommissionsname,
+    IF (gk.Aktiv_Bis is NULL, 'Aktiv',  'Inaktiv')       AS `Status`,
 	gk.Funktion                    AS Funktion,
 	pers.Geschlecht                AS Geschlecht,
     pers.Vorname_Initial           AS Vorname_Initial,
@@ -2007,6 +2010,7 @@ CREATE VIEW Mitarbeiter AS
     ORDER BY Funktion, Familien_Name, Vorname;
     
 -- -----------------------------------------------------
+/*
 DROP VIEW IF EXISTS Geno_Reisende; 
 CREATE VIEW Geno_Reisende AS
     SELECT
@@ -2027,7 +2031,7 @@ CREATE VIEW Geno_Reisende AS
           FIND_IN_SET(ID, get_IDs_from_Kommissionen('Mitarbeiter')) >  0  OR
           ID IN (488, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188)   -- Partner
     ORDER BY Familien_Name, Vorname;
-
+*/
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Graue_Panter; 
 CREATE VIEW Graue_Panter AS

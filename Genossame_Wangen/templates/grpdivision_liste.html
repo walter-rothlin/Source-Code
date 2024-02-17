@@ -14,10 +14,12 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">K ID</th>
+            <th scope="col">ID</th>
+            <!-- <th scope="col">K ID</th> -->
             <th scope="col">Kommission/Gruppe</th>
+            <th scope="col">Status</th>
             <th scope="col">Funktion</th>
-            <th scope="col">P ID</th>
+            <!-- <th scope="col">P ID</th> -->
             <th scope="col">Mitglied</th>
             <th scope="col">Seit</th>
             <th scope="col">Bis</th>
@@ -28,19 +30,21 @@
         <tbody>
         {% for addr in result_liste %}
         <tr>
-            <td>{{ addr.K_ID }}</td>
-            <td><a href="{{ url_for('kommissions_details') }}?k_id={{ addr.K_ID }}">{{ addr.Kommissionsname }}</a></td>
-            <td>{{ addr.Funktion }}</td>
             <td>{{ addr.ID }}</td>
-            <td><a href="{{ url_for('personen_details') }}?pid={{ addr.ID }}">{{ addr.Geschlecht }} {{ addr.Vorname_Initial }} {{ addr.Familienname }}</a></td>
+            <!-- <td>{{ addr.K_ID }}</td> -->
+            <td><a href="{{ url_for('kommissions_details') }}?k_id={{ addr.K_ID }}">{{ addr.Kommissionsname }}</a></td>
+            <td>{{ addr.Status }}</td>
+            <td>{{ addr.Funktion }}</td>
+            <!-- <td>{{ addr.P_ID }}</td> -->
+            <td><a href="{{ url_for('personen_details') }}?pid={{ addr.P_ID }}">{{ addr.Geschlecht }} {{ addr.Vorname_Initial }} {{ addr.Familienname }}</a></td>
             <td>{{ addr.Member_Ab }}</td>
             {% if addr.Member_Bis != None %}
                 <td>{{ addr.Member_Bis }}</td>
             {% else %}
-                 <td>Aktiv</td>
+                 <td>Noch im Dienst</td>
             {% endif %}
             <!-- <td><a href="{{ url_for('show_modify_single_person') }}?pid={{ addr.ID }}&k_id={{ addr.K_ID }}" class="btn btn-danger">Remove</a></td> -->
-            <td><a href="{{ url_for('show_modify_single_grpdivision') }}?pid={{ addr.ID }}&k_id={{ addr.K_ID }}" class="btn btn-danger">Modify</a></td>
+            <td><a href="{{ url_for('show_modify_single_grpdivision') }}?pid={{ addr.P_ID }}&k_id={{ addr.K_ID }}&id={{ addr.ID }}" class="btn btn-danger">Modify</a></td>
         </tr>
         {% endfor %}
         </tbody>

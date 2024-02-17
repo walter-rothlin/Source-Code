@@ -3,11 +3,10 @@
 
 {% block content %}
 <div class="container">
-    <h2>{{ details.Kommissionsname }} {{ details.Vorname_Familienname }} </h2>
+    <h2>{{ details.ID }} {{ details.Kommissionsname }} {{ details.Vorname_Familienname }} </h2>
 
     <form id="updateForm" method="post" action="{{ url_for('execute_update_grpdivision') }}">
-        <INPUT TYPE="HIDDEN" NAME="OLD_ID" VALUE="{{ details.ID }}">
-        <INPUT TYPE="HIDDEN" NAME="OLD_K_ID" VALUE="{{ details.K_ID }}">
+        <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ details.ID }}">
 
         <div class="form-row">
             <div class="form-group col-md-3">
@@ -19,7 +18,7 @@
             <div class="form-group col-md-3">
                 <label for="pid" class="col-form-label">Personen ID:</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="pid" name="pid" maxlength="5" value="{{ details.ID }}" onchange="markChangedFields()" required>
+                    <input type="text" class="form-control" id="pid" name="pid" maxlength="5" value="{{ details.P_ID }}" onchange="markChangedFields()" required>
                 </div>
             </div>
         </div>

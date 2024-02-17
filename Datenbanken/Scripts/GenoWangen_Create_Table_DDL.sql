@@ -26,6 +26,7 @@
 -- 01-Jan-2024   Walter Rothlin      Added Kommissionen_Gruppen und Gehört_zu_Kommission
 -- 04-Jan-2024   Walter Rothlin      Removed GPK, Genossenrat, LWK, Forst_Komm from Kategorien
 -- 17-Jan-2024   Walter Rothlin      Removed Grauer Panter, Angestellter from Kategorien
+-- 17-Jan-2024   Walter Rothlin      Migration `Kommissionen`
 -- -----------------------------------------
 
 -- -----------------------------------------
@@ -715,3 +716,99 @@ CREATE TABLE IF NOT EXISTS `Landteile` (
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------
+-- Migration `Kommissionen`
+-- ----------------------------------------
+ALTER TABLE `gehört_zu_kommissionen` 
+ADD COLUMN `ID` INT UNSIGNED NULL FIRST;
+
+UPDATE `gehört_zu_kommissionen` SET `ID` = '1' WHERE (`Personen_ID` = '67') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '2' WHERE (`Personen_ID` = '73') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '3' WHERE (`Personen_ID` = '100') and (`Kommissionen_ID` = '3');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '4' WHERE (`Personen_ID` = '100') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '5' WHERE (`Personen_ID` = '116') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '6' WHERE (`Personen_ID` = '120') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '7' WHERE (`Personen_ID` = '120') and (`Kommissionen_ID` = '5');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '8' WHERE (`Personen_ID` = '163') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '9' WHERE (`Personen_ID` = '174') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '10' WHERE (`Personen_ID` = '181') and (`Kommissionen_ID` = '4');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '11' WHERE (`Personen_ID` = '202') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '12' WHERE (`Personen_ID` = '202') and (`Kommissionen_ID` = '10');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '13' WHERE (`Personen_ID` = '204') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '14' WHERE (`Personen_ID` = '207') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '15' WHERE (`Personen_ID` = '224') and (`Kommissionen_ID` = '5');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '16' WHERE (`Personen_ID` = '258') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '17' WHERE (`Personen_ID` = '261') and (`Kommissionen_ID` = '5');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '18' WHERE (`Personen_ID` = '279') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '19' WHERE (`Personen_ID` = '285') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '20' WHERE (`Personen_ID` = '323') and (`Kommissionen_ID` = '11');
+
+UPDATE `gehört_zu_kommissionen` SET `ID` = '21' WHERE (`Personen_ID` = '336') and (`Kommissionen_ID` = '3');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '22' WHERE (`Personen_ID` = '336') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '23' WHERE (`Personen_ID` = '357') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '24' WHERE (`Personen_ID` = '357') and (`Kommissionen_ID` = '4');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '25' WHERE (`Personen_ID` = '357') and (`Kommissionen_ID` = '6');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '26' WHERE (`Personen_ID` = '357') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '27' WHERE (`Personen_ID` = '452') and (`Kommissionen_ID` = '2');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '28' WHERE (`Personen_ID` = '456') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '29' WHERE (`Personen_ID` = '483') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '30' WHERE (`Personen_ID` = '483') and (`Kommissionen_ID` = '5');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '31' WHERE (`Personen_ID` = '483') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '32' WHERE (`Personen_ID` = '493') and (`Kommissionen_ID` = '10');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '33' WHERE (`Personen_ID` = '495') and (`Kommissionen_ID` = '10');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '34' WHERE (`Personen_ID` = '524') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '35' WHERE (`Personen_ID` = '524') and (`Kommissionen_ID` = '5');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '36' WHERE (`Personen_ID` = '524') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '37' WHERE (`Personen_ID` = '533') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '38' WHERE (`Personen_ID` = '534') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '39' WHERE (`Personen_ID` = '572') and (`Kommissionen_ID` = '3');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '40' WHERE (`Personen_ID` = '589') and (`Kommissionen_ID` = '4');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '41' WHERE (`Personen_ID` = '637') and (`Kommissionen_ID` = '10');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '42' WHERE (`Personen_ID` = '644') and (`Kommissionen_ID` = '1');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '43' WHERE (`Personen_ID` = '644') and (`Kommissionen_ID` = '3');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '44' WHERE (`Personen_ID` = '644') and (`Kommissionen_ID` = '6');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '45' WHERE (`Personen_ID` = '644') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '46' WHERE (`Personen_ID` = '647') and (`Kommissionen_ID` = '2');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '47' WHERE (`Personen_ID` = '660') and (`Kommissionen_ID` = '4');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '48' WHERE (`Personen_ID` = '693') and (`Kommissionen_ID` = '3');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '49' WHERE (`Personen_ID` = '693') and (`Kommissionen_ID` = '10');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '50' WHERE (`Personen_ID` = '723') and (`Kommissionen_ID` = '9');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '51' WHERE (`Personen_ID` = '757') and (`Kommissionen_ID` = '6');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '52' WHERE (`Personen_ID` = '783') and (`Kommissionen_ID` = '9');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '53' WHERE (`Personen_ID` = '805') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '54' WHERE (`Personen_ID` = '832') and (`Kommissionen_ID` = '9');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '55' WHERE (`Personen_ID` = '835') and (`Kommissionen_ID` = '11');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '56' WHERE (`Personen_ID` = '871') and (`Kommissionen_ID` = '2');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '57' WHERE (`Personen_ID` = '992') and (`Kommissionen_ID` = '8');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '58' WHERE (`Personen_ID` = '995') and (`Kommissionen_ID` = '8');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '59' WHERE (`Personen_ID` = '999') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '60' WHERE (`Personen_ID` = '1028') and (`Kommissionen_ID` = '5');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '61' WHERE (`Personen_ID` = '1036') and (`Kommissionen_ID` = '6');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '62' WHERE (`Personen_ID` = '1077') and (`Kommissionen_ID` = '8');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '63' WHERE (`Personen_ID` = '1096') and (`Kommissionen_ID` = '6');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '64' WHERE (`Personen_ID` = '1113') and (`Kommissionen_ID` = '9');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '65' WHERE (`Personen_ID` = '1120') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '66' WHERE (`Personen_ID` = '1121') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '67' WHERE (`Personen_ID` = '1122') and (`Kommissionen_ID` = '6');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '68' WHERE (`Personen_ID` = '1122') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '69' WHERE (`Personen_ID` = '1123') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '70' WHERE (`Personen_ID` = '1124') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '71' WHERE (`Personen_ID` = '1125') and (`Kommissionen_ID` = '6');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '72' WHERE (`Personen_ID` = '1125') and (`Kommissionen_ID` = '12');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '73' WHERE (`Personen_ID` = '1208') and (`Kommissionen_ID` = '9');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '74' WHERE (`Personen_ID` = '1210') and (`Kommissionen_ID` = '9');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '75' WHERE (`Personen_ID` = '1211') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '76' WHERE (`Personen_ID` = '1212') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '77' WHERE (`Personen_ID` = '1213') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '78' WHERE (`Personen_ID` = '1214') and (`Kommissionen_ID` = '7');
+UPDATE `gehört_zu_kommissionen` SET `ID` = '79' WHERE (`Personen_ID` = '1215') and (`Kommissionen_ID` = '7');
+
+ALTER TABLE `gehört_zu_kommissionen` 
+CHANGE COLUMN `ID` `ID` INT UNSIGNED NOT NULL ,
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`ID`);
+
+ALTER TABLE `genossame_wangen`.`gehört_zu_kommissionen` 
+CHANGE COLUMN `ID` `ID` INT UNSIGNED NOT NULL AUTO_INCREMENT ;
+

@@ -144,13 +144,13 @@ has_user_granted_for_right('{application}',
         mycursor.execute(sql)
         return mycursor.fetchall()
 
-    def get_grpdivision_details_from_DB_by_ID(self, id=None, k_id=None, search_criterium=None, attr_list=['*'], case_sensitive=True):
+    def get_grpdivision_details_from_DB_by_ID(self, id=None, p_id=None, k_id=None, search_criterium=None, attr_list=['*'], case_sensitive=True):
         fieldStr = (',\n            ').join(attr_list)
         like_str = 'LIKE'
         if case_sensitive:
             like_str = 'LIKE Binary'
 
-        if id is None:
+        if p_id is None:
             if search_criterium is None:
                 sql = f"""
                     SELECT
@@ -181,6 +181,7 @@ has_user_granted_for_right('{application}',
                 for a_such_kriterium in prep_such_kriterien:
                     where_clauses.append(f"""
                         (Kommissionsname {like_str} '%{a_such_kriterium}%' OR 
+                        Status {like_str} '%{a_such_kriterium}%'        OR
                         Funktion {like_str} '%{a_such_kriterium}%'        OR 
                         Vorname_Familienname {like_str} '%{a_such_kriterium}%')
                         """)
@@ -202,16 +203,23 @@ has_user_granted_for_right('{application}',
             SELECT
                 {fieldStr}
             FROM Kommissionen 
-            WHERE ID = {str(id)};
+            WHERE P_ID = {str(p_id)};
+            """
+        elif id is None:
+            sql = f"""
+            SELECT
+                {fieldStr}
+            FROM Kommissionen 
+            WHERE P_ID = {str(p_id)} AND K_ID = {str(k_id)};
             """
         else:
             sql = f"""
             SELECT
                 {fieldStr}
             FROM Kommissionen 
-            WHERE ID = {str(id)} AND K_ID = {str(k_id)};
+            WHERE P_ID = {str(p_id)} AND K_ID = {str(k_id)} AND ID = {str(id)};
             """
-        # print(sql)
+        print(sql)
         mycursor = self.__db_connection.cursor(dictionary=True)
         mycursor.execute(sql)
         return mycursor.fetchall()
@@ -514,7 +522,7 @@ has_user_granted_for_right('{application}',
             self.__db_connection.commit()
             return {'KID': new_name_values["KID"], 'PID': new_name_values["PID"]}
         except Exception:
-            return {'KID': 1, 'PID': 644}
+            return {'KID': 13, 'PID': 1245}
 
     def insert_new_password(self, new_name_values, verbal=False):
         if verbal:
@@ -635,13 +643,12 @@ has_user_granted_for_right('{application}',
         myCursor.execute(sql_update)
         self.__db_connection.commit()
 
-    def update_grpdivision(self, id=None, kid=None, new_name_values={}, verbal=False):
+    def update_grpdivision(self, id=None, new_name_values={}, verbal=False):
         if verbal:
             print(f'''
             update_grpdivision
             ------------------
                 id:{id}
-                kid:{kid}
                 values:{new_name_values}
             ''')
 
@@ -660,7 +667,7 @@ has_user_granted_for_right('{application}',
               {aktiv_bis},
               Funktion           = '{new_name_values['Funktion']}'
 
-        WHERE Personen_ID={id} AND Kommissionen_ID={kid};
+        WHERE ID={id};
         """
         # print(sql_update)
 
