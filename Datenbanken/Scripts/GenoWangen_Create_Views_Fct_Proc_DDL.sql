@@ -47,6 +47,7 @@
 -- 29-Jan-2024   Walter Rothlin      Added deleteEmailAdrFull, deleteTelnrFull
 -- 07-Feb-2024   Walter Rothlin      Removed Login_Table
 -- 17-Feb-2024   Walter Rothlin      Removed Geno_Reisende
+-- 19-Feb-2024   Walter Rothlin      Fixed Error in Fct getReferenced_Name by adding READS SQL DATA
 -- -----------------------------------------
 
 -- To-Does
@@ -625,7 +626,8 @@ DELIMITER ;
 -- -----------------------------------------
 DROP FUNCTION IF EXISTS getReferenced_Name;
 DELIMITER //
-CREATE FUNCTION getReferenced_Name(p_is_buerger BOOLEAN, p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45), p_firstname CHAR(45), p_geb_datum DATE, p_tod_datum DATE) RETURNS CHAR(50)
+CREATE FUNCTION getReferenced_Name(p_is_buerger BOOLEAN, p_sex CHAR(5) , p_name_angenommen BOOLEAN , p_ledig_name CHAR(45) , p_partner_name CHAR(45), p_firstname CHAR(45), p_geb_datum DATE, p_tod_datum DATE) RETURNS CHAR(100)
+READS SQL DATA
 BEGIN
     IF p_is_buerger = TRUE THEN
 		IF p_tod_datum IS NULL THEN
@@ -2038,7 +2040,7 @@ CREATE VIEW Graue_Panter AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Graue Panter')) >  0  -- FIND_IN_SET('Grauer Panter', Kategorien) >  0
+    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Graue Panter')) >  0
     ORDER BY Funktion, Familien_Name, Vorname;
 
 -- -----------------------------------------------------

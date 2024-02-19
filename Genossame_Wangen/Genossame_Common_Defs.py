@@ -61,22 +61,22 @@ class Stammdaten:
             self.__db_connection = db_connect(connect_to_prod=True, trace=True)
         return not connection_lost
 
-    def has_user_granted_for_right(self, application, requested_rights, user_id, priviliges=None, verbal=False):
+    def has_user_granted_for_right(self, application, requested_rights, user_id, priviliges=None, verbal=True):
         if verbal:
             print(f'''
-            Calling ...
+Calling ...
 has_user_granted_for_right('{application}',
                            '{requested_rights}',
-                            '{user_id}',
-                            {priviliges})
-            .... ''')
+                           '{user_id}',
+                           {priviliges})
+.... ''')
 
         ret_value = False
         set_priv_for_this_application = priviliges.get(application, priviliges.get('*', None))
         if verbal:
             print(f'set_priv_for_this_application:{set_priv_for_this_application}')
 
-        if requested_rights in set_priv_for_this_application:
+        if set_priv_for_this_application is not None and requested_rights in set_priv_for_this_application:
             ret_value = True
 
         if verbal:
