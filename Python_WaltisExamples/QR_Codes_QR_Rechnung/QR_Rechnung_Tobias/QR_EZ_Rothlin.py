@@ -36,12 +36,13 @@ ibanNr = {
 
     'claudia_szkb_börsenkonto' : "CH74 0077 7002 3265 2447 8",
     'claudia_raiffeisen_privat': "CH22 8080 8003 1592 9572 2",
-    'claudia_raiffeisen_ET'    : " CH26 8080 8002 8098 7681 8",
-    'claudia_raiffeisen_ET_Gemeinsam': " CH30 8080 8003 1157 2958 0",
+    'claudia_raiffeisen_ET'    : "CH26 8080 8002 8098 7681 8",
+    'claudia_raiffeisen_ET_Gemeinsam': "CH30 8080 8003 1157 2958 0",
 
     'remo_szkb_privat'      : "CH28 0077 7001 6831 9007 2",
     'FG_Abern'              : "CH90 0077 7003 2922 1166 7",
     'FDP Wangen SZ'         : "CH84 0077 7008 8504 5194 0",
+    'uwe_kilger_post'       : "CH42 0900 0000 2533 9394 51",
 }
 
 adressen = f"""
@@ -57,6 +58,8 @@ Claudia_Raiffeisen   |Claudia Collet         |Peterliwiese 33|8855            |W
 Claudia_ET           |Claudia Collet         |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['claudia_raiffeisen_ET']}
 Claudia_ET_Gemeinsam |Claudia Collet         |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['claudia_raiffeisen_ET_Gemeinsam']}
 
+Uwe_Kilger           |Uwe Kilger             |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['uwe_kilger_post']}
+
 FG_Aberen            |Flurgenossenschaft     |Aberen         |8858            |Innerthal   |      |{ibanNr['FG_Abern']}
 Mieter_P33           |Fredi Kistler          |Peterliwiese 33|8855            |Wangen SZ   |      |
 Mieter_Aubrigweg     |Roland Schweizer       |Aubrigweg 6    |8855            |Wangen SZ   |      |
@@ -68,8 +71,8 @@ if __name__ == '__main__':
 
     rechnungssteller_id = 'Walti'
     zahleradresse_id = 'Mieter_Aubrigweg'
-    zu_zahlender_betrag = '1.0'
-    mitteilung = 'Test Versuch'
+    zu_zahlender_betrag = '100.00'
+    mitteilung = 'Nebenkosten'
     path_name = r'E:\_WaltisDaten\Buchhaltung\__Einzahlungsscheine'
     file_name = f'From_{rechnungssteller_id}_to_{zahleradresse_id}'
 
