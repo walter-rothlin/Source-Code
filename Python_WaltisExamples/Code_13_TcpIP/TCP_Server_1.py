@@ -43,12 +43,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 print("<== ", strReceived)
                 print("<== ", strReceivedParts)
 
+                # ===== Start Business-Logik ============
                 if fctName == "toUpper":
                     strSent = fctParam.upper()
                 elif fctName == "toLower":
                     strSent = fctParam.lower()
                 else:
                     strSent = "ERROR: Unknown Function"
+                # ===== Ende  Business-Logik ============
+
                 data = bytes(strSent, 'ascii')
                 print("==> ", strSent)
                 conn.sendall(data)

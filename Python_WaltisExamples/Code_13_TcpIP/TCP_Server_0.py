@@ -37,7 +37,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 strReceived = str(data, 'ascii')
                 print("<== ", strReceived)
 
+                # ===== Start Business-Logik ============
                 strSent = strReceived.upper()
+                # ===== Ende  Business-Logik ============
+
                 data = bytes(strSent, 'ascii')
                 print("==> ", strSent)
                 conn.sendall(data)

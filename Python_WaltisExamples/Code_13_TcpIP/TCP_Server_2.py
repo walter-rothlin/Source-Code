@@ -20,5 +20,5 @@ from SocketDefinitions import *
 
 print("\n")
 print(f"TCP/IP Server ready on '{PORT:d}'. Waiting for requests....", end="", flush=True)
-print(waitForServiceCall(True))
+print(waitForServiceCall(xmlMsg=False, trace=True))
 print(f"TCP/IP Server closed on '{PORT:d}'!")
