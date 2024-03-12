@@ -43,6 +43,7 @@ ibanNr = {
     'FG_Abern'              : "CH90 0077 7003 2922 1166 7",
     'FDP Wangen SZ'         : "CH84 0077 7008 8504 5194 0",
     'uwe_kilger_post'       : "CH42 0900 0000 2533 9394 51",
+    'geno_wangen'           : "CH51 0077 7001 5617 7194 5",
 }
 
 adressen = f"""
@@ -63,17 +64,21 @@ Uwe_Kilger           |Uwe Kilger             |Peterliwiese 33|8855            |W
 FG_Aberen            |Flurgenossenschaft     |Aberen         |8858            |Innerthal   |      |{ibanNr['FG_Abern']}
 Mieter_P33           |Fredi Kistler          |Peterliwiese 33|8855            |Wangen SZ   |      |
 Mieter_Aubrigweg     |Roland Schweizer       |Aubrigweg 6    |8855            |Wangen SZ   |      |
+Sepp_Vogel           |Josef Vogel            |Stockbergweg 37|8855            |Wangen SZ   |      |
+Genossame_Wangen     |Genossame Wangen       |Leuholz 12     |8855            |Wangen SZ   |      |{ibanNr['geno_wangen']}
+
 """
 
 if __name__ == '__main__':
     person_date = CSV_Data(inputCsvStr=adressen)
     print(person_date)
 
-    rechnungssteller_id = 'Walti'
-    zahleradresse_id = 'Mieter_Aubrigweg'
-    zu_zahlender_betrag = '100.00'
-    mitteilung = 'Nebenkosten'
+    rechnungssteller_id = 'Genossame_Wangen'
+    zahleradresse_id = 'Sepp_Vogel'
+    zu_zahlender_betrag = '500.00'
+    mitteilung = 'Busse'
     path_name = r'E:\_WaltisDaten\Buchhaltung\__Einzahlungsscheine'
+    path_name = r'.'
     file_name = f'From_{rechnungssteller_id}_to_{zahleradresse_id}'
 
     do_loop = True

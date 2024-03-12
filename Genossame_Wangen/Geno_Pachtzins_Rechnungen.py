@@ -11,6 +11,7 @@
 # History:
 # 17-Jun_2022   Walter Rothlin      Initial Version
 # 31-Dec-2022   Walter Rothlin      Neuste Library: https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
+
 # ------------------------------------------------------------------
 from SwissQRInvoiceGenerator import *
 from Genossame_Common_Defs import *
@@ -21,7 +22,7 @@ if __name__ == '__main__':
     base_directory = 'V:/Landwirtschaft/Pachtland/Pachtzinsrechnungen/2023/'
 
 
-    title = 'Pachtlandzins_2023'
+    title = 'Pachtlandzins_2024'
 
     geno_schema = db_connect(connect_to_prod=True, trace=True)
     ret_value = get_record_details_from_db(geno_schema, 'personen_daten', 625, ['ID', 'Firma', 'Private_Strassen_Adresse', 'Priv_PLZ', 'Priv_Ort', 'IBAN'], as_json=True, take_action=True, verbal=False)[0]
@@ -34,6 +35,9 @@ if __name__ == '__main__':
         "city"    : ret_value['Priv_Ort'],
         "country" : '',
     }
+
+    print(rechnungs_steller)
+    exit
 
     ret_values = get_record_details_from_db(geno_schema, 'Paechterstatistik', None, [], as_json=True, take_action=True, verbal=False)
     print('Produced files in', base_directory)

@@ -26,6 +26,7 @@
 -- 25-Apr-2023   Walter Rothlin      Added more Functions 10.3.1 and 10.3.2
 -- 28-Apr-2023   Walter Rothlin      Added getAge() Aktuelles Alter berechnen, wenn Todestag dann Alter fixiert, sonst NOW() - Birthday (Nur Jahre)
 -- 17-May-2023   Walter Rothlin      Changed LEFT/RIGHT JOIN to LEFT/RIGHT OUTER JOIN
+-- 07-Mar-2023   Walter Rothlin      Added more GROUP BY (1.7.1 tbc)
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -121,6 +122,20 @@ FROM
 ORDER BY 
     last_name,
     first_name;  -- 121
+    
+-- 1.7.1 tbc) Gibt es Städte die es in mehreren Ländern gibt und wie heissen diese Städte?
+SELECT DISTINCT ci.city FROM city AS ci;
+
+-- If you need only the duplicates between the result sets of two SELECT statements in MySQL, you can use the INTERSECT operator. Unfortunately, MySQL doesn't support the INTERSECT operator directly, but you can achieve the same result using JOIN or EXISTS clauses. Here's an example:
+
+SELECT column1, column2 
+FROM table1 
+WHERE EXISTS (
+    SELECT column1, column2 
+    FROM table2 
+    WHERE table1.column1 = table2.column1 
+    AND table1.column2 = table2.column2
+);
 
 -- 1.8) Liste alle Schauspielern (Vorname und Nachname) auf, welche Kirsten zum Vornamen heissen? Sortiere diese
 --      nach Nachnamen absteigend (Z..A) und nach Vorname aufsteigend (A..Z)
@@ -259,7 +274,28 @@ INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
 ORDER BY
    `Betrag`    DESC;
 
--- 1.13) Erstellen Sie eine Liste aller Kunden_id mit deren Umsaetzen 
+-- 1.13) Erstellen Sie eine Liste mit allen Ländern und der Anzahl Städte, sortiert nach Anzahl Städte 
+--       (Das Land mit den meisten Städten zu oberst)
+SELECT * FROM CITY;
+
+SELECT
+   ci.Country_id        AS Land_ID,
+   count(ci.Country_id) AS `Anzahl Städte`
+FROM city AS ci
+GROUP BY ci.Country_id
+ORDER BY `Anzahl Städte` DESC;
+
+SELECT 
+   ci.Country_id        AS Land_ID,
+   co.country           AS Land,
+   count(ci.Country_id) AS `Anzahl Städte`
+FROM city AS ci
+JOIN country AS co ON ci.country_id = co.country_id
+GROUP BY ci.Country_id
+ORDER BY `Anzahl Städte` DESC;
+
+
+-- 1.13.0) Erstellen Sie eine Liste aller Kunden_id mit deren Umsaetzen 
 --       und Anzahl Rechnungen (FROM payment), sortiert nach customer_id und Betraege   
 SELECT 
    `P`.`customer_id`    AS `Customer_ID`,

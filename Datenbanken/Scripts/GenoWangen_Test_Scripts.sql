@@ -191,6 +191,9 @@ WHERE eMail_Adresse = 'isabella.vogt@bluewin.ch';
 select * from email_adressen WHERE id >= 535;
 
 
+SELECT * FROM email_adressen WHERE eMail LIKE '%eugen.bruhin%';
+SELECT * FROM personen_has_email_adressen WHERE EMail_Adressen_ID = 304 or EMail_Adressen_ID = 557;
+
 -- IBAN
 -- ----
 select * from iban WHERE id >= 776;
