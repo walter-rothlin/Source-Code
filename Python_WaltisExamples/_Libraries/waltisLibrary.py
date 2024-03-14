@@ -55,6 +55,7 @@
 # 23-Dec-2023   Walter Rothlin      Added convert_str_to_int_float_str
 # 10-Feb-2024   Walter Rothlin      Added read_text_file_into_list_of_lines, remove_empty_line
 # 15-Feb-2024   Walter Rothlin      Added get_sql_datums_update_value
+# 14-Mar-2024   Walter Rothlin      Changes for BZU
 # ------------------------------------------------------------------
 
 # toDo:
@@ -106,6 +107,11 @@ regEx_Int = r'[+-]?[0-9]'
 regEx_Float_Or_Int = r'[+-]?\d*\.?\d+'
 regEx_Date_US = r'[0-9]{4}.[0-9]{2}.[0-9]{2}'   # 1964-11-29
 regEx_Date_EU = r'[0-9]{2}.[0-9]{2}.[0-9]{4}'   # 29.11.1964
+
+# Konstanten
+# ==========
+pi = math.pi
+halbBogen = 180
 
 # Bildschirmsteuerung
 # ===================

@@ -12,69 +12,103 @@
 # 24-Oct-2017   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-
 from waltisLibrary import *
 
+menu_items = [
+    'Schluss',
+    'Grad in Bogenmass',
+    'Bogenmass in Grad',
+    'Fahrenheit in Celsius',
+    'Celsius in Fahrenheit',
+    'Fakultät',
+]
+
+menu_text = f'''
+  Umrechnungen
+  ============
+  1: {menu_items[1]}
+  2: {menu_items[2]}
+
+  3: {menu_items[3]}
+  4: {menu_items[4]}
+
+  5: {menu_items[5]}
+  
+  0: {menu_items[0]}
+'''
+
+formeln = '''
+    rad  = grad*pi/180
+    grad = rad*180/pi
+    32F -> 0°C    100F -> 37.78°C     °C = (°F - 32) / 1.8
+    32F -> 0°C    100F -> 37.78°C     °F = (°C * 1.8) + 32
+'''
+
+def menu():
+    print(menu_text)
+    return input("\n  Wähle:")
+
+def read_float_x(prompt):
+    error = True
+    while error:
+        input_str = input(prompt)
+        try:
+            ret_val = float(input_str)
+            error = False
+        except ValueError:
+            print("Was hast du eingegeben!!! Ich muss einen Float haben")
+            error = True
+    return ret_val
 
 # =============
 # Hauptprogramm
 # =============
 doLoop = True
-print(isPrimzahl.__doc__)  # docstring similar to java doc
+# print(isPrimzahl.__doc__)  # docstring similar to java doc
 while doLoop:
     VT52_cls_home()
+    antwort = menu()
 
-    print("  Umrechnungen")
-    print("  ============")
-    print("  1: Grad in Bogenmass")  # rad  = grad*pi/180
-    print("  2: Bogenmass in Grad")  # grad = rad*180/pi
-    print()
-    print("  3: Fahrenheit in Celsius")  #32F -> 0°C    100F -> 37.78°C     °C = (°F - 32) / 1.8
-    print("  4: Celsius in Fahrenheit")  #32F -> 0°C    100F -> 37.78°C     °F = (°C * 1.8) + 32
-    print()
-    print("  5: Fakultät")
-    print()
-    print("  0: Schluss")
-
-
-    antwort = input("\n  Wähle:")
     if antwort == "1":
         VT52_cls_home()
         print("Grad --> Bogenmass")
-        gradValue = float(input("Grad:"))
-        print("Grad={grad:1.2f}  ==> Rad={rad:1.2f}".format(grad=gradValue,rad=grad2Rad(gradValue)))
+        gradValue = read_float_x("Grad:")
+        print(f"Grad={gradValue:1.2f}  ==> Rad={grad2Rad(gradValue):1.2f}")
         halt()
 
-    if antwort == "2":
+    elif antwort == "2":
         VT52_cls_home()
         print("Bogenmass --> Grad")
-        radValue = float(input("Rad:"))
-        print("Rad={rad:1.2f}  ==> Grad={grad:1.2f}".format(rad=radValue,grad=rad2Grad(radValue)))
+        radValue = readFloat(prompt="Rad:")
+        print("Rad={rad:1.2f}  ==> Grad={grad:1.2f}".format(rad=radValue, grad=rad2Grad(radValue)))
         halt()
 
-    if antwort == "3":
+    elif antwort == "3":
         VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/fahrenheit-in-celsius.htm
         print("Fahrenheit in Celsius")
-        fahrenheitValue = float(input("Fahrenheit:"))
-        print("Fahrenheit={fahrenheit:1.2f}  ==> Celsius={celsius:1.2f}".format(fahrenheit=fahrenheitValue,celsius=fahrenheit2Celsius(fahrenheitValue)))
+        fahrenheitValue = readFloat(prompt="Fahrenheit:")
+        print("Fahrenheit={fahrenheit:1.2f}  ==> Celsius={celsius:1.2f}".format(fahrenheit=fahrenheitValue ,celsius=fahrenheit2Celsius(fahrenheitValue)))
         halt()
 
-    if antwort == "4":
+    elif antwort == "4":
         VT52_cls_home()   # http://www.metric-conversions.org/de/temperatur/celsius-in-fahrenheit.htm
         print("Celsius in Fahrenheit")
-        celsiusValue = float(input("Celsius:"))
-        print("Celsius={celsius:1.2f}  ==> Fahrenheit={fahrenheit:1.2f}".format(celsius=celsiusValue,fahrenheit=celsius2Fahrenheit(celsiusValue)))
+        celsiusValue = readFloat(prompt="Celsius:")
+        print("Celsius={celsius:1.2f}  ==> Fahrenheit={fahrenheit:1.2f}".format(celsius=celsiusValue, fahrenheit=celsius2Fahrenheit(celsiusValue)))
         halt()
 
-    if antwort == "5":
+    elif antwort == "5":
         VT52_cls_home()
         print("Berechnet die Fakultät")
-        upperLimit = int(input("Obergrenze:"))
-        lowerLimit = int(input("Untergrenze:"))
+        upperLimit = readFloat(prompt="Obergrenze:")
+        lowerLimit = readFloat(prompt="Untergrenze:")
         print("{upper:5d}!  = {fak:7d}".format(upper=upperLimit, fak=fakultaet(obergrenze=upperLimit, untergrenze=lowerLimit)))
         halt()
 
-    if antwort == "0":
+    elif antwort == "0":
         doLoop = False
+
+    else:
+        print('Falsche Auswahl')
 
 print("Ende....Done")

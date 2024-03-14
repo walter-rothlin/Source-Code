@@ -62,6 +62,12 @@ SELECT
     last_name  AS Nachname
 FROM
     sakila.actor AS act;
+    
+SELECT
+	CONCAT(`first_name`, ' ', `last_name`) AS `Vor- Nachname`
+FROM
+	actor;
+    
 
 -- 1.3) Sortiert die Resultat-Tabelle von 1.2 nach Nachname, Vorname
 SELECT 
@@ -98,7 +104,7 @@ FROM
     actor
 ORDER BY Nachname;
 
--- 1.6) Von wie vielen Schauspieler hat oder hatte es eine DVD?
+-- 1.6) Von wie vielen Schauspieler hat oder hatte der Shop DVDs?
 SELECT 
     COUNT(last_name)
 FROM
@@ -126,7 +132,8 @@ ORDER BY
 -- 1.7.1 tbc) Gibt es Städte die es in mehreren Ländern gibt und wie heissen diese Städte?
 SELECT DISTINCT ci.city FROM city AS ci;
 
--- If you need only the duplicates between the result sets of two SELECT statements in MySQL, you can use the INTERSECT operator. Unfortunately, MySQL doesn't support the INTERSECT operator directly, but you can achieve the same result using JOIN or EXISTS clauses. Here's an example:
+-- If you need only the duplicates between the result sets of two SELECT statements in MySQL, you can use the INTERSECT operator. 
+-- Unfortunately, MySQL doesn't support the INTERSECT operator directly, but you can achieve the same result using JOIN or EXISTS clauses. Here's an example:
 
 SELECT column1, column2 
 FROM table1 
@@ -455,6 +462,49 @@ LEFT OUTER JOIN country AS B ON A.country_id = B.country_id;
 -- -- WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(STR_TO_DATE('17.03.2023','%d.%m.%Y'),'%d.%m.%Y')
 -- WHERE DATE_FORMAT(last_update,'%d.%m.%Y') = DATE_FORMAT(NOW(),'%d.%m.%Y')
 -- ORDER BY last_update DESC;
+
+-- 2.1) Vorbereitung
+SELECT * FROM actor WHERE actor_id > 200;
+
+SELECT
+	actor_id,
+    last_name,
+    first_name,
+    DATE_FORMAT(last_update,'%Y') AS `Jahr letzte Aenderung`,
+    DATE_FORMAT(last_update,'%W %d.%m.%Y %H:%i:%s') AS `Letzte Aenderung am`
+FROM actor 
+WHERE actor_id > 200;
+
+SELECT
+	actor_id,
+    last_name,
+    first_name,
+    DATE_FORMAT(last_update,'%Y') AS `Jahr letzte Aenderung`,
+    DATE_FORMAT(last_update,'%W %d.%m.%Y %H:%i:%s') AS `Letzte Aenderung am`
+FROM actor 
+WHERE DATE_FORMAT(last_update,'%d-%m-%Y') = '14-03-2024';
+
+SELECT
+    actor_id,
+    first_name,
+    last_name,
+    DATE_FORMAT(last_update, '%W') AS `Wochentag`,
+    DATE_FORMAT(last_update, '%W, %d.%m.%Y') AS `Letze Aenderung`
+FROM actor
+WHERE DATE_FORMAT(last_update, '%W') != 'Wednesday';
+
+INSERT INTO `actor` (actor_id, `first_name`, `last_name`) VALUES 
+	(201, 'Walter', 'Rothlin');
+
+INSERT INTO `actor` (actor_id, `first_name`, `last_name`) VALUES 
+	(200, 'Max', 'Meier');
+    
+UPDATE `actor` 
+	SET `last_update` = STR_TO_DATE('13-03 2024 14:59:41', '%d-%m %Y %H:%i:%s')
+WHERE (`actor_id` > 200);
+
+DELETE FROM `actor` WHERE (`actor_id` > 200);
+ALTER TABLE `actor` AUTO_INCREMENT = 200;  -- Reset Auto_Increment DDL Command
 
 
 -- 2.1.1) liste alle Mitarbeiter (staff) mit (Vorname, Nachname und LAST_UPDATE im format [yyyy-mon-dd hh:mm:ss]) auf, 

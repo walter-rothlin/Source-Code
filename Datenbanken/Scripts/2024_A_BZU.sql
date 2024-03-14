@@ -86,7 +86,6 @@ SELECT
     `last_name`  As `Nachname`
 FROM `actor`;
 
-
 -- 1.2) Beschrifte die Resultat-Tabelle von 1.1 mit Vorname und Nachname als Spalten-Header
 
 
@@ -103,6 +102,14 @@ FROM `actor`;
 
 
 
+SELECT
+    actor_id,
+    first_name,
+    last_name,
+    DATE_FORMAT(last_update, '%W') AS `Wochentag`,
+    DATE_FORMAT(last_update, '%W, %d.%m.%Y') AS `Letze Aenderung`
+FROM actor
+WHERE DATE_FORMAT(last_update, '%W') != 'Wednesday';
 
 
 
