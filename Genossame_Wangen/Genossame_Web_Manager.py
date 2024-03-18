@@ -212,7 +212,7 @@ def grpdivision_liste():
         # print(f's_criteria:{s_criteria}')
 
         genossame.check_and_reconnect_db()
-        rs = genossame.get_grpdivision_details_from_DB_by_ID(search_criterium=s_criteria)
+        rs = genossame.get_grpdivision_details_from_DB_by_ID(search_criterium=s_criteria, case_sensitive=True)
         # print(rs)
         rec_found = len(rs)
         # print('s_criteria:', s_criteria, '    Anz Rec found: ', rec_found)

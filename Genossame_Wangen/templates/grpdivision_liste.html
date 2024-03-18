@@ -7,9 +7,10 @@
     <div class="form">
         <form action="{{ url_for('grpdivision_liste') }}" method="POST">
             <input type="text" name="search_criteria" id="search_criteria" value="{{ search_criterium }}">
-            <input type="submit" value="suchen"> ({{ rec_found }})
+            <input type="submit" value="suchen"> <font size="-1">Gross-Kleinschreibung beachten! </font> (Datensätze gefunden: {{ rec_found }})
         </form>
         <br/>
+
     </div>
     <table class="table">
         <thead class="thead-dark">

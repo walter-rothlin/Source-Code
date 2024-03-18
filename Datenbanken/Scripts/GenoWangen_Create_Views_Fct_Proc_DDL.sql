@@ -1017,13 +1017,14 @@ DELIMITER ;
 -- =========================================
 --          Kommissionen                  --
 -- =========================================
+/*
 DROP FUNCTION IF EXISTS get_IDs_from_Kommissionen;
 DELIMITER //
 CREATE FUNCTION get_IDs_from_Kommissionen(p_Kommissionsname VARCHAR(45)) RETURNS VARCHAR(255)
 BEGIN
     DECLARE result_ids VARCHAR(255) DEFAULT '';
 
-    SELECT GROUP_CONCAT(id) INTO result_ids
+    SELECT GROUP_CONCAT(p_id) INTO result_ids
     FROM Kommissionen
     WHERE (Kommissionsname      LIKE CONCAT('%', p_Kommissionsname, '%') OR
            Kommissionsabkürzung LIKE CONCAT('%', p_Kommissionsname, '%')) AND Member_Bis IS NULL;
@@ -1031,6 +1032,7 @@ BEGIN
     RETURN result_ids;
 END//
 DELIMITER ;
+*/
 
 -- SELECT get_IDs_from_Kommissionen('Genossenrat');
 -- SELECT * FROM Personen_daten WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0;
@@ -1754,7 +1756,8 @@ CREATE VIEW Bürger_Geburtstage_Gerade AS
     ORDER BY Sorter ASC;
     
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS Mitarbeiter_Geburtstage; 
+DROP VIEW IF EXISTS Mitarbeiter_Geburtstage;
+/* tbd WR 18.3.2024
 CREATE VIEW Mitarbeiter_Geburtstage AS
     SELECT
         DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%d.%M') AS Geburtstag,
@@ -1780,6 +1783,32 @@ CREATE VIEW Mitarbeiter_Geburtstage AS
            FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0 ) AND 
            Todestag IS NULL
 	ORDER BY Sorter ASC;
+    */
+CREATE VIEW Mitarbeiter_Geburtstage AS
+	SELECT
+        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%d.%M') AS Geburtstag,
+        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%Y')    AS Jahr,
+		DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%W')    AS Wochentag,
+		Geburtstag  AS Geburtsdatum,
+        `Alter`,
+        `Alter_in_diesem_Jahr`,
+        
+        Geschlecht,
+        Vorname_Initial,
+        Familien_Name,
+        Private_Strassen_Adresse,
+        Private_PLZ_Ort,
+        Tel_Nr,
+        eMail,
+		ID,
+		Kategorien,
+        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%m%d') AS Sorter
+    FROM Personen_Daten
+    WHERE (ID in (SELECT P_ID FROM Kommissionen WHERE  (Kommissionsname LIKE 'Mitarbeiter' AND Member_Bis IS NULL)) or
+           ID in (SELECT P_ID FROM Kommissionen WHERE  (Kommissionsname LIKE 'Genossenrat' AND Member_Bis IS NULL)) or
+           ID in (SELECT P_ID FROM Kommissionen WHERE  (Kommissionsname LIKE 'GPK'         AND Member_Bis IS NULL)) and
+           Todestag IS NOT NULL)
+	ORDER BY Sorter ASC;
 
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Genossenrat; 
@@ -1787,228 +1816,16 @@ CREATE VIEW Genossenrat AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR
-          FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0
+    WHERE ID in (SELECT P_ID FROM Kommissionen WHERE  (Kommissionsname LIKE 'Genossenrat' AND Member_Bis IS NULL))
     ORDER BY Funktion, Familien_Name, Vorname;
-    
--- -----------------------------------------------------
-/*
-DROP VIEW IF EXISTS Kommissionen_OLD; 
-CREATE VIEW Kommissionen_OLD AS
-    SELECT
-        ID,
-        'LWK'         AS `Kommission`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        eMail,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (644,100,693,336,572)
-    UNION
-	SELECT
-        ID,
-        'Forst'         AS `Kommission`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        eMail,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (357,589,660)
-    UNION
-	SELECT
-        ID,
-        'Liegenschaft'         AS `Kommission`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        eMail,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (524, 261, 483, 224, 1028)
-	UNION
-	SELECT
-        ID,
-        'Energie'         AS `Kommission`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        eMail,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (357,644,1036,1096,757,1122,1125)
-	UNION
-	SELECT
-        ID,
-        'GPK'         AS `Kommission`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        eMail,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (452, 871, 647)
-	UNION
-	SELECT
-        ID,
-        'Nuoler_Ried'         AS `Kommission`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        eMail,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (357,644,524,483,100,336,1211,1212,1213,1214,1215)
-	ORDER BY Kommission, Last_Name, Vorname_Initial;
 
--- -----------------------------------------------------
-DROP VIEW IF EXISTS Projekt_Personen_Listen; 
-CREATE VIEW Projekt_Personen_Listen AS
-	SELECT
-        ID,
-        'Gebrauchsleihe: Marienhöfli'         AS `Projekt`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        Tel_Nr_1,
-        eMail,
-        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
-		Concat('SAK:',SAK)                  AS `Diverses_2`,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (693, 990)
-    UNION
-	SELECT
-        ID,
-        'Gebrauchsleihe: Stall Winkelhöfli'         AS `Projekt`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        Tel_Nr_1,
-        eMail,
-        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
-		Concat('SAK:',SAK)                  AS `Diverses_2`,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (693, 1076, 723, 100)
-	UNION
-	SELECT
-        ID,
-        'Winteratzung'         AS `Projekt`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        Tel_Nr_1,
-        eMail,
-        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
-		Concat('SAK:',SAK)                  AS `Diverses_2`,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (1208, 723, 832, 783, 1113, 1210)
-    UNION
-	SELECT
-        ID,
-        'Kibietzförderflächen'         AS `Projekt`,
-        Geschlecht,
-		Vorname_Initial,
-        Last_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        Tel_Nr_1,
-        eMail,
-        Concat('BetriebsNr:',Betriebs_Nr)   AS `Diverses`,
-		Concat('SAK:',SAK)                  AS `Diverses_2`,
-        IBAN,
-        Geburtstag,
-        Alter_in_diesem_Jahr,
-        AHV_Nr,
-        Brief_Anrede,
-		Vorname_Familienname
-    FROM Personen_Daten
-    WHERE ID IN (493,693,202,495,637)
-	ORDER BY Projekt, Last_Name, Vorname_Initial;
-*/    
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Mitarbeiter;
 CREATE VIEW Mitarbeiter AS
     SELECT
         *
     FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Mitarbeiter')) >  0 
+    WHERE ID in (SELECT P_ID FROM Kommissionen WHERE  (Kommissionsname LIKE 'Mitarbeiter' AND Member_Bis IS NULL))
     ORDER BY Funktion, Familien_Name, Vorname;
     
 -- -----------------------------------------------------
