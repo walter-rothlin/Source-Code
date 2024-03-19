@@ -85,35 +85,40 @@ status_wifi.off()
 # try to connect to WIFI
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect('WalterRothlin_2', 'waltiClaudia007')
+# wlan.connect('WalterRothlin_2', 'waltiClaudia007')
+wlan.connect('WIFI-PSC', 'Wlan-PSC!')
 
-while not wlan.isconnected() and wlan.status() >= 0:
+max_wifi_connect_tries = 100
+wifi_connect_tries = 0
+while not wlan.isconnected() and wlan.status() >= 0 and wifi_connect_tries < max_wifi_connect_tries:
+    wifi_connect_tries += 1
     status_wifi.toggle()
-    print('WARNING: Not connected to WIFI!!!!')
+    print(f'WARNING ({wifi_connect_tries:3d}): Not connected to WIFI!!!!')
     sleep(0.5)
 
-ip_adr = ''
-clock_is_set = False
-if wlan.isconnected():
-    status_wifi.on()
-    status_warning.off()
-    netConfig = wlan.ifconfig()
-    ip_adr = str(netConfig[0])
-    clock_is_set = set_rtc_time(rtc)
+if wifi_connect_tries < max_wifi_connect_tries:
+    ip_adr = ''
+    clock_is_set = False
+    if wlan.isconnected():
+        status_wifi.on()
+        status_warning.off()
+        netConfig = wlan.ifconfig()
+        ip_adr = str(netConfig[0])
+        clock_is_set = set_rtc_time(rtc)
 
-addr = socket.getaddrinfo(netConfig[0], 80)[0][-1]
-server = socket.socket()
-server.bind(addr)
-server.listen(1)
-status_ok.on()
+    addr = socket.getaddrinfo(netConfig[0], 80)[0][-1]
+    server = socket.socket()
+    server.bind(addr)
+    server.listen(1)
+    status_ok.on()
 
-clock_is_set_text = 'Clock NOT syncronized'
-if clock_is_set:
-    clock_is_set_text = 'Clock is syncronized'
+    clock_is_set_text = 'Clock NOT syncronized'
+    if clock_is_set:
+        clock_is_set_text = 'Clock is syncronized'
 
-print(pgm_name, 'Version:', version)
-print('Actual IP:', ip_adr, end='\n')
-print('Date/Time now: ', get_string_from_date_time(rtc.datetime()), clock_is_set_text, end='\n\n')
+    print(pgm_name, 'Version:', version)
+    print('Actual IP:', ip_adr, end='\n')
+    print('Date/Time now: ', get_string_from_date_time(rtc.datetime()), clock_is_set_text, end='\n\n')
 
 watchdog_timer = Timer()
 watchdog_timer.init(period=2000, mode=Timer.PERIODIC, callback=watch_dog_cb_fct)
@@ -121,7 +126,7 @@ watchdog_timer.init(period=2000, mode=Timer.PERIODIC, callback=watch_dog_cb_fct)
 minuten_clock = Timer()
 minuten_clock.init(period=60000, mode=Timer.PERIODIC, callback=minuten_takt)
 
-# Auf eingehende Verbindungen hören
+# Auf eingehende Requests hören
 while True:
     try:
         conn, addr = server.accept()
