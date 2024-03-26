@@ -48,6 +48,7 @@
 -- 07-Feb-2024   Walter Rothlin      Removed Login_Table
 -- 17-Feb-2024   Walter Rothlin      Removed Geno_Reisende
 -- 19-Feb-2024   Walter Rothlin      Fixed Error in Fct getReferenced_Name by adding READS SQL DATA
+-- 21-Mar-2024   Walter Rothlin      Cleanup code
 -- -----------------------------------------
 
 -- To-Does
@@ -133,8 +134,6 @@ DROP VIEW IF EXISTS Genossenrat;
 DROP VIEW IF EXISTS Kommissionen;
 DROP VIEW IF EXISTS Projekt_Personen_Listen;
 DROP VIEW IF EXISTS Mitarbeiter;
-DROP VIEW IF EXISTS Geno_Reisende;
-DROP VIEW IF EXISTS Graue_Panter;
 DROP VIEW IF EXISTS Bürger_Nutzungsberechtigt;
 DROP VIEW IF EXISTS Nutzungsberechtigt_co_Einschränkung;
 DROP VIEW IF EXISTS Bürger_Nicht_Nutzungsberechtigt;
@@ -948,9 +947,6 @@ DELIMITER ;
 
 -- -----------------------------------------
 
-
-
-
 -- =========================================
 --          Nutzen                        --
 -- =========================================
@@ -1757,33 +1753,6 @@ CREATE VIEW Bürger_Geburtstage_Gerade AS
     
 -- -----------------------------------------------------
 DROP VIEW IF EXISTS Mitarbeiter_Geburtstage;
-/* tbd WR 18.3.2024
-CREATE VIEW Mitarbeiter_Geburtstage AS
-    SELECT
-        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%d.%M') AS Geburtstag,
-        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%Y')    AS Jahr,
-		DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%W')    AS Wochentag,
-		Geburtstag  AS Geburtsdatum,
-        `Alter`,
-        `Alter_in_diesem_Jahr`,
-        
-        Geschlecht,
-        Vorname_Initial,
-        Familien_Name,
-        Private_Strassen_Adresse,
-        Private_PLZ_Ort,
-        Tel_Nr,
-        eMail,
-		ID,
-		Kategorien,
-        DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%m%d') AS Sorter
-    FROM Personen_Daten
-    WHERE (FIND_IN_SET(ID, get_IDs_from_Kommissionen('Mitarbeiter')) >  0 OR
-           FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0 OR
-           FIND_IN_SET(ID, get_IDs_from_Kommissionen('GPK')) >  0 ) AND 
-           Todestag IS NULL
-	ORDER BY Sorter ASC;
-    */
 CREATE VIEW Mitarbeiter_Geburtstage AS
 	SELECT
         DATE_FORMAT(STR_TO_DATE(`Geburtstag`,'%d.%m.%Y'), '%d.%M') AS Geburtstag,
@@ -1826,38 +1795,6 @@ CREATE VIEW Mitarbeiter AS
         *
     FROM Personen_Daten
     WHERE ID in (SELECT P_ID FROM Kommissionen WHERE  (Kommissionsname LIKE 'Mitarbeiter' AND Member_Bis IS NULL))
-    ORDER BY Funktion, Familien_Name, Vorname;
-    
--- -----------------------------------------------------
-/*
-DROP VIEW IF EXISTS Geno_Reisende; 
-CREATE VIEW Geno_Reisende AS
-    SELECT
-        ID,
-        ''                          AS Anzahl_angemeldet,
-        Geschlecht,
-        Vorname_Initial             AS Vorname,
-        Familien_Name               AS `Name`,
-        Private_Strassen_Adresse    AS Strasse_Nr,
-        Private_PLZ_Ort             AS PLZ_Ort,
-        Tel_Nr,
-        eMail,
-        Geburtstag,
-        Kategorien,
-        Brief_Anrede_PerDu
-    FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Genossenrat')) >  0  OR
-          FIND_IN_SET(ID, get_IDs_from_Kommissionen('Mitarbeiter')) >  0  OR
-          ID IN (488, 1180, 1181, 1182, 1183, 1184, 1185, 1186, 1187, 1188)   -- Partner
-    ORDER BY Familien_Name, Vorname;
-*/
--- -----------------------------------------------------
-DROP VIEW IF EXISTS Graue_Panter; 
-CREATE VIEW Graue_Panter AS
-    SELECT
-        *
-    FROM Personen_Daten
-    WHERE FIND_IN_SET(ID, get_IDs_from_Kommissionen('Graue Panter')) >  0
     ORDER BY Funktion, Familien_Name, Vorname;
 
 -- -----------------------------------------------------
@@ -2711,73 +2648,6 @@ FROM (
 GROUP BY Ver_landteil
 HAVING COUNT(*) > 1;
 
--- -----------------------------------------------------
-/*
-DROP VIEW IF EXISTS Wärmeanschlüsse_Reco; 
-CREATE VIEW Wärmeanschlüsse_Reco AS
-	SELECT 
-       `anschluss`.`ID`                                         AS `ID`,
-	   `standort`.`ID`                                          AS `Stao_ID`,
-       -- `standort`.`Strassen_Adresse`                            AS `Standort`,
-       `anschluss`.`Parzellen_Nummer`                           AS `Parzellen_Nummer`,
-       `anschluss`.`Korrenspondenz`                             AS `Korrenspondenz`,
-       `anschluss`.`Gebietsbezeichnung`                         AS `Gebietsbezeichnung`,
-       `anschluss`.`Anschluss_Type`                             AS `Anschluss_Type`,
-       `anschluss`.`Anschluss_Gebühr`                           AS `Anschluss_Gebühr`,
-       `anschluss`.`Vertrag_unterzeichnet_Am`                   AS `Vertrag_unterzeichnet_Am`,
-       `anschluss`.`Teilanschluss_Vereinbarung_Endet_Am`        AS `Teilanschluss_Vereinbarung_Endet_Am`,
-       `anschluss`.`Verrechnet_Am`                              AS `Verrechnet_Am`,
-       `anschluss`.`Bezahlt_Am`                                 AS `Bezahlt_Am`,
-  
-       `anschluss`.`kW_Leistung`                                AS `kW_Leistung`,
-       `anschluss`.`Stations_Type`                              AS `Stations_Type`,
-
-       `anschluss`.`Fabrikations_Nr`                            AS `Fabrikations_Nr`,
-       `anschluss`.`Steuerungs_Type`                            AS `Steuerungs_Type`,
-       `anschluss`.`Zähler_Nr`                                  AS `Zähler_Nr`,
-       `anschluss`.`Baujahr_Station`                            AS `Baujahr_Station`,
-  
-       `anschluss`.`Inbetrieb_genommen_Am`                      AS `Inbetrieb_genommen_Am`,
-       `anschluss`.`Letzte_Kontrolle_Am`                        AS `Letzte_Kontrolle_Am`,
-       `anschluss`.`Sieb_Primär_gereinigt_Am`                   AS `Sieb_Primär_gereinigt_Am`,
-       `anschluss`.`Sieb_Sekundär_gereinigt_Am`                 AS `Sieb_Sekundär_gereinigt_Am`,
-       `anschluss`.`SBS_Baterrien_gewechselt_Am`                AS `SBS_Baterrien_gewechselt_Am`,
-  
-       `anschluss`.`Parameter`                                  AS `Parameter`,
-       `anschluss`.`Durchleitungsvertrag_unterzeichnet_Am`      AS `Durchleitungsvertrag_unterzeichnet_Am`,
-       `anschluss`.`Durchleitungsvertrag_endet_Am`              AS `Durchleitungsvertrag_endet_Am`,
-       `anschluss`.`Bezahlte_Durchleitungs_Gebühr`              AS `Bezahlte_Durchleitungs_Gebühr`,
-       `anschluss`.`Bemerkungen`                                AS `Bemerkungen`,
-       
-       eigentümer.ID                                  AS Eigentümer_ID,
-	   kontakt.ID                                     AS Kontakt_ID,
-       rechAdr.ID                                     AS Rechnung_ID,
-       heiziger.ID                                    AS Heiziger_ID,
-       elektriker.ID                                  AS Elektriker_ID
-       
-	FROM Wärmeanschlüsse AS anschluss
-    LEFT OUTER JOIN Adress_Daten   AS standort   ON standort.ID   = anschluss.Standort_Adresse_ID
-    LEFT OUTER JOIN Personen_Daten AS eigentümer ON eigentümer.ID = anschluss.Eigentümer_ID
-    LEFT OUTER JOIN Personen_Daten AS kontakt    ON kontakt.ID    = anschluss.Kontakt_ID
-    LEFT OUTER JOIN Personen_Daten AS rechAdr    ON rechAdr.ID    = anschluss.Rechnungs_Adresse_ID
-    LEFT OUTER JOIN Personen_Daten AS heiziger   ON heiziger.ID   = anschluss.Heizungs_Installateur_ID
-    LEFT OUTER JOIN Personen_Daten AS elektriker ON elektriker.ID = anschluss.Elektro_Installateur_ID;
- */
-
--- --------------------------------------------------------------------------------    
-/*
-DROP VIEW IF EXISTS Login_Table; 
-CREATE VIEW Login_Table AS
-    SELECT
-        Personen_ID,
-        Vorname_Familienname,
-        Tel_Nr,
-        -- eMail,
-        `Password`
-    FROM Personen_has_Priviliges AS pers_priv
-    JOIN Personen_Daten AS pDaten ON  pers_priv.Personen_ID = pDaten.ID;
-*/
-    
 -- --------------------------------------------------------------------------------    
 DROP VIEW IF EXISTS App_Priviliges; 
 CREATE VIEW App_Priviliges AS
@@ -3842,113 +3712,9 @@ BEGIN
     
     UPDATE `IBAN` SET `Lautend_auf` = ''  WHERE `Lautend_auf` IS NULL;
 
-    
-	/* 
-    DELETE FROM iban WHERE ID IN (SELECT ID FROM Personen WHERE Zivilstand = 'Gestorben');
-    
-    DELETE 
-    FROM email_adressen 
-    WHERE ID IN (SELECT EMail_Adressen_ID 
-                 FROM personen_has_email_adressen 
-                 WHERE Personen_ID IN (SELECT ID 
-                                       FROM Personen 
-                                       WHERE Zivilstand = 'Gestorben'));
-                                  
-	DELETE 
-    FROM personen_has_email_adressen 
-    WHERE Personen_ID IN (SELECT ID 
-                          FROM Personen 
-                          WHERE Zivilstand = 'Gestorben');
-    
-    
-	DELETE
-    FROM telefonnummern 
-    WHERE ID IN (SELECT Telefonnummern_ID 
-                 FROM personen_has_telefonnummern 
-                 WHERE Personen_ID IN (SELECT ID 
-                                       FROM Personen 
-                                       WHERE Zivilstand = 'Gestorben'));
-	DELETE 
-    FROM personen_has_telefonnummern 
-    WHERE Personen_ID IN (SELECT ID 
-                          FROM Personen 
-                          WHERE Zivilstand = 'Gestorben'); 
-    */
-
 END$$
 DELIMITER ;
 
 call important_updates();
 
-
-
-
--- ------------------------------------------------------
--- Hilfreiche Abfragen
--- ------------------------------------------------------
-/*
- UPDATE EMail_Adressen SET Type='Fehlermeldung' 
-		   WHERE ID IN (4,65,11,164,95,130,287,40,44,145,139,277,44,112,183,226,258,174,288,444);
- UPDATE EMail_Adressen SET Prio=100 
-		   WHERE ID IN (4,65,11,164,95,130,287,40,44,145,139,277,44,112,183,226,258,174,288,444);
-
-UPDATE EMail_Adressen SET eMail=CONCAT('FEHLER:',eMail)
-		   WHERE ID IN (4,65,11,164,95,130,287,40,44,145,139,277,44,112,183,226,258,174,288,444);
-*/
-           
--- SELECT * FROM email_liste WHERE Pers_ID in (671,491,804,88,489);
-
- 
-
- /*
- SELECT Vorname_Initial,
-       getFamilieName(P.Sex, 
-                      P.Partner_Name_Angenommen, 
-                      P.Ledig_Name, 
-                      P.Partner_Name) AS Familien_Name,
-       P.Sex, 
-       P.Partner_Name_Angenommen, 
-	   P.Ledig_Name, 
-       P.Partner_Name
-FROM personen AS P 
-WHERE ID in (11,23,42,889) 
-ORDER BY Familien_Name;
-*/
-
-
-/*
-SELECT
-    ID                                                 AS ID,
-    Anrede_Long_Long                                   AS Anrede,
-    Private_Strassen_Adresse                           AS Strasse,
-    CONCAT(Private_PLZ_International,' ',Private_Ort)  AS PLZ_Ort,
-    
-    DATE_FORMAT(Geburtstag, '%d.%m.%Y') AS Geburtstag,
-
-    Zivilstand    AS Zivilstand,
-    Kategorien    AS Kategorien,
-    Such_Begriff  AS Such_Begriff
-FROM Personen_Daten 
-WHERE 
-        ID is NOT NULL
-        -- AND ID in (11,23,42,488,487,889)
-        -- AND (FIND_IN_SET('Landwirt', `Kategorien`) > 0 OR FIND_IN_SET('Bürger', `Kategorien`) > 0)
-        AND (Such_Begriff LIKE BINARY '%Kä' AND Such_Begriff LIKE BINARY '%holz%')
-ORDER BY Familien_Name, Vorname;
-*/
-
-/*
-SELECT * FROM personen_has_email_adressen WHERE Personen_ID = 305;
-SELECT * FROM eMail_Adressen WHERE eMail = 'fam-schnellmann@bluewin.ch';
-
-SELECT * FROM personen_has_telefonnummern WHERE Personen_ID = 590;
-SELECT * FROM telefonnummern WHERE nummer = 7928579;
-*/
-
-
-
-
--- ----------------------------------------------------------------------------------
--- TBD TBD TBD TBD TBD TBD TBD TBD TBD TBD TBD TBD
--- ----------------------------------------------------------------------------------
 

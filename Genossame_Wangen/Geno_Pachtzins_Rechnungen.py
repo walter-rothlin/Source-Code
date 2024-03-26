@@ -11,15 +11,15 @@
 # History:
 # 17-Jun_2022   Walter Rothlin      Initial Version
 # 31-Dec-2022   Walter Rothlin      Neuste Library: https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
-
+# 23-Mar-2024   Walter Rothlin      Prepared for 2024
 # ------------------------------------------------------------------
 from SwissQRInvoiceGenerator import *
 from Genossame_Common_Defs import *
 
 
 if __name__ == '__main__':
-    base_directory = './Rechnungen_2023/'
-    base_directory = 'V:/Landwirtschaft/Pachtland/Pachtzinsrechnungen/2023/'
+    base_directory = './Rechnungen_2024/'
+    base_directory = 'V:/Landwirtschaft/Pachtland/Pachtzinsrechnungen/2024/'
 
 
     title = 'Pachtlandzins_2024'

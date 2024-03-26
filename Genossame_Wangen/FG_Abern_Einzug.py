@@ -11,6 +11,7 @@
 # History:
 # 17-Jun_2022   Walter Rothlin      Initial Version
 # 31-Dec-2022   Walter Rothlin      Neuste Library: https://github.com/TobiasRothlin/SwissQRInvoiceGenerator
+# 23-Mar-2024   Walter Rothlin      Data moved to V:
 # ------------------------------------------------------------------
 from SwissQRInvoiceGenerator import *
 from openpyxl import load_workbook
@@ -18,9 +19,13 @@ from waltisLibrary import *
 
 
 if __name__ == '__main__':
-    jahr = "2023"
-    baseDestDir = 'N:\\06_FG_Abern\\' + jahr + '\\PerimeterRechnungen\\'
-    baseSourceDir = 'N:\\06_FG_Abern\\'
+    jahr = "2024"
+    ## tbd 23.3.2024    baseDestDir = 'N:\\06_FG_Abern\\' + jahr + '\\PerimeterRechnungen\\'
+    ## tbd 23.3.2024    baseSourceDir = 'V:\\06_FG_Abern\\'
+
+    baseSourceDir = r'V:\Landwirtschaft\Flurgenossenschaften\FG Aberen\FG_Aberen_Kassier\\'
+    baseDestDir   = baseSourceDir + jahr + '\\PerimeterRechnungen\\'
+
 
     sourceDate = 'FG_Aberen_Kassier.xlsx'
 
@@ -42,16 +47,19 @@ if __name__ == '__main__':
     dataSheet = wb['Perimeter']
 
     # Strassenbenützung
+    zeilen_nummer_strassenbenutzung = '23'
     addr_strassenbenutzung = {
-        "name": dataSheet['B17'].value + " " + dataSheet['C17'].value,
-        "address": dataSheet['D17'].value,
-        "zip_code": str(dataSheet['E17'].value),
-        "city": dataSheet['F17'].value,
+        "name": dataSheet['B'+zeilen_nummer_strassenbenutzung].value + " " + dataSheet['C'+zeilen_nummer_strassenbenutzung].value,
+        "address": dataSheet['D'+zeilen_nummer_strassenbenutzung].value,
+        "zip_code": str(dataSheet['E'+zeilen_nummer_strassenbenutzung].value),
+        "city": dataSheet['F'+zeilen_nummer_strassenbenutzung].value,
         "country": "",
     }
 
-    pdfName = baseDestDir + "FG_Aberen_Strassenbenutzung 1"
-    htmlName = baseDestDir + "FG_Aberen_Strassenbenutzung 1" + ".html"
+    # EZ für Strassenbenutzung
+    # ------------------------
+    pdfName = baseDestDir + "FG_Aberen_Strassenbenutzung"
+    htmlName = baseDestDir + "FG_Aberen_Strassenbenutzung" + ".html"
 
     createQRInvoice(
         generateQRInvoiceData(
@@ -59,19 +67,22 @@ if __name__ == '__main__':
             addr_FG_Aberen,
             addr_strassenbenutzung,
             amount="50.00",
-            additional_information="Strassenbeutzung 2023"),
+            additional_information="Strassenbeutzung " + jahr),
         invoice_text_html="",
         pdfName=pdfName,
         htmlName=htmlName)
 
+    if (os.path.exists(htmlName)):
+        os.remove(htmlName)
     print("Produced following files: ", pdfName)
 
-
+    # EZ für Perimeter-Einzug
+    # -----------------------
     doLoop = True
-    row = 2
+    row = 7   #   1.Zeile
     while doLoop:
         anschrift = dataSheet['A' + str(row)].value
-        # print("==> ", anschrift, ";", type(anschrift), end="\n")
+        ## print("==> ", anschrift, ";", type(anschrift), end="\n")
 
         vorname   = dataSheet['B' + str(row)].value
         if vorname is None:
