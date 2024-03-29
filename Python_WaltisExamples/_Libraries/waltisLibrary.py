@@ -2959,11 +2959,11 @@ def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
                                     take_action            = {take_action},
                                     verbal                 = {verbal})''')
 
-    sql_insert = f"SELECT Attr_Type,Enum_Set_Values FROM Table_Meta_data WHERE `Table` = '{table}' AND `Attribute` = '{attribute}'"
+    select_sql = f"SELECT Attr_Type,Enum_Set_Values FROM Table_Meta_data WHERE `Table` = '{table}' AND `Attribute` = '{attribute}'"
     if verbal:
-        print(sql_insert)
+        print(select_sql)
     mycursor = db.cursor()
-    mycursor.execute(sql_insert)
+    mycursor.execute(select_sql)
     ret_val = {}
     for aRec in mycursor.fetchall():
         ret_val = {
@@ -2971,6 +2971,50 @@ def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
             'enums': ''  # aRec[1]    # .decode('ascii')
         }
     return ret_val
+
+def get_db_attr_type_new(db, schema_name=None, table_name=None, attribute_name=None, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_db_attr_type_new(db,
+                                    schema_name            = {schema_name},
+                                    table_name             = {table_name}, 
+                                    attribute_name         = {attribute_name},
+                                    take_action            = {take_action},
+                                    verbal                 = {verbal})''')
+
+    where_clause_list = []
+    where_clause_str = ''
+    if schema_name is not None:
+        where_clause_list.append(f"TABLE_SCHEMA = '{schema_name}'")
+    if table_name is not None:
+        where_clause_list.append(f"TABLE_NAME = '{table_name}'")
+    where_clause_str = ' AND '.join(where_clause_list)
+    if where_clause_str != '':
+        where_clause_str = 'WHERE ' + where_clause_str
+
+    select_sql = f"""
+SELECT
+	TABLE_SCHEMA   AS TABLE_SCHEMA,
+	TABLE_NAME     AS TABLE_NAME,
+	COLUMN_NAME    AS Attribute,
+	DATA_TYPE      AS Attr_Type,
+	COLUMN_KEY     AS Is_key,
+	COLUMN_TYPE    AS Attr_Type_Values,
+	'TBD' AS Set_Values
+FROM INFORMATION_SCHEMA.COLUMNS
+{where_clause_str}
+    """
+
+
+    if verbal:
+        print(select_sql)
+    mycursor = db.cursor()
+    mycursor.execute(select_sql)
+    ret_val = {}
+    for aRec in mycursor.fetchall():
+        print(aRec)
+    return ret_val
+
 
 
 def update_db_attributes(db=None,
@@ -3087,6 +3131,53 @@ def update_db_attribute(db=None,
 
     return update_count
 
+def get_table_records(db, table_name, where_clause=None, as_dictionary=True, take_action=False, verbal=False):
+    if verbal:
+        print(f'''
+           --> Calling get_table_records(db,
+                                    table_name             = {table_name}, 
+                                    take_action            = {take_action},
+                                    verbal                 = {verbal})''')
+
+    select_stmt = f"SELECT * FROM {table_name}"
+    if where_clause is not None:
+        select_stmt += ' WHERE ' + where_clause
+    if verbal:
+        print(select_stmt)
+
+    mycursor = db.cursor(dictionary=as_dictionary)
+    mycursor.execute(select_stmt)
+    my_results = mycursor.fetchall()
+    if verbal:
+        for a_data_set in my_results:
+            print(a_data_set)
+        print('Count:', len(my_results))
+    return my_results
+
+def create_sql_stmt_from_rs(result_set, table_name='Language', as_csv=False, take_action=False, verbal=False):
+    if verbal:
+        print(result_set)
+
+    ret_str = ''
+    attr_list = []
+    for attr_name in result_set[0]:
+        attr_list.append('`' + attr_name + '`')
+
+    ret_str += f"""INSERT INTO `{table_name}` ({', '.join(attr_list)}) VALUES \n"""
+    for a_tuple in result_set:
+        value_list = []
+        for attr_name, attr_value in a_tuple.items():
+            if isinstance(attr_value, datetime.datetime):
+                attr_value = f"STR_TO_DATE('{attr_value}', '%Y-%m-%d %H:%i:%s')"
+            elif isinstance(attr_value, str):
+                attr_value = f"'{attr_value}'"
+            else:
+                attr_value = f"{attr_value}"
+            # print(attr_name, attr_value)
+            value_list.append(attr_value)
+        ret_str += f"""  ({', '.join(value_list)}),\n"""
+    ret_str = ret_str[0:-2] + ";"
+    return ret_str
 
 # ------------------------
 # Reusable Excel-Functions
