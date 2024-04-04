@@ -38,12 +38,12 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- =========================================
 -- == Schema Stammdaten kreieren          ==
 -- =========================================
-DROP SCHEMA IF EXISTS genossame_wangen;
-CREATE SCHEMA IF NOT EXISTS genossame_wangen  DEFAULT CHARACTER SET utf8 ;
+DROP SCHEMA IF EXISTS geno_clone;
+CREATE SCHEMA IF NOT EXISTS geno_clone  DEFAULT CHARACTER SET utf8 ;
 
 -- Als default Schema setzen
 SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
-USE genossame_wangen;
+USE geno_clone;
 
 
 -- =========================================

@@ -13,7 +13,7 @@
 # 06-Dec-2017   Walter Rothlin      Initial Version (Eigene Funktions von umrechnen.py ausgelagert)
 # 28-May-2019   Walter Rothlin      Added Primzahlen functions
 # 07-Jun-2019   Walter Rothlin      Merged with littlePythonLib.py
-# 09-Apr-2020   Walter Rothlin      Refactoring isPrimezahl()
+# 09-Apr-2020   Walter Rothlin      Refactoring isPrimzahl()
 # 28-Sep-2020   Walter Rothlin      Added equalsWithinTolerance
 # 19-Nov-2020   Walter Rothlin      Added calcCircle mit None parameter
 # 10-Dec-2020   Walter Rothlin      Added fakultaet
@@ -56,6 +56,11 @@
 # 10-Feb-2024   Walter Rothlin      Added read_text_file_into_list_of_lines, remove_empty_line
 # 15-Feb-2024   Walter Rothlin      Added get_sql_datums_update_value
 # 14-Mar-2024   Walter Rothlin      Changes for BZU
+# 04-Apr-2024   Walter Rothlin      Added SQL Functions:
+#                                           get_table_records
+#                                           create_sql_stmt_from_rs
+#                                           create_insert_data_stmt
+#                                           File_create
 # ------------------------------------------------------------------
 
 # toDo:
@@ -94,6 +99,7 @@ import locale
 # Library fucntions
 # =================
 import requests
+import json
 
 
 def waltisPythonLib_Version():
@@ -1099,6 +1105,34 @@ def isPrimzahl(aZahl):
                 isPrim = False
     return isPrim
 
+def isPrimzahl_0(n):
+    if n == 1:
+        isPrimzahl = False
+    else:
+        t = 2
+        while True:
+            if t >= n:
+                isPrimzahl = True
+                break
+            if n % t == 0:
+                isPrimzahl = False
+                break
+            t += 1
+    return isPrimzahl
+
+def isPrimzahl_2(eineZahl):
+    ist_eine_Primzahl = True
+    if eineZahl == 1:
+        ist_eine_Primzahl = False
+    if eineZahl == 2:
+        ist_eine_Primzahl = True
+
+    obergrenze = int(eineZahl / 2) + 1
+    for i in range(2, obergrenze):
+        if eineZahl % i == 0:
+            ist_eine_Primzahl = False
+            break
+    return ist_eine_Primzahl
 
 def getNextPrimzahl(zahl):
     if ((zahl % 2) == 0):  # then Gerade
@@ -1120,7 +1154,7 @@ def getPrevPrimzahl(zahl):
         return 1
     else:
         # print("getPrevPrimzahl::Startwert:",aZahl)
-        while (isPrimzahl(aZahl) == False):
+        while isPrimzahl(aZahl) == False:
             aZahl = aZahl - 2
     return aZahl
 
@@ -1146,8 +1180,8 @@ def getPrimfactorsAsList(zahl):
     if zahl == 1 or zahl == 2:
         ret_list = [zahl]
     else:
-        while (isPrimzahl(aZahl) == False):
-            if ((aZahl % aDivisor) == 0):
+        while isPrimzahl(aZahl) == False:
+            if (aZahl % aDivisor) == 0:
                 if aZahl > 1:
                     ret_list.append(aDivisor)
                 aZahl = int(aZahl / aDivisor)  # Ganzzahlige division
@@ -2225,6 +2259,9 @@ def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr=""):
     aTestFile.writelines(lines)
     aTestFile.close()
 
+def File_create(filename, str_to_save='', mode= 'w', encoding="utf-8", verbal=False):
+    with open(filename, mode, encoding=encoding) as file:
+        file.write(str_to_save)
 
 def AUTO_TEST_a_File_addHeader(verbal=False):
     testsPerformed = 0
@@ -3167,17 +3204,56 @@ def create_sql_stmt_from_rs(result_set, table_name='Language', as_csv=False, tak
     for a_tuple in result_set:
         value_list = []
         for attr_name, attr_value in a_tuple.items():
+            if verbal:
+                print('-->', attr_name, attr_value, type(attr_value))
             if isinstance(attr_value, datetime.datetime):
                 attr_value = f"STR_TO_DATE('{attr_value}', '%Y-%m-%d %H:%i:%s')"
+            elif isinstance(attr_value, datetime.date):
+                attr_value = f"STR_TO_DATE('{attr_value}', '%Y-%m-%d')"
+            elif isinstance(attr_value, set):
+                attr_value = str(attr_value)
+                if attr_value == 'set()':
+                    # print(attr_value)
+                    attr_value = 'NULL'
+                else:
+                    attr_value = attr_value.replace("', '", ",")
+                    attr_value = attr_value[:-2]   # .replace(r"'{", "")
+                    attr_value = attr_value[2:]    # .replace(r"}'", "")
+                    attr_value = f"'{attr_value}'"
             elif isinstance(attr_value, str):
+                attr_value = attr_value.replace("'", "\\'")
+                attr_value = attr_value.replace("\n", "<br/>")
                 attr_value = f"'{attr_value}'"
+            elif attr_value is None:
+                attr_value = 'NULL'
             else:
                 attr_value = f"{attr_value}"
-            # print(attr_name, attr_value)
             value_list.append(attr_value)
+            if verbal:
+                print('==>', attr_name, attr_value, type(attr_value), "\n")
+        if verbal:
+            print('\n\n', value_list)
         ret_str += f"""  ({', '.join(value_list)}),\n"""
     ret_str = ret_str[0:-2] + ";"
     return ret_str
+
+
+def create_insert_data_stmt(db_schema, table_name, where_clause=None):
+    data_sets = get_table_records(db_schema, table_name=table_name, where_clause=where_clause, as_dictionary=True, take_action=True, verbal=False)
+    insert_str = create_sql_stmt_from_rs(
+                    data_sets,
+                    table_name=table_name, as_csv=False, take_action=False, verbal=False)
+    if where_clause is None:
+        where_clause = ''
+    else:
+        where_clause = f' WHERE {where_clause}'
+
+    insert_str = f"""
+    -- Extracted at: 
+    -- SELECT * FROM {table_name} {where_clause};    Tuples found: {len(data_sets)}
+    {insert_str}
+    """
+    return insert_str
 
 # ------------------------
 # Reusable Excel-Functions

@@ -42,19 +42,51 @@ elif db_schema_name == 'geno_prod':
 
 
 myCursor = db_schema.cursor()
+# insert_str = create_insert_data_stmt(db_schema, table_name='Personen', where_clause="Ledig_Name='Rothlin'")
+# print(insert_str)
+# halt()
 
-data_tuples = get_table_records(db_schema, table_name='Personen', where_clause="ID=644", as_dictionary=True, take_action=True, verbal=False)
-print(data_tuples)
-print(create_sql_stmt_from_rs(data_tuples, table_name='Personen', as_csv=False, take_action=False, verbal=False))
+tables_to_read = ['# Properties',
+                  'Land',
+                  'Orte',
+                  'Adressen',
+                  'Personen',
+                  'Priviliges',
+                  'Personen_has_Priviliges',
+                  'EMail_Adressen',
+                  'Personen_has_EMail_Adressen',
+                  'Telefonnummern',
+                  'Personen_has_Telefonnummern',
+                  'IBAN',
+                  'Kommissionen_Gruppen',
+                  'Gehört_zu_Kommissionen',
+                  '# Entschädigungs_Modelle',
+                  '# Durchleitungsrechte',
+                  'Wärmeanschlüsse',
+                  'Landteile']
 
-halt()
 
-tables_to_read = ['Land', 'Priviliges', 'Personen']
+insert_str = ''
 for a_table in tables_to_read:
-    insert_str = create_sql_stmt_from_rs(
-                    get_table_records(db_schema, table_name=a_table, as_dictionary=True, take_action=True, verbal=False),
-                    table_name=a_table, as_csv=False, take_action=False, verbal=False)
-    print(insert_str)
+    if a_table.startswith('#'):
+        print(f'WARNING: Table {a_table} not extracted!')
+    else:
+        print(f'INFO: Data extracted from {a_table}')
+        insert_str = f'''
+        {insert_str}
+        
+        {create_insert_data_stmt(db_schema, table_name=a_table)}
+        '''
+
+insert_str = f'''
+SET FOREIGN_KEY_CHECKS = 0;
+
+{insert_str}
+
+SET FOREIGN_KEY_CHECKS = 1;
+'''
+
+File_create(r'C:\Users\Landwirtschaft\Documents\SoruceCode\Datenbanken\Scripts\Geno_Data_Extract.sql', insert_str)
 
 
 
