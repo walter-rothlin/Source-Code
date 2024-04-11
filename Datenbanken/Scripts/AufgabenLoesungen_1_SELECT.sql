@@ -27,6 +27,7 @@
 -- 28-Apr-2023   Walter Rothlin      Added getAge() Aktuelles Alter berechnen, wenn Todestag dann Alter fixiert, sonst NOW() - Birthday (Nur Jahre)
 -- 17-May-2023   Walter Rothlin      Changed LEFT/RIGHT JOIN to LEFT/RIGHT OUTER JOIN
 -- 07-Mar-2023   Walter Rothlin      Added more GROUP BY (1.7.1 tbc)
+-- 11-Apr-2024   Walter Rothlin      Changes for TI23xx at BZU
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
