@@ -92,7 +92,10 @@ while doLoop:
         print("Berechnet die Fakultät")
         upperLimit = readInt(prompt="Obergrenze:")
         lowerLimit = readInt(prompt="Untergrenze:")
-        print("{upper:5d}!  = {fak:7d}".format(upper=upperLimit, fak=fakultaet(obergrenze=upperLimit, untergrenze=lowerLimit)))
+        if lowerLimit <= 2:
+            print(f"{upperLimit:5d}!  = {fakultaet(obergrenze=upperLimit, untergrenze=lowerLimit):7d}")
+        else:
+            print(f"{upperLimit:0d}! / {lowerLimit-1:0d}! = {fakultaet(obergrenze=upperLimit):0d} / {fakultaet(obergrenze=lowerLimit-1):0d} = {fakultaet(obergrenze=upperLimit, untergrenze=lowerLimit):0d}")
         halt()
 
     elif antwort == "0":
