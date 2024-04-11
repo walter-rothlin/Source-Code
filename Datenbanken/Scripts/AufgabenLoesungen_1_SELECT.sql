@@ -2212,33 +2212,47 @@ WHERE SUBQ_1.Originalsprache IS NOT NULL;
 -- 5.2 (siehe 1.14.1) Erstellen Sie eine Liste Kunden_id, Vor- und Nachnamen mit deren Umsaetzen (FROM payment),
 --       ordnen Sie die Liste nach den Umsaetzen (Bester Kunde zuoberst)
 --       Nur von den Kunden mit einem Umsatz > 170
+SELECT
+   P.customer_id      AS Kunden_ID,
+   C.first_name       AS Vorname,
+   C.last_name        AS Nachname,
+   sum(P.amount)      AS Umsatz
+FROM 
+   payment AS P
+LEFT JOIN customer AS C ON C.customer_id = P.customer_id
+GROUP BY
+   P.customer_id
+ORDER BY Umsatz DESC;
+        
+
 SELECT 
+    UmsatzListe.Kunden_ID AS Kunde,
     UmsatzListe.Vorname   AS Firstname,
     UmsatzListe.Nachname  AS Lastname,
-    UmsatzListe.Kunden_ID AS Kunde,
     UmsatzListe.Umsatz    AS Sales
 FROM (
-    SELECT
-       C.first_name  AS Vorname,
-       C.last_name   AS Nachname,
-       P.customer_id AS Kunden_ID,
-       sum(P.amount) AS Umsatz
-    FROM 
-       payment AS P
-    LEFT JOIN customer AS C ON C.customer_id = P.customer_id
-    GROUP BY
-       P.customer_id
-    ORDER BY
-       P.customer_id,
-       P.amount    DESC) AS UmsatzListe
+			SELECT
+			   P.customer_id      AS Kunden_ID,
+			   C.first_name       AS Vorname,
+			   C.last_name        AS Nachname,
+			   sum(P.amount)      AS Umsatz
+			FROM 
+			   payment AS P
+			LEFT JOIN customer AS C ON C.customer_id = P.customer_id
+			GROUP BY
+			   P.customer_id
+			ORDER BY Umsatz DESC
+       ) AS UmsatzListe
 WHERE
     UmsatzListe.Umsatz > 170;
 
--- 5.3) Listen sie alle Filme-Titles auf, welche als Sprache "GERMAN" oder "ENGLISH" haben.
+       
+-- 5.3) Setzen Sie bei mindestens 2 Filmen eine Original-Sprache. Danach entwickeln Sie eine Query für folgende Frage:
+--      Liste alle Filme-Titles mit Original_Sprache auf, welche als Original-Sprache "GERMAN" oder "ENGLISH" haben.
 --      Verwenden Sie dazu eine Subquery als Scalar-Operand fuer einen Vergleich
 SELECT
     title                AS  FilmTitle,
-    original_language_id AS  Sprache
+    original_language_id AS  `Original Sprache`
 FROM
     film
 WHERE
