@@ -22,6 +22,7 @@ menu_items = [
     'Fahrenheit in Celsius',
     'Celsius in Fahrenheit',
     'Fakultät',
+    'Primzahlen (tba)'
 ]
 
 menu_text = f'''
