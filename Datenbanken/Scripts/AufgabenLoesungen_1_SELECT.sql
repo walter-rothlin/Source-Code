@@ -28,6 +28,7 @@
 -- 17-May-2023   Walter Rothlin      Changed LEFT/RIGHT JOIN to LEFT/RIGHT OUTER JOIN
 -- 07-Mar-2023   Walter Rothlin      Added more GROUP BY (1.7.1 tbc)
 -- 11-Apr-2024   Walter Rothlin      Changes for TI23xx at BZU
+-- 11-Apr-2024   Walter Rothlin      Changes for BWI-A22
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -1628,12 +1629,16 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d %Y');
 --  -------------------------------------------------------------
 --  Fct 1.0) Gibt 'Hallo!!' zurueck.
 --           SELECT sayHelloSimple();-- --> Hallo!!
+
+SET GLOBAL log_bin_trust_function_creators = 1;
+
 DROP FUNCTION IF EXISTS sayHelloSimple;
 Delimiter //
 CREATE FUNCTION sayHelloSimple() RETURNS CHAR(50)
 BEGIN
-  RETURN  'Hoi!!';
+  RETURN  'Hello';
 END//
+DELIMITER ;
 
 -- Test-Cases
 -- SELECT sayHelloSimple();
@@ -1648,6 +1653,7 @@ CREATE FUNCTION sayHello(p_input_string CHAR(20)) RETURNS CHAR(50)
 BEGIN
   RETURN  CONCAT('Hallo: ', p_input_string);
 END$$$
+DELIMITER ;
 
 -- Test-Cases
 -- SELECT sayHello('Walti');-- --> Hallo: Walti
@@ -2089,6 +2095,7 @@ SELECT @dolphin;
     CALL isCountryExits('GermanY', false);
     CALL isCountryExits('GermanY', true);
 
+               
 
 -- STO_02) Schreiben sie eine Stored-Procedure, bei welcher eine Landesbezeichnung uebergeben werden kann. 
 --         Existiert dieses Land noch nicht in der country Tabelle, wird es dort eingefuegt.
