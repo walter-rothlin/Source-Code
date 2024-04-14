@@ -657,7 +657,7 @@ def login():
         genossame.check_and_reconnect_db()
         password_is_correct, user_id = genossame.is_password_correct(username, password)
         # print(f'login():: password_is_correct:{password_is_correct}   user_id:{user_id}  password:{password}')
-        session[session_attr_scriteria_addr_list] = 'Walter'
+        session[session_attr_scriteria_addr_list] = 'Vogt'
         session[session_attr_scriteria_addr_orte_list] = 'Peterliwiese'
         session[session_attr_scriteria_orte_list] = 'SZ'
         session[session_attr_scriteria_orte_list] = 'Genossenrat'
@@ -665,8 +665,11 @@ def login():
             session['user_name'] = username
             session['user_id'] = user_id
             session['user_priv'] = genossame.get_priviliges_for_pers_ID(user_id, as_list=False)
+            print(f'INFO:Login successful for {username}!! ')
             print('session:', session)
             return render_template("index.html", db=genossame)
+        else:
+            print(f'INFO:Login failed for {username}!! ')
     return render_template("index.html", db=genossame)
 
 @app.route('/logout', methods=['GET', 'POST'])
