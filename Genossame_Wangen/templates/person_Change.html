@@ -5,7 +5,17 @@
 
     <form id="updateForm" method="post" action="{{ url_for('execute_update_person_details') }}">
         <button type="submit" class="btn btn-primary"><-- Back</button>
-        <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+        {% if details.Zivilstand == 'Gestorben' %}
+            <h1  class="dead_person">{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+        {% elif details.Kategorien is not none and ('Verwaltungsberechtigt' in details.Kategorien and 'Nutzungsberechtigt' in details.Kategorien) %}
+            <h1  class="full_quali_buerger">{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+        {% elif details.Kategorien is not none and ('Nutzungsberechtigt' in details.Kategorien) %}
+            <h1  class="nutzungsberechtigt_only_buerger">{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+        {% else %}
+            <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+        {% endif %}
+
+        <!-- <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1> -->
         <br/>
         <INPUT TYPE="HIDDEN" NAME="ID" VALUE="{{ details.ID }}">
         <br/><hr/><h3>Grunddaten:</h3>

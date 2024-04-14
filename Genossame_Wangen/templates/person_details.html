@@ -2,11 +2,18 @@
 
 {% block content %}
 <div class="container">
-    <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+    {% if details.Zivilstand == 'Gestorben' %}
+        <h1  class="dead_person">{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+    {% elif details.Kategorien is not none and ('Verwaltungsberechtigt' in details.Kategorien and 'Nutzungsberechtigt' in details.Kategorien) %}
+        <h1  class="full_quali_buerger">{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+    {% elif details.Kategorien is not none and ('Nutzungsberechtigt' in details.Kategorien) %}
+        <h1  class="nutzungsberechtigt_only_buerger">{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+    {% else %}
+        <h1>{{ details.ID }} {{ details.Anrede_Long_Long }} {{ details.Geburtstag }}</h1>
+    {% endif %}
     {{ details.Anrede_Long_Long }} {% if details.Todestag != None %} {{ details.Geburtstag }} -  {{ details.Todestag }}{% endif %} ({{ details.Alter }})<BR/>
     {{ details.Private_Strassen_Adresse }}<BR/>
     {{ details.Private_PLZ_International }} {{ details.Private_Ort }}<BR/><BR/>
-
     {% if details.Zivilstand != None and details.Zivilstand != '' %}Zivilstand: <B>{{ details.Zivilstand }}</B><BR/>{% endif %}
     {% if details.Kategorien != None and details.Kategorien != '' %}Kategorien: <B>{{ details.Kategorien }}</B><BR/>{% endif %}
     {% if details.Funktion   != None and details.Function   != '' %}Funktion:   <B>{{ details.Funktion }}  </B><BR/>{% endif %}
