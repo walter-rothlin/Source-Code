@@ -131,7 +131,7 @@ ORDER BY
     last_name,
     first_name;  -- 121
     
--- 1.7.1 tbc) Gibt es Städte die es in mehreren Ländern gibt und wie heissen diese Städte?
+-- 1.7.1 tbc) Gibt es Staedte die es in mehreren Laendern gibt und wie heissen diese Staedte?
 SELECT DISTINCT ci.city FROM city AS ci;
 
 -- If you need only the duplicates between the result sets of two SELECT statements in MySQL, you can use the INTERSECT operator. 
@@ -255,7 +255,7 @@ SELECT
 FROM 
     film
 WHERE
-    rating = 'PG' AND    -- e.g. Parental Guidance (Amerikanische Alterbeschränkung)
+    rating = 'PG' AND    -- e.g. Parental Guidance (Amerikanische Alterbeschraenkung)
     find_in_set('Trailers', special_features);
 
 
@@ -283,25 +283,25 @@ INNER JOIN `customer` AS `C` ON `P`.`customer_id` = `C`.`customer_id`
 ORDER BY
    `Betrag`    DESC;
 
--- 1.13) Erstellen Sie eine Liste mit allen Ländern und der Anzahl Städte, sortiert nach Anzahl Städte 
---       (Das Land mit den meisten Städten zu oberst)
+-- 1.13) Erstellen Sie eine Liste mit allen Laendern und der Anzahl Staedte, sortiert nach Anzahl Staedte 
+--       (Das Land mit den meisten Staedten zu oberst)
 SELECT * FROM CITY;
 
 SELECT
    ci.Country_id        AS Land_ID,
-   count(ci.Country_id) AS `Anzahl Städte`
+   count(ci.Country_id) AS `Anzahl Staedte`
 FROM city AS ci
 GROUP BY ci.Country_id
-ORDER BY `Anzahl Städte` DESC;
+ORDER BY `Anzahl Staedte` DESC;
 
 SELECT 
    ci.Country_id        AS Land_ID,
    co.country           AS Land,
-   count(ci.Country_id) AS `Anzahl Städte`
+   count(ci.Country_id) AS `Anzahl Staedte`
 FROM city AS ci
 JOIN country AS co ON ci.country_id = co.country_id
 GROUP BY ci.Country_id
-ORDER BY `Anzahl Städte` DESC;
+ORDER BY `Anzahl Staedte` DESC;
 
 
 -- 1.13.0) Erstellen Sie eine Liste aller Kunden_id mit deren Umsaetzen 
@@ -1231,13 +1231,13 @@ WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
 
 
 -- 4.4.2) Erstellen Sie eine Liste mit allen ausgeliehenen DVD-Titeln, sowie den Initial.Nachnamen
---        des Ausleihers und der Rückgabezeit, welche am 27.5.2005 zurueckgegeben worden sind.
+--        des Ausleihers und der Rueckgabezeit, welche am 27.5.2005 zurueckgegeben worden sind.
 --        https://dev.mysql.com/doc/refman/5.7/en/string-functions.html
 SELECT 
    f.title                                               AS Film,
    CONCAT(LEFT(cust.first_name, 1),'. ', cust.last_name) AS Renter,
-   -- rent.return_date                                   AS Rückgabe,
-   DATE_FORMAT(rent.return_date, '%H:%i:%s')             AS Rückgabezeit
+   -- rent.return_date                                   AS Rueckgabe,
+   DATE_FORMAT(rent.return_date, '%H:%i:%s')             AS Rueckgabezeit
 FROM
    rental AS rent
 INNER JOIN customer  AS cust ON rent.customer_id     = cust.customer_id
@@ -1250,11 +1250,11 @@ ORDER BY
     rent.return_date; -- (49 rows)
 
 -- 4.4.3) Erstellen Sie eine Mahnungsliste, wie folgt:
---        Enthaelt alle Filmtitel, Rückgabezeit, V.Name, Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurueckgeben haben
+--        Enthaelt alle Filmtitel, Rueckgabezeit, V.Name, Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurueckgeben haben
 --        https://dev.mysql.com/doc/refman/5.7/en/string-functions.html
 SELECT 
     f.title                                              AS Filmtitel,
-    DATE_FORMAT(rent.return_date, '%H:%i:%s')            AS Rückgabezeit,
+    DATE_FORMAT(rent.return_date, '%H:%i:%s')            AS Rueckgabezeit,
     CONCAT(LEFT(cust.first_name, 1),'. ',cust.last_name) AS Renter,
     cust.first_name                                      AS Vorname,
 	cust.last_name                                       AS Nachname,
@@ -1822,8 +1822,8 @@ DELIMITER ;
 -- SELECT firstUpper("HERR");    -- --> Herr
 -- SELECT firstUpper("Herr");    -- --> Herr
 -- SELECT firstUpper("hERR");    -- --> Herr
--- SELECT firstUpper("züger");   -- --> Zzaüger
--- SELECT firstUpper("zueger");  -- --> Zzaüger
+-- SELECT firstUpper("zueger");   -- --> Zzaueger
+-- SELECT firstUpper("zueger");  -- --> Zzaueger
 
 
 -- --------------------------------------------------------------------------------
@@ -2047,9 +2047,9 @@ DELIMITER ;
 -- START variablen
 -- Variablen
 -- =========
-SET @dolphin:='BZUäöü';
+SET @dolphin:='BZUaeoeue';
 SELECT LENGTH(@dolphin), CHAR_LENGTH(@dolphin);
-SELECT 'HAlloäöü';
+SELECT 'HAlloaeoeue';
 SELECT @dolphin;
 
 -- DECLARE @MyCounter INT;
@@ -2258,7 +2258,7 @@ WHERE
     UmsatzListe.Umsatz > 170;
 
        
--- 5.3) Setzen Sie bei mindestens 2 Filmen eine Original-Sprache. Danach entwickeln Sie eine Query für folgende Frage:
+-- 5.3) Setzen Sie bei mindestens 2 Filmen eine Original-Sprache. Danach entwickeln Sie eine Query fuer folgende Frage:
 --      Liste alle Filme-Titles mit Original_Sprache auf, welche als Original-Sprache "GERMAN" oder "ENGLISH" haben.
 --      Verwenden Sie dazu eine Subquery als Scalar-Operand fuer einen Vergleich
 SELECT
