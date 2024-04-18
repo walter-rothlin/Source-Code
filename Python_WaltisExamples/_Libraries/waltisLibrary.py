@@ -62,6 +62,8 @@
 #                                           create_insert_data_stmt
 #                                           File_create
 # 18-Apr-2024   Walter Rothlin      Changed create_insert_data_stmt()
+#                                           getMenuStrFromList()
+#                                           getValueFromDictList()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -104,7 +106,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 1.0.0.5")
+    print("waltisLibrary.py: 2.0.0.0")
 
 # Regular-Expressions
 # ===================
@@ -176,10 +178,13 @@ def read_boolean(prompt="Boolean[Y/*N]:", true_val_liste=['Y', 'J', 'T'], defaul
     ret_val = input(prompt).upper()
     if ret_val == '':
         ret_val = default_value
+
     elif ret_val[0] in true_val_liste:
         ret_val = True
+
     else:
         ret_val = default_value
+
     return ret_val
 
 def TEST_readln(verbal=False):
@@ -1458,12 +1463,33 @@ def AUTO_TEST_addParity(verbal=False):
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
-def getMenuStrFromList(aList, titel="Menu-Items", indent="    ", itmeFormat="{i:2d}: {menuText:1s}", itemNrOffest=1, unterstreichen="-"):
-    retList = [(indent + itmeFormat).format(i=i + itemNrOffest, menuText=p) for i, p in zip(range(len(aList)), aList)]
-    if unterstreichen is not None:
-        retStr = indent + titel + "\n" + indent + unterstreichen*len(titel) + "\n"  + "\n".join(retList)
+def getValueFromDictList(menu_liste, key_name='nr', key_value='4', value_name='formel'):
+    list_element = [an_element for an_element in menu_liste if an_element[key_name] == key_value]
+    if list_element[0].get(value_name) is None:
+        return ''
     else:
-        retStr = indent + titel + "\n" + "\n".join(retList)
+        return list_element[0].get(value_name)
+
+def getMenuStrFromList(aList, titel="Menu-Items", indent="    ", itmeFormat="{i:2d}: {menuText:1s}", itemNrOffest=1, unterstreichen="-"):
+    if aList is None:
+        return 'None Menu'
+    if len(aList) < 1:
+        return 'Empty Menu'
+
+    retStr = ''
+    if isinstance(aList[0], str):
+        retList = [(indent + itmeFormat).format(i=i + itemNrOffest, menuText=p) for i, p in zip(range(len(aList)), aList)]
+        if unterstreichen is not None:
+            retStr = indent + titel + "\n" + indent + unterstreichen*len(titel) + "\n"  + "\n".join(retList)
+        else:
+            retStr = indent + titel + "\n" + "\n".join(retList)
+    else:
+        retStr = f'{indent}{titel}\n{indent}{unterstreichen*len(titel)}\n'
+        for a_menu_item in aList:
+            if a_menu_item['menu_str'].strip() == '':
+                retStr += f"\n"
+            else:
+                retStr += f"{indent}{a_menu_item['nr']}: {a_menu_item['menu_str']}\n"
     return retStr
 
 def TEST_getMenuFromList(verbal=False):
