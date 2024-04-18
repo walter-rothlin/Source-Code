@@ -1230,42 +1230,46 @@ FROM staff
 WHERE date(last_update) = STR_TO_DATE('May 17, 2021','%M %d,%Y');
 
 
--- 4.4.2) Erstellen Sie eine Liste mit allen ausgeliehenen DVDs und listen Sie die Vor-, Nachnamen
---        und Telefonnummern der Ausleiher auf sowie den Titel der DVD, welche am 27.5.2005 
---        zurueckgegeben worden sind.
+-- 4.4.2) Erstellen Sie eine Liste mit allen ausgeliehenen DVD-Titeln, sowie den Initial.Nachnamen
+--        des Ausleihers und der Rückgabezeit, welche am 27.5.2005 zurueckgegeben worden sind.
 --        https://dev.mysql.com/doc/refman/5.7/en/string-functions.html
 SELECT 
-   CONCAT(LEFT(customer.first_name, 1),'. ', customer.last_name) AS Renter,
-   film.title                                                    AS Film
+   f.title                                               AS Film,
+   CONCAT(LEFT(cust.first_name, 1),'. ', cust.last_name) AS Renter,
+   -- rent.return_date                                   AS Rückgabe,
+   DATE_FORMAT(rent.return_date, '%H:%i:%s')             AS Rückgabezeit
 FROM
-   rental
-LEFT OUTER JOIN customer  ON rental.customer_id     = customer.customer_id
-LEFT OUTER JOIN inventory ON rental.inventory_id    = inventory.inventory_id
-LEFT OUTER JOIN film      ON inventory.inventory_id = film.film_id
+   rental AS rent
+INNER JOIN customer  AS cust ON rent.customer_id     = cust.customer_id
+INNER JOIN inventory AS inv  ON rent.inventory_id    = inv.inventory_id
+INNER JOIN film      AS f    ON inv.inventory_id = f.film_id
 WHERE
-    return_date IS NOT NULL AND 
-    DATE_FORMAT(return_date, '%Y%m%d') = '20050527'
+    rent.return_date IS NOT NULL AND 
+    DATE_FORMAT(rent.return_date, '%Y%m%d') = '20050527'
 ORDER BY 
-    return_date; -- (49 rows)
+    rent.return_date; -- (49 rows)
 
 -- 4.4.3) Erstellen Sie eine Mahnungsliste, wie folgt:
---        Enthaelt alle Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurueckgeben haben
+--        Enthaelt alle Filmtitel, Rückgabezeit, V.Name, Vornamen und Nachnamen und Telefonnummer der Kunden, welche eine DVD am 2005-05-27 zurueckgeben haben
 --        https://dev.mysql.com/doc/refman/5.7/en/string-functions.html
 SELECT 
-    CONCAT(LEFT(customer.first_name, 1),'. ',customer.last_name) AS Renter,
-    address.phone                                                AS Phone,
-    film.title                                                   AS Film
+    f.title                                              AS Filmtitel,
+    DATE_FORMAT(rent.return_date, '%H:%i:%s')            AS Rückgabezeit,
+    CONCAT(LEFT(cust.first_name, 1),'. ',cust.last_name) AS Renter,
+    cust.first_name                                      AS Vorname,
+	cust.last_name                                       AS Nachname,
+    adr.phone                                            AS Phone
 FROM
-    rental
-INNER JOIN customer  ON rental.customer_id     = customer.customer_id
-INNER JOIN address   ON customer.address_id    = address.address_id
-INNER JOIN inventory ON rental.inventory_id    = inventory.inventory_id
-INNER JOIN film      ON inventory.inventory_id = film.film_id
+    rental AS rent
+INNER JOIN customer  AS cust ON rent.customer_id   = cust.customer_id
+INNER JOIN address   AS adr  ON cust.address_id    = adr.address_id     -- has to come after cust join!!
+INNER JOIN inventory AS inv  ON rent.inventory_id  = inv.inventory_id
+INNER JOIN film      AS f    ON inv.inventory_id   = f.film_id
 WHERE
-    return_date IS NOT NULL AND 
-    DATE_FORMAT(return_date, '%Y%m%d') = '20050527'
+    rent.return_date IS NOT NULL AND 
+    DATE_FORMAT(rent.return_date, '%Y%m%d') = '20050527'
 ORDER BY
-    return_date; -- (12 rows)
+    rent.return_date; -- (12 rows)
 -- END joins
 
 
