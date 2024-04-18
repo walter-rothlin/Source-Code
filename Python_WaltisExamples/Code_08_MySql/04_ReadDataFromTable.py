@@ -14,7 +14,18 @@
 # ------------------------------------------------------------------
 from waltisLibrary import *
 
-db_schema_name = 'geno_prod'
+time_now = getTimestamp(formatString="{ts:%Y_%m_%d__%H%M%S}")
+
+db_schema_name = 'sakila'
+
+tables_to_read = ['Store',
+                  'Film',
+                  '# language'
+                 ]
+
+file_to_store = f'./Data/Data_Extract_{time_now}.sql'
+file_to_store = f'./Data/Data_Extract.sql'
+
 
 if db_schema_name == 'sakila':
     db_schema = mysql_db_connect(db_host='localhost',
@@ -23,75 +34,37 @@ if db_schema_name == 'sakila':
                      password='admin',
                      trace=False)
 
-elif db_schema_name == 'geno_test':
-    db_schema = mysql_db_connect(db_host='localhost',
-                     db_schema='genossame_wangen',
-                     db_user_name="App_User_Stammdaten",
-                     password="1234ABCD12abcd",
-                     trace=False)
-    db_schema_name == 'genossame_wangen'
-
-elif db_schema_name == 'geno_prod':
-    db_schema = mysql_db_connect(db_host='192.168.253.24',
-                     port=3311,
-                     db_schema='genossame_wangen',
-                     db_user_name="Web_App_User",
-                     password="Geno_8855!",
-                     trace=False)
-    db_schema_name == 'genossame_wangen'
-
-
-myCursor = db_schema.cursor()
-# insert_str = create_insert_data_stmt(db_schema, table_name='Personen', where_clause="Ledig_Name='Rothlin'")
-# print(insert_str)
-# halt()
-
-tables_to_read = ['# Properties',
-                  'Land',
-                  'Orte',
-                  'Adressen',
-                  'Personen',
-                  'Priviliges',
-                  'Personen_has_Priviliges',
-                  'EMail_Adressen',
-                  'Personen_has_EMail_Adressen',
-                  'Telefonnummern',
-                  'Personen_has_Telefonnummern',
-                  'IBAN',
-                  'Kommissionen_Gruppen',
-                  'Gehört_zu_Kommissionen',
-                  '# Entschädigungs_Modelle',
-                  '# Durchleitungsrechte',
-                  'Wärmeanschlüsse',
-                  'Landteile']
-
-
 insert_str = ''
+file_header = f'''
+-- ----------------------------------------
+-- Data Extract by: 04_ReadDataFromTable.py (using create_insert_data_stmt())
+--    at: {getTimestamp()}
+-- 
+-- Source:
+--    db-Schema: {db_schema_name}
+--    Tables: {tables_to_read}
+-- 
+-- Saved in: {file_to_store}
+--
+-- ----------------------------------------
+'''
+
 for a_table in tables_to_read:
     if a_table.startswith('#'):
-        print(f'WARNING: Table {a_table} not extracted!')
+        print(f'WARNING: Table {a_table.replace("#", "").strip()} not extracted!')
     else:
         print(f'INFO: Data extracted from {a_table}')
         insert_str = f'''
-        {insert_str}
-        
-        {create_insert_data_stmt(db_schema, table_name=a_table)}
-        '''
+{insert_str}
 
-insert_str = f'''
+{create_insert_data_stmt(db_schema, table_name=a_table)}'''
+
+insert_str = f'''{file_header}
 SET FOREIGN_KEY_CHECKS = 0;
-
 {insert_str}
 
 SET FOREIGN_KEY_CHECKS = 1;
 '''
 
-File_create(r'C:\Users\Landwirtschaft\Documents\SoruceCode\Datenbanken\Scripts\Geno_Data_Extract.sql', insert_str)
-
-
-
-
-print('\n\n')
-# etupl_types = get_db_attr_type_new(db_schema, schema_name='db_schema_name', table_name='language', take_action=True, verbal=True)
-# print(tuple_types)
-print('\n\n')
+File_create(file_to_store, insert_str)
+print(f'\nData saved in {file_to_store}')

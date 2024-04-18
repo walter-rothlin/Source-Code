@@ -61,6 +61,7 @@
 #                                           create_sql_stmt_from_rs
 #                                           create_insert_data_stmt
 #                                           File_create
+# 18-Apr-2024   Walter Rothlin      Changed create_insert_data_stmt()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -3248,11 +3249,9 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None):
     else:
         where_clause = f' WHERE {where_clause}'
 
-    insert_str = f"""
-    -- Extracted at: 
-    -- SELECT * FROM {table_name} {where_clause};    Tuples found: {len(data_sets)}
-    {insert_str}
-    """
+    insert_str = f"""  -- Extracted at: {getTimestamp()}
+    -- SELECT * FROM `{table_name}` {where_clause};    Tuples found: {len(data_sets)}
+    {insert_str}"""
     return insert_str
 
 # ------------------------
