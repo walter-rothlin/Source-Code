@@ -285,7 +285,21 @@ ORDER BY
 
 -- 1.13) Erstellen Sie eine Liste mit allen Laendern und der Anzahl Staedte, sortiert nach Anzahl Staedte 
 --       (Das Land mit den meisten Staedten zu oberst)
-SELECT * FROM CITY;
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT * FROM CITY ORDER BY Country_ID;
+SELECT * FROM Country;
 
 SELECT
    ci.Country_id        AS Land_ID,
@@ -295,11 +309,11 @@ GROUP BY ci.Country_id
 ORDER BY `Anzahl Staedte` DESC;
 
 SELECT 
-   ci.Country_id        AS Land_ID,
-   co.country           AS Land,
-   count(ci.Country_id) AS `Anzahl Staedte`
-FROM city AS ci
-JOIN country AS co ON ci.country_id = co.country_id
+   ci.Country_id          AS Land_ID,
+   co.country             AS Land,
+   count(`ci`.Country_id) AS `Anzahl Staedte`
+FROM `city` AS `ci`
+INNER JOIN country AS co ON ci.country_id = co.country_id
 GROUP BY ci.Country_id
 ORDER BY `Anzahl Staedte` DESC;
 
