@@ -64,6 +64,7 @@
 # 18-Apr-2024   Walter Rothlin      Changed create_insert_data_stmt()
 #                                           getMenuStrFromList()
 #                                           getValueFromDictList()
+# 09-May-2024   Walter Rothlin      Added get_all_table_names_from_schema()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -108,37 +109,43 @@ import json
 def waltisPythonLib_Version():
     print("waltisLibrary.py: 2.0.0.0")
 
+
 # Regular-Expressions
 # ===================
 regEx_email = r'([\w\.-]+)@([\w\.-]+)'
 regEx_Float = r'[+-]?\d*\.[0-9]+'
 regEx_Int = r'[+-]?[0-9]'
 regEx_Float_Or_Int = r'[+-]?\d*\.?\d+'
-regEx_Date_US = r'[0-9]{4}.[0-9]{2}.[0-9]{2}'   # 1964-11-29
-regEx_Date_EU = r'[0-9]{2}.[0-9]{2}.[0-9]{4}'   # 29.11.1964
+regEx_Date_US = r'[0-9]{4}.[0-9]{2}.[0-9]{2}'  # 1964-11-29
+regEx_Date_EU = r'[0-9]{2}.[0-9]{2}.[0-9]{4}'  # 29.11.1964
 
 # Konstanten
 # ==========
 pi = math.pi
 halbBogen = 180
 
+
 # Bildschirmsteuerung
 # ===================
 def VT52_cls():
     print("\033[2J", end="", flush=True)
 
+
 def VT52_home():
     print("\033[H", end="", flush=True)
+
 
 def VT52_cls_home():
     VT52_cls()
     VT52_home()
 
+
 def halt(prompt="Weiter?"):
     return input(prompt)
 
+
 # Print iterations progress
-def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
     """
     Call in a loop to create terminal progress bar
     @params:
@@ -159,6 +166,7 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
     if iteration == total:
         print()
 
+
 def TEST_printProgressBar(verbal=False):
     items = list(range(0, 57))
     l = len(items)
@@ -171,6 +179,7 @@ def TEST_printProgressBar(verbal=False):
         # Update Progress Bar
         printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
     print("Completed")
+
 
 # Readln functions
 # ================
@@ -186,6 +195,7 @@ def read_boolean(prompt="Boolean[Y/*N]:", true_val_liste=['Y', 'J', 'T'], defaul
         ret_val = default_value
 
     return ret_val
+
 
 def TEST_readln(verbal=False):
     print("Test readInt:", end="")
@@ -215,6 +225,7 @@ def TEST_readln(verbal=False):
     print("\nTest readFloat:", end="")
     f1 = readFloat(prompt="    float <= 150:", postErrorStr=" Must be a {t:1s}!!!!", max=150)
     print(f1)
+
 
 def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
                 min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
@@ -254,6 +265,7 @@ def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:
             error = True
     return userInputZahl
 
+
 def readInt_0(prompt="Input [Int]:", preError="Wrong Format:", postError="   Must be a INT!"):
     error = True
     userInputStr = ""
@@ -268,6 +280,7 @@ def readInt_0(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mus
             error = True
     return userInputInt
 
+
 def readInt_00(prompt="Input [Int]:", preError="Wrong Format:", postError="   Must be a INT!"):
     error = True
     userInputStr = ""
@@ -279,6 +292,7 @@ def readInt_00(prompt="Input [Int]:", preError="Wrong Format:", postError="   Mu
             print(preError + userInputStr + postError)
             error = True
     return userInputInt
+
 
 def convert_str_to_int(int_str, default_value=None):
     try:
@@ -311,6 +325,7 @@ def convert_str_to_int_float_str(a_string_to_cast, default=''):
                     ret_val = a_string_to_cast
     return ret_val
 
+
 def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
     error = True
     while error:
@@ -326,6 +341,7 @@ def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must b
             error = True
     return userInputFloat
 
+
 def readFloat_00(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
     error = True
     while error:
@@ -340,6 +356,7 @@ def readFloat_00(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must 
             print(errPreMsg + userInputStr + errPostMsg)
             error = True
     return userInputFloat
+
 
 def readFloat_1(prompt="Input [Float]:",
                 preErrorStr="Wrong Format:",
@@ -416,7 +433,7 @@ def readFloat(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postE
 def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErrorStr="   Must be a {t:1s}!",
             min=None, minErrorStr="Value must be greater or equal than {mi:1d}",
             max=None, maxErrorStr="Value must less or equal than {ma:1d}"):
-    return read_Number("int"  , prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr,
+    return read_Number("int", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr,
                        min=min, minErrorStr=minErrorStr,
                        max=max, maxErrorStr=maxErrorStr)
 
@@ -1111,6 +1128,7 @@ def isPrimzahl(aZahl):
                 isPrim = False
     return isPrim
 
+
 def isPrimzahl_0(n):
     if n == 1:
         isPrimzahl = False
@@ -1126,6 +1144,7 @@ def isPrimzahl_0(n):
             t += 1
     return isPrimzahl
 
+
 def isPrimzahl_2(eineZahl):
     ist_eine_Primzahl = True
     if eineZahl == 1:
@@ -1139,6 +1158,7 @@ def isPrimzahl_2(eineZahl):
             ist_eine_Primzahl = False
             break
     return ist_eine_Primzahl
+
 
 def getNextPrimzahl(zahl):
     if ((zahl % 2) == 0):  # then Gerade
@@ -1164,6 +1184,7 @@ def getPrevPrimzahl(zahl):
             aZahl = aZahl - 2
     return aZahl
 
+
 def getPrimezahlenListeAsListe(start, end):
     ret_list = []
     for i in range(start, end + 1):
@@ -1171,9 +1192,11 @@ def getPrimezahlenListeAsListe(start, end):
             ret_list.append(i)
     return ret_list
 
+
 def getPrimezahlenListeAsString(start, end, sep=";"):
     string_list = [str(num) for num in getPrimezahlenListeAsListe(start, end)]
     return sep.join(string_list)
+
 
 def getPrimezahlenListe(start, end, sep=";"):
     return getPrimezahlenListeAsString(start, end, sep=";")
@@ -1197,9 +1220,11 @@ def getPrimfactorsAsList(zahl):
             ret_list.append(aZahl)
     return ret_list
 
+
 def getPrimfactorsAsString(zahl, sep=";"):
     string_list = [str(num) for num in getPrimfactorsAsList(zahl)]
     return sep.join(string_list)
+
 
 def getPrimfactors(zahl, sep=";"):
     return getPrimfactorsAsString(zahl, sep=";")
@@ -1215,9 +1240,11 @@ def getDivisorsAsList(zahl):
         aDivisor = aDivisor + 1
     return ret_list
 
+
 def getDivisorsAsString(zahl, sep=";"):
     string_list = [str(num) for num in getDivisorsAsList(zahl)]
     return sep.join(string_list)
+
 
 def getDivisors(zahl, sep=";"):
     return getDivisorsAsString(zahl, sep=";")
@@ -1232,6 +1259,7 @@ def TEST_Primzahlen():
         else:
             print("{z:3d}: Primzahlen:{s:30s}      Teiler    :{s1:30s}".format(z=i, s=getPrimfactors(i),
                                                                                s1=getDivisors(i)))
+
 
 # csv- or set-functions
 # =====================
@@ -1250,6 +1278,7 @@ def remove_set_value(set_values, value_to_remove, verbal=True):
     # set_values_str = 'Pächter,Hat_35a,Hat_16a,Bürger'
     return set_values_str
 
+
 # String Functions
 # ================
 def remove_empty_line(lines, comment_str='#'):
@@ -1261,9 +1290,11 @@ def remove_empty_line(lines, comment_str='#'):
             ret_list.append(a_line)
     return ret_list
 
+
 def format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True):
     locale.setlocale(locale.LC_ALL, '')
     return locale.format_string("%" + str(vorkommastellen) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
+
 
 def AUTO_TEST__format_float(verbal=False):
     testsPerformed = 0
@@ -1305,7 +1336,6 @@ def AUTO_TEST__format_float(verbal=False):
         print(f"    Result:{format_float(1234.3, vorkommastellen=10, nachkommastellen=2, do_grouping=True)}:   Expected:  1’234.30:", end="\n\n")
         testsFailed += 1
 
-
     if verbal:
         print("=>   ", ("{v:" + str(auto_test_suiteNameLength) + "s}").format(v=testSuite), "Tests Performed:",
               ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsPerformed), "      Tests Failed:",
@@ -1313,6 +1343,7 @@ def AUTO_TEST__format_float(verbal=False):
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
 
     return [testsPerformed, testsFailed]
+
 
 def split_adress_street_nr(street_nr_string, verbal=False):
     parts = street_nr_string.split(' ')
@@ -1325,6 +1356,7 @@ def split_adress_street_nr(street_nr_string, verbal=False):
     else:
         return {'Street': ' '.join(parts[0:-1]), 'No': parts[-1]}
 
+
 def AUTO_TEST__split_adress_street_nr():
     test_cases = ['Etzelstrasse 7',
                   'Rue de solei 788ab',
@@ -1334,16 +1366,18 @@ def AUTO_TEST__split_adress_street_nr():
         strasse_nr = split_adress_street_nr(a_test_case, verbal=False)
         print('Strasse:', strasse_nr['Street'], '  Nr:', strasse_nr['No'])
 
+
 def split_plz_ort(plz_ort_string, verbal=False):
     parts = plz_ort_string.split(' ')
     if verbal:
         print(parts)
     return {'PLZ': parts[0], 'Ort': ' '.join(parts[1:])}
 
+
 def split_familien_name(familien_name, sex='Herr', verbal=False):
     parts = familien_name.split('-')
     if verbal:
-        print(parts, '   Sex:', sex )
+        print(parts, '   Sex:', sex)
 
     ret_val = {}
     if len(parts) == 1:
@@ -1363,6 +1397,7 @@ def split_familien_name(familien_name, sex='Herr', verbal=False):
 
     return ret_val
 
+
 def howManyDigitsAreInString_Classic(aString, trace=False):
     count = 0
     for c in aString:
@@ -1372,11 +1407,13 @@ def howManyDigitsAreInString_Classic(aString, trace=False):
         print("howManyDigitsAreInString_Classic:", aString, count)
     return count
 
+
 def howManyDigitsAreInString_WithComprehension(aString, trace=False):
     count = len([d for d in aString if '0' <= d <= '9'])
     if trace:
         print("howManyDigitsAreInString_WithComprehension:", aString, "--> ", count)
     return count
+
 
 def howManyDigitsAreInString_WithRegEx(aString, trace=False):
     import re
@@ -1463,12 +1500,14 @@ def AUTO_TEST_addParity(verbal=False):
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
+
 def getValueFromDictList(menu_liste, key_name='nr', key_value='4', value_name='formel'):
     list_element = [an_element for an_element in menu_liste if an_element[key_name] == key_value]
     if list_element[0].get(value_name) is None:
         return ''
     else:
         return list_element[0].get(value_name)
+
 
 def getMenuStrFromList(aList, titel="Menu-Items", indent="    ", itmeFormat="{i:2d}: {menuText:1s}", itemNrOffest=1, unterstreichen="-"):
     if aList is None:
@@ -1480,17 +1519,18 @@ def getMenuStrFromList(aList, titel="Menu-Items", indent="    ", itmeFormat="{i:
     if isinstance(aList[0], str):
         retList = [(indent + itmeFormat).format(i=i + itemNrOffest, menuText=p) for i, p in zip(range(len(aList)), aList)]
         if unterstreichen is not None:
-            retStr = indent + titel + "\n" + indent + unterstreichen*len(titel) + "\n"  + "\n".join(retList)
+            retStr = indent + titel + "\n" + indent + unterstreichen * len(titel) + "\n" + "\n".join(retList)
         else:
             retStr = indent + titel + "\n" + "\n".join(retList)
     else:
-        retStr = f'{indent}{titel}\n{indent}{unterstreichen*len(titel)}\n'
+        retStr = f'{indent}{titel}\n{indent}{unterstreichen * len(titel)}\n'
         for a_menu_item in aList:
             if a_menu_item['menu_str'].strip() == '':
                 retStr += f"\n"
             else:
                 retStr += f"{indent}{a_menu_item['nr']}: {a_menu_item['menu_str']}\n"
     return retStr
+
 
 def TEST_getMenuFromList(verbal=False):
     menuList = ["Grad to Kelvin", "Kelvin to Grad", "Rad to Grad", "Grad to Rad"]
@@ -1569,7 +1609,8 @@ def generateStringRepeats(len, aStr=" "):
     # generateStringRepeats(6)           => '      '
     return (aStr * len)[:len]
 
-def getRange(startVal = 0, endVal = 8, inc=1):
+
+def getRange(startVal=0, endVal=8, inc=1):
     doLoop = True
     retList = []
     i = startVal
@@ -1589,6 +1630,7 @@ def getRange(startVal = 0, endVal = 8, inc=1):
         else:
             doLoop = False
     return retList
+
 
 def AUTO_TEST_getRange(verbal=False):
     testsPerformed = 0
@@ -1631,6 +1673,7 @@ def AUTO_TEST_getRange(verbal=False):
               ("{v:" + str(auto_test_testStatistics_anzStellen) + "d}").format(v=testsFailed),
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
+
 
 def placer(strichArt="-", laenge=30):
     return generateStringRepeats(len=laenge, aStr=strichArt)
@@ -1680,8 +1723,10 @@ def AUTO_TEST_a_generateStringRepeats(verbal=False):
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
+
 def underline(titleStr, strichArt="="):
     return unterstreichen(title=titleStr, aChar=strichArt, end="\n")
+
 
 def unterstreichen(title, aChar="=", end="\n"):
     # Spezifikation: Unterstreich einen String auf dem Bildschirm
@@ -1795,6 +1840,7 @@ def TEST_hexStrToURLEncoded():
     """
     print(hexStrToURLEncoded(testStr_3))
 
+
 # UNICODE Functions
 # =================
 # https://www.geeksforgeeks.org/how-to-print-superscript-and-subscript-in-python/
@@ -1804,6 +1850,7 @@ def TEST_get_sup_super():
     print("get_sub('1'):", EinsSub)
     print("get_sub('2'):", get_sub('2'))
     print("get_super('1'):", get_super('1'))
+
 
 def get_sub(x):
     """
@@ -1829,6 +1876,7 @@ def get_super(x):
     super_s = "ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖ۹ʳˢᵗᵘᵛʷˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾"
     res = x.maketrans(''.join(normal), ''.join(super_s))
     return x.translate(res)
+
 
 # Date and Timestamp
 # ==================
@@ -1903,6 +1951,7 @@ def equalsWithinTolerance(ist, soll, abweichungProzent=0.001):
         else:
             return True
 
+
 def is_US_Date(date_str, reg_ex=regEx_Date_US, verbal=False):
     if verbal:
         print(f"is_US_Date('{date_str}', '{reg_ex}')")
@@ -1919,6 +1968,7 @@ def is_EU_Date(date_str, reg_ex=regEx_Date_EU, verbal=False):
         return True
     else:
         return False
+
 
 def isFloatEquals(ist, soll, roundDezimals=3):
     # Test-Cases
@@ -2024,12 +2074,14 @@ def AUTO_TEST_xPath_Get(verbal=False):
         print("--> Test Cases Failed  : {a:4d}".format(a=testCasesFailed))
     return {"TestName": getMyFctName(), "testCasesExecuted": testCasesExecuted, "testCasesFailed": testCasesFailed}
 
+
 def format_IBAN(IBAN):
     IBAN_str = IBAN.replace(' ', '')
     IBAN_str = IBAN_str[:4] + ' ' + IBAN_str[4:8] + ' ' + IBAN_str[8:12] + ' ' + IBAN_str[12:16] + ' ' + IBAN_str[16:20] + ' ' + IBAN_str[20:]
     return IBAN_str
 
-def generateQRInvoiceData(creditor_iban, creditor_addr,  debitor_addr, amount, currency='CHF', reference=None, additional_information=""):
+
+def generateQRInvoiceData(creditor_iban, creditor_addr, debitor_addr, amount, currency='CHF', reference=None, additional_information=""):
     invoice_data = {
         "creditor_iban": creditor_iban,
         "creditor_name": creditor_addr["name"],
@@ -2074,27 +2126,32 @@ def loadAndSaveFileFromURL(url='http://google.com/favicon.ico'):
 def getFilenameWithoutExtension(fileName):
     return fileName[:fileName.index(".")]
 
+
 def getFilenameExtension(fileName):
     return fileName[fileName.index("."):]
+
 
 def addTimestampToFileName(fileName, timestampFormat="%Y_%m_%d"):
     indexBeforeFileType = fileName.index(".")
     fileName = fileName[:indexBeforeFileType] + "_" + datetime.now().strftime(timestampFormat) + fileName[indexBeforeFileType:]
     return fileName
 
-def getPath(full_filename = None):
+
+def getPath(full_filename=None):
     if full_filename is None or len(full_filename) == 0:
         return os.path.abspath(os.getcwd()) + "\\"
     else:
         directory, filename = os.path.split(full_filename)
         return directory
 
-def getFilename(full_filename = None):
+
+def getFilename(full_filename=None):
     if full_filename is None or len(full_filename) == 0:
         return ''
     else:
         directory, filename = os.path.split(full_filename)
         return filename
+
 
 def createDirIfNotExists(dir_path="./TestData", access_rights=0o755, verbal=False):
     try:
@@ -2201,7 +2258,10 @@ def File_cleanup(filename, directory, path_sign):
 def readFile(sourceFileFN, lineEnd="\n"):
     return File_getFileContent(sourceFileFN, returnType="String", lineEnd=lineEnd)
 
+
 '''String or ListOfLines'''
+
+
 def File_getFileContent(sourceFileFN, returnType="String", lineEnd="\n"):
     # with open(sourceFileFN, "r", encoding="utf-8") as f:
     with open(sourceFileFN, "r", encoding="utf-8") as f:
@@ -2214,6 +2274,7 @@ def File_getFileContent(sourceFileFN, returnType="String", lineEnd="\n"):
     else:
         return "ERROR: File_getFileContent unknown format!"
 
+
 def read_text_file_into_list_of_lines(filename):
     try:
         with open(filename, 'r') as file:
@@ -2222,6 +2283,7 @@ def read_text_file_into_list_of_lines(filename):
     except FileNotFoundError:
         print(f"ERROR: File '{filename}' not found.")
         return []
+
 
 def File_createTestFile(aFileFN, startLineNr=1, endLineNr=20, aHeader="", aFooter="", aContent=""):
     aTestFile = open(aFileFN, "w")
@@ -2286,9 +2348,11 @@ def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr=""):
     aTestFile.writelines(lines)
     aTestFile.close()
 
-def File_create(filename, str_to_save='', mode= 'w', encoding="utf-8", verbal=False):
+
+def File_create(filename, str_to_save='', mode='w', encoding="utf-8", verbal=False):
     with open(filename, mode, encoding=encoding) as file:
         file.write(str_to_save)
+
 
 def AUTO_TEST_a_File_addHeader(verbal=False):
     testsPerformed = 0
@@ -2620,6 +2684,7 @@ def TEST_calcNulstellen():
     except TypeError:
         print('6)', "Exception geworfen wegen falschen Datentypen der Parameter!!!")
 
+
 def calcNullstellen(a, b, c):
     """
     Berechnung der Nullstellen einer quadratischen Funktion der Form:
@@ -2656,6 +2721,7 @@ def calcNullstellen_checked(a, b, c, ParameterCheck=True, ParamCheckErrorMsg="Fa
     else:
         return calcNullstellen(a, b, c)
 
+
 # Symetrische Cryptographie
 # =========================
 def shifter(sChr, sh):
@@ -2678,12 +2744,14 @@ def chipher(text, cipherKey, encript=False):
                       shiftChr(string_in_list, (1 if encript else -1) * ord(cipherKey[i % len(cipherKey)]))]
                      for i, string_in_list in zip(range(len(text)), text)]])
 
+
 def encrypt(klartext, cipherKey):
-    return chipher(klartext, cipherKey, encript = True)
+    return chipher(klartext, cipherKey, encript=True)
 
 
 def decrypt(geheimtext, cipherKey):
-    return chipher(geheimtext, cipherKey, encript = False)
+    return chipher(geheimtext, cipherKey, encript=False)
+
 
 def encrypt_old(klartext, aKey):
     keyIndex = 0
@@ -2735,7 +2803,6 @@ def AUTO_TEST_CryptDecrypt(verbal=False):
         print("    Result: ", chiffrat, "   Expected:", chiffratOld, end="\n\n")
         testsFailed += 1
 
-
     testsPerformed += 1
     # -------------------------------------------------------------------------------
     fct = "decrypt()"
@@ -2764,18 +2831,19 @@ def AUTO_TEST_CryptDecrypt(verbal=False):
               "    Passed:{v:7.1f}".format(v=round(100 - (100 * testsFailed / testsPerformed), 1)), "%", sep="")
     return [testsPerformed, testsFailed]
 
+
 # geo.admin search / tel.search
 # =============================
-def getResults_geoAdmin(searchCriteriaEncoded, appId = "", doTrace = False):
+def getResults_geoAdmin(searchCriteriaEncoded, appId="", doTrace=False):
     serviceURL = "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText={search:2s}&lang=en&type=locations"
     requestStr = serviceURL.format(search=searchCriteriaEncoded)
     responseStr = requests.get(requestStr)
     jsonResponse = json.loads(responseStr.text)
     print("Request:\n", requestStr) if doTrace else False
     print("Response:\n", jsonResponse, "\n") if doTrace else False
-    returnJSON = {'criteria' : searchCriteriaEncoded,
-                  'count' : int(len(jsonResponse['results'])),
-                  'results' : []}
+    returnJSON = {'criteria': searchCriteriaEncoded,
+                  'count': int(len(jsonResponse['results'])),
+                  'results': []}
 
     recNr = 1
     # print("Parsed values (Records found:{recCount:2d}):".format(recCount=len(jsonResponse['results'])))
@@ -2785,11 +2853,11 @@ def getResults_geoAdmin(searchCriteriaEncoded, appId = "", doTrace = False):
         lat = entry['attrs']['lat']
         x = entry['attrs']['x']
         y = entry['attrs']['y']
-        details = {'details' : details,
-                   'longitude' : lon,
-                   'latitude' : lat,
-                   'ch_x' : x,
-                   'ch_y' : y}
+        details = {'details': details,
+                   'longitude': lon,
+                   'latitude': lat,
+                   'ch_x': x,
+                   'ch_y': y}
         returnJSON['results'].append(details)
         print("\nRecord No: ", recNr) if doTrace else False
         print("  detail  :", details) if doTrace else False
@@ -2800,36 +2868,36 @@ def getResults_geoAdmin(searchCriteriaEncoded, appId = "", doTrace = False):
         recNr += 1
     return returnJSON
 
+
 def getFieldFromTelSearchXML(searchCH_Entry, namespaces, fieldname="type"):
     try:
         # print("++++++++++++++++++::::", fieldname, ":::")
         node = searchCH_Entry.find(fieldname, namespaces)
         # if fieldname == "extra":
-            # print("----------------->")
-            # print(node.text)
-            # print(node.xPath("@type").text)
-            # print("+++++++++++++++++>")
+        # print("----------------->")
+        # print(node.text)
+        # print(node.xPath("@type").text)
+        # print("+++++++++++++++++>")
         retVal = node.text
     except AttributeError:
         retVal = ""
     return retVal
 
 
-def getResults_search_ch(searchCriteriaEncoded, appId = "8e8a84fd0f10d3b44920e49bc3b06a37", doTrace = False):
+def getResults_search_ch(searchCriteriaEncoded, appId="8e8a84fd0f10d3b44920e49bc3b06a37", doTrace=False):
     serviceURL = "https://tel.search.ch/api/?q={search:2s}&key={appId:2s}"
     requestStr = serviceURL.format(search=searchCriteriaEncoded, appId=appId)
     responseStr = requests.get(requestStr).content
     print("Request:\n", requestStr) if doTrace else False
     ## print("Response:\n", responseStr, "\n\n\n")  if doTrace else False
 
-
     namespaces = {'tel': 'http://tel.search.ch/api/spec/result/1.0/',
-                  'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/'} # add more as needed
+                  'openSearch': 'http://a9.com/-/spec/opensearchrss/1.0/'}  # add more as needed
     dom = ET.fromstring(responseStr)
     countFound = int(dom.find('{http://a9.com/-/spec/opensearchrss/1.0/}totalResults').text)
-    returnJSON = {'criteria' : searchCriteriaEncoded,
-                  'count' : countFound,
-                  'results' : []}
+    returnJSON = {'criteria': searchCriteriaEncoded,
+                  'count': countFound,
+                  'results': []}
     dom = etree.HTML(responseStr)
     value = dom.xpath('//entry')
     print("  Elements found  :", len(value)) if doTrace else False
@@ -2849,19 +2917,19 @@ def getResults_search_ch(searchCriteriaEncoded, appId = "8e8a84fd0f10d3b44920e49
         telNrExtra = getFieldFromTelSearchXML(aEntry, namespaces, "extra")
         content = getFieldFromTelSearchXML(aEntry, namespaces, "content")
         details = {'entryType': entryType,
-                   'name' : name,
-                   'subname' : subname,
+                   'name': name,
+                   'subname': subname,
                    'firstname': firstname,
-                   'street' : street,
+                   'street': street,
                    'streetno': streetno,
                    'zip': zip,
                    'city': city,
-                   'canton' : canton,
+                   'canton': canton,
                    'country': country,
                    'telNr': telNr,
                    'telNrExtra': telNrExtra,
                    'content': content
-                  }
+                   }
         returnJSON['results'].append(details)
 
         print("  aEntry  :", aEntry) if doTrace else False
@@ -2873,8 +2941,7 @@ def getResults_search_ch(searchCriteriaEncoded, appId = "8e8a84fd0f10d3b44920e49
     return returnJSON
 
 
-def getResultsFromAdressSearch(searchCriteriaEncoded, doTrace = False):
-
+def getResultsFromAdressSearch(searchCriteriaEncoded, doTrace=False):
     results = getResults_search_ch(searchCriteriaEncoded, doTrace=doTrace)
     resultsFoundInTelSearch = results['count']
     print("Records found with AdressSearch   :{recCount:2d}".format(recCount=resultsFoundInTelSearch)) if doTrace else False
@@ -2898,6 +2965,7 @@ def getResultsFromAdressSearch(searchCriteriaEncoded, doTrace = False):
             results['results'][i]['ch_y'] = resultsGoeAdmin['results'][0]['ch_y']
     return results
 
+
 def dictify(context, names):
     node = context.context_node
     rv = []
@@ -2917,15 +2985,17 @@ def dictify(context, names):
     rv.append('__dictify_end_marker__')
     return rv
 
+
 # ---------------------
 # Reusable DB-Functions
 # ---------------------
 def get_sql_datums_update_value(attr_name, new_value, date_str_format='%d.%m.%Y'):
     if new_value is None or str(new_value) == 'None' or new_value == '':
-       ret_val = f"{attr_name} = NULL"
+        ret_val = f"{attr_name} = NULL"
     else:
         ret_val = f"{attr_name} = STR_TO_DATE('{new_value}', '{date_str_format}')"
     return ret_val
+
 
 def remove_all_enum_value_in_set(db, table, attribute_name, enum_val_to_remove, key_attr_name='ID', take_action=False, verbal=False):
     myCursor = db.cursor(dictionary=True)
@@ -2961,6 +3031,7 @@ def remove_all_enum_value_in_set(db, table, attribute_name, enum_val_to_remove, 
 
     return records_affected
 
+
 def get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=[], as_json=True, take_action=True, verbal=False):
     if verbal:
         print(f'''
@@ -2988,20 +3059,22 @@ def get_record_details_from_db(db, table_name, key_id=None, db_attributes_names=
     myresult = myCursor.fetchall()
     return myresult
 
+
 def mysql_db_connect(db_host='localhost', port=3306, db_schema='stammdaten', db_user_name=None, password=None, trace=False):
     if trace:
         print(f"Connecting to '{db_schema:s}@{db_host:s}' with user '{db_user_name:s}'....", end="", flush=True)
     db_connection = mysql.connector.connect(
-          host        = db_host,
-          port        = port,
-          user        = db_user_name,
-          password    = password,
-          database    = db_schema,
-          auth_plugin = 'mysql_native_password'
+        host=db_host,
+        port=port,
+        user=db_user_name,
+        password=password,
+        database=db_schema,
+        auth_plugin='mysql_native_password'
     )
     if trace:
         print("completed!")
     return db_connection
+
 
 def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
     sql_select = f'SELECT count(*) FROM {db_tbl_name} '
@@ -3012,6 +3085,7 @@ def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
         return {'rows_in_db   (' + db_tbl_name + '):': myresult[0][0]}
     else:
         return myresult[0][0]
+
 
 # uses the view Table_Meta_Data
 def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
@@ -3031,10 +3105,49 @@ def get_db_attr_type(db, table, attribute, take_action=False, verbal=False):
     ret_val = {}
     for aRec in mycursor.fetchall():
         ret_val = {
-            'type' : aRec[0].decode('ascii'),
+            'type': aRec[0].decode('ascii'),
             'enums': ''  # aRec[1]    # .decode('ascii')
         }
     return ret_val
+
+
+def get_all_table_names_from_schema(db, schema=None, object_types=None, verbal=False):
+    '''
+    object_types: BASE TABLE, VIEW
+    '''
+
+    if verbal:
+        print(f'''
+           --> Calling get_all_table_names_from_schema(db,
+                        schema        = {schema}, 
+                        object_types  = {object_types},
+                        verbal        = {verbal})''')
+
+    where_list = []
+    if schema is not None:
+        where_list.append(f"`TABLE_SCHEMA` = '{schema}'")
+    if object_types is not None:
+        where_list.append(f"`TABLE_TYPE` = '{object_types}'")
+    where_clause = ' AND '.join(where_list)
+    if len(where_clause) > 0:
+        where_clause = 'WHERE' + where_clause
+    select_sql = f'''
+        SELECT 
+            TABLE_SCHEMA, 
+            TABLE_NAME, 
+            TABLE_TYPE
+        FROM
+            INFORMATION_SCHEMA.TABLES
+        {where_clause};
+    '''
+    if verbal:
+        if verbal:
+            print(select_sql)
+
+    mycursor = db.cursor()
+    mycursor.execute(select_sql)
+    return mycursor.fetchall()
+
 
 def get_db_attr_type_new(db, schema_name=None, table_name=None, attribute_name=None, take_action=False, verbal=False):
     if verbal:
@@ -3069,7 +3182,6 @@ FROM INFORMATION_SCHEMA.COLUMNS
 {where_clause_str}
     """
 
-
     if verbal:
         print(select_sql)
     mycursor = db.cursor()
@@ -3078,7 +3190,6 @@ FROM INFORMATION_SCHEMA.COLUMNS
     for aRec in mycursor.fetchall():
         print(aRec)
     return ret_val
-
 
 
 def update_db_attributes(db=None,
@@ -3100,12 +3211,13 @@ def update_db_attributes(db=None,
                            verbal           = {verbal})''')
 
     return {'dataset_changed': 1, 'attributes_changed': 7}
+
+
 def update_db_attribute(db=None,
                         db_tbl_name=None, db_attr_name=None, db_attr_type='varchar', db_attr_set_enum_values='',
                         id_attr_name='ID', id=None,
                         new_value=None, new_value_format=None,
                         take_action=False, verbal=False):
-
     if verbal:
         print(f'''
            --> Calling update_db_attribute(db,
@@ -3113,13 +3225,13 @@ def update_db_attribute(db=None,
                           db_attr_name                = {db_attr_name},
                           db_attr_type                = {db_attr_type}, 
                           db_attr_set_enum_values     = {db_attr_set_enum_values},
-                          
+
                           id_attr_name     = {id_attr_name}, 
                           id               = {id},
-                          
+
                           new_value        = {new_value},
                           new_value_format = {new_value_format}, 
-                          
+
                           take_action      = {take_action},
                           verbal           = {verbal})''')
 
@@ -3140,7 +3252,7 @@ def update_db_attribute(db=None,
             sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = NULL WHERE {id_attr_name} = {id}"
         elif old_value != new_value:
             if db_attr_type == 'varchar':
-                if new_value[0] == '+' or  new_value[0] == ';' or  new_value[0] == '|':
+                if new_value[0] == '+' or new_value[0] == ';' or new_value[0] == '|':
                     if len(old_value) > 0:
                         sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = CONCAT({db_attr_name}, '{new_value}') WHERE {id_attr_name} = {id}"
                     else:
@@ -3181,7 +3293,6 @@ def update_db_attribute(db=None,
             else:
                 sql_update = f"UPDATE {db_tbl_name} SET {db_attr_name} = {new_value} WHERE {id_attr_name} = {id}"
 
-
         if verbal:
             print('sql_update:', sql_update)
 
@@ -3194,6 +3305,7 @@ def update_db_attribute(db=None,
             print(myresult)
 
     return update_count
+
 
 def get_table_records(db, table_name, where_clause=None, as_dictionary=True, take_action=False, verbal=False):
     if verbal:
@@ -3217,6 +3329,7 @@ def get_table_records(db, table_name, where_clause=None, as_dictionary=True, tak
             print(a_data_set)
         print('Count:', len(my_results))
     return my_results
+
 
 def create_sql_stmt_from_rs(result_set, table_name='Language', as_csv=False, take_action=False, verbal=False):
     if verbal:
@@ -3244,8 +3357,8 @@ def create_sql_stmt_from_rs(result_set, table_name='Language', as_csv=False, tak
                     attr_value = 'NULL'
                 else:
                     attr_value = attr_value.replace("', '", ",")
-                    attr_value = attr_value[:-2]   # .replace(r"'{", "")
-                    attr_value = attr_value[2:]    # .replace(r"}'", "")
+                    attr_value = attr_value[:-2]  # .replace(r"'{", "")
+                    attr_value = attr_value[2:]  # .replace(r"}'", "")
                     attr_value = f"'{attr_value}'"
             elif isinstance(attr_value, str):
                 attr_value = attr_value.replace("'", "\\'")
@@ -3268,8 +3381,8 @@ def create_sql_stmt_from_rs(result_set, table_name='Language', as_csv=False, tak
 def create_insert_data_stmt(db_schema, table_name, where_clause=None):
     data_sets = get_table_records(db_schema, table_name=table_name, where_clause=where_clause, as_dictionary=True, take_action=True, verbal=False)
     insert_str = create_sql_stmt_from_rs(
-                    data_sets,
-                    table_name=table_name, as_csv=False, take_action=False, verbal=False)
+        data_sets,
+        table_name=table_name, as_csv=False, take_action=False, verbal=False)
     if where_clause is None:
         where_clause = ''
     else:
@@ -3280,11 +3393,14 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None):
     {insert_str}"""
     return insert_str
 
+
 # ------------------------
 # Reusable Excel-Functions
 # ------------------------
 def is_not_empty(value):
     return value is not None and value != ''
+
+
 def are_all_values_empty(ws, title_row=1, row=1, exclude_attr_names=[]):
     column_header_list = get_existing_column_titles(ws, title_row=title_row, exclude_attr_names=exclude_attr_names, key_only=False)
     ret_value = get_cell_values_by_column_titles(ws, title_row=title_row, row=row, column_names=column_header_list, do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False)
@@ -3296,11 +3412,13 @@ def are_all_values_empty(ws, title_row=1, row=1, exclude_attr_names=[]):
     else:
         return False
 
+
 def get_existing_column_titles(ws, title_row=1, exclude_attr_names=[], key_only=False):
     ret_value = {cell.value: cell.column for cell in ws[title_row] if cell.value not in exclude_attr_names}
     if key_only:
         ret_value = list(ret_value.keys())
     return ret_value
+
 
 def get_cell_values_by_column_titles(ws, title_row=1, row=1, column_names=[], do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
     if verbal:
@@ -3322,6 +3440,7 @@ def get_cell_values_by_column_titles(ws, title_row=1, row=1, column_names=[], do
         else:
             ret_values[column_name] = value
     return ret_values
+
 
 def get_cell_value_by_column_title(ws, title_row=1, row=1, column_name='ID', do_reset_cell=False, reset_cell_value=None, take_action=False, verbal=False):
     if verbal:
@@ -3355,6 +3474,7 @@ def get_cell_value_by_column_title(ws, title_row=1, row=1, column_name='ID', do_
                 'cell_column': column_letter,
                 'cell_row': row,
                 f'ws["{column_letter}{str(row)}"].value': cell_value}
+
 
 def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, column_name='ID', take_action=False, verbal=False):
     if verbal:
@@ -3391,7 +3511,6 @@ def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, colum
             'cell_col': column_letter,
             'cell_row': row,
             f'ws["{column_letter}{str(row)}"].value': new_cell_value}
-
 
 
 # ===========================================================
