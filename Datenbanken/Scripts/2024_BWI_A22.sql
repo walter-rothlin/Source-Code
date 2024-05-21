@@ -20,21 +20,21 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- =========================================
 -- == Schema HWZ kreieren                 ==
 -- =========================================
-DROP SCHEMA IF EXISTS `hwz`;
-CREATE SCHEMA IF NOT EXISTS  `hwz` ;
+DROP SCHEMA IF EXISTS `hwz_2024`;
+CREATE SCHEMA IF NOT EXISTS  `hwz_2024` ;
 
 -- Als default Schema setzen
 SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
-USE `hwz`;
+USE `hwz_2024`;
 
 -- =========================================
 -- == Rohdaten-Tabellen kreieren          ==
 -- =========================================
 -- -----------------------------------------------------
--- Table `hwz`.`Orte`
+-- Table `Orte`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Orte` (
-  `ID` INT NOT NULL,
+  `ID` INT NOT NULL AUTO_INCREMENT,
   `PLZ` VARCHAR(10) NOT NULL,
   `Ortsname` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`ID`));
@@ -92,6 +92,14 @@ UPDATE `adressen` SET `Strasse` = 'Nördlingerhof.', `Hausnummer` = '1d'  WHERE 
 UPDATE `adressen` SET `Strasse` = 'Zürcherstr.',    `Hausnummer` = '42c' WHERE `ID` IN (5);
 
 
+-- -----------------------------------------
+DROP FUNCTION IF EXISTS get_strasse_nr;
+DELIMITER //
+CREATE FUNCTION get_strasse_nr(p_strasse VARCHAR(45), p_nr VARCHAR(10)) RETURNS CHAR(100)
+BEGIN
+    RETURN CONCAT(p_strasse,' ', p_nr);
+END//
+DELIMITER ;
 
 -- ===============================================
 -- == Ursprüngliche Benutzersicht herstellen    ==
@@ -104,6 +112,7 @@ CREATE VIEW Adresse_View AS
 		`adr`.`Nachname`     AS `Nachname`,
 		`adr`.`Strasse`      AS `Strasse`,
 		`adr`.`Hausnummer`   AS `Hausnummer`,
+        get_strasse_nr(`adr`.`Strasse`,`adr`.`Hausnummer`)                    AS `Strasse_Nr`,
 		-- `adr`.`Orte_ID`      AS `adr_Orte_ID`,
 		-- `adr`.`PLZ`          AS `adr_PLZ`,
 		-- `adr`.`Ort`          AS `adr_Ort`,
@@ -117,4 +126,10 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
+/*
+CREATE USER `Test_APP_2024`@`localhost` IDENTIFIED BY 'BWI-A22';
+GRANT SELECT ON `hwz_2024`.`adresse_view` TO `Test_APP_2024`@`localhost`;
 
+REVOKE SELECT ON hwz_2024.adresse_view FROM 'Test_APP_2024'@'localhost';
+DROP USER 'Test_APP_2024'@'localhost';
+*/
