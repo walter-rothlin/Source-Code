@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+    <!--
+    Source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK/templates/index_template.html
+    Run-Time: templates/index_template.html
+    -->
+
+{% block head %}
+<!-- block head -->
+{% endblock %}
+
+
+{% block body %}
+<!-- Kommentar -->
+{{anrede}} {{studiengruppe}}!!
+<table>
+    {% for a_student in studies %}
+        {% if a_student['firstname'] != 'Oliver' %}
+            <tr><td>{{a_student['firstname']}}</td><td>{{a_student['lastname']}}</td></tr>
+        {% else %}
+            <tr><td>{{a_student['firstname']}}</td><td>Geheim</td></tr>
+        {% endif %}
+    {% endfor %}
+</table>
+{% endblock %}

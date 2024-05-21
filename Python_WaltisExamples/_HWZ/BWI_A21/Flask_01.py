@@ -1,4 +1,4 @@
-from flask import Flask, request, session
+from flask import Flask, request, session, render_template
 
 class Counter:
     def __init__(self, start_value):
@@ -101,6 +101,15 @@ def get_adr_liste():
               },
               ]
     return ret_val
+
+@app.route('/index_page')
+def render_index_page():
+    return render_template('index_template.html', anrede='Hallihallo', studiengruppe='BWI-a21',
+                           studies=[
+                               {'firstname': 'Oliver', 'lastname':'Keller'},
+                               {'firstname': 'Edgar', 'lastname': 'Golup'},
+                               {'firstname': 'Nanchoz', 'lastname': 'Leuzinger'},
+                           ])
 
 if __name__ == '__main__':
     request_counter = Counter(10)

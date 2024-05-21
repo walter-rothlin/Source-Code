@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name: 01_DB_Access.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HWZ/BWI_22/01_DB_Access.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HWZ/BWI_A22/01_DB_Access.py
 #
 # Description: Connects to sakila and queries data
 #
