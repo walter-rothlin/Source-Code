@@ -41,12 +41,36 @@ menu_text = '''
 # ==============
 # Functions
 # ==============
-def read_float(promt):
-    try:
-        ret_val = float(input(promt))
-    except ValueError:
-        ret_val = -1
+def read_number(promt, data_type='Float', min=None):
+    error = True
+    while error:
+        try:
+            in_str = input(promt)
+            if data_type == 'Float':
+                ret_val = float(in_str)
+            elif data_type == 'Int':
+                ret_val = int(in_str)
+            else:
+                print('WARNING: unknown data type')
+            error = False
+
+            if min is not None and ret_val < min:
+                print(f'WARNING: {ret_val} ist kleiner als {min}')
+                error = True
+        except Exception:
+            error = True
+            print(f'ERROR: {in_str} ist kein {data_type}!')
+
     return ret_val
+
+
+
+def read_float(promt, min=None):
+    return read_number(promt, data_type='Float', min=min)
+
+def read_int(promt, min=None):
+    return read_number(promt, data_type='Int', min=min)
+
 
 def grad_to_rad(g_value):
     rad_value = g_value*pi/halbbogen
@@ -59,8 +83,8 @@ if __name__ == '__main__':
     do_loop = True
     while do_loop:
         print(menu_text)
-        answer = input('Bitte wähle (0..4):')
-        if answer == '1':
+        answer = read_int('Bitte wähle (0..4):', min=0)
+        if answer == 1:
             print('Grad in Bogenmass')         # rad  = grad*pi/180
             grad_value = read_float('Grad:')
             rad_value = grad_to_rad(grad_value)
@@ -68,32 +92,32 @@ if __name__ == '__main__':
             print(f'{grad_value}° --> {rad_value:0.2f} rad')
             input('Weiter?')
 
-        elif answer == '2':
+        elif answer == 2:
             print('Bogenmass in Grad')
             rad_value = float(input('Rad:'))   # grad = rad*180/pi
             grad_value = rad_value*halbbogen/pi
             print(f'{rad_value} rad --> {grad_value:0.2f}°')
             input('Weiter?')
 
-        elif answer == '3':
+        elif answer == 3:
             print('Fahrenheit in Celsius')
             fahr_value = float(input('Fahrenheit:'))   # 32F -> 0°C    100F -> 37.78°C     °C = (°F - 32) / 1.8
             grad_value = (fahr_value - fahr2Grad_c)/fahr2Grad_a
             print(f'{fahr_value}Fahrenheit --> {grad_value:0.2f}°')
             input('Weiter?')
 
-        elif answer == '4':
+        elif answer == 4:
             print('Celsius in Fahrenheit')
             grad_value = float(input('Grad:'))
             fahr_value = (grad_value*fahr2Grad_a) + fahr2Grad_c  # 32F -> 0°C    100F -> 37.78°C     °F = (°C * 1.8) + 32
             print(f'{grad_value}° --> {fahr_value:0.2f} Fahrenheit')
             input('Weiter?')
 
-        elif answer == '0':
+        elif answer == 0:
             print('Schluss')
             do_loop = False
         else:
-            print('Ungültige Eingabe! Nochmals versuchen')
+            print('Unbekannte Auswahl!')
 
     print('Ende')
 
