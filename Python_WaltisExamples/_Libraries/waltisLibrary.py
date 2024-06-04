@@ -65,6 +65,8 @@
 #                                           getMenuStrFromList()
 #                                           getValueFromDictList()
 # 09-May-2024   Walter Rothlin      Added get_all_table_names_from_schema()
+# 04-Jun-2024   Walter Rothlin      Added new version of create_insert_data_stmt
+#
 # ------------------------------------------------------------------
 
 # toDo:
@@ -3378,20 +3380,92 @@ def create_sql_stmt_from_rs(result_set, table_name='Language', as_csv=False, tak
     return ret_str
 
 
-def create_insert_data_stmt(db_schema, table_name, where_clause=None):
+def create_insert_data_stmt_old(db_schema, table_name, where_clause=None):  # replace on 4.6.2024
     data_sets = get_table_records(db_schema, table_name=table_name, where_clause=where_clause, as_dictionary=True, take_action=True, verbal=False)
-    insert_str = create_sql_stmt_from_rs(
-        data_sets,
-        table_name=table_name, as_csv=False, take_action=False, verbal=False)
+    if len(data_sets) > 0:
+        insert_str = create_sql_stmt_from_rs(
+            data_sets,
+            table_name=table_name, as_csv=False, take_action=False, verbal=False)
+        if where_clause is None:
+            where_clause = ''
+        else:
+            where_clause = f' WHERE {where_clause}'
+    else:
+        insert_str = ' -- Table is empty'
+    insert_str = f"""  -- Extracted at: {getTimestamp()}
+    -- SELECT * FROM `{table_name}` {where_clause};    Tuples found: {len(data_sets)}
+    {insert_str}"""
+    return insert_str
+
+
+def create_insert_data_stmt(db_schema, table_name, where_clause=None):
+    my_cursor = db_schema.cursor(dictionary=True)
+
     if where_clause is None:
         where_clause = ''
     else:
         where_clause = f' WHERE {where_clause}'
 
-    insert_str = f"""  -- Extracted at: {getTimestamp()}
-    -- SELECT * FROM `{table_name}` {where_clause};    Tuples found: {len(data_sets)}
-    {insert_str}"""
-    return insert_str
+    select_statement = f'SELECT * FROM `{table_name}`{where_clause};'
+
+    my_cursor.execute(select_statement)
+    result_set = my_cursor.fetchall()
+    count_of_records = len(result_set)
+
+    if count_of_records > 0:
+        attribute_list = list(result_set[0].keys())
+        attributes = str(attribute_list).replace('[', '').replace(']', '').replace("'", '`')
+        ret_str = f'''
+    INSERT INTO `{table_name}` ({attributes}) VALUES'''
+
+        insert_tuple_str = ''
+        for a_tuple in result_set:
+            a_tuple_str = '        ('
+            for a_attr in attribute_list:
+                value_of_attr = a_tuple[a_attr]
+                type_of_attr = type(value_of_attr)
+                # print(f'{a_attr}={value_of_attr}  [{type_of_attr}]')
+                if isinstance(value_of_attr, datetime.datetime):
+                    a_tuple_str += f"STR_TO_DATE('{value_of_attr}', '%Y-%m-%d %H:%i:%s')" + ', '
+
+                elif isinstance(value_of_attr, datetime.date):
+                    a_tuple_str += f"STR_TO_DATE('{value_of_attr}', '%Y-%m-%d')" + ', '
+
+                elif isinstance(value_of_attr, set):
+                    value_of_attr = str(value_of_attr)
+                    if value_of_attr == 'set()':
+                        # print(value_of_attr)
+                        a_tuple_str += 'NULL' + ', '
+                    else:
+                        value_of_attr = value_of_attr.replace("', '", ",")
+                        value_of_attr = value_of_attr[:-2]  # .replace(r"'{", "")
+                        value_of_attr = value_of_attr[2:]  # .replace(r"}'", "")
+                        a_tuple_str += f"'{value_of_attr}'" + ', '
+
+                elif isinstance(value_of_attr, str):
+                    a_tuple_str += f"'{value_of_attr}'" + ', '
+
+                elif value_of_attr is None:
+                    a_tuple_str += 'NULL' + ', '
+
+                else:
+                    a_tuple_str += f"{value_of_attr}" + ', '
+
+            a_tuple_str = a_tuple_str[:-2]
+            a_tuple_str += '),'
+            insert_tuple_str += '\n' + a_tuple_str
+        insert_tuple_str = insert_tuple_str[:-1]
+        # print(insert_tuple_str)
+        ret_str += insert_tuple_str + ';'
+    else:
+        ret_str = f' -- WARNING: Table `{table_name}` is empty!'
+
+    return f'''
+    -- -------------------------------
+    -- {select_statement}   --> {count_of_records} records found
+    -- Extracted at: {getTimestamp()}{ret_str}
+
+  '''
 
 
 # ------------------------
