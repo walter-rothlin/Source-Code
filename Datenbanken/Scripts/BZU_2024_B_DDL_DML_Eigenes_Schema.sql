@@ -25,69 +25,96 @@ USE `bzu_b`;
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Orte`;
 CREATE TABLE IF NOT EXISTS `Orte` (
-  `Ort_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `PLZ`       VARCHAR(10) NULL,
-  `Ort`       VARCHAR(45) NULL,
-  PRIMARY KEY (`Ort_id`));
+  `ID`             INT UNSIGNED NOT NULL,
+  `PLZ`            VARCHAR(10)  NOT NULL,
+  `Ortsname`       VARCHAR(45)  NOT NULL,
+  `last_update`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `changed_by`     VARCHAR(45)  NOT NULL DEFAULT 'Unknown',
+  PRIMARY KEY (`ID`));
 
-INSERT INTO `Orte` (`Ort_id`, `PLZ`, `Ort`) VALUES 
-     (1,  '8855', 'Wangen'),
-     (2,  '8854', 'Siebnen'),
-     (3,  '8854', 'Galgenen'),
-     (4,  '8855', 'Nuolen'),
-     (5,  '8853', 'Lachen');
+INSERT INTO `Orte` (`ID`, `PLZ`, `Ortsname`) VALUES 
+	(1, '8855',  'Wangen' ),
+    (2, '8854',  'Galgenen'),
+    (3, '8854',  'Siebnen'),
+    (4, '8853',  'Lachen');
 
 -- -----------------------------------------------------
 -- Table `Adressen`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Adressen`;
 CREATE TABLE IF NOT EXISTS `Adressen` (
-  `Adress_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Vorname`   VARCHAR(45) NOT NULL,
-  `Nachname`  VARCHAR(45) NOT NULL,
-  `Strasse`   VARCHAR(45) NULL,
-  `HausNr`    VARCHAR(5)  NULL,
-  -- `PLZ`       VARCHAR(10) NULL,
-  -- `Ort`       VARCHAR(45) NULL,
-  `Ort_id`    INT UNSIGNED NULL,
-  PRIMARY KEY (`Adress_id`),
+  `ID`             INT UNSIGNED NOT NULL,
+  `Strasse`        VARCHAR(45)  NULL,
+  `Hausnummer`     VARCHAR(10)  NULL,
+  `Ort_id`         INT UNSIGNED NOT NULL,
+  `last_update`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `changed_by`     VARCHAR(45)  NOT NULL DEFAULT 'Unknown',
+  PRIMARY KEY (`ID`),
   INDEX `fk_Ort_id_idx` (`Ort_id` ASC) VISIBLE,
-  CONSTRAINT `fk_adressen_orte`
+  CONSTRAINT `fk_Adressen_Orte`
     FOREIGN KEY (`Ort_id`)
-    REFERENCES `Orte` (`Ort_id`)
+    REFERENCES `Orte` (`ID`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-  );
+    ON UPDATE NO ACTION);
+  
+INSERT INTO `Adressen` (`ID`, `Strasse`, `Hausnummer`, `Ort_id` ) VALUES 
+	(1, 'Peterliwiese',    '33',  1 ),
+    (2, 'Musterstr.',      '44',  2 ),
+    (3, 'Nördlingerhof.',  '1d',  3 ),
+    (4, 'Zürcherstr.',     '42c', 4 );
+
+-- -----------------------------------------------------
+-- Table `Personen`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Personen`;
+CREATE TABLE IF NOT EXISTS `Personen` (
+  `ID`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Vorname`       VARCHAR(45)  NOT NULL,
+  `Nachname`      VARCHAR(45)  NOT NULL,
+  `Adresse_id`    INT UNSIGNED NULL,
+  `last_update`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `changed_by`    VARCHAR(45)  NOT NULL DEFAULT 'Unknown',
+  PRIMARY KEY (`ID`),
+  INDEX `fk_Adresse_id_idx` (`Adresse_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Personen_Adressen`
+    FOREIGN KEY (`Adresse_id`)
+    REFERENCES `Adressen` (`ID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+    
+    
+INSERT INTO `Personen` (`ID`, `Vorname`, `Nachname`, `Adresse_id` ) VALUES 
+	(1, 'Walter' , 'Rothlin', 1 ),
+    (2, 'Claudia', 'Collet' , 1 ),
+    (3, 'Hans'   , 'Muster' , 2 ),
+    (4, 'Max'    , 'Meier'  , 3 ),
+    (5, 'Fritz'  , 'Künzli' , 4 ),
+    (6, 'Martin' , 'Landolt', NULL );
+    
+-- -----------------------------------------------------
+-- View `Mailing_Liste`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `Mailing_Liste`;
+CREATE VIEW `Mailing_Liste` AS    
+SELECT
+	`pers`.`ID`                AS `ID`, 
+    `pers`.`Vorname`           AS `Vorname`, 
+    `pers`.`Nachname`          AS `Nachname`,
+    `pers`.`Adresse_id`        AS `Adresse_id`,
+    
+    `adr`.`Strasse`            AS `Strasse`,
+	`adr`.`Hausnummer`         AS `Hausnummer`,
+    CONCAT(`adr`.`Strasse`, 
+           ' ', 
+           `adr`.`Hausnummer`)  AS `Strasse_Nr`,
+	
+    `o`.`PLZ`                   AS `PLZ`, 
+    `o`.`Ortsname`              AS `Ort`
+FROM `Personen` AS `pers`
+LEFT OUTER JOIN `Adressen` AS `adr` ON `pers`.`Adresse_id` = `adr`.`ID`
+LEFT OUTER JOIN `Orte`     AS `o`   ON `adr`.`ID` = `o`.`ID`;
 
 
-INSERT INTO `Adressen` (`Adress_id`, `Vorname`, `Nachname`, `Strasse`, `HausNr`, `Ort_id`) VALUES 
-     (1, 'Walter',  'Rothlin', 'Peterliwiese',    '33',  1),
-     (2, 'Claudia', 'Rothlin', 'Peterliwiese',    '33',  1),
-     (3, 'Max',     'Meier',   'Nördlingerhof',   '1d',  3),
-     (4, 'Walter',  'Rothlin', 'Etzelstr.',       ' 7',  1),
-     (5, 'Walter',  'Krieg',    'St. Gallerstr.', '24c', 5);
-     
-     
-DROP VIEW IF EXISTS `Adressen_V`;
-CREATE VIEW `Adressen_V` AS    
-	SELECT
-		`Adr`.`Adress_id` AS `Adress_id`, 
-		`Adr`.`Vorname`   AS `Vorname`, 
-		`Adr`.`Nachname`  AS `Nachname`, 
-		CONCAT(`Adr`.`Strasse`,' ',`Adr`.`HausNr`)    AS `Strasse`, 
-		-- `Adr`.`HausNr`    AS `HausNr`, 
-		-- `Adr`.`PLZ`, 
-		-- `Adr`.`Ort`, 
-		-- `Adr`.`Ort_id`,
-		`O`.`PLZ`         AS `PLZ`,
-		`O`.`Ort`         AS `Ort`
-	FROM `Adressen` AS `Adr`
-	LEFT OUTER JOIN `Orte` AS `O` ON `Adr`.`Ort_id` =  `O`.`Ort_id`;
-     
-     
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
-
-
