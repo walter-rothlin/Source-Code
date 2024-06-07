@@ -65,8 +65,12 @@
 #                                           getMenuStrFromList()
 #                                           getValueFromDictList()
 # 09-May-2024   Walter Rothlin      Added get_all_table_names_from_schema()
-# 04-Jun-2024   Walter Rothlin      Added new version of create_insert_data_stmt
-#
+# 04-Jun-2024   Walter Rothlin      Added new version of create_insert_data_stmt()
+# 06-Jun-2024   Walter Rothlin      Added verbal to File_create()
+# 07-Jun-2024   Walter Rothlin      Added vhashing in create_insert_data_stmt()
+#                                   Added hash_string()
+#                                   Added is_email()
+#                                   Fixed problem with ' in create_insert_data_stmt()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -90,6 +94,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 import urllib.parse
 import locale
+import hashlib
 
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
@@ -115,6 +120,7 @@ def waltisPythonLib_Version():
 # Regular-Expressions
 # ===================
 regEx_email = r'([\w\.-]+)@([\w\.-]+)'
+regEx_email_1 = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
 regEx_Float = r'[+-]?\d*\.[0-9]+'
 regEx_Int = r'[+-]?[0-9]'
 regEx_Float_Or_Int = r'[+-]?\d*\.?\d+'
@@ -181,6 +187,12 @@ def TEST_printProgressBar(verbal=False):
         # Update Progress Bar
         printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
     print("Completed")
+
+
+# Test functions for readln
+# =========================
+def is_email(email):
+    return re.match(regEx_email_1, email) is not None
 
 
 # Readln functions
@@ -1562,6 +1574,27 @@ def showASCII_Table(firstVal=33, lastVal=126, sep=" --> ", end="\n"):
               addParity(bin(i)[2:].upper().rjust(7, "0"), False), sep="")
 
 
+def hash_string(string, algorithm='md5', ret_length=None):
+    # Create a hash object based on the specified algorithm
+    if algorithm == 'md5':
+        hash_object = hashlib.md5()
+    elif algorithm == 'sha1':
+        hash_object = hashlib.sha1()
+    elif algorithm == 'sha256':
+        hash_object = hashlib.sha256()
+    else:
+        raise ValueError("Unsupported algorithm. Use 'md5', 'sha1', or 'sha256'.")
+
+    # Update the hash object with the bytes of the string
+    hash_object.update(string.encode('utf-8'))
+
+    # Get the hexadecimal representation of the hash
+    hash_string = hash_object.hexdigest()
+    if ret_length is not None:
+        hash_string = hash_string[:ret_length]
+    return hash_string
+
+
 def left(s, amount):
     return s[:amount]
 
@@ -2133,9 +2166,9 @@ def getFilenameExtension(fileName):
     return fileName[fileName.index("."):]
 
 
-def addTimestampToFileName(fileName, timestampFormat="%Y_%m_%d"):
+def addTimestampToFileName(fileName, timestampFormat="{ts:%Y_%m_%d}"):
     indexBeforeFileType = fileName.index(".")
-    fileName = fileName[:indexBeforeFileType] + "_" + datetime.now().strftime(timestampFormat) + fileName[indexBeforeFileType:]
+    fileName = fileName[:indexBeforeFileType] + "_" + getTimestamp(formatString=timestampFormat) + fileName[indexBeforeFileType:]
     return fileName
 
 
@@ -2352,6 +2385,8 @@ def File_addHeader(sourceFileFN, destinationFileFN=None, headerStr=""):
 
 
 def File_create(filename, str_to_save='', mode='w', encoding="utf-8", verbal=False):
+    if verbal:
+        print(f'File written to {filename}')
     with open(filename, mode, encoding=encoding) as file:
         file.write(str_to_save)
 
@@ -3398,7 +3433,7 @@ def create_insert_data_stmt_old(db_schema, table_name, where_clause=None):  # re
     return insert_str
 
 
-def create_insert_data_stmt(db_schema, table_name, where_clause=None):
+def create_insert_data_stmt(db_schema, table_name, where_clause=None, fields_to_select=None, fields_to_hash=None, verbal=False):
     my_cursor = db_schema.cursor(dictionary=True)
 
     if where_clause is None:
@@ -3406,8 +3441,17 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None):
     else:
         where_clause = f' WHERE {where_clause}'
 
-    select_statement = f'SELECT * FROM `{table_name}`{where_clause};'
+    if fields_to_select is None:
+        fields_to_select = '*'
+    else:
+        fields_to_select = ','.join(fields_to_select)
 
+    if fields_to_hash is None:
+        fields_to_hash = []
+
+    select_statement = f'SELECT {fields_to_select} FROM `{table_name}`{where_clause};'
+    if verbal:
+        print(f'    --> {select_statement}')
     my_cursor.execute(select_statement)
     result_set = my_cursor.fetchall()
     count_of_records = len(result_set)
@@ -3424,6 +3468,23 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None):
             for a_attr in attribute_list:
                 value_of_attr = a_tuple[a_attr]
                 type_of_attr = type(value_of_attr)
+
+                if a_attr in fields_to_hash:
+                    if value_of_attr is not None and len(value_of_attr) > 0:
+                        if is_email(value_of_attr):
+                            email_part_0 = value_of_attr.split('@')[0]
+                            email_part_1 = value_of_attr.split('@')[1]
+                            value_of_attr_hash = hash_string(email_part_0, ret_length=len(email_part_0))
+                            value_of_attr_hash_1 = value_of_attr[0] + value_of_attr_hash[1:] + '@' + email_part_1
+                            if verbal:
+                                print(f'         {a_attr}={value_of_attr} EMAIL: {value_of_attr_hash} : {value_of_attr_hash_1}')
+                            value_of_attr = value_of_attr_hash_1
+                        else:
+                            value_of_attr_hash = hash_string(value_of_attr, ret_length=len(value_of_attr))
+                            value_of_attr_hash_1 = value_of_attr[0] + value_of_attr_hash[1:]
+                            if verbal:
+                                print(f'         {a_attr}={value_of_attr} HASH: {value_of_attr_hash} : {value_of_attr_hash_1}')
+                            value_of_attr = value_of_attr_hash_1
                 # print(f'{a_attr}={value_of_attr}  [{type_of_attr}]')
                 if isinstance(value_of_attr, datetime.datetime):
                     a_tuple_str += f"STR_TO_DATE('{value_of_attr}', '%Y-%m-%d %H:%i:%s')" + ', '
@@ -3440,9 +3501,11 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None):
                         value_of_attr = value_of_attr.replace("', '", ",")
                         value_of_attr = value_of_attr[:-2]  # .replace(r"'{", "")
                         value_of_attr = value_of_attr[2:]  # .replace(r"}'", "")
+                        value_of_attr = value_of_attr.replace("'", "'")
                         a_tuple_str += f"'{value_of_attr}'" + ', '
 
                 elif isinstance(value_of_attr, str):
+                    value_of_attr = value_of_attr.replace("'", r"\'")
                     a_tuple_str += f"'{value_of_attr}'" + ', '
 
                 elif value_of_attr is None:
@@ -3459,7 +3522,8 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None):
         ret_str += insert_tuple_str + ';'
     else:
         ret_str = f' -- WARNING: Table `{table_name}` is empty!'
-
+    if verbal:
+        print('\n')
     return f'''
     -- -------------------------------
     -- {select_statement}   --> {count_of_records} records found
