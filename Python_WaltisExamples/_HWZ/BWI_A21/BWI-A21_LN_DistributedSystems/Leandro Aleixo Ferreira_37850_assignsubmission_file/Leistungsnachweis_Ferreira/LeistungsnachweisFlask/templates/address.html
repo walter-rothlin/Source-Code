@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1>Adressliste</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Adresse</th>
+          <th>Telefon</th>
+          <th>E-Mail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Max Mustermann</td>
+          <td>Musterstrasse 1, 8000 Zürich</td>
+          <td>+41 78 657 32 23</td>
+          <td>max.mustermann@example.com</td>
+        </tr>
+        <tr>
+          <td>Erika Beispiel</td>
+          <td>Beispielallee 2, 8001 Zürich</td>
+          <td>+41 76 654 32 11</td>
+          <td>erika.beispiel@example.com</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Kontakt</h1>
+<p>Wenn du Fragen hast oder weitere Informationen benötigst, kannst du uns gerne kontaktieren:</p>
+
+<h2>Kontaktinformationen</h2>
+<p><strong>Adresse:</strong> Hinterer Bachblütenweg 17, 4455 Bolzheim</p>
+<p><strong>Telefon:</strong> +79 756 66 04</p>
+<p><strong>Email:</strong> info@gavintherealdeal.com</p>
+
+<h2>Kontaktformular</h2>
+<form action="/kontakt" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="message">Nachricht:</label>
+    <textarea id="message" name="message" rows="4" required></textarea>
+    <br>
+    <input type="submit" value="Absenden">
+</form>
+{% endblock %}
