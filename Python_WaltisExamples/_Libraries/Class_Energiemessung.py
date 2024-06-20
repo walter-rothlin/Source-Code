@@ -32,7 +32,7 @@ class Energieberechnungen:
         self.current(current)
 
     def getCurrentPower(self):
-        retVal = self.voltage * current
+        retVal = self.voltage * self.current
         return retVal
 
     def getName(self):
