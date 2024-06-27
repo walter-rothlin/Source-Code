@@ -22,26 +22,42 @@ appid = "144747fd356c86e7926ca91ce78ce170"
 
 ort = input('Ort:')
 
-old_temp = 0
-old_pressure = 0
-old_humidity = 0
+header = f'''
+Ort:  {ort}
++-------------------+-----------------+--------------+--------------+----------------------+-------------------+
+| Timestamp         | Temperatur [°C] | Druck [mBar] | Feuchtigkeit | Text                 |
++-------------------+-----------------+--------------+--------------+----------------------+-------------------+
+'''
 
+old_log_entry = ''
+open('Wetter_Daten.txt', 'w').write(header)
 do_loop = True
 while do_loop:
     url_request = f"{url_endpoint}?q={ort}&units={units}&lang={lang}&appid={appid}"
-    responseStr = requests.get(url_request)
-    jsonResponse = json.loads(responseStr.text)
+
+    response = requests.get(url_request)
+    jsonResponse = json.loads(response.text)
+
+    if response.status_code >= 400:
+        print(f"Error: {jsonResponse}")
+        break
+
     temp = jsonResponse['main']['temp']
     pressure = jsonResponse['main']['pressure']
     humidity = jsonResponse['main']['humidity']
-    if old_temp != temp or old_pressure != pressure or old_humidity != humidity:
-        print(f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}:: ', end='')
-        print(f"{ort} ({jsonResponse['coord']['lon']}/{jsonResponse['coord']['lat']}): ", end='')
-        print(f"{temp}°C   {pressure}mBar   {humidity}%  ", end='')
-        print(f"{jsonResponse['weather'][0]['main']} --> {jsonResponse['weather'][0]['description']} ", end='')
-        print()
-        old_temp = temp
-        old_pressure = pressure
-        old_humidity = humidity
+
+    # log_entry = f"({jsonResponse['coord']['lon']}/{jsonResponse['coord']['lat']}): "
+    log_entry = ''
+    log_entry += f"{temp}°C   {pressure}mBar   {humidity}%  "
+    log_entry += f"{jsonResponse['weather'][0]['main']} --> {jsonResponse['weather'][0]['description']} "
+
+    if old_log_entry != log_entry:
+        log_entry_full = f'|{datetime.datetime.now():%Y-%m-%d %H:%M:%S}|{log_entry}|'
+        print(log_entry_full)
+        open('Wetter_Daten.txt', 'a').write(log_entry_full + '\n')
+        old_log_entry = log_entry
+    else:
+        print('.', end='', flush=True)
+
     time.sleep(5)
 

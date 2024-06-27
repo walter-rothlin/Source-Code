@@ -16,7 +16,6 @@ import pyodbc
 
 # Replace with the path to your .mdb or .accdb file
 db_file_path = r'C:\Users\Landwirtschaft\Documents\SoruceCode\Python_WaltisExamples\Code_08b_DB_MSAccess\Data\sample.mdb'
-db_file_path = r'V:\EDV\Bürgerdaten_Access\GW_data_2023_06_01.mdb'
 
 # Connection string for Access Database
 conn_str = (
@@ -33,13 +32,22 @@ try:
     cursor = conn.cursor()
 
     # Execute a query
-    # cursor.execute('SELECT * FROM customers')
-    cursor.execute('SELECT * FROM tblPersonen')
+    cursor.execute('SELECT * FROM customers')
 
     # Fetch and display the results
     rows = cursor.fetchall()
-    for row in rows:
-        print(row)
+
+    as_dictionary = True
+    if as_dictionary:
+        # Fetch column names
+        columns = [column[0] for column in cursor.description]
+        print(columns)
+        result = [dict(zip(columns, row)) for row in rows]
+        for row in result:
+            print(row)
+    else:
+        for row in rows:
+            print(row)
 
     # Close the cursor and connection
     cursor.close()
