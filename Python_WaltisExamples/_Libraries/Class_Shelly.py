@@ -27,7 +27,7 @@ https://shelly-api-docs.shelly.cloud/gen2/ComponentsAndServices/Switch    API Sh
 # ----------------
 '''
 # Testlampe Shelly 1 Blue
-http://192.168.1.131    in Chrom starten und mit F12 trace des traffics
+http://192.168.107.132    in Chrom starten und mit F12 trace des traffics
 http://192.168.1.131/status
 http://192.168.1.131/settings
 http://192.168.1.131/relay/0?turn=on
@@ -35,6 +35,14 @@ http://192.168.1.131/relay/0?turn=off
 http://192.168.1.131/relay/0?turn=off&timer=3
 http://192.168.1.131/settings/relay/0?schedule_rules=1430-0123456-on
 http://192.168.1.131/settings/relay/0?schedule_rules=1430-0123456-on%2C1435-0123456-off
+
+
+# Shelly 4 Vierfach
+http://192.168.1.136
+http://192.168.1.133/relay/0?turn=on
+http://192.168.1.133/relay/0?turn=off
+http://192.168.1.133/rpc/Switch.GetStatus?id=0
+
 
 # Shelly 1 Rot
 http://192.168.1.134
@@ -51,11 +59,7 @@ http://192.168.1.135/settings
 http://192.168.1.135/relay/0?turn=on
 http://192.168.1.135/relay/0?turn=off
 
-# Shelly 4 Vierfach
-http://192.168.1.133
-http://192.168.1.133/relay/0?turn=on
-http://192.168.1.133/relay/0?turn=off
-http://192.168.1.133/rpc/Switch.GetStatus?id=0
+
 '''
 
 import socket
