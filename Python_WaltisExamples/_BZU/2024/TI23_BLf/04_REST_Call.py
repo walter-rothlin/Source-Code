@@ -9,6 +9,7 @@
 #
 # History:
 # 12-Jun-2024   Walter Rothlin      Initial Version
+# 27-Jun-2024   Walter Rothlin      Write to file
 # ------------------------------------------------------------------
 import requests
 import json
@@ -16,7 +17,8 @@ import time
 import datetime
 
 url_endpoint = 'https://api.openweathermap.org/data/2.5/weather'
-appid = '144747fd356c86e7926ca91ce78ce170'
+appid = '144747fd356c86e7926ca91ce78ce170'  # correct
+# appid = '144747fd356c86e7926ca91ce78ce166'  # wrong
 lang = 'de'
 units = 'metric'
 
@@ -24,25 +26,37 @@ ort = input('Ort:')
 url_str = f"{url_endpoint}?q={ort}&units={units}&lang={lang}&appid={appid}"
 
 
-old_temp = 0
-old_pressure = 0
-old_humidity = 0
+old_log_entry = ''
+header_str = f'''
 
+'''
 do_loop = True
-while do_loop:
-    responseStr = requests.get(url_str)
-    jsonResponse = json.loads(responseStr.text)
-    # print(jsonResponse)
+try:
+    while do_loop:
+        response = requests.get(url_str)
+        jsonResponse = json.loads(response.text)
 
-    temp = jsonResponse['main']['temp']
-    pressure = jsonResponse['main']['pressure']
-    humidity = jsonResponse['main']['humidity']
-    if old_temp != temp or old_pressure != pressure or old_humidity != humidity:
-        print(f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}:: ', end='')
-        print(f"{ort} ({jsonResponse['coord']['lon']}/{jsonResponse['coord']['lat']}):", end='')
-        print(f"{temp}°C  {pressure}mBar  {humidity}%   ", end='')
-        print(f"{jsonResponse['weather'][0]['main']} --> {jsonResponse['weather'][0]['description']}")
-        old_temp = temp
-        old_pressure = pressure
-        old_humidity = humidity
-    time.sleep(5)
+        if response.status_code >= 400:
+            print(f"Error: {jsonResponse}")
+            break
+
+        temp = jsonResponse['main']['temp']
+        pressure = jsonResponse['main']['pressure']
+        humidity = jsonResponse['main']['humidity']
+
+        log_entry = f"{ort} ({jsonResponse['coord']['lon']}/{jsonResponse['coord']['lat']}):"
+        log_entry += f"{temp}°C  {pressure}mBar  {humidity}%   "
+        log_entry += f"{jsonResponse['weather'][0]['main']} --> {jsonResponse['weather'][0]['description']}\n"
+        if old_log_entry != log_entry:
+            new_log_entry_full = f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}:: {log_entry}'
+            print(new_log_entry_full, end='')
+            open('Wetter_Daten.txt', 'a').write(new_log_entry_full)
+            old_log_entry = log_entry
+        else:
+            print('.', flush=True, end='')
+
+        time.sleep(5)
+except KeyboardInterrupt:
+    do_loop = False
+
+print('Tschüss!!')

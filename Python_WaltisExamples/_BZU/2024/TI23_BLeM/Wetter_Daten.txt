@@ -1,0 +1,12 @@
+
+Ort:  Lachen
++-------------------+------------+-------------+------------+----------------------+-------------------+
+| Timestamp         |     | Lon / Lat   | Temperatur | Durck | Feuchtigkeit | Text              |
++-------------------+------------+-------------+------------+----------------------+-------------------+
+|2024-06-27 16:05:16|26.91°C   1013mBar   56%  Clouds --> Überwiegend bewölkt |
+|2024-06-27 16:06:18|27.14°C   1013mBar   56%  Clouds --> Überwiegend bewölkt |
+|2024-06-27 16:07:04|26.8°C   1013mBar   56%  Clouds --> Überwiegend bewölkt |
+|2024-06-27 16:07:14|26.91°C   1013mBar   56%  Clouds --> Überwiegend bewölkt |
+|2024-06-27 16:07:39|27.14°C   1013mBar   56%  Clouds --> Überwiegend bewölkt |
+|2024-06-27 16:14:44|27.18°C   1013mBar   56%  Clouds --> Überwiegend bewölkt |
+|2024-06-27 16:17:17|27.14°C   1013mBar   56%  Clouds --> Überwiegend bewölkt |
