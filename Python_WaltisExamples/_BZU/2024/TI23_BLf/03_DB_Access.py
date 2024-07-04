@@ -43,8 +43,6 @@ def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=N
                             email_part_1 = an_attr_value.split('@')[1]
                             value_of_attr_hash = hash_string(email_part_0, ret_length=len(email_part_0))
                             value_of_attr_hash_1 = an_attr_value[0] + value_of_attr_hash[1:] + '@' + email_part_1
-                            if verbal:
-                                print(f'         {an_attr_name}={an_attr_value} EMAIL: {value_of_attr_hash} : {value_of_attr_hash_1}')
                             an_attr_value = value_of_attr_hash_1
                         else:
                             value_of_attr_hash = hash_string(an_attr_value, ret_length=len(an_attr_value))
@@ -85,7 +83,7 @@ def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=N
                 else:
                     tuple_str += f"{str(an_attr_value)}, "
 
-            tuple_str = "       " + tuple_str[:-2] + "),\n"
+            tuple_str = "   " + tuple_str[:-2] + "),\n"
             insert_str += tuple_str
         insert_str = insert_str[:-2] + ";"
     else:
@@ -119,10 +117,9 @@ def do_db_connect(password,
     return db_connection
 
 
-def do_prepare_db_attributes(attributes_to_select=None, indent=8):
+def do_prepare_db_attributes(attributes_to_select=None, indent=4):
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
-        # print(':', indent, ':', sep='')
 
     ret_str = ''
     if attributes_to_select is None:
@@ -131,13 +128,14 @@ def do_prepare_db_attributes(attributes_to_select=None, indent=8):
         ret_str = attributes_to_select
     elif isinstance(attributes_to_select, list):
         ret_str = f',\n{indent}'.join(attributes_to_select)
+
+    ret_str = f'\n{indent}{ret_str}'
     return ret_str
 
 
-def do_prepare_order_by(order_by=None, indent=8):
+def do_prepare_order_by(order_by=None, indent=4):
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
-        # print(':', indent, ':', sep='')
 
     ret_str = ''
     if order_by is None:
@@ -148,7 +146,7 @@ def do_prepare_order_by(order_by=None, indent=8):
         ret_str = f',\n{indent}'.join(order_by)
 
     if ret_str != '':
-        ret_str = 'ORDER BY\n' + indent + ret_str
+        ret_str = '\nORDER BY\n' + indent + ret_str
     return ret_str
 
 
@@ -160,7 +158,7 @@ def select_data_from_db_table(db_connection,
                               order_by_list=None,
 
                               db_type='MySql',
-                              indent=8,
+                              indent=4,
                               dictionary=True,
                               verbal=False):
 
@@ -173,10 +171,7 @@ def select_data_from_db_table(db_connection,
     else:
         where_clause = f"\nWHERE\n{indent}{where_clause}"
 
-    sql_statement = f"""
-    SELECT {do_prepare_db_attributes(attribute_list)}
-    FROM {table_name} {where_clause} {do_prepare_order_by(order_by_list)};
-    """
+    sql_statement = f"""SELECT {do_prepare_db_attributes(attribute_list, indent=indent)}\nFROM {table_name} {where_clause} {do_prepare_order_by(order_by_list, indent=indent)};"""
 
     if verbal:
         print(sql_statement)
@@ -216,16 +211,80 @@ def unload_data_from_db_table(db_connection,
                                    verbal=verbal
                                    )
     insert_string = f"""
-    -- Extracted at: {rs['timestamp']}
-    -- Count:        {rs['count']}
-    /*
-    {rs['select']}
-    */
-    {insert_string}
+-- Extracted at: {rs['timestamp']}
+-- Count       : {rs['count']}
+/*
+{rs['select']}
+*/
+{insert_string}
 
     """
     return insert_string
 
+def get_exception_for_table_unload(table_name, exception_list, verbal=False):
+    if verbal:
+        print(f'''
+        get_exception_for_table_unload('{table_name}', {exception_list}, {verbal} has been called)
+        ''')
+
+    ret_exception = None
+    for an_exception in exception_list:
+        if an_exception['table'].lower() == table_name.lower():
+            ret_exception = an_exception
+            break
+
+    return ret_exception
+
+def unload_all_data_from_schema(db_connection,
+        schema_name=None,
+        tables_to_read_with_exceptions=None,
+        verbal=False):
+
+    obj_type = 'BASE TABLE'
+    all_tables = get_all_table_names_from_schema(db_connection, schema=schema_name, object_types=obj_type, verbal=False)
+    if verbal:
+        print(f'{len(all_tables)} "{obj_type}" found in "{schema_name}"!')
+
+    max_len = 0
+    for a_table_name in all_tables:
+        length = len(a_table_name[1])
+        if length > max_len:
+            max_len = length
+    max_table_name_length = f'{max_len}s'
+
+    insert_string = ''
+    for a_table in all_tables:
+        if verbal:
+            print(f'a_table: {a_table}')
+        exception = get_exception_for_table_unload(a_table[1], tables_to_read_with_exceptions, verbal=False)
+
+        if exception is not None:
+            if verbal:
+                print(f'    Exceptions for "{a_table[1]}" found\n{exception}')
+            if exception.get('action') == 'Exclude':
+                print(f'WARNING: {a_table[1]:{max_table_name_length}} Data not extracted!')
+                continue
+            fields_to_select = exception.get('fields')
+            where_clause = exception.get('where_clause')
+            do_verbal = exception.get('verbal')
+            fields_to_hash = exception.get('fields_to_hash')
+            # print(f'Parameter: {a_table[1]} {fields_to_select} {where_clause} {do_verbal}')
+            print(f'WARNING: {a_table[1]:{max_table_name_length}} Data with exceptions extracted')
+            insert_string += "\n\n" + unload_data_from_db_table(
+                db_connection,
+                table_name=a_table[1],
+                attribute_list=fields_to_select,
+                where_clause=where_clause,
+                order_by_list=None,
+                fields_to_hash=None,
+                verbal=False
+            )
+
+            # insert_str += create_insert_data_stmt(db_schema, table_name=a_table[1], where_clause=where_clause, fields_to_select=fields_to_select, fields_to_hash=fields_to_hash, verbal=do_verbal)
+        else:
+            print(f'INFO   : {a_table[1]:{max_table_name_length}} Data extracted from ')
+            # insert_str += create_insert_data_stmt(db_schema, table_name=a_table[1], where_clause=None)
+    return insert_string
 # -------------------------------------------
 # ++++++++++++ Main Main Main +++++++++++++++
 # -------------------------------------------
@@ -240,20 +299,40 @@ if __name__ == '__main__':
                         fields_to_hash=['first_name', 'email'],
                         verbal=False
                     )
-    print(insert_string)
 
 
-    insert_string = unload_data_from_db_table(
+    insert_string += "\n\n" + unload_data_from_db_table(
                         db_connection,
                         table_name='`city` AS `c`',
-                        attribute_list=['`city_id` AS `ID`', '`city` AS `Cityname`'],
-                        where_clause="`City` LIKE 'O%'",
-                        order_by_list=None,
+                        attribute_list=["`c`.`country_id` AS `Country_ID`",
+                                        "`c`.`city`       AS `City_Name`"],
+                        where_clause="`city` LIKE 'O%'",
+                        order_by_list=['Country_ID', 'City_Name'],
                         fields_to_hash=None,
-                        verbal=True
+                        verbal=False
+                    )
+
+
+    insert_string += "\n\n" + unload_data_from_db_table(
+                        db_connection,
+                        table_name='language',
+                        verbal=False
                     )
     print(insert_string)
 
 
+    tables_to_read_with_exceptions = [
+        {'table': 'country', 'action': 'Exclude'},
+        {'table': 'customer', 'fields': ['customer_id', 'first_name', 'last_name', 'email'], 'fields_to_hash': ['first_name', 'email'], 'verbal': True},
+        {'table': 'Personen', 'fields_to_hash': ['Vorname', 'Ledig_Name', 'Partner_Name'], 'where_clause': "ID IN (644)", 'verbal': True},
+        {'table': 'Personen', 'fields_to_hash': ['Vorname', 'Ledig_Name', 'Partner_Name'], 'verbal': False},
+        {'table': 'Email_Adressen', 'fields_to_hash': ['eMail'], 'verbal': True},
+    ]
 
+    insert_string = unload_all_data_from_schema(
+        db_connection=db_connection,
+        schema_name='sakila',
+        tables_to_read_with_exceptions=tables_to_read_with_exceptions,
+        verbal=True)
 
+    print(insert_string)
