@@ -8,12 +8,64 @@
 #
 # History:
 # 13-Jun-2024   Walter Rothlin      Initial Version
-# 27-Jun_2024   Walter Rothlin      Merged Version
+# 27-Jun-2024   Walter Rothlin      Merged Version
+# 04-Jul-2024   Walter Rothlin      Added Fct to convert JSON to insert_statement convert_resultSet_to_insertSQL()
 # ------------------------------------------------------------------
 #
 from waltisLibrary import *
 # import datetime
 # import mysql.connector # mysql-connector-python
+
+def convert_resultSet_to_insertSQL(table_name, result_set=None, verbal=True):
+    insert_str = ""
+    if result_set is not None and len(result_set) > 0:
+        insert_str = f"INSERT INTO `{table_name}` ("
+        attr_list = list(result_set[0].keys())
+        if verbal:
+            print(result_set[0], "\n", attr_list)
+
+        for a_attr in attr_list:
+            insert_str += f"`{a_attr}`,"
+        insert_str = insert_str[:-1] + ") VALUES\n"
+        for a_tuple in result_set:
+            a_tuple_str = ""
+            for a_attr in attr_list:
+                attr_value = a_tuple[a_attr]
+                if isinstance(attr_value, str):
+                    a_tuple_str += "'" + str(attr_value) + "', "
+
+                elif isinstance(attr_value, datetime.datetime):
+                    a_tuple_str += f"STR_TO_DATE('{attr_value}', '%Y-%m-%d %H:%i:%s')" + ', '
+
+                elif isinstance(attr_value, datetime.date):
+                    a_tuple_str += f"STR_TO_DATE('{attr_value}', '%Y-%m-%d')" + ', '
+
+                elif isinstance(attr_value, set):
+                    if verbal:
+                        print(f"\nWARNING is a set: {a_attr}: {attr_value}")
+
+                    attr_value = str(attr_value)
+                    if attr_value == 'set()':
+                        # print(attr_value)
+                        a_tuple_str += 'NULL' + ', '
+                    else:
+                        attr_value = attr_value.replace("', '", ",")
+                        attr_value = attr_value[:-2]  # .replace(r"'{", "")
+                        attr_value = attr_value[2:]  # .replace(r"}'", "")
+                        attr_value = attr_value.replace("'", "'")
+                        attr_value = f"'{attr_value}'" + ', '
+                        a_tuple_str += attr_value
+                    if verbal:
+                        print(f"            {a_tuple_str}\n")
+                else:
+                    a_tuple_str += str(attr_value) + ", "
+
+            insert_str += "    (" + a_tuple_str[:-2] + "),\n"
+        insert_str = insert_str[:-2] + ";\n\n"
+    else:
+        insert_str = ""
+
+    return insert_str
 
 def do_db_connect(password, user,
                   host='localhost',
@@ -126,11 +178,11 @@ if __name__ == '__main__':
     db_connection = do_db_connect(user='TI23_B', password='TI23_B')
 
     rs = select_data_from_db_table(db_connection,
-                                   table_name = 'city AS c',
+                                   table_name='city AS c',
                                    # attribute_list="`c`.`country_id` AS `Country_ID`",
-                                   attribute_list=["`c`.`country_id` AS `Country_ID`",
-                                                   "`c`.`city` AS `City_Name`"],
-                                   order_by_list=['Country_ID', 'City_Name'],
+                                   # attribute_list=["`c`.`country_id` AS `Country_ID`",
+                                   #                "`c`.`city` AS `City_Name`"],
+                                   # order_by_list=['Country_ID', 'City_Name'],
                                    where_clause="`city` LIKE 'O%'")
     print(f"{rs['timestamp']}")
     print(f"{rs['select']}")
@@ -154,3 +206,24 @@ if __name__ == '__main__':
     do_prepare_db_attributes(["`c`.`country_id`   AS `Country_ID`", "`c`.`city`         AS `City_Name`"]) =
     {do_prepare_db_attributes(["`c`.`country_id`   AS `Country_ID`", "`c`.`city`         AS `City_Name`"])}
     ''')
+
+    print('\n\n\n\n\n\n\n\n\n\n\n\n')
+    rs = select_data_from_db_table(db_connection, table_name='film', attribute_list=['film_id', 'special_features', 'rating'])
+
+    insert_string = convert_resultSet_to_insertSQL('film', rs['rs'])
+    print('\n\n\n\n\n\n\n\n\n\n\n\n')
+    insert_string = f"""
+
+    -- Extracted at: {rs['timestamp']}
+    -- Count:        {rs['count']}
+    /*
+    {rs['select']}
+    */
+    
+    {insert_string}
+    
+    """
+    print(insert_string)
+
+
+

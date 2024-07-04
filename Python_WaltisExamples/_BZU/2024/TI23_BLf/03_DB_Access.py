@@ -8,19 +8,76 @@
 #
 # History:
 # 13-Jun-2024   Walter Rothlin      Initial Version
-# 27-Jun_2024   Walter Rothlin      Merged Version
+# 27-Jun-2024   Walter Rothlin      Merged VersionTI23_BLf
+# 04-Jul-2024   Walter Rothlin      Added Fct to convert JSON to insert_statement convert_resultSet_to_insertSQL()
 # ------------------------------------------------------------------
 #
 from waltisLibrary import *
+
+
 # import datetime
 # import mysql.connector # mysql-connector-python
 
-def do_db_connect(password, user,
+def convert_resultSet_to_insertSQL(table_name, result_set=None, verbal=True):
+    insert_str = ""
+    if result_set is not None and len(result_set) > 0:
+        insert_str = f"INSERT INTO `{table_name}` ("
+        attr_list = list(result_set[0].keys())
+        for a_attr_name in attr_list:
+            insert_str += f"`{a_attr_name}`, "
+
+        insert_str = insert_str[:-2] + ") VALUES\n"
+
+        for a_tuple in result_set:
+            tuple_str = '('
+            for an_attr_name in attr_list:
+                an_attr_value = a_tuple[an_attr_name]
+
+                if isinstance(an_attr_value, str):
+                    an_attr_value = an_attr_value.replace("'", r"\'")
+                    tuple_str += f"'{an_attr_value}'" + ', '
+
+                elif an_attr_value is None:
+                    tuple_str += 'NULL' + ', '
+
+                elif isinstance(an_attr_value, datetime.datetime):
+                    tuple_str += f"STR_TO_DATE('{an_attr_value}', '%Y-%m-%d %H:%i:%s')" + ', '
+
+                elif isinstance(an_attr_value, datetime.date):
+                    tuple_str += f"STR_TO_DATE('{an_attr_value}', '%Y-%m-%d')" + ', '
+
+                elif isinstance(an_attr_value, set):
+                    if verbal:
+                        print(f"\nWARNING is a set: {an_attr_name}: {an_attr_value}")
+
+                    an_attr_value = str(an_attr_value)
+                    if an_attr_value == 'set()':
+                        # print(attr_value)
+                        tuple_str += 'NULL' + ', '
+                    else:
+                        an_attr_value = an_attr_value.replace("', '", ",")
+                        an_attr_value = an_attr_value[:-2]  # .replace(r"'{", "")
+                        an_attr_value = an_attr_value[2:]  # .replace(r"}'", "")
+                        # attr_value = attr_value.replace("'", "'")
+                        an_attr_value = f"'{an_attr_value}'" + ', '
+                        tuple_str += an_attr_value
+                else:
+                    tuple_str += f"{str(an_attr_value)}, "
+
+            tuple_str = "       " + tuple_str[:-2] + "),\n"
+            insert_str += tuple_str
+        insert_str = insert_str[:-2] + ";"
+    else:
+        insert_str = ""
+    return insert_str
+
+
+def do_db_connect(password,
+                  user,
                   host='localhost',
                   port=3306,
                   schema='sakila',
                   db_type='MySql', verbal=False):
-
     if db_type == 'MySql':
         if verbal:
             print(f'Connecting to {user}@{host} --> {schema}...', end='', )
@@ -40,8 +97,8 @@ def do_db_connect(password, user,
 
     return db_connection
 
-def do_prepare_db_attributes(attributes_to_select=None, indent=8):
 
+def do_prepare_db_attributes(attributes_to_select=None, indent=8):
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
         # print(':', indent, ':', sep='')
@@ -55,8 +112,8 @@ def do_prepare_db_attributes(attributes_to_select=None, indent=8):
         ret_str = f',\n{indent}'.join(attributes_to_select)
     return ret_str
 
-def do_prepare_order_by(order_by=None, indent=8):
 
+def do_prepare_order_by(order_by=None, indent=8):
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
         # print(':', indent, ':', sep='')
@@ -73,6 +130,7 @@ def do_prepare_order_by(order_by=None, indent=8):
         ret_str = 'ORDER BY\n' + indent + ret_str
     return ret_str
 
+
 def select_data_from_db_table(db_connection,
                               table_name,
 
@@ -84,7 +142,6 @@ def select_data_from_db_table(db_connection,
                               indent=8,
                               dictionary=True,
                               verbal=True):
-
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
         # print(':', indent, ':', sep='')
@@ -118,7 +175,6 @@ def select_data_from_db_table(db_connection,
     }
 
 
-
 # -------------------------------------------
 # ++++++++++++ Main Main Main +++++++++++++++
 # -------------------------------------------
@@ -126,18 +182,17 @@ if __name__ == '__main__':
     db_connection = do_db_connect(user='TI23_B', password='TI23_B')
 
     rs = select_data_from_db_table(db_connection,
-                                   table_name = 'city AS c',
+                                   table_name='city AS c',
                                    # attribute_list="`c`.`country_id` AS `Country_ID`",
-                                   attribute_list=["`c`.`country_id` AS `Country_ID`",
-                                                   "`c`.`city` AS `City_Name`"],
-                                   order_by_list=['Country_ID', 'City_Name'],
+                                   # attribute_list=["`c`.`country_id` AS `Country_ID`",
+                                   #                "`c`.`city` AS `City_Name`"],
+                                   # order_by_list=['Country_ID', 'City_Name'],
                                    where_clause="`city` LIKE 'O%'")
     print(f"{rs['timestamp']}")
     print(f"{rs['select']}")
     print(f"{rs['count']}")
     print('\n')
     print(rs['rs'][1])
-
 
     print('\n')
     print(f'''
@@ -154,3 +209,23 @@ if __name__ == '__main__':
     do_prepare_db_attributes(["`c`.`country_id`   AS `Country_ID`", "`c`.`city`         AS `City_Name`"]) =
     {do_prepare_db_attributes(["`c`.`country_id`   AS `Country_ID`", "`c`.`city`         AS `City_Name`"])}
     ''')
+
+    print('\n\n\n\n\n\n\n\n\n\n\n\n')
+    rs = select_data_from_db_table(db_connection,
+                                   table_name='film',
+                                   attribute_list=['film_id', 'special_features'])
+    insert_string = convert_resultSet_to_insertSQL('film', rs['rs'])
+    print('\n\n\n\n\n\n\n\n\n\n\n\n')
+    insert_string = f"""
+    -- Extracted at: {rs['timestamp']}
+    -- Count:        {rs['count']}
+    /*
+    {rs['select']}
+    */
+    {insert_string}
+
+    """
+    print(insert_string)
+
+
+
