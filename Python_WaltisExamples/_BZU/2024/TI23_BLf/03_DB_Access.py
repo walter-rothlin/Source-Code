@@ -18,8 +18,11 @@ from waltisLibrary import *
 # import datetime
 # import mysql.connector # mysql-connector-python
 
-def convert_resultSet_to_insertSQL(table_name, result_set=None, verbal=True):
-    insert_str = ""
+def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=None, verbal=False):
+
+    if fields_to_hash is None:
+        fields_to_hash = []
+
     if result_set is not None and len(result_set) > 0:
         insert_str = f"INSERT INTO `{table_name}` ("
         attr_list = list(result_set[0].keys())
@@ -32,6 +35,24 @@ def convert_resultSet_to_insertSQL(table_name, result_set=None, verbal=True):
             tuple_str = '('
             for an_attr_name in attr_list:
                 an_attr_value = a_tuple[an_attr_name]
+
+                if an_attr_name in fields_to_hash:
+                    if an_attr_value is not None and len(an_attr_value) > 0:
+                        if is_email(an_attr_value):
+                            email_part_0 = an_attr_value.split('@')[0]
+                            email_part_1 = an_attr_value.split('@')[1]
+                            value_of_attr_hash = hash_string(email_part_0, ret_length=len(email_part_0))
+                            value_of_attr_hash_1 = an_attr_value[0] + value_of_attr_hash[1:] + '@' + email_part_1
+                            if verbal:
+                                print(f'         {an_attr_name}={an_attr_value} EMAIL: {value_of_attr_hash} : {value_of_attr_hash_1}')
+                            an_attr_value = value_of_attr_hash_1
+                        else:
+                            value_of_attr_hash = hash_string(an_attr_value, ret_length=len(an_attr_value))
+                            value_of_attr_hash_1 = an_attr_value[0] + value_of_attr_hash[1:]
+                            if verbal:
+                                print(f'         {an_attr_name}={an_attr_value} HASH: {value_of_attr_hash} : {value_of_attr_hash_1}')
+                            an_attr_value = value_of_attr_hash_1
+                # print(f'{a_attr}={value_of_attr}  [{type_of_attr}]')
 
                 if isinstance(an_attr_value, str):
                     an_attr_value = an_attr_value.replace("'", r"\'")
@@ -141,7 +162,8 @@ def select_data_from_db_table(db_connection,
                               db_type='MySql',
                               indent=8,
                               dictionary=True,
-                              verbal=True):
+                              verbal=False):
+
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
         # print(':', indent, ':', sep='')
@@ -149,14 +171,11 @@ def select_data_from_db_table(db_connection,
     if where_clause is None:
         where_clause = ''
     else:
-        where_clause = f"WHERE\n{indent}{where_clause}"
+        where_clause = f"\nWHERE\n{indent}{where_clause}"
 
     sql_statement = f"""
-    SELECT
-        {do_prepare_db_attributes(attribute_list)}
-    FROM {table_name}
-    {where_clause}
-    {do_prepare_order_by(order_by_list)};
+    SELECT {do_prepare_db_attributes(attribute_list)}
+    FROM {table_name} {where_clause} {do_prepare_order_by(order_by_list)};
     """
 
     if verbal:
@@ -174,48 +193,28 @@ def select_data_from_db_table(db_connection,
         'rs': my_resultset
     }
 
-
-# -------------------------------------------
-# ++++++++++++ Main Main Main +++++++++++++++
-# -------------------------------------------
-if __name__ == '__main__':
-    db_connection = do_db_connect(user='TI23_B', password='TI23_B')
+def unload_data_from_db_table(db_connection,
+                              table_name,
+                              attribute_list=None,
+                              where_clause=None,
+                              order_by_list=None,
+                              fields_to_hash=None,
+                              verbal=False
+                              ):
 
     rs = select_data_from_db_table(db_connection,
-                                   table_name='city AS c',
-                                   # attribute_list="`c`.`country_id` AS `Country_ID`",
-                                   # attribute_list=["`c`.`country_id` AS `Country_ID`",
-                                   #                "`c`.`city` AS `City_Name`"],
-                                   # order_by_list=['Country_ID', 'City_Name'],
-                                   where_clause="`city` LIKE 'O%'")
-    print(f"{rs['timestamp']}")
-    print(f"{rs['select']}")
-    print(f"{rs['count']}")
-    print('\n')
-    print(rs['rs'][1])
-
-    print('\n')
-    print(f'''
-    do_prepare_db_attributes() = 
-    {do_prepare_db_attributes()}
-    ''')
-
-    print(f'''
-    do_prepare_db_attributes("`c`.`country_id`   AS `Country_ID`") = 
-    {do_prepare_db_attributes("`c`.`country_id`   AS `Country_ID`")}
-    ''')
-
-    print(f'''
-    do_prepare_db_attributes(["`c`.`country_id`   AS `Country_ID`", "`c`.`city`         AS `City_Name`"]) =
-    {do_prepare_db_attributes(["`c`.`country_id`   AS `Country_ID`", "`c`.`city`         AS `City_Name`"])}
-    ''')
-
-    print('\n\n\n\n\n\n\n\n\n\n\n\n')
-    rs = select_data_from_db_table(db_connection,
-                                   table_name='film',
-                                   attribute_list=['film_id', 'special_features'])
-    insert_string = convert_resultSet_to_insertSQL('film', rs['rs'])
-    print('\n\n\n\n\n\n\n\n\n\n\n\n')
+                                   table_name=table_name,
+                                   attribute_list=attribute_list,
+                                   where_clause=where_clause,
+                                   order_by_list=order_by_list,
+                                   verbal=verbal
+                                   )
+    insert_string = convert_resultSet_to_insertSQL(
+                                   table_name,
+                                   rs['rs'],
+                                   fields_to_hash=fields_to_hash,
+                                   verbal=verbal
+                                   )
     insert_string = f"""
     -- Extracted at: {rs['timestamp']}
     -- Count:        {rs['count']}
@@ -225,7 +224,36 @@ if __name__ == '__main__':
     {insert_string}
 
     """
+    return insert_string
+
+# -------------------------------------------
+# ++++++++++++ Main Main Main +++++++++++++++
+# -------------------------------------------
+if __name__ == '__main__':
+    db_connection = do_db_connect(user='TI23_B', password='TI23_B')
+    insert_string = unload_data_from_db_table(
+                        db_connection,
+                        table_name='customer',
+                        attribute_list=['customer_id', 'first_name', 'last_name', 'email'],
+                        where_clause=None,
+                        order_by_list=None,
+                        fields_to_hash=['first_name', 'email'],
+                        verbal=False
+                    )
     print(insert_string)
+
+
+    insert_string = unload_data_from_db_table(
+                        db_connection,
+                        table_name='`city` AS `c`',
+                        attribute_list=['`city_id` AS `ID`', '`city` AS `Cityname`'],
+                        where_clause="`City` LIKE 'O%'",
+                        order_by_list=None,
+                        fields_to_hash=None,
+                        verbal=True
+                    )
+    print(insert_string)
+
 
 
 
