@@ -72,6 +72,8 @@
 #                                   Added is_email()
 #                                   Fixed problem with ' in create_insert_data_stmt()
 # 07-Jul-2024   Walter Rothlin      Added DB unload/load-functions
+#                                   Fixed issue in addTimestampToFileName() if it has more than one . in the name
+#                                   Fixed issue get_exception_for_table_unload with empty exception lists
 # ------------------------------------------------------------------
 
 # toDo:
@@ -2168,7 +2170,7 @@ def getFilenameExtension(fileName):
 
 
 def addTimestampToFileName(fileName, timestampFormat="{ts:%Y_%m_%d}"):
-    indexBeforeFileType = fileName.index(".")
+    indexBeforeFileType = fileName.rindex(".")
     fileName = fileName[:indexBeforeFileType] + "_" + getTimestamp(formatString=timestampFormat) + fileName[indexBeforeFileType:]
     return fileName
 
@@ -3780,10 +3782,11 @@ def get_exception_for_table_unload(table_name, exception_list, verbal=False):
         ''')
 
     ret_exception = None
-    for an_exception in exception_list:
-        if an_exception['table'].lower() == table_name.lower():
-            ret_exception = an_exception
-            break
+    if exception_list is not None and len(exception_list) > 0:
+        for an_exception in exception_list:
+            if an_exception['table'].lower() == table_name.lower():
+                ret_exception = an_exception
+                break
 
     return ret_exception
 
