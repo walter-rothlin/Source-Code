@@ -74,6 +74,7 @@
 # 07-Jul-2024   Walter Rothlin      Added DB unload/load-functions
 #                                   Fixed issue in addTimestampToFileName() if it has more than one . in the name
 #                                   Fixed issue get_exception_for_table_unload with empty exception lists
+# 11-Jul-2024   Walter Rothlin      Fixed issues in unload_all_data_from_schema() and select_data_from_db_table()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -3725,7 +3726,7 @@ def select_data_from_db_table(db_connection,
     else:
         where_clause = f"\nWHERE\n{indent}{where_clause}"
 
-    sql_statement = f"""SELECT {do_prepare_db_attributes(attribute_list, indent=indent)}\nFROM {table_name} {where_clause} {do_prepare_order_by(order_by_list, indent=indent)};"""
+    sql_statement = f"""SELECT {do_prepare_db_attributes(attribute_list, indent=len(indent))}\nFROM {table_name} {where_clause} {do_prepare_order_by(order_by_list, indent=len(indent))};"""
 
     if verbal:
         print(sql_statement)
@@ -3841,7 +3842,7 @@ def unload_all_data_from_schema(db_connection,
             where_clause=where_clause,
             order_by_list=order_by_list,
             fields_to_hash=fields_to_hash,
-            verbal=do_verbal
+            verbal=verbal
         )
     return insert_string
 

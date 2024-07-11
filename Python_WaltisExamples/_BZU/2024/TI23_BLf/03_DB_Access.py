@@ -143,10 +143,6 @@ def get_all_table_names_from_schema(db, schema=None, object_types=None, verbal=F
     return mycursor.fetchall()
 
 
-
-
-
-
 def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=None, verbal=False):
 
     if fields_to_hash is None:
@@ -299,7 +295,7 @@ def select_data_from_db_table(db_connection,
     else:
         where_clause = f"\nWHERE\n{indent}{where_clause}"
 
-    sql_statement = f"""SELECT {do_prepare_db_attributes(attribute_list, indent=indent)}\nFROM {table_name} {where_clause} {do_prepare_order_by(order_by_list, indent=indent)};"""
+    sql_statement = f"""SELECT {do_prepare_db_attributes(attribute_list, indent=len(indent))}\nFROM {table_name} {where_clause} {do_prepare_order_by(order_by_list, indent=len(indent))};"""
 
     if verbal:
         print(sql_statement)
@@ -414,7 +410,7 @@ def unload_all_data_from_schema(db_connection,
             where_clause=where_clause,
             order_by_list=order_by_list,
             fields_to_hash=fields_to_hash,
-            verbal=do_verbal
+            verbal=verbal
         )
     return insert_string
 # -------------------------------------------
