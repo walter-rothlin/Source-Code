@@ -76,6 +76,7 @@
 #                                   Fixed issue get_exception_for_table_unload with empty exception lists
 # 11-Jul-2024   Walter Rothlin      Fixed issues in unload_all_data_from_schema() and select_data_from_db_table()
 #                                   Added format_sql_stmt(sql_statement, indent=4)
+#                                   Removed double if verbal
 # ------------------------------------------------------------------
 
 # toDo:
@@ -3207,8 +3208,7 @@ def get_all_table_names_from_schema(db, schema=None, object_types=None, verbal=F
         {where_clause};
     '''
     if verbal:
-        if verbal:
-            print(select_sql)
+        print(select_sql)
 
     mycursor = db.cursor()
     mycursor.execute(select_sql)
@@ -3778,10 +3778,10 @@ def unload_data_from_db_table(db_connection,
                                    )
 
     insert_string = f"""
+/*
 -- Extracted at: {rs['timestamp']}
 -- Count       : {rs['count']}
-/*
-{rs['select']}
+-- {rs['select'].strip()}
 */
 {insert_string}
 
