@@ -9,7 +9,7 @@
 #
 # Autor: Walter Rothlin
 #
-# History:  
+# History:
 # 06-Dec-2017   Walter Rothlin      Initial Version (Eigene Funktions von umrechnen.py ausgelagert)
 # 28-May-2019   Walter Rothlin      Added Primzahlen functions
 # 07-Jun-2019   Walter Rothlin      Merged with littlePythonLib.py
@@ -75,6 +75,7 @@
 #                                   Fixed issue in addTimestampToFileName() if it has more than one . in the name
 #                                   Fixed issue get_exception_for_table_unload with empty exception lists
 # 11-Jul-2024   Walter Rothlin      Fixed issues in unload_all_data_from_schema() and select_data_from_db_table()
+#                                   Added format_sql_stmt(sql_statement, indent=4)
 # ------------------------------------------------------------------
 
 # toDo:
@@ -3562,6 +3563,17 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None, fields_to_
 # ------------------------
 # DB unload/load-functions
 # ------------------------
+def format_sql_stmt(sql_statement, indent=4):
+    sql_statement = sql_statement.replace('\n', ' ')
+    sql_statement = sql_statement.replace('  ', ' ')
+    sql_statement = sql_statement.replace('  ', ' ')
+    sql_statement = sql_statement.replace('  ', ' ')
+    sql_statement = sql_statement.replace('  ', ' ')
+    sql_statement = sql_statement.replace(' ;', ';')
+    if isinstance(indent, int):
+        indent = f'{" ":{indent}s}'
+    return indent + sql_statement
+
 def get_all_table_names_from_schema(db, schema=None, object_types=None, verbal=False):
     '''
     object_types: BASE TABLE, VIEW
@@ -3647,9 +3659,6 @@ def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=N
                     tuple_str += f"STR_TO_DATE('{an_attr_value}', '%Y-%m-%d')" + ', '
 
                 elif isinstance(an_attr_value, set):
-                    if verbal:
-                        print(f"\nWARNING is a set: {an_attr_name}: {an_attr_value}")
-
                     an_attr_value = str(an_attr_value)
                     if an_attr_value == 'set()':
                         # print(attr_value)
@@ -3728,6 +3737,8 @@ def select_data_from_db_table(db_connection,
 
     sql_statement = f"""SELECT {do_prepare_db_attributes(attribute_list, indent=len(indent))}\nFROM {table_name} {where_clause} {do_prepare_order_by(order_by_list, indent=len(indent))};"""
 
+    sql_statement = format_sql_stmt(sql_statement)
+
     if verbal:
         print(sql_statement)
 
@@ -3735,7 +3746,7 @@ def select_data_from_db_table(db_connection,
     my_cursor.execute(sql_statement)
     my_resultset = my_cursor.fetchall()
     if verbal:
-        print(f"{len(my_resultset)} record(s) found")
+        print(f"{indent}{len(my_resultset)} record(s) found")
     return {
         'timestamp': f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}',
         'count': len(my_resultset),
@@ -3765,6 +3776,7 @@ def unload_data_from_db_table(db_connection,
                                    fields_to_hash=fields_to_hash,
                                    verbal=verbal
                                    )
+
     insert_string = f"""
 -- Extracted at: {rs['timestamp']}
 -- Count       : {rs['count']}
@@ -3799,7 +3811,7 @@ def unload_all_data_from_schema(db_connection,
     obj_type = 'BASE TABLE'
     all_tables = get_all_table_names_from_schema(db_connection, schema=schema_name, object_types=obj_type, verbal=False)
     if verbal:
-        print(f'{len(all_tables)} "{obj_type}" found in "{schema_name}"!')
+        print(f'{len(all_tables)} "{obj_type}" found in "{schema_name}"!\n')
 
     max_len = 0
     for a_table_name in all_tables:
