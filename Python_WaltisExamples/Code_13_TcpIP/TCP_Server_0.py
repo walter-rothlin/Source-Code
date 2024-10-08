@@ -35,19 +35,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print("No more data received!")
                     break
                 strReceived = str(data, 'ascii')
-                parts = strReceived.split(':')
-                fct = parts[0]
-                strReceived = parts[1]
-
                 print("<== ", strReceived)
 
                 # ===== Start Business-Logik ============
-                if fct == 'toLower':
-                    strSent = strReceived.lower()
-                elif fct == 'toUpper':
-                    strSent = strReceived.upper()
-                else:
-                    strSent = f'ERROR: Unknown function called!! {fct}'
+
+                strSent = strReceived.upper()
+
                 # ===== Ende  Business-Logik ============
 
                 data = bytes(strSent, 'ascii')
