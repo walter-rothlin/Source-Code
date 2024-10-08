@@ -17,7 +17,7 @@ import socket
 # https://realpython.com/python-sockets/
 
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-PORT = 1024        # Port to listen on (non-privileged ports are > 1023)
+PORT = 1025        # Port to listen on (non-privileged ports are > 1023)
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
@@ -35,10 +35,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print("No more data received!")
                     break
                 strReceived = str(data, 'ascii')
+                parts = strReceived.split(':')
+                fct = parts[0]
+                strReceived = parts[1]
+
                 print("<== ", strReceived)
 
                 # ===== Start Business-Logik ============
-                strSent = strReceived.upper()
+                if fct == 'toLower':
+                    strSent = strReceived.lower()
+                elif fct == 'toUpper':
+                    strSent = strReceived.upper()
+                else:
+                    strSent = f'ERROR: Unknown function called!! {fct}'
                 # ===== Ende  Business-Logik ============
 
                 data = bytes(strSent, 'ascii')

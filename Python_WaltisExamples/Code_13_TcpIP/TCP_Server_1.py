@@ -12,6 +12,7 @@
 # 26-May-2020   Walter Rothlin      Initial Version
 # 24-Sep-2021   Walter Rothlin      Git
 # 20-Sep-2022   Walter Rothlin      Changes for BWI-A20
+# 08-Oct-2024   Walter Rothlin      Changes for BWI-A22
 # ------------------------------------------------------------------
 
 import socket
