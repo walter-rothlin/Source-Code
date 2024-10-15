@@ -423,7 +423,7 @@ package main;        #has to be "main"
 # 11/19/08    V4.11 Walter Rothlin      Fixed bug in createUnixCommander
 # 12/13/08    V4.12 Walter Rothlin      Added vCard support
 #                                             vcfMimeType
-#                                             replaceASCII_to_HEX_InHashValues¨
+#                                             replaceASCII_to_HEX_InHashValuesï¿½
 #                                             convertASCII_to_HEX
 #                                             createVcardStringArrayFromFltFile
 #                                             createVcardFilesFromFltFile
@@ -1238,7 +1238,7 @@ $useMailxAsDefault  = $TRUE;
 
 %monatNamesD = ("0"  => "Januar",
                 "1"  => "Februar",
-                "2"  => "März",
+                "2"  => "Mï¿½rz",
                 "3"  => "April",
                 "4"  => "Mai",
                 "5"  => "Juni",
@@ -1250,17 +1250,17 @@ $useMailxAsDefault  = $TRUE;
                 "11" => "Dezember",);
 
 %monatNamesF= ("0"  => "Janvier",
-               "1"  => "Février",
+               "1"  => "Fï¿½vrier",
                "2"  => "Mars",
                "3"  => "Avril",
                "4"  => "Mai",
                "5"  => "Juin",
                "6"  => "Juillet",
-               "7"  => "Août",
+               "7"  => "Aoï¿½t",
                "8"  => "Septembre",
                "9"  => "Octobre",
                "10" => "Novembre",
-               "11" => "Décembre",);
+               "11" => "Dï¿½cembre",);
                            
 %monatNamesI= ("0"  => "Gennaio",
                "1"  => "Febbraio",
@@ -1277,10 +1277,10 @@ $useMailxAsDefault  = $TRUE;
 
 %holidays_floating_G = (
       "-52" => "Schmutziger Donnerstag (Fasnacht)",
-      "-48" => "Güdel-Montag (Fasnacht)",
+      "-48" => "Gï¿½del-Montag (Fasnacht)",
       "-47" => "Kleiner-Dienstag (Fasnacht)",
       "-46" => "Aschermittwoch",
-      "-42" => "Alte Fasnacht (Göttikranz)",
+      "-42" => "Alte Fasnacht (Gï¿½ttikranz)",
       "-2"  => "Karfreitag",
       "-7"  => "Palmsonntag",
       "0"   => "Ostern",
@@ -1296,12 +1296,12 @@ $useMailxAsDefault  = $TRUE;
 %other_floating_holidays_G = (
     "Bettag"          => "3.Sonnatg im September (16.9.2001)",
     "Knabenschiesen"  => "Montag vor Bettag (10.9.2001)",
-    "Siebener-Märt"   => "Wochenende nach Bettag (23.9.2001)",
-    "Sechselaeuten"   => "1. Grundsätzlich findet das Sechseläuten am dritten Montag des Monats April statt"+
-                         "2. Fällt dieser Termin in die Karwoche, so wird das Sechsläuten am zweiten Montag abgehalten"+
-                         "3. Fällt der dritte Montag im April auf den Ostermontag, so wird das Fest auf den vierten Montag verschoben"+
-                         "4. Fällt dieser Termin auf den ersten Mai, wird der Termin auf ein Wochenende anfangs April bzw. Ende März festgesetzt"+
-                         "Ist nach diesem Muster ein geeigneter Termin gefunden und dieser fällt (unglücklicherweise) in die Frühlingsferien der Volksschule, so wird versucht, ein Ausweichdatum zu finden. Diese neue Regelung wurde 2001 eingeführt und kommt im Jahr 2008 erstmals zur Anwendung"+
+    "Siebener-Mï¿½rt"   => "Wochenende nach Bettag (23.9.2001)",
+    "Sechselaeuten"   => "1. Grundsï¿½tzlich findet das Sechselï¿½uten am dritten Montag des Monats April statt"+
+                         "2. Fï¿½llt dieser Termin in die Karwoche, so wird das Sechslï¿½uten am zweiten Montag abgehalten"+
+                         "3. Fï¿½llt der dritte Montag im April auf den Ostermontag, so wird das Fest auf den vierten Montag verschoben"+
+                         "4. Fï¿½llt dieser Termin auf den ersten Mai, wird der Termin auf ein Wochenende anfangs April bzw. Ende Mï¿½rz festgesetzt"+
+                         "Ist nach diesem Muster ein geeigneter Termin gefunden und dieser fï¿½llt (unglï¿½cklicherweise) in die Frï¿½hlingsferien der Volksschule, so wird versucht, ein Ausweichdatum zu finden. Diese neue Regelung wurde 2001 eingefï¿½hrt und kommt im Jahr 2008 erstmals zur Anwendung"+
                          "  2005 18. April" +
                          "  2006 24. April" +
                          "  2007 16. April" +
@@ -1321,7 +1321,7 @@ $useMailxAsDefault  = $TRUE;
 %holidays_fixed_G = (
       "0101"  => "Neujahr",
       "0102"  => "Berchtoldstag",
-      "0106"  => "Drei Könige",
+      "0106"  => "Drei Kï¿½nige",
       "0214"  => "Valentin's Tag",
       "0319"  => "Josef's Tag",
       "0501"  => "Tag der Arbeit",
@@ -1330,7 +1330,7 @@ $useMailxAsDefault  = $TRUE;
       "0815"  => "Maria Himmelfahrt",
       "1101"  => "Allerheiligen",
       "1111"  => "Fassnachts Start",
-      "1208"  => "Maria Empfängnis",
+      "1208"  => "Maria Empfï¿½ngnis",
       "1224"  => "Heilig Abend",
       "1225"  => "Weihnachten",
       "1226"  => "Stefan's Tag",  
@@ -1484,47 +1484,47 @@ $DefaultCryptKey         = "Bond_007";
 ############################################################################
 # Language dependant text strings
 ############################################################################
-$german_strSelect            = "Auswählen";
+$german_strSelect            = "Auswï¿½hlen";
 $german_strAll               = "Alle";
 $german_strAction            = "Befehle";
-$german_strInsert            = "Einfügen";
+$german_strInsert            = "Einfï¿½gen";
 $german_strModify            = "Aendern";
 $german_strCopy              = "Kopieren";
-$german_strDelete            = "Löschen";
+$german_strDelete            = "Lï¿½schen";
 $german_strDetail            = "Details";
 $german_strCancel            = "Abbrechen";
-$german_strUndo              = "Rückgängig";
+$german_strUndo              = "Rï¿½ckgï¿½ngig";
 $german_strClose             = "Schliessen";
 $german_strQBE               = "qbe";
 $german_newPwdLabel          = "Neues Passwort";
-$german_newPwdLabelVerify    = "Bestätigung";
-$german_insertTitleStr       = "Datensatz einfügen";
-$german_deleteTitleStr       = "Datensatz löschen";
-$german_modifyTitleStr       = "Datensatz ändern";
+$german_newPwdLabelVerify    = "Bestï¿½tigung";
+$german_insertTitleStr       = "Datensatz einfï¿½gen";
+$german_deleteTitleStr       = "Datensatz lï¿½schen";
+$german_modifyTitleStr       = "Datensatz ï¿½ndern";
 $german_qbeTitleStr          = "SQL-Ausdruck";
 $german_emailLinkStr         = "e-Mail";
 $german_emailSendBtnLb1      = "Senden";
-$german_emailSendBtnLb2      = "Alle auswählen";
-$german_displayEmailListStr  = "Senden \%s an alle Ausgewählten!";
+$german_emailSendBtnLb2      = "Alle auswï¿½hlen";
+$german_displayEmailListStr  = "Senden \%s an alle Ausgewï¿½hlten!";
 $german_pwdMissMatch         = "Falsches Passwort / Fehlendes Passwort";
-$german_pwdError1            = "Passwort-Bestätigung falsch";
-$german_pwdError2            = "Passwort muss länger als \%s sein";
+$german_pwdError1            = "Passwort-Bestï¿½tigung falsch";
+$german_pwdError2            = "Passwort muss lï¿½nger als \%s sein";
 $german_strLogin             = "Anmelden";
 $german_strUserId            = "Benutzername";
 $german_strPassword          = "Passwort";
 $german_strNotAuthorized     = "Nur berechtigte Benutzer haben Zugriff";
-$german_strLoginFailBtn      = "Zurück zum Anmeldung";
+$german_strLoginFailBtn      = "Zurï¿½ck zum Anmeldung";
 $german_strUnknown           = "Unbekannt";
 $german_strName              = "Name";
 $german_strMsg               = "Meldung";
 $german_strRefreshEnter      = "Meldung absenden / Seite neu laden";
-$german_strPressReturn       = "RETURN Taste drücken zum Weitermachen";
+$german_strPressReturn       = "RETURN Taste drï¿½cken zum Weitermachen";
 $german_strForgotten         = "Passwort";
 $german_forgottenTitle       = "Passwort vergessen";
 $german_strPwdSend           = "Passwort via e-mail senden";
 $german_emailNotifySubject   = "Vergessenes Passwort";
 $german_forgottenPwdMsg      = "Das vergessene Passwort ist \%s";
-$german_strCaseMatch         = "Gross- / Kleinschreibung berücksichtigen";
+$german_strCaseMatch         = "Gross- / Kleinschreibung berï¿½cksichtigen";
 $german_strFrom              = "Absender";
 $german_strTo                = "An";
 $german_strCc                = "Kopie an";
@@ -1532,12 +1532,12 @@ $german_strBcc               = "Heimliche Kopie an";
 $german_strSubject           = "Betrifft";
 $german_strMessage           = "Nachricht";
 $german_strSendEMail         = "Nachricht senden";
-$german_strClear             = "Nachricht löschen";
+$german_strClear             = "Nachricht lï¿½schen";
 $german_strFieldMissing      = "Einige Angaben werden vermisst";
-$german_strEnterFollowFields = "Folgende Felder müssen definiert werden";
+$german_strEnterFollowFields = "Folgende Felder mï¿½ssen definiert werden";
 $german_strEmailSentTo       = "Meldung wurde an <B>\%s</B> gesendet";
 $german_strEmailSentError    = "Meldung konnte nicht abgesendet werden. Fehler-Meldung ist:";
-$german_strBack              = "Zurück zur alten Nachricht";
+$german_strBack              = "Zurï¿½ck zur alten Nachricht";
 $german_strNewMail           = "Neue Nachricht erfassen";
 $german_strOld               = "Alt:";
 $german_strNew               = "Neu:";
@@ -1550,16 +1550,16 @@ $german_strTryAgain          = "Nochmals versuchen";
 $german_strSave              = "Speichern";
 $german_strYes               = "Ja";
 $german_strNo                = "Nein";
-$german_strReallyDelete      = "Möchten Sie wirklich <B>\%s</B> löschen?";
-$german_strHasDeleted        = "<B>\%s</B> wurde gelöscht";
-$german_strExecute           = "Ausführen";
-$german_strExecuteTime       = "Ausführungszeit";
-$german_strEmailNotifyTo     = "Ausführungsmeldung an";
-$german_strJobExecAt         = "Auftrag wir am <B>\%s</B> ausgeführt";
-$german_strShowJobs          = "Anzeigen der Aufträge";
+$german_strReallyDelete      = "Mï¿½chten Sie wirklich <B>\%s</B> lï¿½schen?";
+$german_strHasDeleted        = "<B>\%s</B> wurde gelï¿½scht";
+$german_strExecute           = "Ausfï¿½hren";
+$german_strExecuteTime       = "Ausfï¿½hrungszeit";
+$german_strEmailNotifyTo     = "Ausfï¿½hrungsmeldung an";
+$german_strJobExecAt         = "Auftrag wir am <B>\%s</B> ausgefï¿½hrt";
+$german_strShowJobs          = "Anzeigen der Auftrï¿½ge";
 $german_strNewJob            = "Neuer Auftrag";
-$german_strReallyLock        = "Möchten Sie wirklich <B>\%s</B> reservieren?";
-$german_strReallyUnlock      = "Möchten Sie die Reservation auf <B>\%s</B> wirklich aufheben?";
+$german_strReallyLock        = "Mï¿½chten Sie wirklich <B>\%s</B> reservieren?";
+$german_strReallyUnlock      = "Mï¿½chten Sie die Reservation auf <B>\%s</B> wirklich aufheben?";
 $german_strHasUnlock         = "<B>\%s</B> wurde freigeben";
 $german_strLockHasSet        = "<B>\%s</B> wurde reserviert";
 $german_strLockHasAlreadySet = "<B>\%s</B> ist bereits durch <B>\%s</B> reserviert";
@@ -1573,11 +1573,11 @@ $german_strReallyUnsubsribe  = "Wollen sie wirklich <B>\%s</B> abbestellen?";
 $german_strHasUnsubscribe    = "<B>\%s</B> wurde abbestellt";
 $german_strNotSubcriber      = "<B>\%s</B> wurde nicht von ihnen bestellt";
 $german_strUpload            = "Upload";
-$german_strDelete            = "Löschen";
+$german_strDelete            = "Lï¿½schen";
 $german_strSubscribe         = "Abo bestellen";
 $german_strLock              = "Reservieren";
-$german_strUnsubscribe       = "Abo löschen";
-$german_strUnlock            = "Reservation löschen";
+$german_strUnsubscribe       = "Abo lï¿½schen";
+$german_strUnlock            = "Reservation lï¿½schen";
 $german_strUpLoadTitle       = "Upload beendet";
 $german_strUpLoadDestination = "Ziel war";
 $german_strLocks             = "Reservationen";
@@ -1590,9 +1590,9 @@ $german_strCurrent           = "Aktuell";
 $german_strSendDbFile        = "Senden";
 $german_strUploadDbFile      = "Laden";
 $german_strIsLocked          = "Ist reserviert";
-$german_strEmailSelectorTitle= "Wähle Namen aus um eine <BR>beliebige Meldung via <B>e-mail</B> an alle zu senden";
-$german_strSmsSelectorTitle  = "Wähle Namen aus um eine <BR>beliebige Meldung via <B>SMS</B> an alle zu senden";
-$german_strNoEmailDefined    = "Für Benutzer <B>\%s</B> ist keine e-mail Adresse definiert";
+$german_strEmailSelectorTitle= "Wï¿½hle Namen aus um eine <BR>beliebige Meldung via <B>e-mail</B> an alle zu senden";
+$german_strSmsSelectorTitle  = "Wï¿½hle Namen aus um eine <BR>beliebige Meldung via <B>SMS</B> an alle zu senden";
+$german_strNoEmailDefined    = "Fï¿½r Benutzer <B>\%s</B> ist keine e-mail Adresse definiert";
 $german_strUseBuiltInEmail   = "Eingebautes e-mail Programm verwenden";
 
 $english_strSelect            = "Select";
@@ -1706,58 +1706,58 @@ $english_strSmsSelectorTitle  = "Select names to send a free<BR>formatted <B>SMS
 $english_strNoEmailDefined    = "There is no e-mail address defined for user <B>\%s</B>";
 $english_strUseBuiltInEmail   = "Use built-in e-mail client";
 
-$french_strSelect            = "Sélectionner";
+$french_strSelect            = "Sï¿½lectionner";
 $french_strAll               = "Tous";
 $french_strAction            = "Instruction";
-$french_strInsert            = "Insérer";
+$french_strInsert            = "Insï¿½rer";
 $french_strModify            = "Modifier";
 $french_strCopy              = "Copie";
 $french_strDelete            = "Effacer";
-$french_strDetail            = "Détailler";
+$french_strDetail            = "Dï¿½tailler";
 $french_strCancel            = "Annuler";
-$french_strUndo              = "Défaire";
+$french_strUndo              = "Dï¿½faire";
 $french_strClose             = "Fermer";
 $french_strQBE               = "qbe";
 $french_newPwdLabel          = "Nouveau mot de passe";
 $french_newPwdLabelVerify    = "Confirmation";
-$french_insertTitleStr       = "Insérer registre";
+$french_insertTitleStr       = "Insï¿½rer registre";
 $french_deleteTitleStr       = "Effacer registre";
 $french_modifyTitleStr       = "Modifiez registre";
 $french_qbeTitleStr          = "SQL- expression";
-$french_emailLinkStr         = "Courrier électronique";
+$french_emailLinkStr         = "Courrier ï¿½lectronique";
 $french_emailSendBtnLb1      = "Envoyer";
-$french_emailSendBtnLb2      = "Sélectionner Tous";
-$french_displayEmailListStr  = "Envoyer \%s à tous les personnes sélectionnées!";
+$french_emailSendBtnLb2      = "Sï¿½lectionner Tous";
+$french_displayEmailListStr  = "Envoyer \%s ï¿½ tous les personnes sï¿½lectionnï¿½es!";
 $french_pwdMissMatch         = "Mauvais mot de passe";
 $french_pwdError1            = "Confirmation mot de passe incorrect";
-$french_pwdError2            = "Mot de passe doit avoir plus que \%s caractères";
-$french_strLogin             = "Accès";
+$french_pwdError2            = "Mot de passe doit avoir plus que \%s caractï¿½res";
+$french_strLogin             = "Accï¿½s";
 $french_strUserId            = "Nom de l'utilisateur";
 $french_strPassword          = "Mot de passe";
-$french_strNotAuthorized     = "Accès restreint aux personnes autorisées!!";
-$french_strLoginFailBtn      = "Retour à la page d'accès ";
+$french_strNotAuthorized     = "Accï¿½s restreint aux personnes autorisï¿½es!!";
+$french_strLoginFailBtn      = "Retour ï¿½ la page d'accï¿½s ";
 $french_strUnknown           = "Inconnu";
 $french_strName              = "Nom";
 $french_strMsg               = "Message";
 $french_strRefreshEnter      = "Envoyer message / Mise a jour";
 $french_strPressReturn       = "Appuyer sur la touche RETOUR pour continuer";
 $french_strForgotten         = "Mot de passe";
-$french_forgottenTitle       = "Mot de passe oublié";
+$french_forgottenTitle       = "Mot de passe oubliï¿½";
 $french_strPwdSend           = "Envoyer mot de passe par courriel";
-$french_emailNotifySubject   = "Mot de passe oublié";
-$french_forgottenPwdMsg      = "Le mot de passe oublié est  \%s";
-$french_strCaseMatch         = "L'entrée est critique";
-$french_strFrom              = "Expéditeur";
-$french_strTo                = "À";
-$french_strCc                = "Copie à";
-$french_strBcc               = "Copie aveugle à";
+$french_emailNotifySubject   = "Mot de passe oubliï¿½";
+$french_forgottenPwdMsg      = "Le mot de passe oubliï¿½ est  \%s";
+$french_strCaseMatch         = "L'entrï¿½e est critique";
+$french_strFrom              = "Expï¿½diteur";
+$french_strTo                = "ï¿½";
+$french_strCc                = "Copie ï¿½";
+$french_strBcc               = "Copie aveugle ï¿½";
 $french_strSubject           = "Concernant";
 $french_strMessage           = "Message";
 $french_strSendEMail         = "Envoyer message";
 $french_strClear             = "Effacer message";
-$french_strFieldMissing      = "Certaines données sont manquantes";
-$french_strEnterFollowFields = "Les données suivantes doivent être définies";
-$french_strEmailSentTo       = "Message envoyé à <B>\%s</B>";
+$french_strFieldMissing      = "Certaines donnï¿½es sont manquantes";
+$french_strEnterFollowFields = "Les donnï¿½es suivantes doivent ï¿½tre dï¿½finies";
+$french_strEmailSentTo       = "Message envoyï¿½ ï¿½ <B>\%s</B>";
 $french_strEmailSentError    = "Message non transmis:";
 $french_strBack              = "Retour";
 $french_strOld               = "Ancien:";
@@ -1765,43 +1765,43 @@ $french_strNew               = "Nouveau:";
 $french_strOnlyOld           = "Seulement dans l'ancien:";
 $french_strOnlyNew           = "Seulement dans le nouveau:";
 $french_strEmailAdr          = "Courriel";
-$french_strInputRequired     = "Cellule obligatoire laissée en blanc";
+$french_strInputRequired     = "Cellule obligatoire laissï¿½e en blanc";
 $french_strFileLocked        = "Fichier en cours d'utilisation";
-$french_strTryAgain          = "Essayer à nouveau";
+$french_strTryAgain          = "Essayer ï¿½ nouveau";
 $french_strSave              = "Save";
 $french_strYes               = "Qui";
 $french_strNo                = "None";
 $french_strReallyDelete      = "Vous voulez vraiment effacer <B>\%s</B>?";
-$french_strHasDeleted        = "<B>\%s</B> a été effacer";
-$french_strExecute           = "Exécuter";
-$french_strExecuteTime       = "Temp d'éxecution";
-$french_strEmailNotifyTo     = "Avis d'exécution a";
-$french_strJobExecAt         = "Exécution de la mission le <B>\%s</B>";
+$french_strHasDeleted        = "<B>\%s</B> a ï¿½tï¿½ effacer";
+$french_strExecute           = "Exï¿½cuter";
+$french_strExecuteTime       = "Temp d'ï¿½xecution";
+$french_strEmailNotifyTo     = "Avis d'exï¿½cution a";
+$french_strJobExecAt         = "Exï¿½cution de la mission le <B>\%s</B>";
 $french_strShowJobs          = "Faire voir les commandes";
 $french_strNewJob            = "Nouveau commandes";
-$french_strReallyLock        = "Vous voulez vraiment réserver <B>\%s</B>?";
-$french_strReallyUnlock      = "Vous voulez vraiment annuler la réservation pour<B>\%s</B>?";
-$french_strHasUnlock         = "<B>\%s</B> a été liberé";
-$french_strLockHasSet        = "<B>\%s</B> a été réservé";
-$french_strLockHasAlreadySet = "<B>\%s</B> a été déjà réservé par <B>\%s</B>";
-$french_strLockHasAlreaUnset = "<B>\%s</B> a éte déjà liberé";
-$french_strNotLockOwner      = "<B>\%s</B> est réservé par <B>\%s</B>";
+$french_strReallyLock        = "Vous voulez vraiment rï¿½server <B>\%s</B>?";
+$french_strReallyUnlock      = "Vous voulez vraiment annuler la rï¿½servation pour<B>\%s</B>?";
+$french_strHasUnlock         = "<B>\%s</B> a ï¿½tï¿½ liberï¿½";
+$french_strLockHasSet        = "<B>\%s</B> a ï¿½tï¿½ rï¿½servï¿½";
+$french_strLockHasAlreadySet = "<B>\%s</B> a ï¿½tï¿½ dï¿½jï¿½ rï¿½servï¿½ par <B>\%s</B>";
+$french_strLockHasAlreaUnset = "<B>\%s</B> a ï¿½te dï¿½jï¿½ liberï¿½";
+$french_strNotLockOwner      = "<B>\%s</B> est rï¿½servï¿½ par <B>\%s</B>";
 $french_strReallySubscribe   = "Vous voulez abonner<B>\%s</B>?";
-$french_strHasSubscribed     = "<B>\%s</B> a été abonné par <B>\%s</B>";
-$french_strAlreadySubscribed = "Vous avez déjà abonné ce document";
+$french_strHasSubscribed     = "<B>\%s</B> a ï¿½tï¿½ abonnï¿½ par <B>\%s</B>";
+$french_strAlreadySubscribed = "Vous avez dï¿½jï¿½ abonnï¿½ ce document";
 $french_strMissingEmailAdr   = "Inserez votre email s.v.p.";
 $french_strReallyUnsubsribe  = "Vous voulez vraiment annuler l'abonnement pour <B>\%s</B>?";
-$french_strHasUnsubscribe    = "L'abonnement <B>\%s</B> a été annulée";
-$french_strNotSubcriber      = "<B>\%s</B> n'as pas été abonné par vous";
+$french_strHasUnsubscribe    = "L'abonnement <B>\%s</B> a ï¿½tï¿½ annulï¿½e";
+$french_strNotSubcriber      = "<B>\%s</B> n'as pas ï¿½tï¿½ abonnï¿½ par vous";
 $french_strUpload            = "Upload";
 $french_strDelete            = "Effacer";
 $french_strSubscribe         = "Commander l'abonnement";
 $french_strLock              = "Reserver";
 $french_strUnsubscribe       = "Annuler l'abonnement";
-$french_strUnlock            = "Annuler la réservation";
-$french_strUpLoadTitle       = "Terminé Upload";
+$french_strUnlock            = "Annuler la rï¿½servation";
+$french_strUpLoadTitle       = "Terminï¿½ Upload";
 $french_strUpLoadDestination = "La destination etait";
-$french_strLocks             = "Réservations";
+$french_strLocks             = "Rï¿½servations";
 $french_strSubscribtions     = "Abonnements";
 $french_strManageMy          = "Administrer mes";
 $french_strView              = "Montrer";
@@ -1840,7 +1840,7 @@ $italian_emailSendBtnLb2      = "Scegliere tutti";
 $italian_displayEmailListStr  = "Inviare \%s a tutti quelli scelti!";
 $italian_pwdMissMatch         = "Codice sbagliato";
 $italian_pwdError1            = "Conferma del codice sbagliata";
-$italian_pwdError2            = "Il codice deve essere più lungo die\%s";
+$italian_pwdError2            = "Il codice deve essere piï¿½ lungo die\%s";
 $italian_strLogin             = "Notifica";
 $italian_strUserId            = "Nome del utente";
 $italian_strPassword          = "Codice";
@@ -1855,7 +1855,7 @@ $italian_strForgotten         = "Codice";
 $italian_forgottenTitle       = "Codice dimenticato";
 $italian_strPwdSend           = "Inviare il codice via e-Mail";
 $italian_emailNotifySubject   = "Codice dimenticato";
-$italian_forgottenPwdMsg      = "Il codice dimenticato è \%s";
+$italian_forgottenPwdMsg      = "Il codice dimenticato ï¿½ \%s";
 $italian_strCaseMatch         = "Tener conto di lettere maiuscole e minuscole";
 $italian_strFrom              = "Emittente";
 $italian_strTo                = "A";
@@ -1867,8 +1867,8 @@ $italian_strSendEMail         = "Inviare messaggio";
 $italian_strClear             = "Cancellare messaggio";
 $italian_strFieldMissing      = "Mancano alcune indicazioni";
 $italian_strEnterFollowFields = "Le seguenti indicazioni devono essere definite";
-$italian_strEmailSentTo       = "Il messaggio é stato inviato a<B>\%s</B>";
-$italian_strEmailSentError    = "Il messaggio non é stato inviato. Errore:";
+$italian_strEmailSentTo       = "Il messaggio ï¿½ stato inviato a<B>\%s</B>";
+$italian_strEmailSentError    = "Il messaggio non ï¿½ stato inviato. Errore:";
 $italian_strBack              = "Ritorno al messaggio precedente";
 $italian_strNewMail           = "Registrare il nuovo messaggio";
 $italian_strOld               = "Vecchio:";
@@ -1883,27 +1883,27 @@ $italian_strSave              = "Save";
 $italian_strYes               = "Si";
 $italian_strNo                = "No";
 $italian_strReallyDelete      = "Vuole veramente cancellare <B>\%s</B>?";
-$italian_strHasDeleted        = "<B>\%s</B> è stato cancellato";
+$italian_strHasDeleted        = "<B>\%s</B> ï¿½ stato cancellato";
 $italian_strExecute           = "Eseguire";
 $italian_strExecuteTime       = "Tempo d'esecuzione";
 $italian_strEmailNotifyTo     = "Avviso d'esecuzione a";
-$italian_strJobExecAt         = "L'ordine sarà eseguito il<B>\%s</B>";
+$italian_strJobExecAt         = "L'ordine sarï¿½ eseguito il<B>\%s</B>";
 $italian_strShowJobs          = "Far vedere gli ordini";
 $italian_strNewJob            = "Nuovi ordini";
 $italian_strReallyLock        = "Vuole veramente riservare <B>\%s</B>?";
 $italian_strReallyUnlock      = "Vuole veramente annullare la riservazione per <B>\%s</B>?";
-$italian_strHasUnlock         = "<B>\%s</B> è stato liberato";
-$italian_strLockHasSet        = "<B>\%s</B> è stato riservato";
-$italian_strLockHasAlreadySet = "<B>\%s</B> é già stato riservato da <B>\%s</B>";
-$italian_strLockHasAlreaUnset = "<B>\%s</B> è già stato liberato";
-$italian_strNotLockOwner      = "<B>\%s</B> é stato riservato da <B>\%s</B>";
+$italian_strHasUnlock         = "<B>\%s</B> ï¿½ stato liberato";
+$italian_strLockHasSet        = "<B>\%s</B> ï¿½ stato riservato";
+$italian_strLockHasAlreadySet = "<B>\%s</B> ï¿½ giï¿½ stato riservato da <B>\%s</B>";
+$italian_strLockHasAlreaUnset = "<B>\%s</B> ï¿½ giï¿½ stato liberato";
+$italian_strNotLockOwner      = "<B>\%s</B> ï¿½ stato riservato da <B>\%s</B>";
 $italian_strReallySubscribe   = "Vuole abonarsi <B>\%s</B>?";
-$italian_strHasSubscribed     = "<B>\%s</B> è stato abonato da <B>\%s</B>";
-$italian_strAlreadySubscribed = "E già abonato a questo documento";
+$italian_strHasSubscribed     = "<B>\%s</B> ï¿½ stato abonato da <B>\%s</B>";
+$italian_strAlreadySubscribed = "E giï¿½ abonato a questo documento";
 $italian_strMissingEmailAdr   = "Inserisca l'email per favore";
 $italian_strReallyUnsubsribe  = "Vuole veramente cancellare l'abonamento per <B>\%s</B>?";
-$italian_strHasUnsubscribe    = "L'abonamento per <B>\%s</B> è stato cancellato";
-$italian_strNotSubcriber      = "Non è stato abonato a <B>\%s</B>";
+$italian_strHasUnsubscribe    = "L'abonamento per <B>\%s</B> ï¿½ stato cancellato";
+$italian_strNotSubcriber      = "Non ï¿½ stato abonato a <B>\%s</B>";
 $italian_strUpload            = "Upload";
 $italian_strDelete            = "Cancellare";
 $italian_strSubscribe         = "Abonare";
@@ -3412,13 +3412,13 @@ sub doTest_sendShortMsg {
          $testEmailAdr_2." # walti in the office",
       );
       my($msgLong) = qq{
-          TEST TEST TEST Kann ohne zu lesen gelöscht werden.
+          TEST TEST TEST Kann ohne zu lesen gelï¿½scht werden.
           Dies ist eine ganz lange Meldung an Walti. Es sollte per e-mail und SMS an Walti gesendet werden.
-          Hier ist noch weiterer Text um das e-mail etwas länger zu machen und noch länger so dass die 150 
-          Zeichen Grenze überwunden wird und das SMS auf mehrer verteilt wird. Im Email sollte die ganze 
-          Meldung in einem Einzigen kommen wobei das Subject im e-mail kürzer sein wird.
+          Hier ist noch weiterer Text um das e-mail etwas lï¿½nger zu machen und noch lï¿½nger so dass die 150 
+          Zeichen Grenze ï¿½berwunden wird und das SMS auf mehrer verteilt wird. Im Email sollte die ganze 
+          Meldung in einem Einzigen kommen wobei das Subject im e-mail kï¿½rzer sein wird.
 
-          Viele Grüsse
+          Viele Grï¿½sse
           Walti
           
       };
@@ -4367,9 +4367,9 @@ sub replaceUmlauteByHTMLcodesInHashValues {
   my @inKeys = keys %inHashTab;
   foreach $inKey (@inKeys) {
     my $aVal = $inHashTab{$inKey};
-    $aVal =~ s/ü/&uuml;/g;
-    $aVal =~ s/ä/&auml;/g;
-    $aVal =~ s/ö/&ouml;/g;
+    $aVal =~ s/ï¿½/&uuml;/g;
+    $aVal =~ s/ï¿½/&auml;/g;
+    $aVal =~ s/ï¿½/&ouml;/g;
     %outHashTab = (%outHashTab,($inKey => $aVal));
   }
   return %outHashTab;
@@ -6992,7 +6992,7 @@ sub doTest_ScheduleResolver {
    my(@peopleNames) = (
      "Walter Rothlin",
      "Karin Diethelm",
-     "Markus Züger",
+     "Markus Zï¿½ger",
      "Hermann Annen",
    );
 
@@ -9512,13 +9512,13 @@ sub replaceUNICODE_UmlauteInHash {
 sub replaceUNICODE_Umlaute {
 	my($inLine)     = @_;
 	my $retVal      = $inLine;
-	$retVal =~ s/Ã¤/ä/g;
-	$retVal =~ s/Ã¶/ö/g;
-	$retVal =~ s/Ã¼/ü/g;
-	$retVal =~ s/Ã©/é/g;
-	$retVal =~ s/Ã¨/è/g;
+	$retVal =~ s/Ã¤/ï¿½/g;
+	$retVal =~ s/Ã¶/ï¿½/g;
+	$retVal =~ s/Ã¼/ï¿½/g;
+	$retVal =~ s/Ã©/ï¿½/g;
+	$retVal =~ s/Ã¨/ï¿½/g;
 	$retVal =~ s/Ãº/u/g;
-	$retVal =~ s/Ã/Ö/g;
+	$retVal =~ s/ï¿½/ï¿½/g;
 	$retVal =~ s/Ö§/c/g;
 	$retVal =~ s/'//g;
 	return $retVal;
@@ -9528,42 +9528,42 @@ sub replaceDOS_Umlaute {
    my($inLine)     = @_;
    my $retVal      = $inLine;
 
-   $retVal =~ s/ö/ /g;
+   $retVal =~ s/ï¿½/ /g;
    
    # Spezialzeichen
-   $retVal =~ s/æ/µ/g;
-   $retVal =~ s/í/ø/g;
+   $retVal =~ s/ï¿½/ï¿½/g;
+   $retVal =~ s/ï¿½/ï¿½/g;
 
    # Deutsche Umlaute
-   $retVal =~ s/„/ä/g;
-   $retVal =~ s//ü/g;
-   $retVal =~ s/”/ö/g;
-   $retVal =~ s/Ž/Ae/g;
-   $retVal =~ s/š/Ue/g;
-   $retVal =~ s/™/Oe/g;
+   $retVal =~ s/ï¿½/ï¿½/g;
+   $retVal =~ s/ï¿½/ï¿½/g;
+   $retVal =~ s/ï¿½/ï¿½/g;
+   $retVal =~ s/ï¿½/Ae/g;
+   $retVal =~ s/ï¿½/Ue/g;
+   $retVal =~ s/ï¿½/Oe/g;
       
-   # Französische Sepzialzeichen
+   # Franzï¿½sische Sepzialzeichen
    $retVal = replaceDosEecuAndKomman($retVal);
-   $retVal =~ s/Š/è/g;   # e graf
-   $retVal =~ s/ƒ/â/g;   # a mit Dach
-   $retVal =~ s/…/à/g;   # a graf
-   $retVal =~ s/Œ/i/g;   # i mit Dach
-   $retVal =~ s/‡/ç/g;   # c mit 5 untendran
-   $retVal =~ s/“/o/g;   # o mit Dach
-   $retVal =~ s/ˆ/ê/g;   # e mit Dach   
+   $retVal =~ s/ï¿½/ï¿½/g;   # e graf
+   $retVal =~ s/ï¿½/ï¿½/g;   # a mit Dach
+   $retVal =~ s/ï¿½/ï¿½/g;   # a graf
+   $retVal =~ s/ï¿½/i/g;   # i mit Dach
+   $retVal =~ s/ï¿½/ï¿½/g;   # c mit 5 untendran
+   $retVal =~ s/ï¿½/o/g;   # o mit Dach
+   $retVal =~ s/ï¿½/ï¿½/g;   # e mit Dach   
 
    # Unterstreich Character   
-   $retVal =~ s/Ä/_/g;
+   $retVal =~ s/ï¿½/_/g;
 
    return $retVal;
 }
 
 sub replaceUmlauteInString {
   my($inString)  = @_;
-  $inString =~ s/ü/ue/g;
-  $inString =~ s/ä/ae/g;
-  $inString =~ s/ö/oe/g;
-  $inString =~ s/é/e/g;
+  $inString =~ s/ï¿½/ue/g;
+  $inString =~ s/ï¿½/ae/g;
+  $inString =~ s/ï¿½/oe/g;
+  $inString =~ s/ï¿½/e/g;
 
   return $inString;
 }
@@ -9577,7 +9577,7 @@ sub replaceDosEecuAndKomman {
 		if (ord($singleChr) == 44) {
 			$retLine = "${retLine},";
 		} elsif (ord($singleChr) == 130) {
-			$retLine = "${retLine}é";        
+			$retLine = "${retLine}ï¿½";        
 		} else {
 			$retLine = "${retLine}${singleChr}";
 		}   
@@ -9585,7 +9585,7 @@ sub replaceDosEecuAndKomman {
 	return $retLine;
 }
 
-# input: "aAäöü\nz"
+# input: "aAï¿½ï¿½ï¿½\nz"
 # output format=0:
 #   6141E4F6FC0A7A
 #
@@ -9601,18 +9601,18 @@ sub replaceDosEecuAndKomman {
 # output format=2:
 #  a=>61
 #  A=>41
-#  õ=>E4
-#  ÷=>F6
-#  ³=>FC
+#  ï¿½=>E4
+#  ï¿½=>F6
+#  ï¿½=>FC
 #
 #  =>0A
 #  z=>7A
 #
-# input: "aAäöü !\nz~"
+# input: "aAï¿½ï¿½ï¿½ !\nz~"
 # output format=3 (quoted-printable)
 # aA=E4=F6=FC=20!=0Az~
 #
-# input: "Zürich"
+# input: "Zï¿½rich"
 # output format=3 (quoted-printable)
 # Z=FCrich
 sub convertASCII_to_HEX {
@@ -9678,7 +9678,7 @@ sub doTest_convertHEX_to_ASCII {
 		print("     Result:".convertHEX_to_ASCII(convertASCII_to_HEX($inString)).":\n");
 		print("     Expect:".$inString.":\n");
 	}
-	$inString  = ".öä$¨üè!?=)(/&%ç*+°§";
+	$inString  = ".ï¿½ï¿½$ï¿½ï¿½ï¿½!?=)(/&%ï¿½*+ï¿½ï¿½";
 	if (!(convertHEX_to_ASCII(convertASCII_to_HEX($inString)) eq $inString)) {
 		print("ERROR: ${myFullName} failed (B)\n");
 		print("     Result:".convertHEX_to_ASCII(convertASCII_to_HEX($inString)).":\n");
@@ -12148,7 +12148,7 @@ sub createAsciiMenuMultipleSelectionWithComments {
 			}
 		} until($endLoop eq $TRUE);
 		
-		# Multiple-Selection auflösen
+		# Multiple-Selection auflï¿½sen
 		if ($multipleSelection) {
 			# print("answer (0):${answer}:\n"); ## halt();
 			$answer =~ s/\.\./-/g;
@@ -15831,9 +15831,9 @@ sub doTest_readWriteLhCookie {
 		Nr|TestString         |Key     
 		01|12345 7865Ax       |    
 		02|12345 7865Ax       |ert    
-		03|WaltiRothlin.,_=%ç*|1234
-		04|WaltiRothlin.,_=%ç*|abc    
-		05|+"*ç%&/()=?`^.,_ä$ü|abc    
+		03|WaltiRothlin.,_=%ï¿½*|1234
+		04|WaltiRothlin.,_=%ï¿½*|abc    
+		05|+"*ï¿½%&/()=?`^.,_ï¿½$ï¿½|abc    
 	};
 	my $cookieName_1  = "TestLhCookie";
 	my $noKeyFound    = "NoKeyFound";
@@ -18912,6 +18912,17 @@ sub isItProbablyAnMS_Browser {
 }
 
 # echo's back all received data (parameters) as an HTML page back to the client
+
+# # simple_echo.pl
+# print "Content-type: text/html\n\n";
+# print "<html><body><table>";
+# foreach my $key (sort keys %ENV) {
+# 	print "<tr><td valign='top'>$key</td><td valign='top'>$ENV{$key}</td></tr>";
+# }
+# print "</table><body><html>\n";
+#
+# exit;
+
 sub echo {
   my($caller_version) = @_;
   $caller_version = setDefault($caller_version,"V1.x");
@@ -24764,7 +24775,7 @@ sub manipulateWhiteBoard {
    # spam filter
    if ($allowedUrl ne "") {
    	  if ($ENV{"HTTP_REFERER"} ne $allowedUrl) {
-   	    $enterField = "<font color=red>Du bist nun in die Falle geraten!</font><BR>Ich habe Deine IP Adresse (".$ENV{"REMOTE_ADDR"}.") und kann Dich nun zurückverfolgen! Stop diese unberechtigte Benutzung des Scripts, ansonsten ich rechtliche Schritte unternehmen werde!";
+   	    $enterField = "<font color=red>Du bist nun in die Falle geraten!</font><BR>Ich habe Deine IP Adresse (".$ENV{"REMOTE_ADDR"}.") und kann Dich nun zurï¿½ckverfolgen! Stop diese unberechtigte Benutzung des Scripts, ansonsten ich rechtliche Schritte unternehmen werde!";
    	    
    	  }
    }
@@ -26539,9 +26550,9 @@ sub mkEmailSelectorFromTab {
 # SpezFilters are a combination of Autofilter including more than one column
 #
 # e.g.
-## @mannschaften = getColumnValues($tabName,$tabSepChr,"Heim","Heim starts Würenlos","Heim",$TRUE);
+## @mannschaften = getColumnValues($tabName,$tabSepChr,"Heim","Heim starts Wï¿½renlos","Heim",$TRUE);
 ## @regeln       = createRegeln(@mannschaften);
-## print("Wählen Sie eine <B>Würenloser</B> Mannschaft<BR>\n");
+## print("Wï¿½hlen Sie eine <B>Wï¿½renloser</B> Mannschaft<BR>\n");
 ## addSpezFilterSelector("MannschaftsSelector",\@mannschaften,\@regeln,$myCgiFormName,$language);
 ##
 ## sub createRegeln {
