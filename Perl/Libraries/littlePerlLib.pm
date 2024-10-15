@@ -552,6 +552,7 @@ package main;        #has to be "main"
 # 09-Dec-2020 V4.87 Walter Rothlin      Modified displayUploadForm (added loginPassword and loginAction)
 # 09-May-2024 V5.01 Walter Rothlin      Fixed problem on line # 26635 $comLine =~ s/ \{//g; OLD: $comLine =~ s/ {//g; in produceHTMLDescription()
 # 15-Oct-2024 V5.02 Walter Rothlin      Added version to echo()
+# 15-Oct-2024 V5.03 Walter Rothlin      Merged Version and Set ANSI encoding
 # Open Issues --------------------------------------------------------------
 # - Fix BUG 1 (End of line)
 # - replaceTab does not handle beginningOfLine
@@ -559,7 +560,7 @@ package main;        #has to be "main"
 #
 ############################################################################
 $sccsId           = "";
-$libLatestVersion = "V5.02";
+$libLatestVersion = "V5.03";
 $libName          = "littlePerlLib.pm";
 ############################################################################
 # General Perl hints
