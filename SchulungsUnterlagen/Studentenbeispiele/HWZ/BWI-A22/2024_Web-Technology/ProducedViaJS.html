@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mit JS erzeugt</title>
+    <SCRIPT LANGUAGE="JavaScript">
+      function displayMsg(msg) {
+       document.write("<U> <font color='#ff0000'>" + msg + "</font></U>");
+    }
+
+    function displayTitle(level,titleText) {
+        displayMsg("<H" + level + ">" + titleText + "</H" + level + ">");
+    }
+    </SCRIPT>
+
+
+</head>
+<body>
+<hr/>
+<SCRIPT> displayTitle(1,"Normaler HTML Text") </SCRIPT>
+<SCRIPT> displayTitle(2,"Untertitle") </SCRIPT>
+<hr/>
+
+</body>
+</html>

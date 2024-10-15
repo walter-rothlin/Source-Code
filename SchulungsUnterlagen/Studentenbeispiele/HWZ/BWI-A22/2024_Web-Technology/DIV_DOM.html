@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Div-DOM</title>
+
+    <script>
+      function CheckboxChanged() {
+          console.log("CheckboxChanged called!!!")
+          if (document.getElementById("showDiv").checked) {
+              console.log("CheckboxChanged to True!");
+              document.getElementById('HTML_Abschnitt').style.visibility  = "visible"
+          } else {
+              console.log("CheckboxChanged to False!");
+              document.getElementById('HTML_Abschnitt').style.visibility  = "hidden"
+          }
+      }
+
+
+    function Adresse_Changed() {
+        console.log("Adresse_Changed called!!!")
+        var xhr = new XMLHttpRequest();
+		console.log(xhr);
+		adrPatternEncoded = encodeURI(document.getElementById("Adressen_Feld").value);
+        console.log(adrPatternEncoded)
+
+        xhr.open("GET", "https://api3.geo.admin.ch/rest/services/api/SearchServer?sr=2056&searchText="+ adrPatternEncoded + "&lang=en&type=locations" , true);
+
+        xhr.onload = function() {
+			console.log(this.responseText);
+			var response = JSON.parse(this.responseText);
+			console.log(response);
+			document.getElementById('ResultSetView').innerHTML = "";
+			response.results.forEach(element => appendTo('ResultSetView',element.attrs));
+		}
+		xhr.send();
+    }
+
+
+	function appendTo(id, aAttr){
+		document.getElementById(id).innerHTML = document.getElementById(id).innerHTML + "<TR><TD>" + aAttr.label + "</TD>" + "<TD>" + aAttr.lon + "</TD>" + "<TD>" + aAttr.lat + "</TD></TR>";
+	}
+
+    </script>
+
+</head>
+<body>
+<h1>Formular Elemente Changes DOM</h1>
+<hr/>
+  Anzeigen:<input type="checkbox" id="showDiv" name="scales" checked>
+<hr/>
+
+<div id="HTML_Abschnitt">
+  <p>Hallo</p>
+  <hr/>
+</div>
+
+<br/>
+<br/>
+<hr/>
+<h2>via JS REST Call  ==> AJAX</h2>
+
+		<HR/>
+		<input type="text" id="Adressen_Feld"  value="peterliwiese" size="30"  >
+		<HR/>
+
+		Table: ResultSetView<BR/>
+		<table id="ResultSetView" >
+			<tr><td>Peterliwiese 33 8855</td><td>8.88730239868164</td><td>47.194541931152344</td></tr>
+			<tr><td>Etzelstr. 7 8855</td>    <td>8.89638900756836</td><td>47.18674087524414</td></tr>
+		</table>
+
+		<HR/>
+</body>
+
+<script>
+    document.getElementById("showDiv").addEventListener('change', CheckboxChanged);
+    document.getElementById("Adressen_Feld").addEventListener('keyup', Adresse_Changed);
+</script>
+</html>

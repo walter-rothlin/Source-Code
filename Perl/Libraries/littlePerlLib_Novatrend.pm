@@ -548,10 +548,8 @@ package main;        #has to be "main"
 # 30-Jun-2016 V4.83 Walter Rothlin      Modified purgeUnixDir added new parameter $withDir
 # 08-May-2016 V4.84 Walter Rothlin      Modified formatation of code
 # 12-Oct-2017 V4.85 Walter Rothlin      Modified processHTML_FormAndSendEmail (Injection of additional parameters)
-# 25-May-2019 V4.86 Walter Rothlin      Modified RegEx in produceHTMLDescription
-# 09-Dec-2020 V4.87 Walter Rothlin      Modified displayUploadForm (added loginPassword and loginAction)
-# 09-May-2024 V5.01 Walter Rothlin      Fixed problem on line # 26635 $comLine =~ s/ \{//g; OLD: $comLine =~ s/ {//g; in produceHTMLDescription()
-# 15-Oct-2024 V5.02 Walter Rothlin      Added version to echo()
+# 15-Oct-2024 V4.86 Walter Rothlin      Fixed problem on line # 26635 $comLine =~ s/ \{//g; OLD: $comLine =~ s/ {//g; in produceHTMLDescription()
+# 15-Oct-2024 V5.02 Walter Rothlin      Added version to echo() and merged versions
 # Open Issues --------------------------------------------------------------
 # - Fix BUG 1 (End of line)
 # - replaceTab does not handle beginningOfLine
@@ -18912,6 +18910,17 @@ sub isItProbablyAnMS_Browser {
 }
 
 # echo's back all received data (parameters) as an HTML page back to the client
+
+# # simple_echo.pl
+# print "Content-type: text/html\n\n";
+# print "<html><body><table>";
+# foreach my $key (sort keys %ENV) {
+# 	print "<tr><td valign='top'>$key</td><td valign='top'>$ENV{$key}</td></tr>";
+# }
+# print "</table><body><html>\n";
+# 
+# exit;
+
 sub echo {
   my($caller_version) = @_;
   $caller_version = setDefault($caller_version,"V1.x");
@@ -27398,7 +27407,6 @@ sub createLittlePerlLibWebDefinitions {
 # History:
 # 01/13/99    V1.0 Walter Rothlin     Initial Version
 # 04/30/99    V1.1 Walter Rothlin     Stephan's Wunsch
-# 25-May_2019 V1.2 Walter Rothlin     Replaced $comLine =~ s/ {//g;    by     $comLine =~ s/ \{//g;
 #
 # Description:
 # ------------
@@ -28238,8 +28246,6 @@ sub displayUploadForm {
 		</table>
 		<INPUT TYPE=HIDDEN NAME="Action"         VALUE="doUpload">
 		<INPUT TYPE=HIDDEN NAME="loginUserId"    VALUE="${loginUserId}">
-		<INPUT TYPE=HIDDEN NAME="loginPassword"  VALUE="${loginPassword}">
-		<INPUT TYPE=HIDDEN NAME="loginAction"    VALUE="Login">
 	</form>
 HTML
 }
