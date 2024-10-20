@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>547362488991</MsgId>
+            <CreDtTm>2024-10-20T10:26:07.021660</CreDtTm>
+            <NbOfTxs>2</NbOfTxs>
+            <CtrlSum>4.0</CtrlSum>
+            <InitgPty>
+                <Nm>Walter Rothlin</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>235805253558</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs>2</NbOfTxs>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt>2024-10-21</ReqdExctnDt>
+            <Dbtr>
+                <Nm>Walter Rothlin</Nm>
+                <PstlAdr>
+                    <Ctry>CH</Ctry>
+                </PstlAdr>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>CH4900777004546031980</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>KBSZCH22XXX</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+
+            
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>1</InstrId>
+                    <EndToEndId>472100000001</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">2.95</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Tobias Rothlin</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH4000777003656120095</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Test von PAIN001 (2.95)</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>2</InstrId>
+                    <EndToEndId>472100000002</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="CHF">1.05</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>Tobias Rothlin</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>CH4000777003656120095</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>Test von PAIN001 (1.05)</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>

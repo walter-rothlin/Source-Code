@@ -77,6 +77,7 @@
 # 11-Jul-2024   Walter Rothlin      Fixed issues in unload_all_data_from_schema() and select_data_from_db_table()
 #                                   Added format_sql_stmt(sql_statement, indent=4)
 #                                   Removed double if verbal
+# 10-Oct-2024   Walter Rothlin      Added PAIN001-Functions: get_pain001_template(), get_pain001_msg()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -89,7 +90,7 @@ import math
 import os
 import shutil
 import time
-import datetime
+from datetime import *
 from pathlib import Path
 import re
 from rich import print
@@ -101,6 +102,7 @@ import xml.etree.ElementTree as ET
 import urllib.parse
 import locale
 import hashlib
+from jinja2 import Environment, FileSystemLoader, Template
 
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
@@ -120,7 +122,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.0")
+    print("waltisLibrary.py: 2.0.0.1")
 
 
 # Regular-Expressions
@@ -3976,19 +3978,156 @@ def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, colum
             'cell_row': row,
             f'ws["{column_letter}{str(row)}"].value': new_cell_value}
 
+# ========================
+# PAIN001 Functions (Zahlungsauftrags-Fileformat)
+# ========================
+def get_pain001_template():
+    pain001_template = '''
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>{{ Debitor_Info.Header_ID }}</MsgId>
+            <CreDtTm>{{ Debitor_Info.Creation_Time }}</CreDtTm>
+            <NbOfTxs>{{ Zahlungs_liste|length }}</NbOfTxs>
+            <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
+            <InitgPty>
+                <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>{{ summery_of_payments.pain_id }}</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt>{{ Debitor_Info.Valuta }}</ReqdExctnDt>
+            <Dbtr>
+                <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+                <PstlAdr>
+                    <Ctry>{{ Debitor_Info.Country_Code.strip().upper() }}</Ctry>
+                </PstlAdr>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>{{ Debitor_Info.IBAN.replace(' ','').upper()  }}</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>{{ Debitor_Info.BIC }}</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+
+            {% for a_payment in Zahlungs_liste %}
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>{{ loop.index}}</InstrId>
+                    <EndToEndId>{{ loop.index + summery_of_payments.pain_start_id }}</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="{{ a_payment.Ccy.replace(' ','').upper()  }}">{{ a_payment.Amount }}</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>{{ a_payment.Receiver_Name.strip()  }}</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>{{ a_payment.IBAN.replace(' ','').upper() }}</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>{{ a_payment.Reason }}</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            {% endfor %}
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>     
+    '''
+    return pain001_template
+
+def get_pain001_msg(debitor_info, payment_list, template_path='./Templates', template_filename=None, pain_id='235805253558', pain_start_id=472100000000):
+    total_amount = 0
+    for a_payment in payment_list:
+        total_amount += float(a_payment['Amount'])
+
+    summery_of_payments = {
+        'count_of_payments': len(payment_list),
+        'total_amount': f'{str(round(total_amount,2))}',
+        'pain_id': pain_id,
+        'pain_start_id': pain_start_id,
+    }
+
+    if template_filename is not None:
+        env = Environment(loader=FileSystemLoader(template_path))
+        template = env.get_template(template_filename)
+    else:
+        template = Template(get_pain001_template())
+
+    return template.render(summery_of_payments=summery_of_payments, Zahlungs_liste=payment_list, Debitor_Info=debitor_info)
+
+
+def TEST_Pain001():
+
+    Debitor_Info_Geno = {
+        'Header_ID': '547362488991',
+        'Creation_Time': f'{datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f%z")}',  # 2023-11-17T14:48:04.485+01:00
+        'Name': 'Genossame Wangen SZ',
+        'Country_Code': 'CH',
+        'IBAN': 'CH5100777001561771945',
+        'BIC': 'KBSZCH22XXX',
+        'Valuta': '2024-11-02'
+    }
+
+    Debitor_Info_WR = {
+        'Header_ID': '547362488991',
+        'Creation_Time': f'{datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f%z")}',  # 2023-11-17T14:48:04.485+01:00
+        'Name': 'Walter Rothlin',
+        'Country_Code': 'CH',
+        'IBAN': 'CH4900777004546031980',  # Börsenkonto SZKB
+        'BIC': 'KBSZCH22XXX',
+        'Valuta': '2024-10-21'
+    }
+
+
+    Zahlungs_liste = [
+        {'Ccy': 'CHF',
+         'Amount': '2.95',
+         'Receiver_Name': 'Tobias Rothlin',
+         'IBAN': 'CH40 0077 7003 6561 2009 5',  # Haushaltsgeld SZKB
+         'Reason': 'Test von PAIN001 (2.95)'},
+        {'Ccy': 'chf',
+         'Amount': '1.05',
+         'Receiver_Name': '  Tobias Rothlin  ',
+         'IBAN': 'ch40 0077 7003 6561 2009 5',  # Haushaltsgeld SZKB
+         'Reason': 'Test von PAIN001 (1.05)'},
+    ]
+
+    pain001_msg = get_pain001_msg(debitor_info=Debitor_Info_WR, payment_list=Zahlungs_liste)
+    print(pain001_msg)
+    with open('generated_pain001.xml', 'w') as file:
+        # Write the string to the file
+        file.write(pain001_msg.strip())
+
 
 # ===========================================================
 # MAIN
 # ===========================================================
 
 if __name__ == '__main__':
-    AUTO_TEST__split_adress_street_nr()
+
+    TEST_Pain001()
 
     autoTest = True
 
     if not autoTest:
         pass  # NOP in Python
         # AUTO_TEST_xPath_Get(verbal=True)
+        # AUTO_TEST__split_adress_street_nr()
         # TEST_stringFct()
         # TEST_hexStrToURLEncoded()
         # TEST_getTimestamp()
