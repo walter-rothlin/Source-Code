@@ -77,7 +77,10 @@
 # 11-Jul-2024   Walter Rothlin      Fixed issues in unload_all_data_from_schema() and select_data_from_db_table()
 #                                   Added format_sql_stmt(sql_statement, indent=4)
 #                                   Removed double if verbal
-# 10-Oct-2024   Walter Rothlin      Added PAIN001-Functions: get_pain001_template(), get_pain001_msg()
+# 20-Oct-2024   Walter Rothlin      Added PAIN001-Functions: get_pain001_template(), get_pain001_msg()
+# 20-Oct-2024   Walter Rothlin      Fixed issue with datetime.datetime
+#                                   Added get_actual_year()
+#                                   Added read_string_with_default()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -122,7 +125,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.1")
+    print("waltisLibrary.py: 2.0.0.3")
 
 
 # Regular-Expressions
@@ -196,15 +199,24 @@ def TEST_printProgressBar(verbal=False):
         printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
     print("Completed")
 
-
-# Test functions for readln
-# =========================
+# =================================
+# verification functions for readln
+# =================================
 def is_email(email):
     return re.match(regEx_email_1, email) is not None
 
-
+# ================
 # Readln functions
 # ================
+def read_string_with_default(prompt="Input:", default_value=None):
+    if default_value is None:
+        in_str = input(prompt + ":")
+    else:
+        in_str = input(f'{prompt} ({default_value}):')
+        if len(in_str) <= 0:
+            in_str = default_value
+    return in_str
+
 def read_boolean(prompt="Boolean[Y/*N]:", true_val_liste=['Y', 'J', 'T'], default_value=False, verbal=False):
     ret_val = input(prompt).upper()
     if ret_val == '':
@@ -459,7 +471,7 @@ def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErr
                        min=min, minErrorStr=minErrorStr,
                        max=max, maxErrorStr=maxErrorStr)
 
-
+# ==========================
 # Physikalische Umrechnungen
 # ==========================
 def grad2Rad(grad):
@@ -1963,14 +1975,16 @@ def getTimestamp(preStr="", postStr="", formatString="nice"):
         formatStr = '{ts:%Y-%m-%d %H:%M:%S}'
     else:
         formatStr = formatString
-    retStr = formatStr.format(ts=datetime.datetime.now())
+    retStr = formatStr.format(ts=datetime.now())
     # retStr = left(retStr,len(retStr)-2)
     return preStr + retStr + postStr
 
+def get_actual_year():
+    return int(getTimestamp(formatString="{ts:%Y}"))
 
 def TEST_getTimestamp():
     print("TEST_getTimestamp...")
-    print(datetime.datetime.now())
+    print(datetime.now())
 
 
 # True if (old-young > limit)
@@ -3031,9 +3045,9 @@ def dictify(context, names):
     return rv
 
 
-# ---------------------
+# =====================
 # Reusable DB-Functions
-# ---------------------
+# =====================
 def get_sql_datums_update_value(attr_name, new_value, date_str_format='%d.%m.%Y'):
     if new_value is None or str(new_value) == 'None' or new_value == '':
         ret_val = f"{attr_name} = NULL"
@@ -3562,9 +3576,9 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None, fields_to_
 
   '''
 
-# ------------------------
+# ========================
 # DB unload/load-functions
-# ------------------------
+# ========================
 def format_sql_stmt(sql_statement, indent=4):
     sql_statement = sql_statement.replace('\n', ' ')
     sql_statement = sql_statement.replace('  ', ' ')
@@ -3750,7 +3764,7 @@ def select_data_from_db_table(db_connection,
     if verbal:
         print(f"{indent}{len(my_resultset)} record(s) found")
     return {
-        'timestamp': f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}',
+        'timestamp': f'{datetime.now():%Y-%m-%d %H:%M:%S}',
         'count': len(my_resultset),
         'select': sql_statement,
         'rs': my_resultset
