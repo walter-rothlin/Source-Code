@@ -1,0 +1,33 @@
+<!-- Manuel_Arn_log.txt 2024-10-26 10:06:33 -->
+Timestamp|Level|Message
+2024-10-26 10:06:33|INFO|Wetterdaten-Logging gestartet.
+2024-10-26 10:06:36|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:37|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:38|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:39|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:41|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:42|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:43|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:44|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:45|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:46|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:48|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:49|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:50|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:51|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:52|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:53|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:55|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:56|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:57|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:58|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:06:59|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:01|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:02|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:03|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:04|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:05|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:06|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:07|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:09|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds
+2024-10-26 10:07:10|INFO|Temperatur: 10.45°C, Luftfeuchtigkeit: 92%, Windgeschwindigkeit: 2.57 m/s, Wetter: overcast clouds

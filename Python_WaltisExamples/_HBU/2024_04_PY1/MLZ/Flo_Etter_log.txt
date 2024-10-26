@@ -1,0 +1,6 @@
+<!-- Log File: Flo_Etter_log.txt, Start-Time: 2024-10-26 09:19:27.716643 -->
+Timestamp|Log-Level|Message
+2024-10-26 09:19:43|INFO|Ortsname: Wangen SZ, Land: CH, Temp: 10.7°C, Wetter: Klarer Himmel, Luftfeuchtigkeit: 81%, Luftdruck: 1018mbar
+2024-10-26 09:19:48|INFO|Ortsname: Wangen SZ, Land: CH, Temp: 10.7°C, Wetter: Klarer Himmel, Luftfeuchtigkeit: 81%, Luftdruck: 1018mbar
+2024-10-26 09:19:53|INFO|Ortsname: Wangen SZ, Land: CH, Temp: 10.7°C, Wetter: Klarer Himmel, Luftfeuchtigkeit: 81%, Luftdruck: 1018mbar
+2024-10-26 09:19:58|INFO|Ortsname: Wangen SZ, Land: CH, Temp: 10.7°C, Wetter: Klarer Himmel, Luftfeuchtigkeit: 81%, Luftdruck: 1018mbar

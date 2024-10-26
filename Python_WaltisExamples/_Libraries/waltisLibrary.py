@@ -81,6 +81,7 @@
 # 20-Oct-2024   Walter Rothlin      Fixed issue with datetime.datetime
 #                                   Added get_actual_year()
 #                                   Added read_string_with_default()
+# 21-Oct-2024   Walter Rothlin      Added format_float_1()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -125,7 +126,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.3")
+    print("waltisLibrary.py: 2.0.0.4")
 
 
 # Regular-Expressions
@@ -1325,9 +1326,39 @@ def remove_empty_line(lines, comment_str='#'):
     return ret_list
 
 
-def format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True):
+def format_float(a_float, field_size=0, nachkommastellen=2, do_grouping=True):
     locale.setlocale(locale.LC_ALL, '')
-    return locale.format_string("%" + str(vorkommastellen) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
+    return locale.format_string("%" + str(field_size) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
+
+def format_float_1(a_float, field_size=0, nachkommastellen=2, do_grouping=True, euro_style=True):
+    formatStr = '.' + str(nachkommastellen) + 'f'
+    if do_grouping:
+        formatStr = ',' + formatStr
+    float_formatted = '{a_float_val:' + formatStr + '}'
+    float_formatted = float_formatted.format(a_float_val=a_float)
+
+    if euro_style:
+        float_str = float_formatted.replace(',', "'")
+
+    if field_size > 0:
+        formatStr = '{float_str:>' + str(field_size) + 's}'
+        float_str = formatStr.format(float_str=float_str)
+
+    return float_str
+
+def TEST__format_float_1(verbal=False):
+    print(f':1234567890123456789012345678900:')
+    a_float_value = 4678.206
+    print(f':{format_float(a_float_value, field_size=15, nachkommastellen=3, do_grouping=True)}:')
+    print(f':{format_float(a_float_value, field_size=15, nachkommastellen=2, do_grouping=True)}:')
+    print(f':{format_float(a_float_value, field_size=15, nachkommastellen=2, do_grouping=False)}:')
+
+    print(f':{format_float_1(a_float_value, field_size=15, nachkommastellen=3, do_grouping=True)}:')
+    print(f':{format_float_1(a_float_value, field_size=15, nachkommastellen=2, do_grouping=True)}:')
+    print(f':{format_float_1(a_float_value, field_size=15, nachkommastellen=2, do_grouping=False)}:')
+    print(f':{format_float_1(a_float_value, nachkommastellen=2, do_grouping=False)}:')
+    print(f':{format_float_1(a_float_value, nachkommastellen=2, do_grouping=True)}:')
+    print(f':{format_float_1(a_float_value, nachkommastellen=4, do_grouping=True)}:')
 
 
 def AUTO_TEST__format_float(verbal=False):
@@ -1358,16 +1389,16 @@ def AUTO_TEST__format_float(verbal=False):
 
     testsPerformed += 1
     case = 4
-    if format_float(1234.3, vorkommastellen=10, nachkommastellen=3, do_grouping=False) != "  1234.300":
+    if format_float(1234.3, field_size=10, nachkommastellen=3, do_grouping=False) != "  1234.300":
         print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
-        print(f"    Result:{format_float(1234.3, vorkommastellen=10, nachkommastellen=3, do_grouping=False)}:   Expected:  1234.300:", end="\n\n")
+        print(f"    Result:{format_float(1234.3, field_size=10, nachkommastellen=3, do_grouping=False)}:   Expected:  1234.300:", end="\n\n")
         testsFailed += 1
 
     testsPerformed += 1
     case = 5
-    if format_float(1234.3, vorkommastellen=10, nachkommastellen=2, do_grouping=True) != "  1’234.30":
+    if format_float(1234.3, field_size=10, nachkommastellen=2, do_grouping=True) != "  1’234.30":
         print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
-        print(f"    Result:{format_float(1234.3, vorkommastellen=10, nachkommastellen=2, do_grouping=True)}:   Expected:  1’234.30:", end="\n\n")
+        print(f"    Result:{format_float(1234.3, field_size=10, nachkommastellen=2, do_grouping=True)}:   Expected:  1’234.30:", end="\n\n")
         testsFailed += 1
 
     if verbal:
@@ -4134,8 +4165,6 @@ def TEST_Pain001():
 
 if __name__ == '__main__':
 
-    TEST_Pain001()
-
     autoTest = True
 
     if not autoTest:
@@ -4150,6 +4179,8 @@ if __name__ == '__main__':
         # TEST_calcNulstellen()
         # TEST_printProgressBar()
         # TEST_getMenuFromList()
+        # TEST_Pain001()
+        # TEST__format_float_1()
 
     # Automated Tests
     # ===============

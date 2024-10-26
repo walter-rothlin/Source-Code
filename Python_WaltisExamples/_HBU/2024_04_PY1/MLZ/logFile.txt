@@ -1,0 +1,2 @@
+<Name> logFile.txt </Name> <Date> 26.10.2024 11:03:31 </Date>
+Zeitstempel ; Log-Level ; Test;Test2;Test3 ; 

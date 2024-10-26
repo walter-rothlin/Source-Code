@@ -1,0 +1,12 @@
+#<Name>C:\Users\Landwirtschaft\Documents\SoruceCode\Python_WaltisExamples\_HBU\2024_04_PY1\MLZ\Janik_Hoffmann_log.txt</Name> <Date>2024-10-26 09:41:41</Date>
+Timestamp;Level;Ort;q [%];p_Low [bar]
+2024-10-26 09:41:52;INFO;Uster;92;1019
+2024-10-26 09:41:53;INFO;Uster;92;1019
+2024-10-26 09:41:54;INFO;Uster;92;1019
+2024-10-26 09:41:55;INFO;Uster;92;1019
+2024-10-26 09:41:56;INFO;Uster;92;1019
+2024-10-26 09:41:57;INFO;Uster;92;1019
+2024-10-26 09:41:58;INFO;Uster;92;1019
+2024-10-26 09:42:00;INFO;Uster;92;1019
+2024-10-26 09:42:01;INFO;Uster;92;1019
+2024-10-26 09:42:02;INFO;Uster;92;1019

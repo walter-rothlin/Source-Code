@@ -1,0 +1,2 @@
+<Name> Stefan_Scheuber_log.txt </Name> <Date> 26.10.2024 11:11:08 </Date>
+Zeitstempel ; Log-Level ; Test;Test2;Test3 ; 

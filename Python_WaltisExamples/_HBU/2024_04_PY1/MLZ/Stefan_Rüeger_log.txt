@@ -1,0 +1,8 @@
+#<Name>./Stefan_Rüeger_log.txt</Name> <Date> 2024-10-26 10:49:00 </Date>
+Zeitstempel;Temp[°C];Luftdruck[hPa];rF[%];Beschreibung;Log-Level
+2024-10-26 11:04:08;10.5;1018;91;Bedeckt;INFO
+2024-10-26 11:04:11;10.5;1018;91;Bedeckt;INFO
+2024-10-26 11:04:13;10.5;1018;91;Bedeckt;INFO
+2024-10-26 11:04:15;10.5;1018;91;Bedeckt;INFO
+2024-10-26 11:04:17;10.5;1018;91;Bedeckt;INFO
+2024-10-26 11:04:19;10.5;1018;91;Bedeckt;INFO
