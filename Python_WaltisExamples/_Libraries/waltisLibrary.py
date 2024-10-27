@@ -82,6 +82,7 @@
 #                                   Added get_actual_year()
 #                                   Added read_string_with_default()
 # 21-Oct-2024   Walter Rothlin      Added format_float_1()
+# 26-Oct-2024   Walter Rothlin      Added get_possible_enum_values_from_db_attribute()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -126,7 +127,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.4")
+    print("waltisLibrary.py: 2.0.0.5")
 
 
 # Regular-Expressions
@@ -3650,13 +3651,66 @@ def get_all_table_names_from_schema(db, schema=None, object_types=None, verbal=F
             INFORMATION_SCHEMA.TABLES
         {where_clause};
     '''
+
     if verbal:
-        if verbal:
-            print(select_sql)
+        print(select_sql)
 
     mycursor = db.cursor()
     mycursor.execute(select_sql)
     return mycursor.fetchall()
+
+
+def get_possible_enum_values_from_db_attribute(db, schema=None, table_name=None, column_name=None, verbal=False):
+    """
+    Fetches all possible values for a SET column in a MySQL table.
+
+    Parameters:
+    - table_name (str): Name of the table containing the SET column.
+    - column_name (str): Name of the SET column.
+
+    Returns:
+    - list of str: Possible values in the SET column.
+    """
+
+    if verbal:
+        print(f'''
+           --> Calling get_possible_set_values_from_db(db,
+                        schema      = {schema}, 
+                        table_name  = {table_name},
+                        column_name = {column_name},
+                        verbal      = {verbal})''')
+    select_sql = f'''
+        SELECT 
+            COLUMN_TYPE
+        FROM 
+            INFORMATION_SCHEMA.COLUMNS
+        WHERE 
+            TABLE_SCHEMA = '{schema}'     AND
+            TABLE_NAME   = '{table_name}' AND
+            COLUMN_NAME  = '{column_name}';
+    '''
+
+    my_cursor = db.cursor(dictionary=True)
+    if verbal:
+        print(select_sql)
+    my_cursor.execute(select_sql)
+    result = my_cursor.fetchone()['COLUMN_TYPE']
+
+    if verbal:
+        print('result --> ', result)
+
+    if result:
+        # Use regex to extract values from the SET definition
+        column_type = result.decode() if isinstance(result, bytes) else result
+        if verbal:
+            column_type
+        values = re.findall(r"'(.*?)'", column_type)
+        values.sort()
+        if verbal:
+            print('--->', values)
+        return values
+    else:
+        return []  # No result found
 
 
 def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=None, verbal=False):
@@ -3904,6 +3958,10 @@ def unload_all_data_from_schema(db_connection,
             verbal=verbal
         )
     return insert_string
+
+def get_enum_values_from_db_attribute(db_connection, schema_name=None, attribute_name=None, verbal=False):
+    print(f'get_enum_values_from_db_attribute(schema_name={schema_name}, attribute_name={attribute_name})')
+    return ['Bürger', 'Hat_16a']
 
 # ------------------------
 # Reusable Excel-Functions
