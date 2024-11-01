@@ -83,6 +83,7 @@
 #                                   Added read_string_with_default()
 # 21-Oct-2024   Walter Rothlin      Added format_float_1()
 # 26-Oct-2024   Walter Rothlin      Added get_possible_enum_values_from_db_attribute()
+# 30-Oct-2024   Walter Rothlin      Changed datetime in convert_resultSet_to_insertSQL()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -127,7 +128,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.5")
+    print("waltisLibrary.py: 2.0.0.6")
 
 
 # Regular-Expressions
@@ -3753,10 +3754,10 @@ def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=N
                 elif an_attr_value is None:
                     tuple_str += 'NULL' + ', '
 
-                elif isinstance(an_attr_value, datetime.datetime):
+                elif isinstance(an_attr_value, datetime):
                     tuple_str += f"STR_TO_DATE('{an_attr_value}', '%Y-%m-%d %H:%i:%s')" + ', '
 
-                elif isinstance(an_attr_value, datetime.date):
+                elif isinstance(an_attr_value, date):
                     tuple_str += f"STR_TO_DATE('{an_attr_value}', '%Y-%m-%d')" + ', '
 
                 elif isinstance(an_attr_value, set):
