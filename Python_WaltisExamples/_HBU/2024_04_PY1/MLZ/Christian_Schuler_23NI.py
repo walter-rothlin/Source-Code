@@ -8,7 +8,7 @@ Bewertung
 3. Für den Weather REST Service wurde ein eigener Token verwendet                       1
 4. Eine eigene, reusable Klasse mit einfachem Interface implementiert (4 Punkte)        4
 5. Nur absolut Notwendiges ist public (2 Punkte)                                        2
-6. Kommentare in Form von doc_strings sind enthalten                                    0
+6. Kommentare in Form von doc_strings sind enthalten                                    1
 7. Log-File enthält eine Kommentar-Zeile mit XML-Syntax                                 1
 8. Log-File enthält eine Headerzeile (Spalten-Bezeichnungen)                            1
 9. Log-Entries enthalten formatierten Time-Stamp und Level                              1
@@ -20,7 +20,7 @@ Bewertung
 14. Strategie via __init__ setzbar (mit Default-Wert)                                   0
 15. Scrolling area via __init__ setzbar (mit Default-Wert)                              0
                                                                 -------------------------
-                                                                Max. Punkte:22         17
+                                                                Max. Punkte:22         18
                                                                 =========================
 - initializer kreiert kein file
 
