@@ -1,0 +1,11 @@
+<!-- Logfile: osman_yagbasan_log.txt, Start-Time: 2024-10-26 10:31:11 -->
+Timestamp;Log-Level;Message
+2024-10-26 10:31:12;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:13;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:14;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:15;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:16;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:18;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:19;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:20;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt
+2024-10-26 10:31:21;INFO;Temperature: 10.57°C, Humidity: 97%, Weather: Überwiegend bewölkt

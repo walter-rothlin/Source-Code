@@ -77,6 +77,13 @@
 # 11-Jul-2024   Walter Rothlin      Fixed issues in unload_all_data_from_schema() and select_data_from_db_table()
 #                                   Added format_sql_stmt(sql_statement, indent=4)
 #                                   Removed double if verbal
+# 20-Oct-2024   Walter Rothlin      Added PAIN001-Functions: get_pain001_template(), get_pain001_msg()
+# 20-Oct-2024   Walter Rothlin      Fixed issue with datetime.datetime
+#                                   Added get_actual_year()
+#                                   Added read_string_with_default()
+# 21-Oct-2024   Walter Rothlin      Added format_float_1()
+# 26-Oct-2024   Walter Rothlin      Added get_possible_enum_values_from_db_attribute()
+# 30-Oct-2024   Walter Rothlin      Changed datetime in convert_resultSet_to_insertSQL()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -89,7 +96,7 @@ import math
 import os
 import shutil
 import time
-import datetime
+from datetime import *
 from pathlib import Path
 import re
 from rich import print
@@ -101,6 +108,7 @@ import xml.etree.ElementTree as ET
 import urllib.parse
 import locale
 import hashlib
+from jinja2 import Environment, FileSystemLoader, Template
 
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
@@ -120,7 +128,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.0")
+    print("waltisLibrary.py: 2.0.0.6")
 
 
 # Regular-Expressions
@@ -194,15 +202,24 @@ def TEST_printProgressBar(verbal=False):
         printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
     print("Completed")
 
-
-# Test functions for readln
-# =========================
+# =================================
+# verification functions for readln
+# =================================
 def is_email(email):
     return re.match(regEx_email_1, email) is not None
 
-
+# ================
 # Readln functions
 # ================
+def read_string_with_default(prompt="Input:", default_value=None):
+    if default_value is None:
+        in_str = input(prompt + ":")
+    else:
+        in_str = input(f'{prompt} ({default_value}):')
+        if len(in_str) <= 0:
+            in_str = default_value
+    return in_str
+
 def read_boolean(prompt="Boolean[Y/*N]:", true_val_liste=['Y', 'J', 'T'], default_value=False, verbal=False):
     ret_val = input(prompt).upper()
     if ret_val == '':
@@ -457,7 +474,7 @@ def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErr
                        min=min, minErrorStr=minErrorStr,
                        max=max, maxErrorStr=maxErrorStr)
 
-
+# ==========================
 # Physikalische Umrechnungen
 # ==========================
 def grad2Rad(grad):
@@ -1311,9 +1328,39 @@ def remove_empty_line(lines, comment_str='#'):
     return ret_list
 
 
-def format_float(a_float, vorkommastellen=0, nachkommastellen=2, do_grouping=True):
+def format_float(a_float, field_size=0, nachkommastellen=2, do_grouping=True):
     locale.setlocale(locale.LC_ALL, '')
-    return locale.format_string("%" + str(vorkommastellen) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
+    return locale.format_string("%" + str(field_size) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
+
+def format_float_1(a_float, field_size=0, nachkommastellen=2, do_grouping=True, euro_style=True):
+    formatStr = '.' + str(nachkommastellen) + 'f'
+    if do_grouping:
+        formatStr = ',' + formatStr
+    float_formatted = '{a_float_val:' + formatStr + '}'
+    float_formatted = float_formatted.format(a_float_val=a_float)
+
+    if euro_style:
+        float_str = float_formatted.replace(',', "'")
+
+    if field_size > 0:
+        formatStr = '{float_str:>' + str(field_size) + 's}'
+        float_str = formatStr.format(float_str=float_str)
+
+    return float_str
+
+def TEST__format_float_1(verbal=False):
+    print(f':1234567890123456789012345678900:')
+    a_float_value = 4678.206
+    print(f':{format_float(a_float_value, field_size=15, nachkommastellen=3, do_grouping=True)}:')
+    print(f':{format_float(a_float_value, field_size=15, nachkommastellen=2, do_grouping=True)}:')
+    print(f':{format_float(a_float_value, field_size=15, nachkommastellen=2, do_grouping=False)}:')
+
+    print(f':{format_float_1(a_float_value, field_size=15, nachkommastellen=3, do_grouping=True)}:')
+    print(f':{format_float_1(a_float_value, field_size=15, nachkommastellen=2, do_grouping=True)}:')
+    print(f':{format_float_1(a_float_value, field_size=15, nachkommastellen=2, do_grouping=False)}:')
+    print(f':{format_float_1(a_float_value, nachkommastellen=2, do_grouping=False)}:')
+    print(f':{format_float_1(a_float_value, nachkommastellen=2, do_grouping=True)}:')
+    print(f':{format_float_1(a_float_value, nachkommastellen=4, do_grouping=True)}:')
 
 
 def AUTO_TEST__format_float(verbal=False):
@@ -1344,16 +1391,16 @@ def AUTO_TEST__format_float(verbal=False):
 
     testsPerformed += 1
     case = 4
-    if format_float(1234.3, vorkommastellen=10, nachkommastellen=3, do_grouping=False) != "  1234.300":
+    if format_float(1234.3, field_size=10, nachkommastellen=3, do_grouping=False) != "  1234.300":
         print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
-        print(f"    Result:{format_float(1234.3, vorkommastellen=10, nachkommastellen=3, do_grouping=False)}:   Expected:  1234.300:", end="\n\n")
+        print(f"    Result:{format_float(1234.3, field_size=10, nachkommastellen=3, do_grouping=False)}:   Expected:  1234.300:", end="\n\n")
         testsFailed += 1
 
     testsPerformed += 1
     case = 5
-    if format_float(1234.3, vorkommastellen=10, nachkommastellen=2, do_grouping=True) != "  1’234.30":
+    if format_float(1234.3, field_size=10, nachkommastellen=2, do_grouping=True) != "  1’234.30":
         print("Error in testSuite:   ", testSuite, ":   ", testSuite, "    case:", case, sep="")
-        print(f"    Result:{format_float(1234.3, vorkommastellen=10, nachkommastellen=2, do_grouping=True)}:   Expected:  1’234.30:", end="\n\n")
+        print(f"    Result:{format_float(1234.3, field_size=10, nachkommastellen=2, do_grouping=True)}:   Expected:  1’234.30:", end="\n\n")
         testsFailed += 1
 
     if verbal:
@@ -1961,14 +2008,16 @@ def getTimestamp(preStr="", postStr="", formatString="nice"):
         formatStr = '{ts:%Y-%m-%d %H:%M:%S}'
     else:
         formatStr = formatString
-    retStr = formatStr.format(ts=datetime.datetime.now())
+    retStr = formatStr.format(ts=datetime.now())
     # retStr = left(retStr,len(retStr)-2)
     return preStr + retStr + postStr
 
+def get_actual_year():
+    return int(getTimestamp(formatString="{ts:%Y}"))
 
 def TEST_getTimestamp():
     print("TEST_getTimestamp...")
-    print(datetime.datetime.now())
+    print(datetime.now())
 
 
 # True if (old-young > limit)
@@ -3029,9 +3078,9 @@ def dictify(context, names):
     return rv
 
 
-# ---------------------
+# =====================
 # Reusable DB-Functions
-# ---------------------
+# =====================
 def get_sql_datums_update_value(attr_name, new_value, date_str_format='%d.%m.%Y'):
     if new_value is None or str(new_value) == 'None' or new_value == '':
         ret_val = f"{attr_name} = NULL"
@@ -3560,9 +3609,9 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None, fields_to_
 
   '''
 
-# ------------------------
+# ========================
 # DB unload/load-functions
-# ------------------------
+# ========================
 def format_sql_stmt(sql_statement, indent=4):
     sql_statement = sql_statement.replace('\n', ' ')
     sql_statement = sql_statement.replace('  ', ' ')
@@ -3603,13 +3652,66 @@ def get_all_table_names_from_schema(db, schema=None, object_types=None, verbal=F
             INFORMATION_SCHEMA.TABLES
         {where_clause};
     '''
+
     if verbal:
-        if verbal:
-            print(select_sql)
+        print(select_sql)
 
     mycursor = db.cursor()
     mycursor.execute(select_sql)
     return mycursor.fetchall()
+
+
+def get_possible_enum_values_from_db_attribute(db, schema=None, table_name=None, column_name=None, verbal=False):
+    """
+    Fetches all possible values for a SET column in a MySQL table.
+
+    Parameters:
+    - table_name (str): Name of the table containing the SET column.
+    - column_name (str): Name of the SET column.
+
+    Returns:
+    - list of str: Possible values in the SET column.
+    """
+
+    if verbal:
+        print(f'''
+           --> Calling get_possible_set_values_from_db(db,
+                        schema      = {schema}, 
+                        table_name  = {table_name},
+                        column_name = {column_name},
+                        verbal      = {verbal})''')
+    select_sql = f'''
+        SELECT 
+            COLUMN_TYPE
+        FROM 
+            INFORMATION_SCHEMA.COLUMNS
+        WHERE 
+            TABLE_SCHEMA = '{schema}'     AND
+            TABLE_NAME   = '{table_name}' AND
+            COLUMN_NAME  = '{column_name}';
+    '''
+
+    my_cursor = db.cursor(dictionary=True)
+    if verbal:
+        print(select_sql)
+    my_cursor.execute(select_sql)
+    result = my_cursor.fetchone()['COLUMN_TYPE']
+
+    if verbal:
+        print('result --> ', result)
+
+    if result:
+        # Use regex to extract values from the SET definition
+        column_type = result.decode() if isinstance(result, bytes) else result
+        if verbal:
+            column_type
+        values = re.findall(r"'(.*?)'", column_type)
+        values.sort()
+        if verbal:
+            print('--->', values)
+        return values
+    else:
+        return []  # No result found
 
 
 def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=None, verbal=False):
@@ -3652,10 +3754,10 @@ def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=N
                 elif an_attr_value is None:
                     tuple_str += 'NULL' + ', '
 
-                elif isinstance(an_attr_value, datetime.datetime):
+                elif isinstance(an_attr_value, datetime):
                     tuple_str += f"STR_TO_DATE('{an_attr_value}', '%Y-%m-%d %H:%i:%s')" + ', '
 
-                elif isinstance(an_attr_value, datetime.date):
+                elif isinstance(an_attr_value, date):
                     tuple_str += f"STR_TO_DATE('{an_attr_value}', '%Y-%m-%d')" + ', '
 
                 elif isinstance(an_attr_value, set):
@@ -3748,7 +3850,7 @@ def select_data_from_db_table(db_connection,
     if verbal:
         print(f"{indent}{len(my_resultset)} record(s) found")
     return {
-        'timestamp': f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}',
+        'timestamp': f'{datetime.now():%Y-%m-%d %H:%M:%S}',
         'count': len(my_resultset),
         'select': sql_statement,
         'rs': my_resultset
@@ -3857,6 +3959,10 @@ def unload_all_data_from_schema(db_connection,
             verbal=verbal
         )
     return insert_string
+
+def get_enum_values_from_db_attribute(db_connection, schema_name=None, attribute_name=None, verbal=False):
+    print(f'get_enum_values_from_db_attribute(schema_name={schema_name}, attribute_name={attribute_name})')
+    return ['Bürger', 'Hat_16a']
 
 # ------------------------
 # Reusable Excel-Functions
@@ -3976,19 +4082,154 @@ def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, colum
             'cell_row': row,
             f'ws["{column_letter}{str(row)}"].value': new_cell_value}
 
+# ========================
+# PAIN001 Functions (Zahlungsauftrags-Fileformat)
+# ========================
+def get_pain001_template():
+    pain001_template = '''
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>{{ Debitor_Info.Header_ID }}</MsgId>
+            <CreDtTm>{{ Debitor_Info.Creation_Time }}</CreDtTm>
+            <NbOfTxs>{{ Zahlungs_liste|length }}</NbOfTxs>
+            <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
+            <InitgPty>
+                <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>{{ summery_of_payments.pain_id }}</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
+            <PmtTpInf>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt>{{ Debitor_Info.Valuta }}</ReqdExctnDt>
+            <Dbtr>
+                <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+                <PstlAdr>
+                    <Ctry>{{ Debitor_Info.Country_Code.strip().upper() }}</Ctry>
+                </PstlAdr>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>{{ Debitor_Info.IBAN.replace(' ','').upper()  }}</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>{{ Debitor_Info.BIC }}</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+
+            {% for a_payment in Zahlungs_liste %}
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>{{ loop.index}}</InstrId>
+                    <EndToEndId>{{ loop.index + summery_of_payments.pain_start_id }}</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="{{ a_payment.Ccy.replace(' ','').upper()  }}">{{ a_payment.Amount }}</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>{{ a_payment.Receiver_Name.strip()  }}</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>{{ a_payment.IBAN.replace(' ','').upper() }}</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>{{ a_payment.Reason }}</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            {% endfor %}
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>     
+    '''
+    return pain001_template
+
+def get_pain001_msg(debitor_info, payment_list, template_path='./Templates', template_filename=None, pain_id='235805253558', pain_start_id=472100000000):
+    total_amount = 0
+    for a_payment in payment_list:
+        total_amount += float(a_payment['Amount'])
+
+    summery_of_payments = {
+        'count_of_payments': len(payment_list),
+        'total_amount': f'{str(round(total_amount,2))}',
+        'pain_id': pain_id,
+        'pain_start_id': pain_start_id,
+    }
+
+    if template_filename is not None:
+        env = Environment(loader=FileSystemLoader(template_path))
+        template = env.get_template(template_filename)
+    else:
+        template = Template(get_pain001_template())
+
+    return template.render(summery_of_payments=summery_of_payments, Zahlungs_liste=payment_list, Debitor_Info=debitor_info)
+
+
+def TEST_Pain001():
+
+    Debitor_Info_Geno = {
+        'Header_ID': '547362488991',
+        'Creation_Time': f'{datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f%z")}',  # 2023-11-17T14:48:04.485+01:00
+        'Name': 'Genossame Wangen SZ',
+        'Country_Code': 'CH',
+        'IBAN': 'CH5100777001561771945',
+        'BIC': 'KBSZCH22XXX',
+        'Valuta': '2024-11-02'
+    }
+
+    Debitor_Info_WR = {
+        'Header_ID': '547362488991',
+        'Creation_Time': f'{datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f%z")}',  # 2023-11-17T14:48:04.485+01:00
+        'Name': 'Walter Rothlin',
+        'Country_Code': 'CH',
+        'IBAN': 'CH4900777004546031980',  # Börsenkonto SZKB
+        'BIC': 'KBSZCH22XXX',
+        'Valuta': '2024-10-21'
+    }
+
+
+    Zahlungs_liste = [
+        {'Ccy': 'CHF',
+         'Amount': '2.95',
+         'Receiver_Name': 'Tobias Rothlin',
+         'IBAN': 'CH40 0077 7003 6561 2009 5',  # Haushaltsgeld SZKB
+         'Reason': 'Test von PAIN001 (2.95)'},
+        {'Ccy': 'chf',
+         'Amount': '1.05',
+         'Receiver_Name': '  Tobias Rothlin  ',
+         'IBAN': 'ch40 0077 7003 6561 2009 5',  # Haushaltsgeld SZKB
+         'Reason': 'Test von PAIN001 (1.05)'},
+    ]
+
+    pain001_msg = get_pain001_msg(debitor_info=Debitor_Info_WR, payment_list=Zahlungs_liste)
+    print(pain001_msg)
+    with open('generated_pain001.xml', 'w') as file:
+        # Write the string to the file
+        file.write(pain001_msg.strip())
+
 
 # ===========================================================
 # MAIN
 # ===========================================================
 
 if __name__ == '__main__':
-    AUTO_TEST__split_adress_street_nr()
 
     autoTest = True
 
     if not autoTest:
         pass  # NOP in Python
         # AUTO_TEST_xPath_Get(verbal=True)
+        # AUTO_TEST__split_adress_street_nr()
         # TEST_stringFct()
         # TEST_hexStrToURLEncoded()
         # TEST_getTimestamp()
@@ -3997,6 +4238,8 @@ if __name__ == '__main__':
         # TEST_calcNulstellen()
         # TEST_printProgressBar()
         # TEST_getMenuFromList()
+        # TEST_Pain001()
+        # TEST__format_float_1()
 
     # Automated Tests
     # ===============

@@ -24,7 +24,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     print("...connected!")
 
-    fctStr   = input("Fct :")
+    fctStr   = input("Fct [toUpper, toLower] :")
     fctParam = input("Text:")
     sendText = fctStr + ":" + fctParam
     data = bytes(sendText, 'ascii')

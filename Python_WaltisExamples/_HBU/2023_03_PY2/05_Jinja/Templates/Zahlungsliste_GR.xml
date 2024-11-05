@@ -36,6 +36,7 @@
                     <BIC>KBSZCH22XXX</BIC>
                 </FinInstnId>
             </DbtrAgt>
+
             <CdtTrfTxInf>
                 <PmtId>
                     <InstrId>1</InstrId>
@@ -56,6 +57,7 @@
                     <Ustrd>Genossennutzen 2023</Ustrd>
                 </RmtInf>
             </CdtTrfTxInf>
+
             <CdtTrfTxInf>
                 <PmtId>
                     <InstrId>2</InstrId>

@@ -1,0 +1,21 @@
+
+body {
+    background-color: lightblue;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table {
+    border-style: double;
+}
+
+thead, tfoot{
+    color: blueviolet;
+    background-color: green;
+    border-style: dashed;
+}
+
+td {
+    border-style: dashed;
+    border-color: red;
+}
+

@@ -4,14 +4,14 @@
         <GrpHdr>
             <MsgId>{{ Debitor_Info.Header_ID }}</MsgId>
             <CreDtTm>{{ Debitor_Info.Creation_Time }}</CreDtTm>
-            <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
+            <NbOfTxs>{{ Zahlungs_liste|length }}</NbOfTxs>
             <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
             <InitgPty>
                 <Nm>{{ Debitor_Info.Name }}</Nm>
             </InitgPty>
         </GrpHdr>
         <PmtInf>
-            <PmtInfId>235805253558</PmtInfId>
+            <PmtInfId>{{ summery_of_payments.pain_id }}</PmtInfId>
             <PmtMtd>TRF</PmtMtd>
             <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
             <PmtTpInf>
@@ -40,8 +40,8 @@
             {% for a_payment in Zahlungs_liste %}
             <CdtTrfTxInf>
                 <PmtId>
-                    <InstrId>1</InstrId>
-                    <EndToEndId>472107230214</EndToEndId>
+                    <InstrId>{{ loop.index}}</InstrId>
+                    <EndToEndId>{{ loop.index + summery_of_payments.pain_start_id }}</EndToEndId>
                 </PmtId>
                 <Amt>
                     <InstdAmt Ccy="{{ a_payment.Ccy }}">{{ a_payment.Amount }}</InstdAmt>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>{{ msg_id }}</MsgId>
+            <CreDtTm>{{ creation_datetime }}</CreDtTm>
+            <NbOfTxs>{{ number_of_transactions }}</NbOfTxs>
+            <CtrlSum>{{ control_sum }}</CtrlSum>
+            <InitgPty>
+                <Nm>{{ initiating_party_name }}</Nm>
+            </InitgPty>
+        </GrpHdr>
+
+        {% for payment in payments %}
+        <PmtInf>
+            <PmtInfId>{{ payment.PaymentInfoId }}</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <BtchBookg>false</BtchBookg>
+            <NbOfTxs>1</NbOfTxs>
+            <CtrlSum>{{ payment.InstructedAmount }}</CtrlSum>
+            <Dbtr>
+                <Nm>{{ payment.DebtorName }}</Nm>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>{{ payment.DebtorAccount }}</IBAN>
+                </Id>
+            </DbtrAcct>
+            <CdtTrfTxInf>
+                <PmtId>
+                    <EndToEndId>{{ payment.EndToEndId }}</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="EUR">{{ payment.InstructedAmount }}</InstdAmt>
+                </Amt>
+                <Cdtr>
+                    <Nm>{{ payment.CreditorName }}</Nm>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>{{ payment.CreditorAccount }}</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <CdtrAgt>
+                    <FinInstnId>
+                        <BIC>{{ payment.CreditorBankBIC }}</BIC>
+                    </FinInstnId>
+                </CdtrAgt>
+                <RmtInf>
+                    <Ustrd>{{ payment.RemittanceInformation }}</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+        </PmtInf>
+        {% endfor %}
+    </CstmrCdtTrfInitn>
+</Document>

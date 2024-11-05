@@ -1,0 +1,12 @@
+<!-- Filename: Claudio_Monti_log.txt, Start-Time: 2024-10-26 09:01:52 -->
+Log-Level;Ortsname;Land;Temp (°C);Feuchtigkeit (%);Zeitstempel
+INFO;Zürich;CH;10.39;95;2024-10-26 09:02:45
+INFO;Zürich;CH;10.39;95;2024-10-26 09:02:48
+INFO;Zürich;CH;10.39;95;2024-10-26 09:02:51
+INFO;Zürich;CH;10.39;95;2024-10-26 09:02:54
+INFO;Zürich;CH;10.39;95;2024-10-26 09:02:57
+INFO;Zürich;CH;10.39;95;2024-10-26 09:03:00
+INFO;Zürich;CH;10.39;95;2024-10-26 09:03:03
+INFO;Zürich;CH;10.39;95;2024-10-26 09:03:06
+INFO;Zürich;CH;10.39;95;2024-10-26 09:03:10
+INFO;Zürich;CH;10.39;95;2024-10-26 09:03:13

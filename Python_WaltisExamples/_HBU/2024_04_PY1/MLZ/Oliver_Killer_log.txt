@@ -1,0 +1,6 @@
+Oliver_Killer_log.txt: Erzeugt am 26.10.2024 10:14:01
+Zeitstempel ; Log-Level ; humidity
+26.10.2024 10:14:01;INFO;92
+26.10.2024 10:14:01;INFO;92
+26.10.2024 10:14:01;INFO;92
+26.10.2024 10:14:01;INFO;92

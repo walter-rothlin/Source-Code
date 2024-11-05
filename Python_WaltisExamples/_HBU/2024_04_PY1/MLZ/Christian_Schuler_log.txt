@@ -1,0 +1,12 @@
+# <Name>./Christian_Schuler_log.txt</Name> <Date>26.10.2024 08:44:17</Date>
+Timestamp,Level,Text,
+26-10-2024,DEBUG,None
+26.10.2024 08:44:17,DEBUG,None
+26.10.2024 08:44:17,DEBUG,hallo
+26.10.2024 08:44:19,INFO,ein Eintrag
+26.10.2024 08:44:24,WARNINGS,dies loggen
+26.10.2024 08:44:24,ERROR,None
+26.10.2024 08:44:26,CRITICAL,Übersicht verloren, was ist erledigt und was fehlt noch ...
+26.10.2024 08:44:26,NOT DEFINED,None
+26.10.2024 08:44:26,INFO,Matt GL 11.22°C 1020hPa 89%
+26.10.2024 08:44:57,INFO,Matt GL 11.22°C 1020hPa 89%
