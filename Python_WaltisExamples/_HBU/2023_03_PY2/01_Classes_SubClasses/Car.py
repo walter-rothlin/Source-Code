@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/_HBU/2023_03_PY2/01_Classes_SubClasses/Car.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2023_03_PY2/01_Classes_SubClasses/Car.py
 #
 # Description: Beispiele
 #
