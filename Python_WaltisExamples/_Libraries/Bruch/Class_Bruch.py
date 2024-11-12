@@ -14,6 +14,7 @@
 # 25-Jan-2021	Added toDecimal()
 # 25-Jan-2021	Make Class ready for reference application (re-use) and docstring
 # 26-Jan-2021	Introduced automated testing
+# 12-Nov-2024	Changes for HFU
 # ------------------------------------------------------------------
 from waltisLibrary import *
 
