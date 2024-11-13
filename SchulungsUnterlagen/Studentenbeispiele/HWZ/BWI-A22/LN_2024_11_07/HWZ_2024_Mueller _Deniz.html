@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--
+        Ehrenwörtliche Erklärung
+        ------------------------
+
+        Hiermit bestätige ich, Deniz Müller, diesen Leistungsnachweis
+        ohne fremde Hilfe nur mit den erlaubten Hilfsmittel während der offiziellen
+        vereinbarten Zeitdauer erstellt zu haben.
+
+        Bewertung
+        ---------
+        1) Richtiger Filename / Ehrenwörtliche Erklärung
+        2) Korrekte Formatierung
+        3) Korrektes XHTML
+        4) Korrekte zusätzliche Felder (inkl. title und body)
+        5) CSS eingebunden
+        6) Erweitertes Antwort-Template eingebunden
+        7) Feldernamen entsprechend neuem Antwort-Template angepasst
+        8) Postleitzahl wird Clientseitig überprüft (korrigiert)
+        9) Warnungs-Symbol mit CSS-Style zugefügt
+        10) Eventhadler eingebaut und Symbole ändern
+                                                                     --------
+                                                             Punkte:
+                                                                     --------
+                                               Note = 0.5 * Punkte + 1 =
+                                                                     ========
+    -->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" href="https://www.peterliwiese.ch/img/Verified.svg" />
+    <link href="https://hwz.peterliwiese.ch/examples/CSS_HWZ_Style_01.css" rel="stylesheet" />
+
+    <style type="text/css">
+        h2 {
+            color: red;
+            font-weight: bold;
+        }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        .invalid {
+            border: 1px solid red;
+            background-color: #fdd;
+        }
+    </style>
+
+    <title>Anmeldeformular für Geschäftsanlass</title>
+
+    <script type="text/javascript">
+        var verifiedPic = "https://www.peterliwiese.ch/img/Verified.svg";
+        var warningPic = "https://www.peterliwiese.ch/img/Warning.svg";
+
+        function checkName() {
+            var nameField = document.getElementById("NameTextField");
+            var nameIcon = document.getElementById("NameIcon");
+
+            if (nameField.value.length >= 3) {
+                nameField.classList.remove("invalid");
+                nameIcon.src = verifiedPic;
+            } else {
+                nameField.classList.add("invalid");
+                nameIcon.src = warningPic;
+            }
+        }
+
+        function checkFirstName() {
+            var firstNameField = document.getElementById("FirstNameTextField");
+            var firstNameIcon = document.getElementById("FirstNameIcon");
+
+            if (firstNameField.value.length >= 3) {
+                firstNameField.classList.remove("invalid");
+                firstNameIcon.src = verifiedPic;
+            } else {
+                firstNameField.classList.add("invalid");
+                firstNameIcon.src = warningPic;
+            }
+        }
+
+        function checkEmail() {
+            var emailField = document.getElementById("EmailTextField");
+            var emailIcon = document.getElementById("EmailIcon");
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailPattern.test(emailField.value)) {
+                emailField.classList.remove("invalid");
+                emailIcon.src = verifiedPic;
+            } else {
+                emailField.classList.add("invalid");
+                emailIcon.src = warningPic;
+            }
+        }
+
+        function validatePLZ() {
+            var plzField = document.getElementById("PLZTextField");
+            var plz = plzField.value;
+
+            plz = plz.replace(/[^0-9]/g, '');
+            if (plz.length > 4) {
+                plz = plz.substring(0, 4);
+            }
+
+            plzField.value = plz;
+        }
+    </script>
+</head>
+
+<body>
+    <h2>Anmeldeformular für Geschäftsanlass</h2>
+    <p>Hiermit melde ich mich für den Anlass vom</p>
+    <form method="get" name="adressForm" action="https://www.peterliwiese.ch/cgi-bin/formHandler.pl">
+        <input type="hidden" name="cgiCmdHidden_replyTemplateSuccess" value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html" />
+
+        <table>
+            <tr>
+                <td>Name:</td>
+                <td>
+                    <input class="TextboxMiddle" type="text" name="Name" id="NameTextField" placeholder="Muster" oninput="checkName()" />
+                    <img src="https://www.peterliwiese.ch/img/Warning.svg" class="status-icon" id="NameIcon" alt="Warnung" />
+                </td>
+            </tr>
+            <tr>
+                <td>Vorname:</td>
+                <td>
+                    <input class="TextboxMiddle" type="text" name="Vorname" id="FirstNameTextField" placeholder="Felix" oninput="checkFirstName()" />
+                    <img src="https://www.peterliwiese.ch/img/Warning.svg" class="status-icon" id="FirstNameIcon" alt="Warnung" />
+                </td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>
+                    <input class="TextboxLong" type="text" size="33" name="Email" id="EmailTextField" placeholder="claudia@peterliwiese.ch" oninput="checkEmail()" />
+                    <img src="https://www.peterliwiese.ch/img/Warning.svg" class="status-icon" id="EmailIcon" alt="Warnung" />
+                </td>
+            </tr>
+            <tr>
+                <td>PLZ:</td>
+                <td>
+                    <input class="TextboxShort" type="text" size="4" name="PLZ" id="PLZTextField" placeholder="8855" oninput="validatePLZ()" />
+                    Ort: <input class="TextboxMiddle" type="text" name="Wohnort" placeholder="Wangen (SZ)" />
+                </td>
+            </tr>
+            <tr>
+                <td>ÖV Vergünstigung:</td>
+                <td>
+                    <input type="radio" name="SbbVaucher" value="Nichts" checked="checked" /> Nichts
+                    <input type="radio" name="SbbVaucher" value="1/2 Preis" /> 1/2 Preis
+                    <input type="radio" name="SbbVaucher" value="GA" /> GA
+                </td>
+            </tr>
+            <tr>
+                <td>Mittagessen:</td>
+                <td><input type="checkbox" name="Vegan" /> Vegan</td>
+            </tr>
+            <tr>
+                <td>Komme in Begleitung von</td>
+                <td>
+                    <select name="Begleitpersonen">
+                        <option value="Keine" selected="selected">keiner</option>
+                        <option value="1">einer</option>
+                        <option value="2">zwei</option>
+                        <option value="3">drei</option>
+                    </select> weiteren Person(en)
+                </td>
+            </tr>
+            <tr>
+                <td>Kommentar:</td>
+                <td><textarea name="Kommentar" rows="5" cols="50" wrap="on"></textarea></td>
+            </tr>
+        </table>
+        <br />
+        <input type="submit" name="submitted" value="Anmelden" />
+        <input type="reset" value="Eingaben löschen" />
+    </form>
+    <hr />
+</body>
+</html>

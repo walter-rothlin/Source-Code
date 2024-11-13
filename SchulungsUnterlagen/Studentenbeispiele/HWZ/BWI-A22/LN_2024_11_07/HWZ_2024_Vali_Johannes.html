@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--
+        Source:    ./DatenFiles/HTML/FormTest_formHandler.html
+        Published: https://hwz.peterliwiese.ch/examples/FormTest_formHandler.html
+
+        Ehrenwörtliche Erklärung
+        ------------------------
+
+        Hiermit bestätige ich, Johannes Vali, diesen Leistungsnachweis
+        ohne fremde Hilfe nur mit den erlaubten Hilfsmittel während der offiziellen
+        vereinbarten Zeitdauer erstellt zu haben.
+
+        Bewertung
+        ---------
+        1) Richtiger Filename / Ehrenwörtliche Erklärung
+        2) Korrekte Formatierung
+        3) Korrektes XHTML
+        4) Korrekte zusätzliche Felder (inkl. title und body)
+        5) CSS eingebunden
+        6) Erweitertes Antwort-Template eingebunden
+        7) Feldernamen entsprechend neuem Antwort-Template angepasst
+        8) Postleitzahl wird Clientseitig überprüft (korrigiert)
+        9) Warnungs-Symbol mit CSS-Style zugefügt
+        10) Eventhadler eingebaut und Symbole ändern
+                                                                         --------
+                                                                 Punkte:
+                                                                         --------
+                                               Note = 0.5 * Punkte + 1 =
+                                                                         ========
+        -->
+    <meta charset="UTF-8">
+ 	<link href="https://hwz.peterliwiese.ch/examples/CSS_HWZ_Style_01.css" rel="stylesheet">
+
+    <script>
+
+        function checkName() {
+            let inputString = document.getElementById("NameTextField").value;
+            console.log("Original lastName: " + inputString);
+
+            if (inputString.length >= 2) {
+                document.getElementById("NameValid").src = "https://www.peterliwiese.ch/img/Verified.svg";
+                return true;
+            } else {
+                document.getElementById("NameValid").src = "https://www.peterliwiese.ch/img/Warning.svg";
+                return false;
+            }
+        }
+
+        function checkFirstame() {
+            let inputString = document.getElementById("FirstameTextField").value;
+            console.log("Original firstName: " + inputString);
+
+            if (inputString.length >= 2) {
+                document.getElementById("FirstameValid").src = "https://www.peterliwiese.ch/img/Verified.svg";
+                return true;
+            } else {
+                document.getElementById("FirstameValid").src = "https://www.peterliwiese.ch/img/Warning.svg";
+                return false;
+            }
+        }
+
+        function checkEmail() {
+            let eMailRegEx = /(?:[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&amp;'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+            let inputString = document.getElementById("EmailTextField").value;
+            console.log("Original eMail: " + inputString);
+            inputString = inputString.toLowerCase();
+            document.getElementById("EmailTextField").value = inputString;
+
+            if (eMailRegEx.test(inputString) == true) {
+                console.log("Email ok!");
+                document.getElementById("EmailValid").src = "https://www.peterliwiese.ch/img/Verified.svg";
+                return true;
+            } else {
+                console.log("Email Nok!");
+                document.getElementById("EmailValid").src = "https://www.peterliwiese.ch/img/Warning.svg";
+                return false;
+            }
+        }
+
+        function checkPLZ() {
+            let inputString = document.getElementById("PLZTextField").value;
+            console.log("Original PLZ                : " + inputString);
+
+            inputString = inputString.replace(/[^(\d)]/g, "");
+            console.log("Output string korrigiert (1):" + inputString);
+            if (inputString.length > 4) {
+                inputString = inputString.substring(0, 4);
+                console.log("Output string korrigiert (2):" + inputString);
+            }
+
+            console.log("Output string korrigiert (3):" + inputString);
+            document.getElementById("PLZTextField").value = inputString;
+
+            if (inputString.length == 4) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+
+    <title>Kundenformular</title>
+
+</head>
+
+<body>
+<h2>Anmeldeformular für Geschäftsanlässe</h2> <!--Im Quelltext stand Geschäftsanlasse, ich habe dies geändert-->
+Hiermit melde ich mich für den Anlass vom
+<!-- <FORM METHOD="GET" NAME="adressForm" ACTION="https://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl">  -->
+<form method="GET" name="adressForm" action=https://www.peterliwiese.ch/cgi-bin/formHandler.pl>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td><input class="TextboxMiddle" type="TEXT" name="Name" value="" oninput="checkName()" id="NameTextField" placeholder="Muster"> <img id="NameValid" class="statusSymbol" src="https://www.peterliwiese.ch/img/Warning.svg"></td>
+        </tr>
+        <tr>
+            <td>Vorname:</td>
+            <td><input class="TextboxMiddle" type="TEXT" name="Vorname" value="" oninput="checkFirstame()" id="FirstameTextField" placeholder="Felix"> <img id="FirstameValid" class="statusSymbol" src="https://www.peterliwiese.ch/img/Warning.svg"></td>
+        </tr>
+        <tr>
+            <td>email:</td>
+            <td><input class="TextboxLong" type="TEXT" size="33" name="Email" value="" oninput="checkEmail()" id="EmailTextField" placeholder="claudia@peterliwiese.ch"> <img id="EmailValid" class="statusSymbol" src="https://www.peterliwiese.ch/img/Warning.svg"></td>
+        </tr>
+        <tr>
+            <td>PLZ:</td>
+            <td><input class="TextboxShort" type="TEXT" size="4" name="PLZ" value="" oninput="checkPLZ()" id="PLZTextField" placeholder="8855"> Ort: <input class="TextboxMiddle" type="TEXT" name="Wohnort" value="" placeholder="Wangen (SZ)"></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td colspan="3">&Ouml;V Vergünstigung:<input type="RADIO" name="SbbVaucher" value="Nichts" checked>Nichts&nbsp;&nbsp;<input TYPE="RADIO" name="SbbVaucher" value="1/2 Preis">1/2 Preis&nbsp;&nbsp;<input type="RADIO" name="SbbVaucher" value="GA">GA</td>
+        </tr>
+        <tr>
+            <td colspan="3">Mittagessen:<input type="CHECKBOX" name="Vegan" checked> Vegan</td>
+        </tr>
+        <tr>
+            <td colspan="3">Ich komme in Begleitung von
+                <select name="Begleitpersonen">
+                    <option value="Keine" SELECTED>keiner
+                    <option value="1">einer
+                    <option value="2">zwei
+                    <option value="3">drei
+                </select> weiteren Person(en)
+            </td>
+        </tr>
+    </table>
+    <br/><br/>
+
+    Kommentar<br/>
+    <textarea name="Kommentar" rows="5" cols="50" wrap="On"></textarea>
+
+    </table>
+
+    <!-- Hidden fields to control the formHandler script -->
+    <input type="HIDDEN" name=constrain_PLZ value="isInteger(XXXX,1000,9999,<B>Postleitzahl</B> muss zwischen 1000 und 9999 sein)">
+    <input type="HIDDEN" name="cgiCmdHidden_replyTemplateSuccess" value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html">
+    <input type="HIDDEN" name="cgiCmdHidden_replyTemplateNotSuccess" value="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html">
+    <input type="HIDDEN" name="cgiCmdHidden_emailTemplate" value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html">
+    <input type="HIDDEN" name="cgiCmdHidden_emailSubject" value="Antwort (Default as HTML)">
+    <input type="HIDDEN" name="cgiCmdHidden_emailToAddrs" value="anmeldung@peterliwiese.ch">
+    <input type="HIDDEN" name="cgiCmdHidden_emailCcAddrs" value="">
+    <input type="HIDDEN" name="cgiCmdHidden_emailBccAddrs" value="">
+    <input type="HIDDEN" name="cgiCmdHidden_emailFromAddr" value="FormField:Email">
+    <input type="HIDDEN" name="cgiCmdHidden_emailSentAsHTML" value="YES">
+    <input type="HIDDEN" name="cgiCmdHidden_emailTemplate_1" value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.txt">
+    <input type="HIDDEN" name="cgiCmdHidden_emailSubject_1" value="Antwort as plain txt mail">
+    <input type="HIDDEN" name="cgiCmdHidden_emailToAddrs_1" value="FormField:Email">
+    <input type="HIDDEN" name="cgiCmdHidden_emailFromAddr_1" value="anmeldung@peterliwiese.ch">
+    <input type="HIDDEN" name="cgiCmdHidden_emailSentAsHTML_1" value="NO">
+    <input type="HIDDEN" name="cgiCmdHidden_countOfEmails" value="2">
+    <input type="HIDDEN" name="cgiCmdHidden_doDebug" value="Yes">
+    <!-- end of hidden fields -->
+
+    <br/><br/>
+    <input type=submit name=submitted value="Anmelden">
+    <input type=reset value="Eingabe löschen">
+    <br/>
+</form>
+<br>
+<hr/>
+Nach dem Submit werden zwei emails (mit unterschiedlichem Inhalt und Layout) gesendet:
+<Ol>
+    <li>Ein HTML-email an <b>anmeldung@peterliwiese.ch</b> mit Absender der email Adresse vom Formular (Anmeldung)</li>
+    <li>Ein Text-email an die email Adresse vom Formular mit Absender <b>anmeldung@peterliwiese.ch</b> (Bestätigung)
+    </li>
+</Ol>
+Diese emails koennen unter <A href="http://www.novatrend.ch/" target="_new">http://www.novatrend.ch/</a> angeschaut
+werden.
+<br/>
+UserId: <b>anmeldung@peterliwiese.ch</b> Password: <b>Ask your teacher</b> <!-- 800_hsk* -->
+<br/>
+Die emails an <b>claudia@peterliwiese.ch</b> werden auf <b>anmeldung@peterliwiese.ch</b> umgeleitet.
+</body>
+</html>
