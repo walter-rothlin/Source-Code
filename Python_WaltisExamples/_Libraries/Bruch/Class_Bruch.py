@@ -3,6 +3,8 @@
 # ------------------------------------------------------------------
 # Name: Class_Bruch.py
 #
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Bruch/Class_Bruch.py
+#
 # Description: Implementiert einen Bruch (Farction) and the basics oparators
 #
 #
