@@ -27,8 +27,31 @@ ein_multiline_str = '''
 
 print(ein_multiline_str)
 
+
+
+print('Bell', chr(7))
+
+
 klar_text = input('Klartext:')
 for a_chr in klar_text:
-    print(a_chr, ' --> ', ord(a_chr), chr(ord(a_chr) + 3))
+    print(a_chr, ord(a_chr))
 
 
+
+
+
+
+
+
+klar_text = input('Klartext:')
+schluessel = int(input('Shifter:'))
+
+chiffrat = ''
+for a_chr in klar_text:
+    ord_value = ord(a_chr)
+    chiffrat_ord_value = ord(a_chr) + schluessel
+    chiffrat_char = chr(chiffrat_ord_value)
+    print(f'{a_chr}={ord_value:3}    ==> {chiffrat_ord_value:3}={chiffrat_char}')
+    chiffrat = chiffrat + chiffrat_char
+
+print(f'{klar_text}:({schluessel})  ==> {chiffrat}')

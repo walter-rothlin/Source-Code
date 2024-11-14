@@ -84,6 +84,7 @@
 # 21-Oct-2024   Walter Rothlin      Added format_float_1()
 # 26-Oct-2024   Walter Rothlin      Added get_possible_enum_values_from_db_attribute()
 # 30-Oct-2024   Walter Rothlin      Changed datetime in convert_resultSet_to_insertSQL()
+# 14-Nov-2024   Walter Rothlin      Changed get_pain001_msg() to use ISO-20022 Template
 # ------------------------------------------------------------------
 
 # toDo:
@@ -128,7 +129,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.6")
+    print("waltisLibrary.py: 2.0.0.7")
 
 
 # Regular-Expressions
@@ -4085,7 +4086,7 @@ def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, colum
 # ========================
 # PAIN001 Functions (Zahlungsauftrags-Fileformat)
 # ========================
-def get_pain001_template():
+def get_pain001_template(use_iso_norm=True):
     pain001_template = '''
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Document xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd">
@@ -4152,7 +4153,91 @@ def get_pain001_template():
     </CstmrCdtTrfInitn>
 </Document>     
     '''
-    return pain001_template
+
+    iso20022_template = '''
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+    <CstmrCdtTrfInitn>
+        <GrpHdr>
+            <MsgId>{{ Debitor_Info.Header_ID }}</MsgId>
+            <CreDtTm>{{ Debitor_Info.Creation_Time }}</CreDtTm>
+            <NbOfTxs>{{ Zahlungs_liste|length }}</NbOfTxs>
+            <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
+            <InitgPty>
+                <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+            </InitgPty>
+        </GrpHdr>
+        <PmtInf>
+            <PmtInfId>{{ summery_of_payments.payment_info_id }}</PmtInfId>
+            <PmtMtd>TRF</PmtMtd>
+            <BtchBookg>true</BtchBookg>
+            <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
+            <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
+            <PmtTpInf>
+                <InstrPrty>NORM</InstrPrty>
+                <SvcLvl>
+                    <Cd>SEPA</Cd>
+                </SvcLvl>
+            </PmtTpInf>
+            <ReqdExctnDt>{{ Debitor_Info.Execution_Date }}</ReqdExctnDt>
+            <Dbtr>
+                <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+                <PstlAdr>
+                    <Ctry>{{ Debitor_Info.Country_Code.strip().upper() }}</Ctry>
+                </PstlAdr>
+            </Dbtr>
+            <DbtrAcct>
+                <Id>
+                    <IBAN>{{ Debitor_Info.IBAN.replace(' ', '').upper() }}</IBAN>
+                </Id>
+            </DbtrAcct>
+            <DbtrAgt>
+                <FinInstnId>
+                    <BIC>{{ Debitor_Info.BIC }}</BIC>
+                </FinInstnId>
+            </DbtrAgt>
+            <ChrgBr>SLEV</ChrgBr>
+
+            {% for a_payment in Zahlungs_liste %}
+            <CdtTrfTxInf>
+                <PmtId>
+                    <InstrId>{{ loop.index }}</InstrId>
+                    <EndToEndId>{{ loop.index + summery_of_payments.pain_start_id }}</EndToEndId>
+                </PmtId>
+                <Amt>
+                    <InstdAmt Ccy="{{ a_payment.Ccy.replace(' ', '').upper() }}">{{ a_payment.Amount }}</InstdAmt>
+                </Amt>
+                <CdtrAgt>
+                    <FinInstnId>
+                        <BIC>{{ a_payment.Creditor_BIC }}</BIC>
+                    </FinInstnId>
+                </CdtrAgt>
+                <Cdtr>
+                    <Nm>{{ a_payment.Receiver_Name.strip() }}</Nm>
+                    <PstlAdr>
+                        <Ctry>{{ a_payment.Receiver_Country_Code.strip().upper() if a_payment.Receiver_Country_Code else "CH" }}</Ctry>
+                    </PstlAdr>
+                </Cdtr>
+                <CdtrAcct>
+                    <Id>
+                        <IBAN>{{ a_payment.IBAN.replace(' ', '').upper() }}</IBAN>
+                    </Id>
+                </CdtrAcct>
+                <RmtInf>
+                    <Ustrd>{{ a_payment.Remittance_Info }}</Ustrd>
+                </RmtInf>
+            </CdtTrfTxInf>
+            {% endfor %}
+        </PmtInf>
+    </CstmrCdtTrfInitn>
+</Document>
+    '''
+
+    if use_iso_norm:
+        return_tmpl = iso20022_template
+    else:
+        return_tmpl = pain001_template
+    return return_tmpl
 
 def get_pain001_msg(debitor_info, payment_list, template_path='./Templates', template_filename=None, pain_id='235805253558', pain_start_id=472100000000):
     total_amount = 0
