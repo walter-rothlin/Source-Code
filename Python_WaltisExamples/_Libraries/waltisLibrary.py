@@ -85,6 +85,7 @@
 # 26-Oct-2024   Walter Rothlin      Added get_possible_enum_values_from_db_attribute()
 # 30-Oct-2024   Walter Rothlin      Changed datetime in convert_resultSet_to_insertSQL()
 # 14-Nov-2024   Walter Rothlin      Changed get_pain001_msg() to use ISO-20022 Template
+# 16-Nov-2024   Walter Rothlin      Fixed get_pain001_msg() to use proper ISO-20022 Template (Imotop)
 # ------------------------------------------------------------------
 
 # toDo:
@@ -129,7 +130,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.7")
+    print("waltisLibrary.py: 2.0.0.8")
 
 
 # Regular-Expressions
@@ -203,11 +204,13 @@ def TEST_printProgressBar(verbal=False):
         printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
     print("Completed")
 
+
 # =================================
 # verification functions for readln
 # =================================
 def is_email(email):
     return re.match(regEx_email_1, email) is not None
+
 
 # ================
 # Readln functions
@@ -220,6 +223,7 @@ def read_string_with_default(prompt="Input:", default_value=None):
         if len(in_str) <= 0:
             in_str = default_value
     return in_str
+
 
 def read_boolean(prompt="Boolean[Y/*N]:", true_val_liste=['Y', 'J', 'T'], default_value=False, verbal=False):
     ret_val = input(prompt).upper()
@@ -474,6 +478,7 @@ def readInt(prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:", postErr
     return read_Number("int", prompt=prompt, preErrorStr=preErrorStr, postErrorStr=postErrorStr,
                        min=min, minErrorStr=minErrorStr,
                        max=max, maxErrorStr=maxErrorStr)
+
 
 # ==========================
 # Physikalische Umrechnungen
@@ -1333,6 +1338,7 @@ def format_float(a_float, field_size=0, nachkommastellen=2, do_grouping=True):
     locale.setlocale(locale.LC_ALL, '')
     return locale.format_string("%" + str(field_size) + "." + str(nachkommastellen) + "f", a_float, grouping=do_grouping)
 
+
 def format_float_1(a_float, field_size=0, nachkommastellen=2, do_grouping=True, euro_style=True):
     formatStr = '.' + str(nachkommastellen) + 'f'
     if do_grouping:
@@ -1348,6 +1354,7 @@ def format_float_1(a_float, field_size=0, nachkommastellen=2, do_grouping=True, 
         float_str = formatStr.format(float_str=float_str)
 
     return float_str
+
 
 def TEST__format_float_1(verbal=False):
     print(f':1234567890123456789012345678900:')
@@ -2013,8 +2020,10 @@ def getTimestamp(preStr="", postStr="", formatString="nice"):
     # retStr = left(retStr,len(retStr)-2)
     return preStr + retStr + postStr
 
+
 def get_actual_year():
     return int(getTimestamp(formatString="{ts:%Y}"))
+
 
 def TEST_getTimestamp():
     print("TEST_getTimestamp...")
@@ -3168,6 +3177,7 @@ def mysql_db_connect(db_host='localhost', port=3306, db_schema='stammdaten', db_
         print("completed!")
     return db_connection
 
+
 def do_db_connect(password,
                   user,
                   host='localhost',
@@ -3192,6 +3202,7 @@ def do_db_connect(password,
         pass
 
     return db_connection
+
 
 def get_record_count(db=None, db_tbl_name=None, retValueWithTblName=True):
     sql_select = f'SELECT count(*) FROM {db_tbl_name} '
@@ -3610,6 +3621,7 @@ def create_insert_data_stmt(db_schema, table_name, where_clause=None, fields_to_
 
   '''
 
+
 # ========================
 # DB unload/load-functions
 # ========================
@@ -3623,6 +3635,7 @@ def format_sql_stmt(sql_statement, indent=4):
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
     return indent + sql_statement
+
 
 def get_all_table_names_from_schema(db, schema=None, object_types=None, verbal=False):
     '''
@@ -3716,7 +3729,6 @@ def get_possible_enum_values_from_db_attribute(db, schema=None, table_name=None,
 
 
 def convert_resultSet_to_insertSQL(table_name, result_set=None, fields_to_hash=None, verbal=False):
-
     if fields_to_hash is None:
         fields_to_hash = []
 
@@ -3828,7 +3840,6 @@ def select_data_from_db_table(db_connection,
                               indent=4,
                               dictionary=True,
                               verbal=False):
-
     if isinstance(indent, int):
         indent = f'{" ":{indent}s}'
         # print(':', indent, ':', sep='')
@@ -3857,6 +3868,7 @@ def select_data_from_db_table(db_connection,
         'rs': my_resultset
     }
 
+
 def unload_data_from_db_table(db_connection,
                               table_name,
                               attribute_list=None,
@@ -3865,7 +3877,6 @@ def unload_data_from_db_table(db_connection,
                               fields_to_hash=None,
                               verbal=False
                               ):
-
     rs = select_data_from_db_table(db_connection,
                                    table_name=table_name,
                                    attribute_list=attribute_list,
@@ -3874,11 +3885,11 @@ def unload_data_from_db_table(db_connection,
                                    verbal=verbal
                                    )
     insert_string = convert_resultSet_to_insertSQL(
-                                   table_name,
-                                   rs['rs'],
-                                   fields_to_hash=fields_to_hash,
-                                   verbal=verbal
-                                   )
+        table_name,
+        rs['rs'],
+        fields_to_hash=fields_to_hash,
+        verbal=verbal
+    )
 
     insert_string = f"""
 /*
@@ -3890,6 +3901,7 @@ def unload_data_from_db_table(db_connection,
 
     """
     return insert_string
+
 
 def get_exception_for_table_unload(table_name, exception_list, verbal=False):
     if verbal:
@@ -3906,11 +3918,11 @@ def get_exception_for_table_unload(table_name, exception_list, verbal=False):
 
     return ret_exception
 
-def unload_all_data_from_schema(db_connection,
-        schema_name=None,
-        tables_to_read_with_exceptions=None,
-        verbal=False):
 
+def unload_all_data_from_schema(db_connection,
+                                schema_name=None,
+                                tables_to_read_with_exceptions=None,
+                                verbal=False):
     obj_type = 'BASE TABLE'
     all_tables = get_all_table_names_from_schema(db_connection, schema=schema_name, object_types=obj_type, verbal=False)
     if verbal:
@@ -3931,7 +3943,6 @@ def unload_all_data_from_schema(db_connection,
 
         if verbal and exception is not None:
             print(f'    Exceptions for "{a_table[1]}" found\n          {exception}\n')
-
 
         if exception is None:
             fields_to_select = None
@@ -3961,9 +3972,11 @@ def unload_all_data_from_schema(db_connection,
         )
     return insert_string
 
+
 def get_enum_values_from_db_attribute(db_connection, schema_name=None, attribute_name=None, verbal=False):
     print(f'get_enum_values_from_db_attribute(schema_name={schema_name}, attribute_name={attribute_name})')
     return ['Bürger', 'Hat_16a']
+
 
 # ------------------------
 # Reusable Excel-Functions
@@ -4083,6 +4096,7 @@ def set_cell_value_by_column_title(new_cell_value, ws, title_row=1, row=1, colum
             'cell_row': row,
             f'ws["{column_letter}{str(row)}"].value': new_cell_value}
 
+
 # ========================
 # PAIN001 Functions (Zahlungsauftrags-Fileformat)
 # ========================
@@ -4154,7 +4168,7 @@ def get_pain001_template(use_iso_norm=True):
 </Document>     
     '''
 
-    iso20022_template = '''
+    iso20022_template_old = '''
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
     <CstmrCdtTrfInitn>
@@ -4233,20 +4247,104 @@ def get_pain001_template(use_iso_norm=True):
 </Document>
     '''
 
+    iso20022_template = '''
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.six-interbank-clearing.com/de/pain.001.001.03.ch.02.xsd">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>{{ Debitor_Info.Header_ID }}</MsgId>
+      <CreDtTm>{{ Debitor_Info.Creation_Time }}</CreDtTm>
+      <NbOfTxs>{{ Zahlungs_liste|length }}</NbOfTxs>
+      <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
+      <InitgPty>
+        <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+        <CtctDtls>
+          <Nm>Walter Rothlin, Peterliwiese 33, 8855 Wangen SZ</Nm>
+          <Othr>Version 3.1.0.4</Othr>
+        </CtctDtls>
+      </InitgPty>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>{{ summery_of_payments.pain_id }}</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <BtchBookg>true</BtchBookg>
+      <NbOfTxs>{{ summery_of_payments.count_of_payments }}</NbOfTxs>
+      <CtrlSum>{{ summery_of_payments.total_amount }}</CtrlSum>
+      <ReqdExctnDt>{{ Debitor_Info.Valuta }}</ReqdExctnDt>
+      <Dbtr>
+        <Nm>{{ Debitor_Info.Name.strip() }}</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <IBAN>{{ Debitor_Info.IBAN.replace(' ','').upper()  }}</IBAN>
+        </Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <ClrSysMmbId>
+            <ClrSysId>
+              <Cd>CHBCC</Cd>
+            </ClrSysId>
+            <MmbId>777</MmbId>
+          </ClrSysMmbId>
+        </FinInstnId>
+      </DbtrAgt>
+
+        {% for a_payment in Zahlungs_liste %}
+        <CdtTrfTxInf>
+            <PmtId>
+                <InstrId>{{ loop.index }}</InstrId>
+                <EndToEndId>{{ loop.index + summery_of_payments.pain_start_id }}</EndToEndId>
+            </PmtId>
+            <Amt>
+                <InstdAmt Ccy="{{ a_payment.Ccy.replace(' ','').upper() }}">{{ a_payment.Amount }}</InstdAmt>
+            </Amt>
+            <Cdtr>
+                <Nm>{{ a_payment.Receiver_Name.strip() }}</Nm>
+                <PstlAdr>
+                    <StrtNm>{{ a_payment.Receiver_Strasse.strip() }}</StrtNm>
+                    <PstCd>{{ a_payment.Receiver_PLZ.strip() }}</PstCd>
+                    <TwnNm>{{ a_payment.Receiver_Ort.strip() }}</TwnNm>
+                    <Ctry>CH</Ctry>
+                </PstlAdr>
+            </Cdtr>
+            <CdtrAcct>
+                <Id>
+                    <IBAN>{{ a_payment.IBAN.replace(' ','').upper() }}</IBAN>
+                </Id>
+            </CdtrAcct>
+            <RmtInf>
+                <Ustrd>{{ a_payment.Reason }}</Ustrd>
+            </RmtInf>
+        </CdtTrfTxInf>
+        {% endfor %}
+    </PmtInf>
+  </CstmrCdtTrfInitn>
+</Document>    
+
+    '''
+
     if use_iso_norm:
         return_tmpl = iso20022_template
     else:
         return_tmpl = pain001_template
     return return_tmpl
 
-def get_pain001_msg(debitor_info, payment_list, template_path='./Templates', template_filename=None, pain_id='235805253558', pain_start_id=472100000000):
+
+def get_pain001_msg(debitor_info,
+                    payment_list,
+                    template_path='./Templates',
+                    template_filename=None,
+                    pain_id=f'{datetime.utcnow().strftime("%y%m%d%H%M%S")}',
+                    pain_start_id=int(f'{datetime.utcnow().strftime("%d%m%y%H%M%S")}')):
     total_amount = 0
     for a_payment in payment_list:
         total_amount += float(a_payment['Amount'])
 
     summery_of_payments = {
         'count_of_payments': len(payment_list),
-        'total_amount': f'{str(round(total_amount,2))}',
+        'total_amount': f'{str(round(total_amount, 2))}',
         'pain_id': pain_id,
         'pain_start_id': pain_start_id,
     }
@@ -4261,7 +4359,6 @@ def get_pain001_msg(debitor_info, payment_list, template_path='./Templates', tem
 
 
 def TEST_Pain001():
-
     Debitor_Info_Geno = {
         'Header_ID': '547362488991',
         'Creation_Time': f'{datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f%z")}',  # 2023-11-17T14:48:04.485+01:00
@@ -4281,7 +4378,6 @@ def TEST_Pain001():
         'BIC': 'KBSZCH22XXX',
         'Valuta': '2024-10-21'
     }
-
 
     Zahlungs_liste = [
         {'Ccy': 'CHF',

@@ -28,21 +28,6 @@ ein_multiline_str = '''
 print(ein_multiline_str)
 
 
-
-print('Bell', chr(7))
-
-
-klar_text = input('Klartext:')
-for a_chr in klar_text:
-    print(a_chr, ord(a_chr))
-
-
-
-
-
-
-
-
 klar_text = input('Klartext:')
 schluessel = int(input('Shifter:'))
 
