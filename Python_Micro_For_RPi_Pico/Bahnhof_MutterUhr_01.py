@@ -1,8 +1,8 @@
 # ------------------------------------------------------------------
-# Name  : Tobias_PCB_Walti.py
+# Name  : Bahnhof_MutterUhr_01.py
 #
 # Description: REST-Enpoints for Relais Steuerung
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Micro_For_RPi_Pico/Tobias_PCB_Walti.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_Micro_For_RPi_Pico/Bahnhof_MutterUhr_01.py
 #
 # Autor: Walter Rothlin
 #
