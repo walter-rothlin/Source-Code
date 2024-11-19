@@ -34,19 +34,45 @@ class Fraction:
 
     def __init__(self, zaehler=0, nenner=1, bruch=None, bruch_str=None):
         """
-        - Check if nenner is not 0
-        - only one sign
-        - only Integers no floats nor string,....
+        Initialisiert ein Fraction-Objekt. Unterstützt die Initialisierung durch
+        Zähler und Nenner, ein anderes Fraction-Objekt oder einen Bruch-String.
         """
         if bruch is not None:
-            pass
+            # Übernahme von Zähler und Nenner aus einem anderen Fraction-Objekt
+            if isinstance(bruch, Fraction):
+                self.__zaehler = bruch.zaehler
+                self.__nenner = bruch.nenner
+            else:
+                raise ValueError("bruch muss ein Fraction-Objekt sein.")
         elif bruch_str is not None:
-            pass
+            # Initialisierung aus einer String-Repräsentation
+            try:
+                if ":" in bruch_str:
+                    numerator_str, denominator_str = bruch_str.split(":")
+                else:
+                    numerator_str, denominator_str = bruch_str.split("/")
+                self.__zaehler = int(numerator_str.strip())
+                self.__nenner = int(denominator_str.strip())
+            except (ValueError, ZeroDivisionError):
+                self.__zaehler = 0
+                self.__nenner = 1
         else:
-            pass
+            # Initialisierung mit Zähler und Nenner
+            try:
+                self.__zaehler = int(zaehler)
+                self.__nenner = int(nenner)
+            except ValueError:
+                self.__zaehler = 0
+                self.__nenner = 1
 
-        self.set_zaehler(zaehler)
-        self.set_nenner(nenner)
+        # Sicherstellen, dass der Nenner nicht 0 ist
+        if self.__nenner == 0:
+            raise ZeroDivisionError("Nenner darf nicht 0 sein.")
+
+        # Normalisierung des Vorzeichens
+        if self.__nenner < 0:
+            self.__zaehler *= -1
+            self.__nenner *= -1
 
     def __str__(self):
         """
