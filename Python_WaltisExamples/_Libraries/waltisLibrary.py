@@ -86,6 +86,8 @@
 # 30-Oct-2024   Walter Rothlin      Changed datetime in convert_resultSet_to_insertSQL()
 # 14-Nov-2024   Walter Rothlin      Changed get_pain001_msg() to use ISO-20022 Template
 # 16-Nov-2024   Walter Rothlin      Fixed get_pain001_msg() to use proper ISO-20022 Template (Imotop)
+# 19-Nov-2024   Walter Rothlin      Added get_link_to_map_for_adress()
+#                                   Added get_coordinates_for_adresse()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -130,7 +132,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.0.8")
+    print("waltisLibrary.py: 2.0.1.0")
 
 
 # Regular-Expressions
@@ -2934,8 +2936,46 @@ def AUTO_TEST_CryptDecrypt(verbal=False):
     return [testsPerformed, testsFailed]
 
 
-# geo.admin search / tel.search
-# =============================
+# geo.admin search / tel.search / Open Street Map (OSM)
+# =====================================================
+
+def get_link_to_map_for_adress(ort='Wangen', strasse='Peterliwiese', hausnr='33', link_lable=None):
+    if link_lable is None:
+        link_lable = f'{strasse} {hausnr}, {ort}'
+    return f'<a target="_new" href="https://search.ch/map/{ort},{strasse}-{hausnr}">{link_lable}</a>'
+
+def get_coordinates_for_adresse(adress='Peterliwiese 33, 8855 Wangen', country='ch'):
+    BASE_URL = "https://nominatim.openstreetmap.org/search"
+
+    params = {
+        'q': f"{adress}",  # Address query
+        'format': 'json',  # Response format
+        'addressdetails': 1,  # Include detailed address components
+        'limit': 1,  # Limit to one result
+        'countrycodes': f'{country}'  # Restrict to the US
+    }
+
+    headers = {
+        'User-Agent': 'PythonApp/1.0 (your_email@example.com)'  # Replace with your email
+    }
+
+    response = requests.get(BASE_URL, params=params, headers=headers)
+
+    if response.status_code == 200:
+        result = response.json()
+        # print("Result:", result)
+        if result:
+            return result[0]
+            # lat = result[0]['lat']
+            # lon = result[0]['lon']
+            # display_name = result[0]['display_name']
+            # print(f"Latitude: {lat}, Longitude: {lon}, Address: {display_name}")
+        else:
+            return "No results found"
+    else:
+        return f"Error: {response.status_code} - {response.reason}"
+
+
 def getResults_geoAdmin(searchCriteriaEncoded, appId="", doTrace=False):
     serviceURL = "https://api3.geo.admin.ch/1912100956/rest/services/ech/SearchServer?sr=2056&searchText={search:2s}&lang=en&type=locations"
     requestStr = serviceURL.format(search=searchCriteriaEncoded)
