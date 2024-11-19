@@ -1,3 +1,15 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2023_03_PY2/03_Multithreading/03_Timer_Event.py
+#
+# Description: Beispiele
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 18-Nov-2024   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
 import time
 import threading
 
