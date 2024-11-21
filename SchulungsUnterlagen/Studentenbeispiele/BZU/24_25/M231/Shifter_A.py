@@ -1,3 +1,24 @@
+#!/usr/bin/python3
+
+# ------------------------------------------------------------------
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/SchulungsUnterlagen/Studentenbeispiele/BZU/24_25/M231/Shifter_A.py
+#
+# Description: Examples
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 21-Nov-2024   Walter Rothlin      Initial Version
+# ------------------------------------------------------------------
+
+
+def shiftChr(aChar, shift):
+    if (aChar >= " ") and (aChar <= "~"):
+        return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
+    else:
+        return aChar
+
+
 print('Shifter')
 print('=======')
 
