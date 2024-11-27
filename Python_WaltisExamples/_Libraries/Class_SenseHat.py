@@ -156,7 +156,7 @@ class MySenseHat(SenseHat):
 if __name__ == '__main__':
     sense = MySenseHat()
     sense.clear()
-    sense.set_pixel(0,0,255,0,0)
+    sense.set_pixel(0, 0, 255, 0, 0)
     sleep(3)
     sense.clear()
 

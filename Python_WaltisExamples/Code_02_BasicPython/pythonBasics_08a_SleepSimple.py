@@ -12,7 +12,7 @@
 # 24-Dec-2022   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 
-import time
+from time import sleep
 
 delayTime = float(input("Delay [s]:"))
 zaehler = 0
@@ -25,7 +25,7 @@ while True:
     #    tmp = 4.5 * 2.1
 
     # timer-Event (Scheduler Anfrage)
-    time.sleep(delayTime)
+    sleep(delayTime)
 
 
 

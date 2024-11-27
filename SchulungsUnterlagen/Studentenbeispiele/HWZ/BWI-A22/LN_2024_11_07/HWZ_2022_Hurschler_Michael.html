@@ -7,29 +7,29 @@
         Source:    ./DatenFiles/HTML/FormTest_formHandler.html
         Published: https://hwz.peterliwiese.ch/examples/FormTest_formHandler.html
 
-        EhrenwÃ¶rtliche ErklÃ¤rung
+        Ehrenwörtliche Erklärung
         ------------------------
        
-        Hiermit bestÃ¤tige ich, MICHAEL HURSCHLER, diesen Leistungsnachweis 
-        ohne fremde Hilfe nur mit den erlaubten Hilfsmittel wÃ¤hrend der offiziellen 
+        Hiermit bestätige ich, MICHAEL HURSCHLER, diesen Leistungsnachweis 
+        ohne fremde Hilfe nur mit den erlaubten Hilfsmittel während der offiziellen 
         vereinbarten Zeitdauer erstellt zu haben.
 
         Bewertung
         ---------
-        1) Richtiger Filename / EhrenwÃ¶rtliche ErklÃ¤rung
+        1) Richtiger Filename / Ehrenwörtliche Erklärung                -1
         2) Korrekte Formatierung
         3) Korrektes XHTML
-        4) Korrekte zusÃ¤tzliche Felder (inkl. title und body)
+        4) Korrekte zusätzliche Felder (inkl. title und body)
         5) CSS eingebunden
         6) Erweitertes Antwort-Template eingebunden
         7) Feldernamen entsprechend neuem Antwort-Template angepasst
-        8) Postleitzahl wird Clientseitig Ã¼berprÃ¼ft (korrigiert)
-        9) Warnungs-Symbol mit CSS-Style zugefÃ¼gt
-        10) Eventhadler eingebaut und Symbole Ã¤ndern
+        8) Postleitzahl wird Clientseitig überprüft (korrigiert)       -1
+        9) Warnungs-Symbol mit CSS-Style zugefügt
+        10) Eventhadler eingebaut und Symbole ändern                 -1
                                                                  --------
-                                                        Punkte:
+                                                        Punkte:  7
                                                                  --------
-                                        Note = 0.5 * Punkte + 1 =
+                                        Note = 0.5 * Punkte + 1 = 4.5
                                                                  ========
     -->
     <meta charset="ISO-8859-1">
@@ -49,13 +49,13 @@
         function check(form) {
             form.Name.value = form.Name.value.toUpperCase(); // Name in Grossbuchstaben umwandeln
 
-            // Validierung fÃ¼r den Namen
+            // Validierung für den Namen
             if (form.Name.value.length < 2) { // Minimum 2 Zeichen
                 form.Name.focus();
                 validateField(form.Name, 'name'); // Warnsymbol aktualisieren
                 return false;
             } else {
-                validateField(form.Name, 'name'); // Warnsymbol aktualisieren, wenn gÃ¼ltig
+                validateField(form.Name, 'name'); // Warnsymbol aktualisieren, wenn gültig
             }
 
             if ((form.PLZ.value.length != 4) || (isNaN(parseInt(form.PLZ.value)))) { // PLZ exakt 4 Zahlen
@@ -71,7 +71,7 @@
         function validateField(input, type) {
             const warningIcon = input.nextElementSibling;
             if (type === 'name' || type === 'vorname') {
-                const isValid = /^[A-ZÃ„Ã–Ãœ][a-zÃ¤Ã¶Ã¼]+$/.test(input.value);
+                const isValid = /^[A-ZÄÖÜ][a-zäöü]+$/.test(input.value);
                 warningIcon.src = isValid ? "https://www.peterliwiese.ch/img/Verified.svg" : "https://www.peterliwiese.ch/img/Warning.svg";
             } else if (type === 'email') {
                 const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value);
@@ -79,11 +79,11 @@
             }
         }
     </script>
-	<!--CSS fÃ¼rWarnungssymbol-->
+	<!--CSS fürWarnungssymbol-->
 	 <style>
         .warning-icon {
-            width: 20px; /* GrÃ¶sse des Symbols */
-            height: 20px; /* GrÃ¶sse des Symbols */
+            width: 20px; /* Grösse des Symbols */
+            height: 20px; /* Grösse des Symbols */
             vertical-align: middle; /* Vertikale Ausrichtung */
             margin-left: 5px; /* Abstand zum Eingabefeld */
         }
@@ -134,7 +134,7 @@
         <br />
         <label>Mittagessen:</label>
         <input type="checkbox" name="Vegan" value="on" /> Vegan
-        <input type="hidden" name="Vegan" value="off" /> <!-- Verstecktes Feld fÃ¼r den Fall, dass das KÃ¤stchen nicht angekreuzt ist -->
+        <input type="hidden" name="Vegan" value="off" /> <!-- Verstecktes Feld für den Fall, dass das Kästchen nicht angekreuzt ist -->
         <br />
         <label>Komme in Begleitung von:</label>
         <select name="Begleitpersonen">

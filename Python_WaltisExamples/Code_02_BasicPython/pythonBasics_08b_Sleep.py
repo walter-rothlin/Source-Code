@@ -12,7 +12,7 @@
 # 24-Dec-2022   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 from threading import Timer
-import time
+from time import sleep
 
 doLoop = True
 
@@ -21,22 +21,27 @@ def hello(msg, text1):
     while doLoop:
         print(i, msg, text1)
         i += 1
-        time.sleep(loopWaitTime)
+        sleep(loopWaitTime)
     print("Thread terminated!!!!")
 
 if __name__ == '__main__':
-    delayTime = float(input("Delay-Time [s]:"))
+    wakeup_time = float(input("Wakeup-Time [s]:"))
     loopWaitTime = float(input("Loop Wait-Time [s]:"))
     message = input("Meldung :")
-    print("Timer set to {dT:3.1f}".format(dT=delayTime))
+    print("Timer set to {dT:3.1f}".format(dT=wakeup_time))
 
-    t = Timer(delayTime, hello, args=[message, "HWZ"])
+    t = Timer(wakeup_time, hello, args=[message, "Studenten"])
     t.start()
 
     print("... main waiting for timer off")
-    doStop = input("Stop?")
+
+    for i in range(10):
+        print(f'main-Thread: {i}')
+        sleep(0.5)
+
+    doStop = input("Press any key to stop?")
     doLoop = False
-    t.join()
+    # t.join()
     print("... main finished!!!!")
 
 

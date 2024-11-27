@@ -65,6 +65,7 @@ FG_Aberen            |Flurgenossenschaft     |Aberen         |8858            |I
 Mieter_P33           |Fredi Kistler          |Peterliwiese 33|8855            |Wangen SZ   |      |
 Mieter_Aubrigweg     |Roland Schweizer       |Aubrigweg 6    |8855            |Wangen SZ   |      |
 Sepp_Vogel           |Josef Vogel            |Stockbergweg 37|8855            |Wangen SZ   |      |
+Luca_Ragnolini       |Luca Ragnolini         |Pfändlergut 11 |8772            |Nidfurn     |      |
 Genossame_Wangen     |Genossame Wangen       |Leuholz 12     |8855            |Wangen SZ   |      |{ibanNr['geno_wangen']}
 
 """
@@ -73,16 +74,18 @@ if __name__ == '__main__':
     person_date = CSV_Data(inputCsvStr=adressen)
     print(person_date)
 
-    rechnungssteller_id = 'Genossame_Wangen'
-    zahleradresse_id = 'Sepp_Vogel'
-    zu_zahlender_betrag = '500.00'
-    mitteilung = 'Busse'
+    rechnungssteller_id = 'Walti'
+    zahleradresse_id = 'Luca_Ragnolini'
+    zu_zahlender_betrag = '750.00'
+    mitteilung = 'Miete Wohnung Laax'
     path_name = r'E:\_WaltisDaten\Buchhaltung\__Einzahlungsscheine'
     path_name = r'.'
-    file_name = f'From_{rechnungssteller_id}_to_{zahleradresse_id}'
+
 
     do_loop = True
     while do_loop:
+
+        file_name = f'From_{rechnungssteller_id}_to_{zahleradresse_id}'
 
         menu_text = f'''
         Einzahlungsscheine erstellen
