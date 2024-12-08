@@ -6,6 +6,7 @@
 #
 # Description: Sub-Class of SenseHat
 #
+#
 # Autor: Walter Rothlin
 #
 # History:
@@ -13,15 +14,20 @@
 # 04-Dec-2023   Walter Rothlin      set_pixel overwritten
 # 08-Dec-2023   Walter Rothlin      draw_line() implemented (extends)
 # 23-Dec-2023   Walter Rothlin      Test_Framework implemented
+# 06-Dec-2023   Walter Rothlin      Refactoring for HFU PY2
 # ------------------------------------------------------------------
 
 from sense_hat import SenseHat
 from time import sleep
 
 class MySenseHat(SenseHat):
-    """
+    '''
+
     A subclass from SenseHat where set_pixel has been overwritten and draw_line() added.
-    """
+
+    '''
+
+
     red      = (255,   0,   0)
     green    = (0,   255,   0)
     blue     = (0,     0, 255)
@@ -35,6 +41,13 @@ class MySenseHat(SenseHat):
     # Initializer and setter/Getter and Properties
     # ============================================
     def __init__(self, background_color=cyan, forground_color=red, trace_on=False):
+        '''
+        Constructor
+        :param background_color: color of the background
+        :param forground_color: color of the forground
+        :param trace_on: True/False for debug mode
+
+        '''
         self.__fg_color = forground_color
         self.__bg_color = background_color
         self.__debug = trace_on
@@ -61,20 +74,31 @@ class MySenseHat(SenseHat):
     # Business Methods
     # ================
     def set_pixel(self, x, y, r=255, g=0, b=0, pixel_color=None):
+        '''
+        Overwrites the set_pixel() method from the SenseHat class.
+        :param x: x-coordinate (0-7)
+        :param y: y-coordinate (0-7)
+        :param r: red color value (0-255)
+        :param g: green color value (0-255)
+        :param b: blue color value (0-255)
+        :param pixel_color: tuple with 3 color values (r, g, b)
+        :return: None
+        '''
         if self.debug_mode:
             print(f'set_pixel(self, x={x}, y={y}, r={r}, g={g}, b={b}, pixel_color={pixel_color})')
 
         if pixel_color is not None:
-            r = int(pixel_color[0])
-            g = int(pixel_color[1])
-            b = int(pixel_color[2])
+            r = round(pixel_color[0])
+            g = round(pixel_color[1])
+            b = round(pixel_color[2])
 
-        if isinstance(x, int):
+        if type(x) is int:
             pass
-        elif isinstance(x, float):
+        elif type(x) is float:
             x = round(x)
-        elif isinstance(x, str):
+        elif type(x) is str:
             try:
+                x = x.replace(',', '.').replace(' ', '')
                 x = round(float(x))
             except ValueError:
                 if self.debug_mode:
@@ -89,6 +113,7 @@ class MySenseHat(SenseHat):
             y = round(y)
         elif isinstance(y, str):
             try:
+                y = y.replace(',', '.').replace(' ', '')
                 y = round(float(y))
             except ValueError:
                 if self.debug_mode:
@@ -99,8 +124,7 @@ class MySenseHat(SenseHat):
 
 
         if (0 <= x <= 7) and (0 <= y <= 7):
-            if self.debug_mode:
-                print(f'set_pixel(self, x={x}, y={y}, r={r}, g={g}, b={b}, pixel_color={pixel_color})')
+            print(f'set_pixel(self, x={x}, y={y}, r={r}, g={g}, b={b}, pixel_color={pixel_color})') if self.debug_mode else None
             super().set_pixel(x, y, r, g, b)
         else:
             if self.debug_mode:
@@ -120,20 +144,14 @@ class MySenseHat(SenseHat):
 
         if x1 == x2:
             if y1 > y2:
-                temp = y1
-                y1 = y2
-                y2 = temp
+                y1, y2 = y2, y1
             for y in range(round(y1), round(y2+1)):
                 self.set_pixel(x1, y, r, g, b)
                 sleep(draw_speed)
         else:
             if x1 > x2:
-                temp = x1
-                x1 = x2
-                x2 = temp
-                temp = y1
-                y1 = y2
-                y2 = temp
+                x1, x2 = x2, x1
+                y1, y2 = y2, y1
             a = (y1-y2)/(x1-x2)
             c = y1 - a*x1
             if (a > 1) or (a < -1):

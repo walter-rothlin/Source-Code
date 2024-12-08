@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 # ------------------------------------------------------------------
 # Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/SchulungsUnterlagen/Studentenbeispiele/BZU/24_25/M231/Shifter_A.py
 #
@@ -12,6 +10,10 @@
 # ------------------------------------------------------------------
 
 
+
+def shiftChr_simple(aChar, shift):
+    return chr(ord(aChar) + shift)
+
 def shiftChr(aChar, shift):
     if (aChar >= " ") and (aChar <= "~"):
         return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
@@ -19,45 +21,12 @@ def shiftChr(aChar, shift):
         return aChar
 
 
-print('Shifter')
-print('=======')
+def encrypt(klartext, key):
+    shiffrat = ''
+    for a_chr in klartext:
+        shiffrat += shiftChr(a_chr, ord(key[0]))
 
-print(-133 * 3, '133' + '5', 3.1415, 3.0, True and not False)
-print('Hallo \'\n"Walti"', "'8610' Uster")
-
-print('Hallo', end='') # Zeilenend Kommentar
-print(end='')
-print("Walti", "!", sep='')
-print('\n\nKreisberechnungen')
-
-pi = 3.1414926
-# radius = float(input('Radius r:'))
-radius = 10
-resultat_str = f'''
-    Radius:{radius:10.2f}  
-    Umfang:{2 * radius * pi:10.2f}
-    Fläche:{radius**2 * pi:10.2f}
-'''
-print(resultat_str)
+    return shiffrat
 
 
-ein_multiline_str = '''
-      Hallo 
-      Uster
-'''
 
-print(ein_multiline_str)
-
-
-klar_text = input('Klartext:')
-schluessel = int(input('Shifter:'))
-
-chiffrat = ''
-for a_chr in klar_text:
-    ord_value = ord(a_chr)
-    chiffrat_ord_value = ord(a_chr) + schluessel
-    chiffrat_char = chr(chiffrat_ord_value)
-    print(f'{a_chr}={ord_value:3}    ==> {chiffrat_ord_value:3}={chiffrat_char}')
-    chiffrat = chiffrat + chiffrat_char
-
-print(f'{klar_text}:({schluessel})  ==> {chiffrat}')
