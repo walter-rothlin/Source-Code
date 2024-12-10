@@ -1,3 +1,15 @@
+
+# ------------------------------------------------------------------
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/FLASK_Wetterstation/01_wetterstation.py
+#
+# Description: Examples
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 10-Dec-2024   Walter Rothlin      Initial Version cretated with HBU PY2
+# ------------------------------------------------------------------
+
 from flask import Flask, request, render_template, url_for
 import requests
 import json
