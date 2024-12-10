@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guten Abend!</title>
+</head>
+<body>
+Heute ist es {{ temperatur.temp }}{{ temperatur.unit }} warm!<br/>
+Es sind bereits {{ counter }} gemacht worden!<br/>
+{% for schulname in schulnamen %}
+Hallo {{ schulname }}  {{ year }}!<br/>
+<br/>
+{% for i in range(1, 11) %}
+    {{ i }}<br/>
+{% endfor %}
+
+{% endfor %}
+
+
+
+</body>
+</html>

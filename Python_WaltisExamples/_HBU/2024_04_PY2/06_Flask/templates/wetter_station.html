@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wetter-Station</title>
+</head>
+<body>
+<h1>Wetter-Station: {{ weather_data.location }}</h1>
+<form action="{{ url_for('HFU_Wetterstation') }}" method="POST">
+    <input type="text" name="location" id="location" value="{{ weather_data.location }}">
+    <input type="submit" value="suchen">
+</form>
+<br/>
+Das Wetter ist:
+{{ weather_data.description }} <img src="{{ weather_data.icon }}" alt="Wetter-Icon"/>
+<br/>
+Es ist {{ weather_data.temp }}°C warm und {{ weather_data.humidity }}% relative Luftfeuchtigkeit.<br/>
+Der Luftdruck beträgt {{ weather_data.pressure }}hPa.<br/>
+
+</body>
+</html>
