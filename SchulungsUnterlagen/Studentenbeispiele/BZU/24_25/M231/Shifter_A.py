@@ -14,6 +14,7 @@
 def shiftChr_simple(aChar, shift):
     return chr(ord(aChar) + shift)
 
+
 def shiftChr(aChar, shift):
     if (aChar >= " ") and (aChar <= "~"):
         return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
@@ -29,4 +30,23 @@ def encrypt(klartext, key):
     return shiffrat
 
 
+
+
+if __name__ == '__main__':
+    print('Shifter')
+    print('=======')
+
+
+'''
+    klar_text = input('Klartext:')
+    shiffer_key = input('Key:')
+
+    shiffrat = encrypt(klar_text, shiffer_key)
+
+    print(f'{klar_text}   ==> {shiffrat}')
+'''
+
+print(f"shiftChr_simple('a', 1) = {shiftChr_simple('a', 1)}")
+print(f"shiftChr_simple('A', 10) = {shiftChr_simple('A', 10)}")
+print(f"shiftChr_simple('Z', 100) = {shiftChr_simple('Z', 100)}")
 

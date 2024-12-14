@@ -12,24 +12,75 @@
 # 21-Nov-2024   Walter Rothlin      Initial Version
 # ------------------------------------------------------------------
 
-def shiffer(ein_char, shift):
-    return chr(ord(ein_char) + shift)
+def shiftChr_simple(aChar, shift):
+    return chr(ord(aChar) + shift)
 
-def encrypt(klartext, shift):
-    shiffrat = ''
-    for a_chr in klartext:
-        shiffrat = shiffrat + shiffer(a_chr, shift)
-    return shiffrat
+def shiftChr(aChar, shift):
+    '''
+    Shifts a character by the given shift value
+    :param aChar: The character to shift
+    :param shift: The shift value
+    :return: The shifted character
+    '''
+    # print(f'aChar: {aChar}  shift: {shift}')
+    if (aChar >= " ") and (aChar <= "~"):
+        return chr(((ord(aChar) - ord(' ') + shift) % (ord('~') - ord(' ') + 1)) + ord(' '))
+    else:
+        return aChar
 
-print('Shifter')
-print('=======')
+def encrypt(klartext, password):
+    '''
+    Encrypts the given text with the given password
+    :param klartext: The text to encrypt
+    :param password: The password to use for encryption
+    :return: The encrypted text
+    '''
+    return de_encrypt(klartext, password, encrypt=True)
 
-klar_text = input('Klartext:')
-shiffer_key = int(input('Key:'))
+def decrypt(shiffrat, password):
+    '''
+    Decrypts the given text with the given password
+    :param shiffrat: The text to decrypt
+    :param password: The password to use for decryption
+    :return: The decrypted text
+    '''
+    return de_encrypt(shiffrat, password, encrypt=False)
 
-shiffrat = encrypt(klar_text, shiffer_key)
+def de_encrypt(text, password, encrypt=True):
+    '''
+    Encrypts or decrypts the given text with the given password
+    :param text: The text to encrypt or decrypt
+    :param password: The password to use for encryption or decryption
+    :param encrypt: True for encryption, False for decryption
+    :return: The encrypted or decrypted
+    '''
+    return_text = ''
+    password_pos = 0
+    factor = 1
+    if not encrypt:
+        factor = -1
+    for a_chr in text:
+        return_text += shiftChr(a_chr, factor * ord(password[password_pos]))
+        password_pos += 1
+        if password_pos >= len(password):
+            password_pos = 0
+    return return_text
 
-print(f'{klar_text}   ==> {shiffrat}')
+if __name__ == '__main__':
+    print('Shifter')
+    print('=======')
+
+    klar_text = input('Klartext:')
+    password = input('Passwort:')
+
+    shiffrat = encrypt(klar_text, password)
+    print(f'{klar_text}   ==> {shiffrat}')
+    deshiffrat = decrypt(shiffrat, password)
+    print(f'{shiffrat}   ==> {deshiffrat}')
+    if klar_text == deshiffrat:
+        print('OK')
+    else:
+        print('Error')
 
 
 
