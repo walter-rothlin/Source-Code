@@ -88,6 +88,7 @@
 # 16-Nov-2024   Walter Rothlin      Fixed get_pain001_msg() to use proper ISO-20022 Template (Imotop)
 # 19-Nov-2024   Walter Rothlin      Added get_link_to_map_for_adress()
 #                                   Added get_coordinates_for_adresse()
+# 15-Dec-2024   Walter Rothlin      Added get_sql_string_update_value(), get_sql_float_update_value()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -132,7 +133,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.1.0")
+    print("waltisLibrary.py: 2.0.1.1")
 
 
 # Regular-Expressions
@@ -3131,6 +3132,20 @@ def dictify(context, names):
 # =====================
 # Reusable DB-Functions
 # =====================
+def get_sql_string_update_value(attr_name, new_value):
+    if new_value is None or str(new_value) == 'None' or new_value == '':
+        ret_val = f"{attr_name} = NULL"
+    else:
+        ret_val = f"{attr_name} = '{new_value}'"
+    return ret_val
+
+def get_sql_float_update_value(attr_name, new_value):
+    if new_value is None or str(new_value) == 'None' or new_value == '':
+        ret_val = f"{attr_name} = NULL"
+    else:
+        ret_val = f"{attr_name} = {new_value}"
+    return ret_val
+
 def get_sql_datums_update_value(attr_name, new_value, date_str_format='%d.%m.%Y'):
     if new_value is None or str(new_value) == 'None' or new_value == '':
         ret_val = f"{attr_name} = NULL"
