@@ -89,6 +89,7 @@
 # 19-Nov-2024   Walter Rothlin      Added get_link_to_map_for_adress()
 #                                   Added get_coordinates_for_adresse()
 # 15-Dec-2024   Walter Rothlin      Added get_sql_string_update_value(), get_sql_float_update_value()
+# 18-Jan-2025   Walter Rothlin      Added search_address_geo_admin()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -133,7 +134,7 @@ import json
 
 
 def waltisPythonLib_Version():
-    print("waltisLibrary.py: 2.0.1.1")
+    print("waltisLibrary.py: 2.0.1.2")
 
 
 # Regular-Expressions
@@ -2945,11 +2946,11 @@ def get_link_to_map_for_adress(ort='Wangen', strasse='Peterliwiese', hausnr='33'
         link_lable = f'{strasse} {hausnr}, {ort}'
     return f'<a target="_new" href="https://search.ch/map/{ort},{strasse}-{hausnr}">{link_lable}</a>'
 
-def get_coordinates_for_adresse(adress='Peterliwiese 33, 8855 Wangen', country='ch'):
+def get_coordinates_for_adresse(address='Peterliwiese 33, 8855 Wangen', country='ch', language='de'):
     BASE_URL = "https://nominatim.openstreetmap.org/search"
 
     params = {
-        'q': f"{adress}",  # Address query
+        'q': f"{address}",  # Address query
         'format': 'json',  # Response format
         'addressdetails': 1,  # Include detailed address components
         'limit': 1,  # Limit to one result
@@ -2975,6 +2976,30 @@ def get_coordinates_for_adresse(adress='Peterliwiese 33, 8855 Wangen', country='
             return "No results found"
     else:
         return f"Error: {response.status_code} - {response.reason}"
+
+def search_address_geo_admin(address='Peterliwiese 33, 8855 Wangen', country='ch', language='de'):
+    """
+    Sucht eine Adresse in der GeoAdmin API und gibt die Ergebnisse zurück.
+
+    :param address: Die zu suchende Adresse (z. B. "Bern, Bundesplatz 3").
+    :param language: Sprache der Antwort, z. B. "de", "fr", "it", "en".
+    :return: JSON-Antwort mit den Suchergebnissen.
+    """
+    base_url = "https://api3.geo.admin.ch/rest/services/api/SearchServer"
+    params = {
+        "searchText": address,  # Die Adresse, nach der gesucht wird
+        "type": "locations",  # Typ der Suche (locations für Adressensuche)
+        "lang": language,  # Sprache der Antwort
+        "limit": 5,  # Max. Anzahl der Ergebnisse
+    }
+
+    try:
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()  # Prüft auf HTTP-Fehler
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Fehler bei der Anfrage: {e}")
+        return None
 
 
 def getResults_geoAdmin(searchCriteriaEncoded, appId="", doTrace=False):
