@@ -35,7 +35,7 @@ ibanNr = {
     'lukas_post_spar'       : "CH68 0900 0000 9241 3538 2",
 
     'claudia_szkb_börsenkonto' : "CH74 0077 7002 3265 2447 8",
-    'claudia_raiffeisen_privat': "CH22 8080 8003 1592 9572 2",
+    # gelöscht im Januar 2025  'claudia_raiffeisen_privat': "CH22 8080 8003 1592 9572 2",
     'claudia_raiffeisen_ET'    : "CH26 8080 8002 8098 7681 8",
     'claudia_raiffeisen_ET_Gemeinsam': "CH30 8080 8003 1157 2958 0",
 
@@ -55,7 +55,6 @@ Tobias               |Tobias Rothlin         |Peterliwiese 33|8855            |W
 Tobias_Liegenschaft  |Tobias Rothlin         |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['tobias_szkb_liegenschaften']}
 Lukas                |Lukas Rothlin          |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['lukas_szkb_privat']}
 Claudia_SZKB         |Claudia Collet         |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['claudia_szkb_börsenkonto']}
-Claudia_Raiffeisen   |Claudia Collet         |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['claudia_raiffeisen_privat']}
 Claudia_ET           |Claudia Collet         |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['claudia_raiffeisen_ET']}
 Claudia_ET_Gemeinsam |Claudia Collet         |Peterliwiese 33|8855            |Wangen SZ   |CH    |{ibanNr['claudia_raiffeisen_ET_Gemeinsam']}
 

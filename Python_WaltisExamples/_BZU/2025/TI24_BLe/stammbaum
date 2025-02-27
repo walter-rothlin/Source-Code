@@ -1,0 +1,21 @@
+digraph Family_Tree {
+	G1A [label="Great-Grandfather"]
+	G1B [label="Great-Grandmother"]
+	G2A [label=Grandfather]
+	G2B [label=Grandmother]
+	G2C [label=Granduncle]
+	P1 [label=Father]
+	P2 [label=Mother]
+	C1 [label="Child 1"]
+	C2 [label="Child 2"]
+	G1A -> G2A
+	G1B -> G2A
+	G1A -> G2C
+	G1B -> G2C
+	G2A -> P1
+	G2B -> P1
+	P1 -> C1
+	P1 -> C2
+	P2 -> C1
+	P2 -> C2
+}
