@@ -2,7 +2,7 @@
 -- Autor: Walter Rothlin
 -- Description: Lädt das Prüfungs-Schema mit Daten 
 --
--- -- https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/LN_Scripts/pruefung_1_data.sql
+-- https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/LN_Scripts/pruefung_1_data.sql
 --
 -- History:
 -- 13-Mar-2025   Walter Rothlin      Initial Version
