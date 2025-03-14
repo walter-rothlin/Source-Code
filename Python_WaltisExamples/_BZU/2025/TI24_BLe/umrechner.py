@@ -11,6 +11,9 @@
 # History:
 # 01-Feb-2025   Walter Rothlin      Initial Version (Menu-Text)
 # 14-Feb-2025   Walter Rothlin      Added Constants and Functions
+# 07-Mar-2025   Walter Rothlin      Added read_float()
+# 14-Mar-2025   Walter Rothlin      read_float() erweitern um min, max
+# 21-Mar-2025   Walter Rothlin      Added read_int()
 # ------------------------------------------------------------------
 
 import re
@@ -50,17 +53,94 @@ def fahrenheit_in_celsius(fahrenheit_value):
 def celsius_in_fahrenheit(celsius_value):
     return (celsius_value * 1.8) + 32
 
-def read_float(prompt):
+def read_float_Precondition(prompt, min=None, max=None):
     error = True
     while error:
         in_str = input(prompt)
+        in_str = in_str.replace(",", ".")
+        in_str = in_str.replace(" ", "")
+        in_str = in_str.replace("\t", "")
+        in_str = in_str.replace("'", "")
         if re.fullmatch(r"^-?\d+(?:\.\d+)?$", in_str):
             in_value = float(in_str)
-            error = False
+            if min is not None and in_value < min:
+                print(f"Error (pre-test): '{in_str}' is smaller than {min}")
+                error = True
+            elif max is not None and in_value > max:
+                print(f"Error (pre-test): '{in_str}' is greater than {max}")
+                error = True
+            else:
+                error = False
         else:
-            print(f"Error: '{in_str}' is not a valid float")
+            print(f"Error (pre-test): '{in_str}' is not a valid float")
             error = True
     return in_value
+
+
+def read_float_exception(prompt, min=None, max=None):
+    error = True
+    while error:
+        try:
+            in_str = input(prompt)
+            in_str = in_str.replace(",", ".")
+            in_str = in_str.replace(" ", "")
+            in_str = in_str.replace("\t", "")
+            in_str = in_str.replace("'", "")
+            in_value = float(in_str)
+            if min is not None and in_value < min:
+                print(f"Error (try-except): '{in_str}' is smaller than {min}")
+                error = True
+            elif max is not None and in_value > max:
+                print(f"Error (try-except): '{in_str}' is greater than {max}")
+                error = True
+            else:
+                error = False
+        except ValueError:
+            print(f"Error (try-except): '{in_str}' is not a valid float")
+            error = True
+    return in_value
+
+def read_float(prompt, min=None, max=None, method="exception"):
+    if method == "pre":
+        return read_float_Precondition(prompt, min=min, max=max)
+    else:
+        return read_float_exception(prompt, min=min, max=max)
+
+def read_int(prompt, min=None, max=None):
+    error = True
+    while error:
+        try:
+            in_str = input(prompt)
+            in_str = in_str.replace(" ", "")
+            in_str = in_str.replace("\t", "")
+            in_str = in_str.replace("'", "")
+            in_value = int(in_str)
+            if min is not None and in_value < min:
+                print(f"Error read_int(): '{in_str}' is smaller than {min}")
+                error = True
+            elif max is not None and in_value > max:
+                print(f"Error read_int(): '{in_str}' is greater than {max}")
+                error = True
+            else:
+                error = False
+        except ValueError:
+            print(f"Error read_int(): '{in_str}' is not a valid int")
+            error = True
+    return in_value
+
+def read_boolean(prompt):
+    error = True
+    while error:
+        in_str = input(prompt)
+        in_str = in_str.replace(" ", "")
+        in_str = in_str.replace("\t", "")
+        if in_str.lower()[0] in ["t", "j", "y", "1"]:
+            return True
+        elif in_str.lower()[0] in ["f", "n", "0"]:
+            return False
+        else:
+            print(f"Error read_boolean(): '{in_str}' is not a valid boolean")
+            error = True
 
 # ----------------------------
 # Main:
@@ -69,16 +149,16 @@ do_loop = True
 while do_loop:
     print(menu_text)
 
-    auswahl = input('Wahl:')
+    auswahl = read_int('Wahl:',min=0,max=4)
     if auswahl == '1':
         print("Grad in Bogenmass")
-        grad = read_float("Grad:")
+        grad = read_float("Grad:", min=-360, max=360)
         rad = grad_in_bogenmass(grad)
         print(f"{grad:0.2f} Grad sind {rad:0.2f} rad")
 
     elif auswahl == '2':
         print("Bogenmass in Grad")
-        rad = read_float("rad:")
+        rad = read_float("rad:", method="pre", min=-10, max=10)
         grad = bogenmass_in_grad(rad)
         print(f"{rad:0.2f} rad sind {grad:0.2f} Grad")
 

@@ -3,6 +3,7 @@
 -- 07-Feb-2025 Walter Rothlin	Initial Version
 -- 14-Feb-2025 Walter Rothlin	String-Functions
 -- 07-Mar-2025 Walter Rothlin   Date / Time Functions
+-- 14-Mar-2025 Walter Rothlin	Group By
 -- ---------------------------------------------------------------------------
 
 -- ==============================
@@ -46,3 +47,25 @@ SELECT
     Date_Format(`last_update`, '%a, %d.%m.%Y %H:%i')  AS `Last Change CH`,
     Date_Format(now(), '%a, %d.%m.%Y %H:%i')  AS `Heute`
 FROM `language`;
+
+
+-- ==============================
+-- Group-By
+-- ==============================
+SELECT  count(*) FROM `Country`;
+SELECT  count(*) FROM `City`;
+
+SELECT
+	`cio`.`Land`     AS `Land`,
+    COUNT(`FK City`) AS `Anzahl Staedte`
+FROM (
+	SELECT
+		`co`.`country_id`  AS `PK Land`,
+		`co`.`country`     AS `Land`,
+		`ci`.`city`        AS `Stadt`,
+		`ci`.`country_id`  AS `FK City`
+	FROM `country` AS `co`, `city` AS `ci`
+	WHERE `co`.`country_id` = `ci`.`country_id`
+	ORDER BY `PK Land`) AS `cio`
+    GROUP BY `FK City`
+ORDER BY `Anzahl Staedte` DESC;

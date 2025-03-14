@@ -9,9 +9,15 @@
 #
 # History:
 # 13-Feb-2025   Walter Rothlin      Initial Version (Menu-Text)
-#
+# 06-Mar-2025   Walter Rothlin      Added Constants and Functions
+# 13-Mar-2025   Walter Rothlin      Added read_float
 # ------------------------------------------------------------------
+import math
+import re
 
+# ----------------------------
+# Constants and Variables
+# ----------------------------
 menu_text = f'''
   Umrechnungen
   ============
@@ -24,39 +30,86 @@ menu_text = f'''
   0: Schluss
 '''
 
-pi = 3.1415926
+pi = math.pi
 
+# ----------------------------
+# Functions
+# ----------------------------
+def read_float_preConditionCheck(prompt):
+    has_error = True
+    while has_error:
+        in_str = input(prompt)
+        if re.fullmatch(r"^-?\d+(?:\.\d+)?$", in_str):
+            in_value = float(in_str)
+            has_error = False
+        else:
+            print(f'ERROR (preCond): {in_str} ist keine Zahl')
+    return in_value
+
+def read_float_try_except(prompt):
+    has_error = True
+    while has_error:
+        try:
+            in_str = input(prompt)
+            in_value = float(in_str)
+            has_error = False
+        except ValueError:
+            print(f'ERROR (try-except): {in_str} ist keine Zahl')
+    return in_value
+
+def read_float(prompt, method='preCond'):
+    if method == 'preCond':
+        return read_float_preConditionCheck(prompt)
+    elif method == 'tryExcept':
+        return read_float_try_except(prompt)
+
+def grad2bogenmass(grad_value):
+    return grad_value * pi / 180
+
+def bogenmass2grad(rad_value):
+    return rad_value * 180 / pi
+
+def fahrenheit2celsius(fahrenheit_value):
+    return (fahrenheit_value - 32) / 1.8
+
+def celsius2fahrenheit(celsius_value):
+    return (celsius_value * 1.8) + 32
+
+# ============================
+# Main
+# ============================
 do_loop = True
 while do_loop:
     print(menu_text)
     auswahl = input('Wähle:')
     if auswahl == '1':
         print('Grad in Bogenmass')
-        grad = float(input('Grad:'))
-        rad = grad * pi / 180
+        grad = read_float('Grad:')
+        rad = grad2bogenmass(grad)
         print(f'{grad:0.2f} Grad sind {rad:0.2f} rad')
 
     elif auswahl == '2':
         print('Bogenmass in Grad')
-        rad = float(input('rad:'))
-        grad = rad * 180 / pi
+        rad = read_float('rad:', 'tryExcept')
+        grad = bogenmass2grad(rad)
         print(f'{rad:0.2f} rad sind {grad:0.2f} Grad')
 
     elif auswahl == '3':
         print('Fahrenheit in Celsius')
-        fahrenheit = float(input('Fahrenheit:'))
-        celsius = (fahrenheit - 32) / 1.8
+        fahrenheit = read_float('Fahrenheit:')
+        celsius = fahrenheit2celsius(fahrenheit)
         print(f'{fahrenheit:0.2f} Fahrenheit sind {celsius:0.2f} Celsius')
 
     elif auswahl == '4':
         print('Celsius in Fahrenheit')
-        celsius = float(input('Celsius:'))
-        fahrenheit = (celsius * 1.8) + 32
+        celsius = read_float('Celsius:')
+        fahrenheit = celsius2fahrenheit(celsius)
         print(f'{celsius:0.2f} Celsius sind {fahrenheit:0.2f} Fahrenheit')
 
     elif auswahl == '0':
         do_loop = False
         print('Schluss')
+
     else:
         print('Unbekannte Auswahl')
 
