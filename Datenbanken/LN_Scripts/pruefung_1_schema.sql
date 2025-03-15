@@ -7,11 +7,15 @@
 -- History:
 -- 13-Mar-2025   Walter Rothlin      Initial Version
 -- -----------------------------------------
+SET @vorname  = 'Walter';
+SET @nachname = 'Rothlin';
+-- -----------------------------------------
 SET NAMES utf8mb4;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+SET @username = CONCAT(@vorname, ' ',  @nachname);
 -- =========================================
 -- == Schema Prüfung_1 kreieren           ==
 -- =========================================
@@ -121,6 +125,20 @@ CREATE TABLE IF NOT EXISTS `Adressen` (
 -- UPDATE `Adressen` SET `changed_by` = 1245;
 
 -- -----------------------------------------
+-- Table `User Log`
+-- -----------------------------------------
+DROP TABLE IF EXISTS `user_logs`;
+CREATE TABLE IF NOT EXISTS  `user_logs` (
+    `id`          INT AUTO_INCREMENT PRIMARY KEY,
+    `username`    VARCHAR(100),
+    `action`      VARCHAR(100),
+    `login_time`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO `user_logs` (`username`,`action`) VALUES (@username, 'Added User-Name');
+INSERT INTO `user_logs` (`username`,`action`) VALUES (CURRENT_USER(), 'Added Login-User');
+
+-- -----------------------------------------
 -- Table `Personen` 
 -- -----------------------------------------
 DROP TABLE IF EXISTS `Personen`;
@@ -219,6 +237,12 @@ CREATE TABLE IF NOT EXISTS `Personen` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
     
+-- -----------------------------------------
+CREATE TRIGGER `log_user_login` 
+BEFORE INSERT ON `Personen`
+FOR EACH ROW 
+INSERT INTO `user_logs` (`username`, `action`) VALUES (@username, 'Insert new Person');
+
 -- -----------------------------------------
 -- Table `Priviliges`
 -- -----------------------------------------
@@ -548,6 +572,7 @@ CREATE TABLE IF NOT EXISTS `Landteile` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+INSERT INTO `personen` (`ID`, `Vorname`, `Ledig_Name`) VALUES ('0', @vorname, @nachname);
    
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

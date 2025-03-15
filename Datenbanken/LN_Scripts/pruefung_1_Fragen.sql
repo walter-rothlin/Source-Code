@@ -8,6 +8,8 @@
 
 -- 1.1) Wie viele Personen gibt es in der Personen-Tabelle?
 
+-- 1.1.1) Zeige alle Personen (Vorname, Ledig_Name, last_update), welche heute aktualisiert wurden. 
+--        Die Spalten sollten als Vorname, Nachname, Letzdes Änderung bezeichnet werden.
 
 -- 1.2) Wieviele Landteile gibt es?
 
