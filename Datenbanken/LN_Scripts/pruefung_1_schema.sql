@@ -1,14 +1,5 @@
--- -----------------------------------------
--- Autor: Walter Rothlin
--- Description: Kreiert ein Prüfungs-Schema 
---
--- https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Datenbanken/LN_Scripts/pruefung_1_schema.sql
---
--- History:
--- 13-Mar-2025   Walter Rothlin      Initial Version
--- -----------------------------------------
-SET @vorname  = 'Walter';
-SET @nachname = 'Rothlin';
+SET @vorname  = [Bitte hier Vorname als Zeichenkette erfassen];    -- z.B. 'Walter'
+SET @nachname = [Bitte hier Nachname als Zeichenkette erfassen];   -- z.B. 'Rothlin'
 -- -----------------------------------------
 SET NAMES utf8mb4;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
