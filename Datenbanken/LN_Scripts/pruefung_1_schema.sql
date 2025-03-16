@@ -1,6 +1,11 @@
+-- --------------------------------Bitte hier ändern--------------------------------
 SET @vorname  = [Bitte hier Vorname als Zeichenkette erfassen];    -- z.B. 'Walter'
 SET @nachname = [Bitte hier Nachname als Zeichenkette erfassen];   -- z.B. 'Rothlin'
--- -----------------------------------------
+-- ---------------------------------------------------------------------------------
+
+
+
+-- --------------------------------Ab hier NICHTS mehr ändern-----------------------
 SET NAMES utf8mb4;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
