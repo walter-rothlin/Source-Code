@@ -1,24 +1,23 @@
+-- ---------------------------------------------------------------------------
 -- Owner: Walter Rothlin
 --
 -- History:
--- 13-Mar-2025 Walter Rothlin	Initial Version 
+-- 10-Mar-2025 Walter Rothlin	Initial Version / Fragen definiert
+-- 14-Mar-2025 Walter Rothlin	Added Question from Jonathan Philip Grütter
 -- ---------------------------------------------------------------------------
--- 
+
 -- Wie bei den Uebungen entwickeln Sie für jede Aufgabe ein SQL-Statement, welches die Business Frage beantwortet.
 
 -- 1.1) Wie viele Personen gibt es in der Personen-Tabelle?
 
 -- 1.1.1) Zeige alle Personen (Vorname, Ledig_Name, last_update), welche heute aktualisiert wurden. 
---        Die Spalten sollten als Vorname, Nachname, Letzdes Änderung bezeichnet werden.
+--        Die Spalten sollten als Vorname, Nachname, Letzdes Aenderung bezeichnet werden.
 
 -- 1.2) Wieviele Landteile gibt es?
 
-
 -- 1.3) Wieviele verschiedene Flur_Bezeichnungen gibt es und benennen Sie die Spalte 'Anzahl verschiedene Flure'?
 
-
 -- 1.4) Welcher Landteil (ID) wurde zuletzt geändert?
-
 
 -- 1.5.0) Erstellen Sie eine Liste von allen Landteilen mit ID, GENO_Parzellen_Nr, Flur_Bezeichnung, Flaeche_In_Aren, Last_Update
 --        den zuletzt geänderten Datensatz zuoberst.
