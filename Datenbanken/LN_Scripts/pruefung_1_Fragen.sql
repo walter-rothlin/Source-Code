@@ -4,14 +4,23 @@
 -- History:
 -- 10-Mar-2025 Walter Rothlin	Initial Version / Fragen definiert
 -- 14-Mar-2025 Walter Rothlin	Added Question from Jonathan Philip Grütter
+-- 21-Mar-2025 Walter Rothlin	Angepasst auf Moodle Fragen
 -- ---------------------------------------------------------------------------
 
--- Wie bei den Uebungen entwickeln Sie für jede Aufgabe ein SQL-Statement, welches die Business Frage beantwortet.
+-- 10.2) Wieviele Tabellen hat das ERD?                                              
 
+-- 10.3) Was für eine Beziehung besteht zwischen ort und land? 
+
+-- 10.4) Was für eine Beziehung besteht zwischen kommissionen_gruppen und personen? 
+
+-- 10.5) Was für eine Beziehung besteht zwischen personen und telefonnummern?
+ 
 -- 1.1) Wie viele Personen gibt es in der Personen-Tabelle?
 
+-- 1.1.1a) Wie heisst der Vorname der Person, welche heute geändert wurde?
+
 -- 1.1.1) Zeige alle Personen (Vorname, Ledig_Name, last_update), welche heute aktualisiert wurden. 
---        Die Spalten sollten als Vorname, Nachname, Letzdes Aenderung bezeichnet werden.
+--        Die Spalten sollten als Vorname, Nachname, Letzte Aenderung bezeichnet werden.
 
 -- 1.2) Wieviele Landteile gibt es?
 
@@ -21,7 +30,7 @@
 
 -- 1.5.0) Erstellen Sie eine Liste von allen Landteilen mit ID, GENO_Parzellen_Nr, Flur_Bezeichnung, Flaeche_In_Aren, Last_Update
 --        den zuletzt geänderten Datensatz zuoberst.
-
+--
 -- Ausschnitt des erwarteten Resultates:
 -- ID  | Parzellen_Nr            | Flur_Bezeichnung    | Fläche in Aren | Letzmals geändert   | Aenderungszeit
 -- ----+-------------------------+---------------------+----------------+---------------------+---------------
@@ -34,9 +43,7 @@
 -- 342 | 293.800.2               | Bruggholz           | 16.0           | 22.02.2025 09:57:47 | 09:57:47      
 
 
-
--- 1.5.1) Wieviele Datensätze wurden nach 10:00 geändert.
-
+-- 1.5.1) Wieviele Landteile wurden nach 10:00 geändert?
 
 
 -- 1.6.0) Erstellen Sie eine Liste mit Flur_Bezeichnungen, Gesamtfläche in Aren und Anzahl_Parzellen
@@ -53,17 +60,13 @@
 -- Witi                | 1157.0               | 23              
 
 
--- 1.6.2) Wie gross ist die Gesamtfläche des grössten Flures?  (Mit einem SELECT-Statement)
+-- 1.6.2) Wie gross ist die Gesamtfläche des grössten Flures? (Mit einem SELECT-Statement)
 
-
--- 1.6.3) Wie heisst der Flur mit der grössten Gesamtfläche?  (Mit einem SELECT-Statement)
-
-
--- 1.6.4) Aus wievielen Parzellen besteht der grössten Flur?  (Mit einem SELECT-Statement)
-
+-- 1.6.3) Wie heisst der Flur mit der grössten Gesamtfläche? (Mit einem SELECT-Statement)   
     
--- 1.6.5) Wieviele Flure bestehen aus gerade nur einer Parzelle?  (Mit einem SELECT-Statement)
-
+-- 1.6.4) Aus wievielen Parzellen besteht der grössten Flur? (Mit einem SELECT-Statement)
+    
+-- 1.6.5) Wieviele Flure bestehen aus gerade nur einer Parzelle? (Mit einem SELECT-Statement)
 
 -- 20.1.5) Erstellen Sie ein SELECT-Statment, welches folgendes Result-Set (Serienbriefliste) aus der Personen-Tabelle erzeugt.
 
@@ -75,9 +78,16 @@
 -- 63   | Herr  | M7fe343                   | B953b5                           | F5a                              | Sehr geehrter Herr B953b5                           | Lieber M7fe343                 
 -- 64   | Herr  | Kf11                      | H994ce                           |                                  | Sehr geehrter Herr H994ce                           | Lieber Kf11                    
 -- 65   | Herr  | A5f1d                     | B953b5                           | Mf016dfa                         | Sehr geehrter Herr B953b5                           | Lieber A5f1d                   
+
      
-     
-     
+-- 20.1.6a) Wie alt (in Jahren) ist die älteste Person? Das Alter wird bei lebenden Personen von Geburtsjahr bis zum aktuellen Jahr, 
+--          bei verstorbenen Personen vom Geburtsjahr bis zum Jahr des Todes gerechnet.
+
+
+-- 20.1.6b) Wie hiess die älteste gestorbene Frau zum Vornamen? Das Alter wird bei lebenden Personen von Geburtsjahr bis zum aktuellen Jahr, 
+--          bei verstorbenen Personen vom Geburtsjahr bis zum Jahr des Todes gerechnet.
+
+
 -- 20.1.6) Erstellen Sie ein SELECT-Statment, welches folgendes Result-Set (Alters-Liste) aus der Personen-Tabelle erzeugt.
 -- Alterliste enthält nur Personen bei denen ein Geburtstag gesetzt ist. Falls die Person noch lebt (kein Todestag gesetzt) 
 -- wird das Alter bis heute berechnet.
