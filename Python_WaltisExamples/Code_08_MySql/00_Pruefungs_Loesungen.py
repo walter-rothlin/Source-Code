@@ -19,24 +19,38 @@ db_connection = mysql.connector.connect(
     host="localhost",
     user="root",
     password="admin",
-    database="pruefung_1",
+    # database="pruefung_1",
+    database="sakila",
     auth_plugin='mysql_native_password'
 )
 print("completed!")
 
 
 sql_statement = """
-SELECT 
-	`ID`, 
-    `Sex`, 
-    `Vorname`, 
-    `Ledig_Name`, 
-    `Geburtstag`, 
-    `Todestag`, 
-    timestampdiff(YEAR,`Geburtstag`, if (`Todestag` is not Null, `Todestag`,  CURDATE())) AS `Alter`
-FROM `personen`
-WHERE `Geburtstag` is not null
-ORDER BY `Alter` DESC;
+SELECT
+	actor_id                            AS ID,
+    first_name                          AS Vorname,
+    last_name                           AS Nachname,
+    CONCAT(UPPER(LEFT(first_name, 1)), 
+           LOWER(SUBSTRING(first_name, 2))) AS Prop_Vorname,
+    CONCAT(UPPER(LEFT(last_name, 1)), 
+           LOWER(SUBSTRING(last_name, 2))) AS Prop_Nachname,
+    CONCAT(
+		CONCAT(UPPER(LEFT(first_name, 1)), 
+			   LOWER(SUBSTRING(first_name, 2))),' ',
+		CONCAT(UPPER(LEFT(last_name, 1)), 
+			   LOWER(SUBSTRING(last_name, 2)))
+	)    AS `Full-Name`,
+    LEFT(first_name,1)                  AS Initial,
+    CONCAT(
+		LEFT(first_name,1),
+		'.',
+		CONCAT(
+			UPPER(LEFT(last_name, 1)), 
+			LOWER(SUBSTRING(last_name, 2)))
+	)                   AS `Initial.Name`           
+FROM
+	actor;
 """
 
 rs_as_dict = True
