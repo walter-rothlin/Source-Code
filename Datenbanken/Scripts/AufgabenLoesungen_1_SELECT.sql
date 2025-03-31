@@ -28,7 +28,7 @@
 -- 17-May-2023   Walter Rothlin      Changed LEFT/RIGHT JOIN to LEFT/RIGHT OUTER JOIN
 -- 07-Mar-2023   Walter Rothlin      Added more GROUP BY (1.7.1 tbc)
 -- 11-Apr-2024   Walter Rothlin      Changes for TI23xx at BZU
--- 11-Apr-2024   Walter Rothlin      Changes for BWI-A22
+-- 26-Mar-2025   Walter Rothlin      Added more String and Group-Examples
 -- ---------------------------------------------------------------------------------------------
 
 -- END title
@@ -285,18 +285,6 @@ ORDER BY
 
 -- 1.13) Erstellen Sie eine Liste mit allen Laendern und der Anzahl Staedte, sortiert nach Anzahl Staedte 
 --       (Das Land mit den meisten Staedten zu oberst)
-
-
-
-
-
-
-
-
-
-
-
-
 
 SELECT * FROM CITY ORDER BY Country_ID;
 SELECT * FROM Country;
@@ -846,6 +834,82 @@ SELECT
 FROM
     film AS f;
 
+-- 2.8) Erstellen Sie ein Select-Statement von der Tabelle actor in sakila mit folgendem Result-Set:
+--
+-- ID  | Vorname     | Nachname     | Prop_Vorname | Prop_Nachname | Full-Name            | Initial | Initial.Name  
+-- ----+-------------+--------------+--------------+---------------+----------------------+---------+---------------
+-- 1   | PENELOPE    | GUINESS      | Penelope     | Guiness       | Penelope Guiness     | P       | P.Guiness     
+-- 2   | NICK        | WAHLBERG     | Nick         | Wahlberg      | Nick Wahlberg        | N       | N.Wahlberg    
+-- 3   | ED          | CHASE        | Ed           | Chase         | Ed Chase             | E       | E.Chase       
+-- 4   | JENNIFER    | DAVIS        | Jennifer     | Davis         | Jennifer Davis       | J       | J.Davis       
+-- 5   | JOHNNY      | LOLLOBRIGIDA | Johnny       | Lollobrigida  | Johnny Lollobrigida  | J       | J.Lollobrigida
+
+SELECT
+	actor_id                            AS ID,
+	first_name                          AS Vorname,
+	last_name                           AS Nachname,
+	CONCAT(UPPER(LEFT(first_name, 1)), 
+		   LOWER(SUBSTRING(first_name, 2))) AS Prop_Vorname,
+	CONCAT(UPPER(LEFT(last_name, 1)), 
+		   LOWER(SUBSTRING(last_name, 2))) AS Prop_Nachname,
+	CONCAT(
+		CONCAT(UPPER(LEFT(first_name, 1)), 
+			   LOWER(SUBSTRING(first_name, 2))),' ',
+		CONCAT(UPPER(LEFT(last_name, 1)), 
+			   LOWER(SUBSTRING(last_name, 2)))
+	)    AS `Full-Name`,
+	LEFT(first_name,1)                  AS Initial,
+	CONCAT(
+		LEFT(first_name,1),
+		'.',
+		CONCAT(
+			UPPER(LEFT(last_name, 1)), 
+			LOWER(SUBSTRING(last_name, 2)))
+	)                   AS `Initial.Name`           
+FROM
+	actor;
+
+-- 2.9) Erstellen Sie eine Liste aller Schauspieler und die Anzahl Filme in denen Sie mitspielen. 
+--      Zuoberst der Schauspieler, welcher an den meisten Filmen mitgespielt hat.
+--
+-- Schauspieler_ID | Vorname     | Name         | Anzahl Filme
+-- ----------------+-------------+--------------+-------------
+-- 107             | GINA        | DEGENERES    | 42          
+-- 102             | WALTER      | TORN         | 41          
+-- 198             | MARY        | KEITEL       | 40          
+-- 181             | MATTHEW     | CARREY       | 39          
+-- 23              | SANDRA      | KILMER       | 37          
+-- 81              | SCARLETT    | DAMON        | 36          
+-- 13              | UMA         | WOOD         | 35          
+
+SELECT 
+	`fa`.`actor_id`        AS `Schauspieler_ID`,
+    `a`.`first_name`       AS `Vorname`,
+    `a`.`last_name`        AS `Name`,
+    count(`fa`.`film_id`)  AS `Anzahl Filme`
+FROM `film_actor` AS `fa`
+INNER JOIN `actor` AS `a` ON `a`.`actor_id` = `fa`.`actor_id`
+GROUP BY `fa`.`actor_id`
+ORDER BY `Anzahl Filme` DESC;
+
+-- 2.10) Erstellen Sie eine Liste von allen Ländern mit der Anzahl ihrer Städte. 
+--      Zuoberst das Land mit den meisten Orten.
+--
+-- Land                                  | Anzahl Städte
+-- --------------------------------------+--------------
+-- India                                 | 60           
+-- China                                 | 53           
+-- United States                         | 35           
+-- Japan                                 | 31           
+-- Mexico                                | 30           
+
+SELECT
+	`co`.`country`           AS `Land`,
+    COUNT(`ci`.`country_id`)    AS `Anzahl Städte`
+FROM `country` AS `co`
+INNER JOIN `city` AS `ci` ON `co`.`country_id` = `ci`.`country_id`
+GROUP BY `ci`.`country_id`
+ORDER BY `Anzahl Städte` DESC;
 
 -- END functions
 

@@ -28,29 +28,12 @@ print("completed!")
 
 sql_statement = """
 SELECT
-	actor_id                            AS ID,
-    first_name                          AS Vorname,
-    last_name                           AS Nachname,
-    CONCAT(UPPER(LEFT(first_name, 1)), 
-           LOWER(SUBSTRING(first_name, 2))) AS Prop_Vorname,
-    CONCAT(UPPER(LEFT(last_name, 1)), 
-           LOWER(SUBSTRING(last_name, 2))) AS Prop_Nachname,
-    CONCAT(
-		CONCAT(UPPER(LEFT(first_name, 1)), 
-			   LOWER(SUBSTRING(first_name, 2))),' ',
-		CONCAT(UPPER(LEFT(last_name, 1)), 
-			   LOWER(SUBSTRING(last_name, 2)))
-	)    AS `Full-Name`,
-    LEFT(first_name,1)                  AS Initial,
-    CONCAT(
-		LEFT(first_name,1),
-		'.',
-		CONCAT(
-			UPPER(LEFT(last_name, 1)), 
-			LOWER(SUBSTRING(last_name, 2)))
-	)                   AS `Initial.Name`           
-FROM
-	actor;
+	`co`.`country`           AS `Land`,
+    COUNT(`ci`.`country_id`)    AS `Anzahl Städte`
+FROM `country` AS `co`
+INNER JOIN `city` AS `ci` ON `co`.`country_id` = `ci`.`country_id`
+GROUP BY `ci`.`country_id`
+ORDER BY `Anzahl Städte` DESC;
 """
 
 rs_as_dict = True
