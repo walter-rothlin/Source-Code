@@ -102,9 +102,8 @@ CREATE VIEW actor_names AS
 		actor;
         
 -- ---------------------------------------------------------------------------
--- Joins
+-- Joins / Views
 -- ---------------------------------------------------------------------------
-SELECT count(*) FROM city;
 
 DROP VIEW IF EXISTS city_country; 
 CREATE VIEW city_country AS
@@ -117,13 +116,23 @@ CREATE VIEW city_country AS
 	FROM city AS ci
 	INNER JOIN country AS co ON ci.country_id = co.country_id;
     
+    
+DROP VIEW IF EXISTS address_city_country; 
+CREATE VIEW address_city_country AS    
 SELECT
-	address_id,
-    address,
-    address2,
-    destrict,
-    city_id,
-    postal_code,
-    phone,
-    location
-FROM address;
+	a.address_id,
+    a.address,
+    -- a.city_id        AS FK_City,
+    -- ci.city_id       AS PK_City,
+    ci.city          AS Stadt,
+    -- ci.country_id	 AS FK_Country,
+    -- co.country_id	 AS PK_Country,
+    co.country       AS Land,
+	a.address2,
+    a.district,
+    a.postal_code,
+    a.phone,
+    a.location
+FROM address AS a
+INNER JOIN city    AS ci ON a.city_id     = ci.city_id
+INNER JOIN country AS co ON ci.country_id = co.country_id;
