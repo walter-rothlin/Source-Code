@@ -116,9 +116,8 @@ CREATE VIEW city_country AS
 	FROM city AS ci
 	INNER JOIN country AS co ON ci.country_id = co.country_id;
     
-    
 DROP VIEW IF EXISTS address_city_country; 
-CREATE VIEW address_city_country AS    
+CREATE VIEW address_city_country AS        
 SELECT
 	a.address_id,
     a.address,

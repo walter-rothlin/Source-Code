@@ -29,7 +29,7 @@ print("completed!")
 stm_selectCities = """
     SELECT
        `city_id`    AS `ID`,
-       `city`       AS `Ortsname`,
+       `city`       AS `City`,
        `country_id` AS `Country`
     FROM 
        `city`
@@ -37,7 +37,7 @@ stm_selectCities = """
        `city` like 'O%'
 """
 
-rs_as_dict = False
+rs_as_dict = True
 print(f"{stm_selectCities}\nResult-Set as Hash: {rs_as_dict}\n")
 
 my_cursor = db_connection.cursor(dictionary=rs_as_dict)
@@ -51,7 +51,7 @@ print("+------+--------------------------------+------------+")
 
 for a_tuple in my_results:
     if rs_as_dict:
-            print(f"| {a_tuple['ID']:4d} | {a_tuple['Ortsname']:30s} | {a_tuple['Country']:10d} |")
+            print(f"| {a_tuple['ID']:4d} | {a_tuple['City']:30s} | {a_tuple['Country']:10d} |")
     else:
             print("| {plh:4d} |".format(plh=a_tuple[0]), end="")
             print(" {plh:30s} |".format(plh=a_tuple[1]), end="")
