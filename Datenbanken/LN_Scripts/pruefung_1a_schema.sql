@@ -1,6 +1,6 @@
 -- --------------------------------Bitte hier ändern--------------------------------
-SET @vorname  = [Bitte hier Vorname als Zeichenkette erfassen];    -- z.B. 'Walter'
-SET @nachname = [Bitte hier Nachname als Zeichenkette erfassen];   -- z.B. 'Rothlin'
+SET @vorname  = 'Ihr Vorname';
+SET @nachname = 'Ihr Nachname';
 -- ---------------------------------------------------------------------------------
 
 
