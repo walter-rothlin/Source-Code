@@ -1,16 +1,26 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
-<head>
-    <meta charset="UTF-8">
-    <title>BWI-A22</title>
-</head>
-<body>
-<a href="{{ url_for('hello') }}">Goto Hallo-Page</a></br></br></br>
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Inhaltsverzeichnis</title>
+{% endblock %}
+
+
+{% block body %}
+<h1>Endpoints</h1>
+<ul>
+    <li><a href="{{ url_for('hello') }}">Hallo-Page</a></li>
+    <li><a href="{{ url_for('get_JSON') }}">JSON</a></li>
+    <li><a href="{{ url_for('get_weather') }}">Wetter-JSON</a></li>
+    <li><a href="{{ url_for('get_weatherpicture') }}">Wetterbild (Default Ort)</a></li>
+    <li><a href="{{ url_for('get_weatherpicture') }}?city=Uster">Wetterbild (Uster)</a></li>
+</ul>
+
+<br/>
+<h1>Adressliste</h1>
 {{ anrede }} {{ stadt_name | safe }}!!
 <table>
 {% for addr in adress_liste %}
     <tr><td>{{ addr.nachname }}</td><td>{{ addr.vorname }}</td></tr>
 {% endfor %}
 </table>
-</body>
-</html>
+{% endblock %}

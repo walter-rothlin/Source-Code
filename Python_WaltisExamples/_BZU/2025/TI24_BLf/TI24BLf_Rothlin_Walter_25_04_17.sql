@@ -159,22 +159,17 @@ CREATE VIEW address_city_country AS
 	INNER JOIN city    AS ci ON a.city_id     = ci.city_id
 	INNER JOIN country AS co ON ci.country_id = co.country_id;
 
+DROP VIEW IF EXISTS schauspieler_liste; 
+CREATE VIEW schauspieler_liste AS   
 	SELECT
-		a.address_id,
+		st.customer_id,
+        st.first_name,
+        st.last_name,
 		a.address,
-		-- a.city_id        AS FK_City,
-		-- ci.city_id       AS PK_City,
 		ci.city          AS Stadt,
-		-- ci.country_id	 AS FK_Country,
-		-- co.country_id	 AS PK_Country,
-		co.country       AS Land,
-		a.address2,
-		a.district,
-		a.postal_code,
-		a.phone,
-		a.location
-	FROM address AS a
-    INNER JOIN address    AS a  ON a.adress_id     = ci.city_id
+		co.country       AS Land
+	FROM customer AS st
+    INNER JOIN address    AS a  ON a.address_id    = st.address_id
 	INNER JOIN city       AS ci ON a.city_id       = ci.city_id
 	INNER JOIN country    AS co ON ci.country_id   = co.country_id;
     

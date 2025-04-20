@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Wetterbild</title>
+{% endblock %}
+
+
+{% block body %}
+ <h1>Wetterbild für {{ weather_data.Ort }} ({{ weather_data.Land }})</h1>
+    <iframe
+      width="600"
+      height="450"
+      style="border:0"
+      loading="lazy"
+      allowfullscreen
+      src="https://www.google.com/maps?q={{ weather_data.Breitengrad }},{{ weather_data.Laengengrad }}&output=embed">
+    </iframe>
+
+    <h2>Aktuelle Wetterdaten {{ weather_data.Laengengrad }} / {{ weather_data.Breitengrad }}</h2>
+    <img src="{{ weather_data.Bild }}" /><br/>{{ weather_data.Wetter }} {{ weather_data.Beschreibung }}<br/>
+    Temperatur: {{ weather_data.Temperatur }}<br/>
+    Luftdruck: {{ weather_data.Luftdruck }}<br/>
+    Luftfeuchtigkeit: {{ weather_data.Luftfeuchtigkeit }}<br/>
+{% endblock %}

@@ -14,6 +14,42 @@
 # ------------------------------------------------------------------
 import mysql.connector
 
+
+def display_dictonary_as_ascii_table(my_results):
+    print("Records found:", len(my_results))
+    if not my_results:
+        print("No records found.")
+        exit(0)
+
+    # Attribut-Namen aus der ersten Zeile extrahieren
+    first_tuple = my_results[0]
+    attr_names = first_tuple.keys()
+
+    # Berechnung der maximalen Breiten für jede Spalte
+    attr_value_lengths = {}
+    for a_tuple in my_results:
+        for a_attr_name in attr_names:
+            attr_value_lengths[a_attr_name] = max(
+                attr_value_lengths.get(a_attr_name, len(a_attr_name)),
+                len(str(a_tuple[a_attr_name]))
+            )
+
+    # Erstellen von Header und Trennlinie
+    header = " | ".join(f"{a_attr_name:{attr_value_lengths[a_attr_name]}}" for a_attr_name in attr_names)
+    trennlinie = "-+-".join("-" * attr_value_lengths[a_attr_name] for a_attr_name in attr_names)
+
+    # Ausgabe der Tabelle
+    print(header)
+    print(trennlinie)
+
+    for a_tuple in my_results:
+        row = " | ".join(f"{str(a_tuple[a_attr_name]):{attr_value_lengths[a_attr_name]}}" for a_attr_name in attr_names)
+        print(row)
+
+
+# ======================================================
+# Haupt-Programm
+# ======================================================
 print("Connecting to pruefung....", end="", flush=True)
 db_connection = mysql.connector.connect(
     host="localhost",
@@ -36,44 +72,14 @@ GROUP BY `ci`.`country_id`
 ORDER BY `Anzahl Städte` DESC;
 """
 
+
+
 rs_as_dict = True
 print(f"{sql_statement}\nResult-Set as Hash: {rs_as_dict}\n")
 
 my_cursor = db_connection.cursor(dictionary=rs_as_dict)
 my_cursor.execute(sql_statement)
 my_results = my_cursor.fetchall()
-
-print("Records found:", len(my_results))
-if not my_results:
-    print("No records found.")
-    exit(0)
-
-# Attribut-Namen aus der ersten Zeile extrahieren
-first_tuple = my_results[0]
-attr_names = first_tuple.keys()
-
-# Berechnung der maximalen Breiten für jede Spalte
-attr_value_lengths = {}
-for a_tuple in my_results:
-    for a_attr_name in attr_names:
-        attr_value_lengths[a_attr_name] = max(
-            attr_value_lengths.get(a_attr_name, len(a_attr_name)),
-            len(str(a_tuple[a_attr_name]))
-        )
-
-# Erstellen von Header und Trennlinie
-header = " | ".join(f"{a_attr_name:{attr_value_lengths[a_attr_name]}}" for a_attr_name in attr_names)
-trennlinie = "-+-".join("-" * attr_value_lengths[a_attr_name] for a_attr_name in attr_names)
-
-# Ausgabe der Tabelle
-print(header)
-print(trennlinie)
-
-for a_tuple in my_results:
-    row = " | ".join(f"{str(a_tuple[a_attr_name]):{attr_value_lengths[a_attr_name]}}" for a_attr_name in attr_names)
-    print(row)
-
-
-
+display_dictonary_as_ascii_table(my_results)
 
 
