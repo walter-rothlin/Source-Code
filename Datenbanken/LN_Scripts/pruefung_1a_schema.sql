@@ -12,9 +12,9 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 SET @username = CONCAT(@vorname, ' ',  @nachname);
--- =========================================
--- == Schema Prüfung_1 kreieren           ==
--- =========================================
+-- ==========================================
+-- == Schema Pruefung_1 kreieren           ==
+-- ==========================================
 
 DROP SCHEMA IF EXISTS `Pruefung_1`;
 CREATE SCHEMA IF NOT EXISTS `Pruefung_1`  DEFAULT CHARACTER SET utf8mb4;
