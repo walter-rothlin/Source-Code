@@ -12,13 +12,16 @@
 --    welche später bei der Test-Driven Entwicklung zum Verifizieren gebraucht werden 
 --    können.
 
--- 1.1) Wie viele Datensätze hat es in personen_liste?
+-- 1.1) Wie viele Datensätze hat es in personen_liste 
+--      (SQL-Statmwent und als Kommentar die effektive Anzahl)?
 SELECT count(*) FROM `personen_liste`;                                            -- --> 1169
 
--- 1.2) Wie viele Personen leben in 8855 Wangen?
+-- 1.2) Wie viele Personen leben in 8855 Wangen 
+--      (SQL-Statmwent und als Kommentar die effektive Anzahl)?
 SELECT count(*) FROM `personen_liste` WHERE `PLZ_Ort` LIKE '8855 W%';             -- --> 703
 
--- 1.3) Wie viele verschiedene PLZ_Ort gibt es in der Tabelle (Not Null)?
+-- 1.3) Wie viele verschiedene PLZ_Ort gibt es in der Tabelle (Not Null) 
+--      (SQL-Statmwent und als Kommentar die effektive Anzahl)?
 SELECT count(distinct `PLZ_Ort`) FROM `personen_liste`;                           -- --> 82
 
 
@@ -172,7 +175,9 @@ ALTER TABLE `personen`
     ON DELETE NO ACTION
     ON UPDATE NO ACTION;
     
--- 5) Final checks for the migration
+-- 5) Final checks for the migration. Kopieren Sie die 3 Statements der Aufgabe 1 und führen Sie diese nochmals aus 
+--    und schreiben die Resultate als Kommentar hin. Vergleichen Sie die Zahlen mit Aufgabe 1.
+
 -- 5.1) Wie viele Datensätze hat es in personen_liste?
 SELECT count(*) FROM `personen_liste`;                                            -- --> 1169
 
