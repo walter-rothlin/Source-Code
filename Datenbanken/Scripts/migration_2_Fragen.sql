@@ -5,8 +5,10 @@
 -- History:
 -- 28-Apr-2025   Walter Rothlin      Initial Version
 -- ---------------------------------------------------------------------------------
+
+
 -- Normalisieren Sie die personen_liste und erstellen Sie hier ein Migrations-Script.
---
+-- ----------------------------------------------------------------------------------
 -- Gehen Sie in folgenden Schritten vor:
 -- 1) Sammeln Sie zuerst einige Informationen über die bestehenden Daten,
 --    welche später bei der Test-Driven Entwicklung zum Verifizieren gebraucht werden 

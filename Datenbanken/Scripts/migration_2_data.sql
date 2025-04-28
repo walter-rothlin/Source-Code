@@ -1,10 +1,9 @@
--- ------------------------------- Ab hier NICHTS mehr ändern ----------------------
 -- ---------------------------------------------------------------------------------
 -- Autor: Walter Rothlin
--- Description: Lädt das Prüfungs-Schema mit Daten 
+-- Description: Lädt Testdaten 
 --
 -- History:
--- 24-Apr-2025   Walter Rothlin      Initial Version
+-- 28-Apr-2025   Walter Rothlin      Initial Version
 -- ---------------------------------------------------------------------------------
 
 SET FOREIGN_KEY_CHECKS = 0;
@@ -17,7 +16,7 @@ INSERT INTO `personen_liste` (`ID`, `Anrede`, `Vorname`, `Nachname`, `Strasse`, 
    (66, 'Herr', 'Fritz', 'Bruhin', 'Seidenstr. 22e', '8853 Lachen', '', ''),
    (67, 'Herr', 'Hans', 'Muster', 'Mühlestr. 18', '8855 Wangen', '055  440 37 65', 'muster_hans@gmx.ch'),
    (68, 'Herr', 'Tobias', 'Rothlin', 'Bruggholzstr. 3', '8855 Wangen', '', ''),
-   (69, 'Frau', 'Barbara', 'Schnellmann', 'Nuolerstr. 22', '8855 Wangen', '055  440 51 84', 'bnabsi@bluewin.ch'),
+   (69, 'Frau', 'Barbara', 'Schnellmann', 'Nuolerstr. 22', '8855 Nuolen', '055  440 51 84', 'bnabsi@bluewin.ch'),
    (70, 'Frau', 'Klara', 'Vogt', 'Wiesenweg 11', '8854 Siebnen', '', ''),
    (71, 'Herr', 'Christof', 'Vogt', 'Peterliwiese 38', '8855 Wangen', '055  440 68 00', 'c.Vogt@bluewin.ch');
 
