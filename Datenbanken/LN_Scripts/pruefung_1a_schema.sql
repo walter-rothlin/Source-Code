@@ -1,11 +1,17 @@
 -- --------------------------------Bitte hier ändern--------------------------------
-SET @vorname  = 'Ihr Vorname';
-SET @nachname = 'Ihr Nachname';
+SET @vorname  = 'Walter';    -- Durch ihren Vornamen ersetzen
+SET @nachname = 'Rothlin';   -- Durch ihren Namen ersetzen
 -- ---------------------------------------------------------------------------------
 
-
-
--- --------------------------------Ab hier NICHTS mehr ändern-----------------------
+-- ------------------------------- Ab hier NICHTS mehr ändern ----------------------
+-- ---------------------------------------------------------------------------------
+-- Autor: Walter Rothlin
+-- Description: Kreiert ein Prüfungs-Schema
+--
+-- History:
+-- 24-Apr-2025   Walter Rothlin      Initial Version
+-- 08-May-2025   Walter Rothlin      Reviewed after BWI-A23
+-- ---------------------------------------------------------------------------------
 SET NAMES utf8mb4;
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;

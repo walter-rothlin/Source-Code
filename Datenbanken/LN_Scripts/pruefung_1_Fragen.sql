@@ -2,19 +2,18 @@
 -- Owner: Walter Rothlin
 --
 -- History:
--- 10-Mar-2025 Walter Rothlin	Initial Version / Fragen definiert
--- 14-Mar-2025 Walter Rothlin	Added Question from Jonathan Philip Grütter
--- 21-Mar-2025 Walter Rothlin	Angepasst auf Moodle Fragen
+-- 10-Mar-2025   Walter Rothlin	     Initial Version / Fragen definiert
+-- 14-Mar-2025   Walter Rothlin	     Added Question from Jonathan Philip Grütter
+-- 21-Mar-2025 	 Walter Rothlin	     Angepasst auf Moodle Fragen
+-- 08-May-2025   Walter Rothlin      Reviewed after BWI-A23
 -- ---------------------------------------------------------------------------
 
--- 10.2) Wieviele Tabellen hat das ERD?                                              
+-- Erstellen sie für die folgenden Fragen jeweils ein SQL-Statment und testen Sie 
+-- es direkt hier aus.
+-- Die entsprechende Antwort/Testresultate schreiben Sie jeweils als Kommentar 
+-- unter das Statement.
+-- ---------------------------------------------------------------------------
 
--- 10.3) Was für eine Beziehung besteht zwischen ort und land? 
-
--- 10.4) Was für eine Beziehung besteht zwischen kommissionen_gruppen und personen? 
-
--- 10.5) Was für eine Beziehung besteht zwischen personen und telefonnummern?
- 
 -- 1.1) Wie viele Personen gibt es in der Personen-Tabelle?
 
 -- 1.1.1a) Wie heisst der Vorname der Person, welche heute geändert wurde?

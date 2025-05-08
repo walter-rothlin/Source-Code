@@ -1,10 +1,12 @@
--- -----------------------------------------
+-- ------------------------------- Ab hier NICHTS mehr ändern ----------------------
+-- ---------------------------------------------------------------------------------
 -- Autor: Walter Rothlin
 -- Description: Lädt das Prüfungs-Schema mit Daten 
 --
 -- History:
 -- 13-Mar-2025   Walter Rothlin      Initial Version
--- -----------------------------------------
+-- 08-May-2025   Walter Rothlin      Reviewed after BWI-A23
+-- ---------------------------------------------------------------------------------
 
 SET FOREIGN_KEY_CHECKS = 0;
 INSERT INTO `adressen` (`ID`, `Strasse`, `Hausnummer`, `Postfachnummer`, `Adresszusatz`, `Wohnung`, `Kataster_Nr`, `lon`, `lat`, `Politisch_Wangen`, `Orte_ID`, `last_update`, `changed_by`) VALUES
