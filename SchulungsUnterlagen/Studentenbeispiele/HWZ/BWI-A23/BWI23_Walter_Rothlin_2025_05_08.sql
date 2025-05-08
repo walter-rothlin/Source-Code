@@ -146,3 +146,73 @@ SELECT SLEEP(1);  -- wait 1 sec, just to give a chance to set schema as default
 USE `hwz`;
 
 
+-- -----------------------------------------------------
+-- Table `Rohdaten-Tabellen`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Orte_Rohdaten`;
+CREATE TABLE IF NOT EXISTS `Orte_Rohdaten` (
+  `id`        INT         NOT NULL AUTO_INCREMENT,
+  `PLZ`       VARCHAR(15) NULL,
+  `Ort`       VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+  
+DROP TABLE IF EXISTS `Adressen_Rohdaten`;
+CREATE TABLE IF NOT EXISTS `Adressen_Rohdaten` (
+  `id`        INT         NOT NULL AUTO_INCREMENT,
+  `Vorname`   VARCHAR(45) NOT NULL,
+  `Nachname`  VARCHAR(45) NOT NULL,
+  `Strasse`   VARCHAR(45) NULL,
+  `HausNr`    VARCHAR(5)  NULL,
+  `PLZ`       VARCHAR(15) NULL,
+  `Ort`       VARCHAR(45) NULL,
+  `FK_Ort`    INT         NULL,
+  PRIMARY KEY (`id`),
+  INDEX `idx_fk_Orte_Rohdaten` (`FK_Ort` ASC) VISIBLE,
+  CONSTRAINT `constr_fk_Orte_Rohdaten`
+    FOREIGN KEY (`FK_Ort`)
+    REFERENCES `Orte_Rohdaten` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+-- -----------------------------------------------------
+-- Testdaten einfügen
+-- -----------------------------------------------------
+INSERT INTO `Orte_Rohdaten` 
+	(`id`, `PLZ`,   `Ort`) VALUES 
+    (1, '8855', 'Wangen'),
+    (2, '8855', 'Nuolen'),
+    (3, '8854', 'Galgenen'),
+    (4, '8853', 'Lachen'),
+    (5, '8006', 'Zürich');
+    
+    
+INSERT INTO `Adressen_Rohdaten` 
+	(`Vorname`, `Nachname`, `Strasse`,      `HausNr`,   `FK_Ort`) VALUES 
+    ('Walter',  'Rothlin', 'Peterliwiese',  '33',        1),
+    ('Tobias',  'Rothlin', 'Peterliwiese',  '33',        1),
+    ('Claudia', 'Collet',  'Etzelstr.',     '33',        2),
+    ('Max',     'Meier',   'Nördlingerhof', '1d',        3),
+    ('Ursula',  'Müller',  'Musterstr ',    '44c',       4),
+    ('Bettina', 'Franzen', 'Militärstr.',   '12a',       5);
+
+
+DROP VIEW IF EXISTS `Adressen` ; 
+CREATE VIEW `Adressen`  AS  
+	SELECT
+		`a`.`id`        AS `adress_id`,
+		`a`.`Vorname`   AS `Vorname`,
+		`a`.`Nachname`  AS `Nachname`,
+		CONCAT(`a`.`Strasse`,
+              ' ',
+              `a`.`HausNr`)
+                        AS `Strasse`,
+		-- `a`.`PLZ`       AS `PLZ_Old`,
+		-- `a`.`Ort`       AS `Ort_Old`,
+        -- `a`.`FK_Ort`    AS `FK_Ort`,
+        
+        `o`.`PLZ`       AS `PLZ`,
+		`o`.`Ort`       AS `Ort`
+    FROM `Adressen_Rohdaten` AS `a`
+    LEFT OUTER JOIN `Orte_Rohdaten` AS `o` ON `o`.`id` = `a`.`FK_Ort`;
+    
+    -- SELECT * FROM `Adressen` WHERE `PLZ_Old` <> `PLZ` AND `FK_Ort` <> `Ort`
