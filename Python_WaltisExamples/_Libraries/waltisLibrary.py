@@ -90,6 +90,7 @@
 #                                   Added get_coordinates_for_adresse()
 # 15-Dec-2024   Walter Rothlin      Added get_sql_string_update_value(), get_sql_float_update_value()
 # 18-Jan-2025   Walter Rothlin      Added search_address_geo_admin()
+# 09-May-2025   Walter Rothlin      Added sis_password_valid()
 # ------------------------------------------------------------------
 
 # toDo:
@@ -115,6 +116,7 @@ import urllib.parse
 import locale
 import hashlib
 from jinja2 import Environment, FileSystemLoader, Template
+import string
 
 # Add dir to PYTHONPATH in a program
 # ----------------------------------
@@ -207,6 +209,107 @@ def TEST_printProgressBar(verbal=False):
         # Update Progress Bar
         printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
     print("Completed")
+
+# =================================
+# Password functions and tests
+# =================================
+def is_password_valid(
+
+        password,
+        min_length=None,
+        min_count_figures=None,
+        min_count_uppercase=None,
+        min_count_lowercase=None,
+        min_count_special_char=None
+):
+    '''
+# ----------------------------------------------
+# Passwortregeln:
+# ----------------------------------------------
+# Ein korrektes Passwort muss je nach Vorgaben:
+# - eine Mindestlänge haben
+# - eine Mindestanzahl an Ziffern enthalten
+# - eine Mindestanzahl an Großbuchstaben enthalten
+# - eine Mindestanzahl an Kleinbuchstaben enthalten
+# - eine Mindestanzahl an Sonderzeichen enthalten
+# ----------------------------------------------
+    '''
+    if not isinstance(password, str):
+        return False
+
+    count_digits = sum(1 for c in password if c.isdigit())
+    count_upper = sum(1 for c in password if c.isupper())
+    count_lower = sum(1 for c in password if c.islower())
+    count_special = sum(1 for c in password if c in string.punctuation)
+
+    if min_length is not None and len(password) < min_length:
+        return False
+    if min_count_figures is not None and count_digits < min_count_figures:
+        return False
+    if min_count_uppercase is not None and count_upper < min_count_uppercase:
+        return False
+    if min_count_lowercase is not None and count_lower < min_count_lowercase:
+        return False
+    if min_count_special_char is not None and count_special < min_count_special_char:
+        return False
+
+    return True
+
+# ---------------------------------------------------
+# Testfunktion mit verschiedenen Test-Cases
+# ---------------------------------------------------
+def AUTO_TEST_is_password_valid():
+    test_cases = [
+        {
+            "password": "Passw0rd",
+            "rules": {
+                "min_length": 8,
+                "min_count_figures": 1,
+                "min_count_uppercase": 1,
+                "min_count_lowercase": 1,
+                "min_count_special_char": 0,
+            },
+            "expected": True,
+        },
+        {
+            "password": "short7!",
+            "rules": {
+                "min_length": 8,
+                "min_count_figures": 1,
+                "min_count_uppercase": 1,
+                "min_count_lowercase": 1,
+                "min_count_special_char": 1,
+            },
+            "expected": False,
+        },
+        {
+            "password": "password1!",
+            "rules": {
+                "min_length": 8,
+                "min_count_figures": 1,
+                "min_count_uppercase": 1,
+                "min_count_lowercase": 1,
+                "min_count_special_char": 1,
+            },
+            "expected": False,
+        },
+        {
+            "password": "ValidPassword123!",
+            "rules": {
+                "min_length": 10,
+                "min_count_figures": 2,
+                "min_count_uppercase": 1,
+                "min_count_lowercase": 3,
+                "min_count_special_char": 1,
+            },
+            "expected": True,
+        },
+    ]
+
+    for i, test in enumerate(test_cases):
+        result = is_password_valid(test["password"], **test["rules"])
+        passed = result == test["expected"]
+        print(f"Testfall {i + 1}: {'✅ OK' if passed else '❌ FEHLER'}")
 
 
 # =================================
@@ -4489,6 +4592,7 @@ if __name__ == '__main__':
 
     if not autoTest:
         pass  # NOP in Python
+        # AUTO_TEST_is_password_valid()
         # AUTO_TEST_xPath_Get(verbal=True)
         # AUTO_TEST__split_adress_street_nr()
         # TEST_stringFct()
@@ -4504,7 +4608,6 @@ if __name__ == '__main__':
 
     # Automated Tests
     # ===============
-
     if autoTest:
         auto_test_suiteNameLength = 40
         auto_test_testStatistics_anzStellen = 4
