@@ -3356,6 +3356,7 @@ def mysql_db_connect(db_host='localhost', port=3306, db_schema='stammdaten', db_
         database=db_schema,
         auth_plugin='mysql_native_password'
     )
+    db_connection.set_charset_collation('utf8mb4', 'utf8mb4_bin')
     if trace:
         print("completed!")
     return db_connection
