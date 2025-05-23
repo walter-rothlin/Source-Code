@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="hero-section text-white p-5 rounded-4 shadow mb-4 text-center">
+            <h1 class="display-5 fw-bold">Willkommen bei <span class="text-warning">MyWebApp</span></h1>
+            <p class="lead">Ihre Plattform für digitale Zusammenarbeit &amp; smarte Adressverwaltung.</p>
+            {% if not session.email %}
+            <button type="button" class="btn btn-light btn-lg mt-3 shadow" data-bs-toggle="modal" data-bs-target="#loginModal">
+                <i class="bi bi-box-arrow-in-right"></i> Jetzt einloggen
+            </button>
+            {% endif %}
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-info-circle-fill text-primary"></i> Über uns
+                </h5>
+                <p class="card-text">
+                    Unsere Anwendung wurde entwickelt, um Ihnen den Zugriff auf wichtige Informationen und Funktionen so einfach wie möglich zu machen.
+                    <span class="badge bg-success">Neu</span> – Profitieren Sie von der Adressverwaltung nach Login!
+                </p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">✔️ Login via Modal</li>
+                    <li class="list-group-item">✔️ Responsive Design</li>
+                    <li class="list-group-item">✔️ Bootstrap 5 Unterstützung</li>
+                </ul>
+                {% if not session.email %}
+                <div class="text-center">
+                    <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="bi bi-person-check"></i> Kostenlos anmelden
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

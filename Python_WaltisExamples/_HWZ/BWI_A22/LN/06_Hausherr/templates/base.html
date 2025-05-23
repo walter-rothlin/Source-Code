@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>PadelConnect HWZ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('home') }}">PadelConnect</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('kontakt') }}">Kontakt</a></li>
+                {% if 'email' in session %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('adress_liste') }}">Adressliste</a></li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+                {% if 'email' in session %}
+                    <li class="nav-item"><span class="navbar-text me-2">Angemeldet als: {{ session['email'] }}</span></li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-secondary btn-sm" href="{{ url_for('logout') }}"
+                           onclick="return confirm('Möchtest du dich wirklich abmelden?');">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-dark btn-sm text-white" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Login  -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" method="POST" action="{{ url_for('home') }}">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="emailLogin" class="form-label">E-Mail-Adresse</label>
+          <input type="email" class="form-control" id="emailLogin" name="email" required placeholder="z. B. max@students.hwz.ch">
+        </div>
+        <div class="mb-3">
+          <label for="passwordLogin" class="form-label">Passwort</label>
+          <input type="password" class="form-control" id="passwordLogin" name="password" required placeholder="z. B. Geheim123">
+        </div>
+        <div class="text-end">
+          <a href="#" class="small" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" data-bs-dismiss="modal">Passwort vergessen?</a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Registrieren</a>
+        <button type="submit" class="btn btn-primary">Anmelden</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Passwort vergessen  -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" method="POST" action="{{ url_for('forgot_password') }}">
+      <div class="modal-header">
+        <h5 class="modal-title" id="forgotPasswordModalLabel">Passwort zurücksetzen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="emailReset" class="form-label">E-Mail-Adresse</label>
+          <input type="email" class="form-control" id="emailReset" name="email" required placeholder="z. B. max@students.hwz.ch">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Zurücksetzen</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Registrierung  -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" method="POST" action="{{ url_for('register') }}">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Registrieren</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="anrede" class="form-label">Anrede</label>
+          <select class="form-select" id="anrede" name="anrede" required>
+            <option value="">Bitte wählen</option>
+            <option>Herr</option>
+            <option>Frau</option>
+            <option>Divers</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="vorname" class="form-label">Vorname</label>
+          <input type="text" class="form-control" id="vorname" name="vorname" required>
+        </div>
+        <div class="mb-3">
+          <label for="nachname" class="form-label">Nachname</label>
+          <input type="text" class="form-control" id="nachname" name="nachname" required>
+        </div>
+        <div class="mb-3">
+          <label for="emailRegister" class="form-label">E-Mail-Adresse</label>
+          <input type="email" class="form-control" id="emailRegister" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="passwordRegister" class="form-label">Passwort</label>
+          <input type="password" class="form-control" id="passwordRegister" name="password" required
+                 placeholder="Mind. 6 Zeichen, Gross-, Kleinbuchstaben & Zahl">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Registrieren</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

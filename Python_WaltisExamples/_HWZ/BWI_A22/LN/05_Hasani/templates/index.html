@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <h1 class="display-5 fw-bold mb-3">Willkommen zur BWI-A22 Web-Applikation</h1>
+
+    {% if 'user' in session %}
+        <div class="alert alert-success" id="welcome-msg">
+            Willkommen zurück, <strong>{{ session['user'] }}</strong>!
+        </div>
+
+        <script>
+            const welcomeEl = document.getElementById('welcome-msg');
+            const hour = new Date().getHours();
+            let gruss = 'Willkommen zurück';
+
+            if (hour >= 5 && hour < 12) {
+                gruss = 'Guten Morgen';
+            } else if (hour >= 12 && hour < 18) {
+                gruss = 'Guten Tag';
+            } else {
+                gruss = 'Guten Abend';
+            }
+
+            welcomeEl.innerHTML = `${gruss}, <strong>{{ session['user'] }}</strong>!`;
+        </script>
+
+        <div class="mt-4 mb-3">
+            <div class="animated-icon">🚀</div>
+            <p class="mt-3">Du hast jetzt Zugang zur Adressübersicht und den erweiterten Funktionen.</p>
+        </div>
+
+    {% else %}
+        <p class="lead text-muted mb-4">
+            Diese Anwendung wurde im Rahmen des Moduls <strong>Distributed and Mobile Systems</strong> entwickelt.
+            Sie demonstriert eine vollständige Web-Applikation mit Login, Navigation, Formularen und strukturierter Darstellung.
+        </p>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-4">
+                <div class="card text-start shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">🔐 Login erforderlich</h5>
+                        <p class="card-text">
+                            Melden Sie sich an, um Zugriff auf die Adressübersicht und weitere Seiten zu erhalten.
+                        </p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Jetzt einloggen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center text-muted">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-around flex-wrap mt-4">
+                    <div class="text-center m-2">
+                        <div style="font-size: 2rem;">⚙️</div>
+                        <div class="small">Technologisch klar strukturiert</div>
+                    </div>
+                    <div class="text-center m-2">
+                        <div style="font-size: 2rem;">🧭</div>
+                        <div class="small">Intuitive Navigation</div>
+                    </div>
+                    <div class="text-center m-2">
+                        <div style="font-size: 2rem;">📬</div>
+                        <div class="small">Kontaktformular mit Rückmeldung</div>
+                    </div>
+                    <div class="text-center m-2">
+                        <div style="font-size: 2rem;">💡</div>
+                        <div class="small">Modulverständnis demonstriert</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="mt-5 text-muted small">
+        <em>Ein Projekt im Rahmen des Moduls „Distributed and Mobile Systems“ – Klasse BWI_A22</em>
+    </div>
+</div>
+{% endblock %}

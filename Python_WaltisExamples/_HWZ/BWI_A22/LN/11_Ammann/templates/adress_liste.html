@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Adress-Liste{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h1 class="text-primary">
+                <i class="bi bi-people-fill me-2"></i>Adress-Liste
+            </h1>
+            <span class="badge bg-success fs-6"><i class="bi bi-shield-check"></i> Zugriff erlaubt</span>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="text-muted mb-3"><i class="bi bi-info-circle"></i> Diese Tabelle zeigt fiktive Adressdaten registrierter Benutzer.</p>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="bi bi-person-badge"></i> Name</th>
+                                <th>Vorname</th>
+                                <th><i class="bi bi-signpost"></i> Strasse</th>
+                                <th>PLZ</th>
+                                <th>Ort</th>
+                                <th><i class="bi bi-envelope"></i> E-Mail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Schneider</td>
+                                <td>Laura</td>
+                                <td>Wiesenweg 5</td>
+                                <td>3012</td>
+                                <td>Bern</td>
+                                <td>laura.schneider@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>Keller</td>
+                                <td>Michael</td>
+                                <td>Industriestrasse 12</td>
+                                <td>4058</td>
+                                <td>Basel</td>
+                                <td>michael.keller@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>Huber</td>
+                                <td>Sabine</td>
+                                <td>Blumenweg 33</td>
+                                <td>6003</td>
+                                <td>Luzern</td>
+                                <td>sabine.huber@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>Weber</td>
+                                <td>Thomas</td>
+                                <td>Alpenstrasse 9</td>
+                                <td>9000</td>
+                                <td>St. Gallen</td>
+                                <td>thomas.weber@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>Müller</td>
+                                <td>Julia</td>
+                                <td>Sonnenweg 7</td>
+                                <td>6300</td>
+                                <td>Zug</td>
+                                <td>julia.mueller@example.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

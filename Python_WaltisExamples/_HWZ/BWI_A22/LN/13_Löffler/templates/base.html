@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Meine Flask App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <a class="navbar-brand" href="{{ url_for('index') }}">Meine App</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('kontakt') }}">Kontakt</a></li>
+      {% if 'user' in session %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('adressliste') }}">Adress-Liste</a></li>
+      {% endif %}
+    </ul>
+    <ul class="navbar-nav">
+      {% if 'user' in session %}
+        <li class="nav-item"><span class="nav-link">👤 {{ session['user'] }}</span></li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<footer class="text-center mt-5 mb-3 text-muted">
+    &copy; 2025 – BWI_A22
+</footer>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="email" class="form-label">E-Mail</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Passwort</label>
+            <input type="password" class="form-control" name="password" pattern=".{6,}" title="Passwort zu kurz." required>
+          </div>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#forgotModal" data-bs-dismiss="modal">Passwort vergessen?</a><br>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Registrieren</a>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">Logout bestätigen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Wirklich ausloggen?
+      </div>
+      <div class="modal-footer">
+        <a href="{{ url_for('logout_confirmed') }}" class="btn btn-danger">Logout</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Eingeloggt bleiben</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Passwort vergessen Modal -->
+<div class="modal fade" id="forgotModal" tabindex="-1" aria-labelledby="forgotModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('passwort_vergessen') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="forgotModalLabel">Passwort zurücksetzen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="reset_email" class="form-label">E-Mail Adresse</label>
+          <input type="email" class="form-control" name="reset_email" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Zurücksetzen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Registrierung Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('registrieren') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel">Registrieren</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Anrede</label>
+            <select class="form-select" name="anrede">
+              <option value="Herr">Herr</option>
+              <option value="Frau">Frau</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Vorname</label>
+            <input type="text" class="form-control" name="vorname" pattern="[A-Za-zÀ-ÿ\s]+" title="Bitte nur Buchstaben und Leerzeichen verwenden." required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nachname</label>
+            <input type="text" class="form-control" name="nachname" pattern="[A-Za-zÀ-ÿ\s]+" title="Bitte nur Buchstaben und Leerzeichen verwenden." required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">E-Mail</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Passwort</label>
+            <input type="password" class="form-control" name="password" pattern=".{6,}" title="Passwort zu kurz" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Registrieren</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

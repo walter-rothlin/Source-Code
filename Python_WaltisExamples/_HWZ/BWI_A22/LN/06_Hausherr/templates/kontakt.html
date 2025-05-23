@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Kontakt</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <p>Du kannst uns per Formular oder E-Mail kontaktieren:</p>
+    <ul>
+        <li>E-Mail: <a href="mailto:padel@hwz.ch">padel@hwz.ch</a></li>
+        <li>Telefon: 044 123 45 67</li>
+    </ul>
+
+    <form method="POST" action="{{ url_for('kontakt') }}" class="mt-4">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Max Muster" required>
+        </div>
+        <div class="mb-3">
+            <label for="nachricht" class="form-label">Nachricht</label>
+            <textarea class="form-control" id="nachricht" name="nachricht" rows="5" placeholder="Deine Nachricht..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Absenden</button>
+    </form>
+</div>
+{% endblock %}

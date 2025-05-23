@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Support & Kontakt</h1>
+<p>Du hast Fragen zur Plattform, brauchst Unterstützung oder möchtest Feedback geben? Dann nutze unser Kontaktformular oder wende dich direkt an uns.</p>
+
+<h2>Kontaktinformationen</h2>
+<p><strong>Adresse:</strong> Lindenweg 42, 8008 Zürich</p>
+<p><strong>Telefon:</strong> +41 44 123 45 67</p>
+<p><strong>E-Mail:</strong> support@kizkin-solutions.ch</p>
+
+<h2>Kontaktformular</h2>
+<form action="{{ url_for('kontakt') }}" method="post">
+    <div class="form-group">
+        <label for="name">Dein Name:</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Deine E-Mail-Adresse:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+        <label for="message">Nachricht:</label>
+        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Absenden</button>
+</form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Willkommen{% endblock %}
+
+{% block extra_scripts %}
+  {% if login_error %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+          loginModal.show();
+      });
+    </script>
+  {% endif %}
+  {% if register_error %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+        registerModal.show();
+      });
+    </script>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>Willkommen bei Distributed und Mobile Systems</h1>
+    <p>Dies ist ein einfaches Beispielprojekt mit Flask.</p>
+
+    <h2>Was kann diese App?</h2>
+    <ul>
+        <li>Navigation mit Templates (Jinja2)</li>
+        <li>GET- und POST-Parameter</li>
+        <li>Session-Verwaltung</li>
+        <li>Formulare mit CSS und JavaScript</li>
+    </ul>
+
+    <p>Nutze das Menü oben, um weitere Seiten zu besuchen.</p>
+
+    <img src="https://www.python.org/static/community_logos/python-logo.png"
+         alt="Python Logo" width="200">
+{% endblock %}

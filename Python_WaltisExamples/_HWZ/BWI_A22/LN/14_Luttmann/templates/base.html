@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Meine App{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+      <span></span><span></span><span></span>
+    </a>
+  </div>
+  <div id="navMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="{{ url_for('home') }}">Home</a>
+      <a class="navbar-item" href="{{ url_for('kontakt') }}">Kontakt</a>
+      {% if logged_in %}
+      <a class="navbar-item" href="{{ url_for('adressen') }}">Adress-Liste</a>
+      {% endif %}
+    </div>
+    <div class="navbar-end">
+      {% if logged_in %}
+      <div class="navbar-item">Eingeloggt als <strong>{{ user_email }}</strong></div>
+      <div class="navbar-item"><a class="button is-danger" id="logoutButton">Logout</a></div>
+      {% else %}
+      <div class="navbar-item"><a class="button is-primary" id="loginButton">Login</a></div>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">{% block content %}{% endblock %}</div>
+</section>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Login</p>
+      <button class="delete" aria-label="close" id="closeLoginModal"></button>
+    </header>
+    <section class="modal-card-body">
+      <form action="{{ url_for('login') }}" method="POST">
+        <div class="field">
+          <label class="label">E-Mail</label>
+          <div class="control">
+            <input class="input" type="email" name="email" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Passwort</label>
+          <div class="control">
+            <input class="input" type="password" name="password" required>
+          </div>
+        </div>
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control">
+            <a id="openForgotPassword" class="has-text-info is-underlined">Passwort vergessen?</a>
+          </div>
+          <div class="control">
+            <a id="openRegister" class="has-text-success is-underlined">Registrieren</a>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-link" type="submit">Login</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal" id="logoutModal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Logout bestätigen</p>
+      <button class="delete" aria-label="close" id="closeLogoutModal"></button>
+    </header>
+    <section class="modal-card-body">
+      <p>Möchten Sie sich wirklich ausloggen?</p>
+    </section>
+    <footer class="modal-card-foot">
+      <a href="{{ url_for('logout') }}" class="button is-danger">Logout</a>
+      <button class="button" id="cancelLogout">Eingeloggt bleiben</button>
+    </footer>
+  </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal" id="forgotPasswordModal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Passwort zurücksetzen</p>
+      <button class="delete" aria-label="close" id="closeForgotPassword"></button>
+    </header>
+    <section class="modal-card-body">
+      <form action="{{ url_for('forgot_password') }}" method="POST" onsubmit="alert('Reset-Link gesendet'); return false;">
+        <div class="field">
+          <label class="label">E-Mail-Adresse</label>
+          <div class="control">
+            <input class="input" type="email" name="email" required>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-link" type="submit">Passwort zurücksetzen</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal" id="registerModal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Registrieren</p>
+      <button class="delete" aria-label="close" id="closeRegisterModal"></button>
+    </header>
+    <section class="modal-card-body">
+      <form action="{{ url_for('register') }}" method="POST" onsubmit="alert('Registrierungs-Link gesendet'); return false;">
+        <div class="field">
+          <label class="label">Anrede</label>
+          <div class="control">
+            <div class="select">
+              <select name="salutation" required>
+                <option>Herr</option>
+                <option>Frau</option>
+                <option>Divers</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Vorname</label>
+          <div class="control">
+            <input class="input" type="text" name="first_name" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Nachname</label>
+          <div class="control">
+            <input class="input" type="text" name="last_name" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">E-Mail-Adresse</label>
+          <div class="control">
+            <input class="input" type="email" name="email" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Passwort</label>
+          <div class="control">
+            <input class="input" type="password" name="password" required>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-success" type="submit">Registrieren</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleModal = (id, show) => {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.toggle('is-active', show);
+  };
+  document.querySelector('.navbar-burger').addEventListener('click', () => {
+    const burger = document.querySelector('.navbar-burger');
+    const menu = document.getElementById(burger.dataset.target);
+    burger.classList.toggle('is-active');
+    menu.classList.toggle('is-active');
+  });
+
+  // Login Modal
+  document.getElementById('loginButton')?.addEventListener('click', () => toggleModal('loginModal', true));
+  document.getElementById('closeLoginModal')?.addEventListener('click', () => toggleModal('loginModal', false));
+  document.querySelector('#loginModal .modal-background')?.addEventListener('click', () => toggleModal('loginModal', false));
+
+  // Logout Modal
+  document.getElementById('logoutButton')?.addEventListener('click', () => toggleModal('logoutModal', true));
+  document.getElementById('closeLogoutModal')?.addEventListener('click', () => toggleModal('logoutModal', false));
+  document.getElementById('cancelLogout')?.addEventListener('click', () => toggleModal('logoutModal', false));
+  document.querySelector('#logoutModal .modal-background')?.addEventListener('click', () => toggleModal('logoutModal', false));
+
+  // Forgot Password Modal
+  document.getElementById('openForgotPassword')?.addEventListener('click', () => {
+    toggleModal('loginModal', false);
+    toggleModal('forgotPasswordModal', true);
+  });
+  document.getElementById('closeForgotPassword')?.addEventListener('click', () => toggleModal('forgotPasswordModal', false));
+  document.querySelector('#forgotPasswordModal .modal-background')?.addEventListener('click', () => toggleModal('forgotPasswordModal', false));
+
+  // Register Modal
+  document.getElementById('openRegister')?.addEventListener('click', () => {
+    toggleModal('loginModal', false);
+    toggleModal('registerModal', true);
+  });
+  document.getElementById('closeRegisterModal')?.addEventListener('click', () => toggleModal('registerModal', false));
+  document.querySelector('#registerModal .modal-background')?.addEventListener('click', () => toggleModal('registerModal', false));
+});
+</script>
+</body>
+</html>

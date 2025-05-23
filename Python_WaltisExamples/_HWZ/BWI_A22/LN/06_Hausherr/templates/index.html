@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="mb-4">Willkommen bei PadelConnect HWZ 🎾</h1>
+    <p class="lead">Du suchst Mitspieler:innen für ein spontanes oder geplantes Padel-Tennis-Match? Dann bist du hier genau richtig!</p>
+    <p>Diese Plattform wurde speziell für HWZ-Studierende entwickelt, um Spielpartner:innen zu finden – egal ob Anfänger:in oder Profi.</p>
+
+
+    <img src="{{ url_for('static', filename='images/court.jpeg') }}"
+         alt="Padel Court"
+         class="img-fluid rounded shadow mt-4"
+         style="max-height: 400px;">
+
+    {% if 'email' not in session %}
+    <div class="alert alert-warning mt-4" role="alert">
+        Du bist nicht eingeloggt. <a href="#" class="alert-link" data-bs-toggle="modal" data-bs-target="#loginModal">Jetzt anmelden</a>, um Mitspieler:innen zu finden!
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-4">
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+{% if request.args.get('modal') == 'login' %}
+<script>
+    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    loginModal.show();
+</script>
+{% elif request.args.get('modal') == 'register' %}
+<script>
+    const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+    registerModal.show();
+</script>
+{% endif %}
+{% endblock %}

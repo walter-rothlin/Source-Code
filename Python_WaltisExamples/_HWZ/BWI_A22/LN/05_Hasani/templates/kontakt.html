@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="text-center mb-4">Kontakt</h2>
+
+    {% if request.args.get('sent') == 'true' %}
+        <div class="alert alert-success text-center" role="alert">
+            Vielen Dank für Ihre Nachricht! Wir melden uns bald bei Ihnen.
+        </div>
+    {% endif %}
+
+    <div class="row g-4 justify-content-center">
+        <!-- Kontaktinformationen -->
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 h-100 bg-light">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-3">Kontaktinformationen</h5>
+                        <p>Unser Support-Team hilft Ihnen bei technischen oder organisatorischen Fragen rund um die BWI-A22 Applikation gerne weiter.</p>
+
+                        <hr class="my-3">
+
+                        <div class="mb-3">
+                            <strong>Adresse:</strong><br>
+                            HWZ Zürich<br>
+                            Lagerstrasse 5<br>
+                            8021 Zürich
+                        </div>
+
+                        <div class="mb-3">
+                            <strong>Telefon:</strong><br>
+                            +41 44 123 45 67
+                        </div>
+
+                        <div class="mb-3">
+                            <strong>E-Mail:</strong><br>
+                            <a href="mailto:support@bwi-a22.ch">support@bwi-a22.ch</a>
+                        </div>
+
+                        <div>
+                            <strong>Öffnungszeiten:</strong><br>
+                            Montag bis Freitag<br>
+                            08:30 – 17:00 Uhr
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kontaktformular -->
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Kontaktformular</h5>
+                    <p class="card-text">Hinterlassen Sie uns eine Nachricht – wir melden uns schnellstmöglich zurück.</p>
+
+                    <form method="GET" action="/kontakt">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Ihr Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Max Mustermann" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Ihre E-Mail-Adresse</label>
+                            <input type="email" class="form-control" id="email" placeholder="max@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="anliegen" class="form-label">Ihr Anliegen</label>
+                            <textarea class="form-control" id="anliegen" rows="4" placeholder="Ihre Nachricht..." required></textarea>
+                        </div>
+                        <button type="submit" name="sent" value="true" class="btn btn-primary">Absenden</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

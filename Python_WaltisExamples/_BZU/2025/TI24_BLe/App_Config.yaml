@@ -1,0 +1,6 @@
+database:
+    host: localhost
+    user: BLE_2024
+    password: 123456789
+    schema: bzu_ble
+    auth_plugin: mysql_native_password

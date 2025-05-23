@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">Kontakt</h1>
+
+<form action="{{ url_for('kontakt') }}" method="post" class="box">
+    <div class="field">
+        <label class="label" for="name">Name</label>
+        <div class="control">
+            <input class="input" type="text" id="name" name="name" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="email">Email</label>
+        <div class="control">
+            <input class="input" type="email" id="email" name="email" required>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="message">Nachricht</label>
+        <div class="control">
+            <textarea class="textarea" id="message" name="message" rows="4" required></textarea>
+        </div>
+    </div>
+
+    <div class="control mt-3">
+        <button class="button is-link" type="submit">Absenden</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">Adress-Liste</h1>
+<p>Die ist eine geschützte Seite mit fiktiven Adressen, nur für eingeloggte Benutzer sichtbar.</p>
+
+<table class="table is-striped is-hoverable is-fullwidth">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Adresse</th>
+            <th>Telefon</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Anna Keller</td>
+            <td>Bahnhofstrasse 12, 8001 Zürich</td>
+            <td>+41 44 123 45 67</td>
+            <td>anna.keller@beispiel.ch</td>
+        </tr>
+        <tr>
+            <td>Marc Dubois</td>
+            <td>Rue de Lausanne 5, 1000 Lausanne</td>
+            <td>+41 21 456 78 90</td>
+            <td>marc.dubois@romandie.ch</td>
+        </tr>
+        <tr>
+            <td>Lena Meier</td>
+            <td>Hauptgasse 8, 4500 Solothurn</td>
+            <td>+41 32 789 01 23</td>
+            <td>lena.meier@solnet.ch</td>
+        </tr>
+        <tr>
+            <td>Tim Widmer</td>
+            <td>Baselstrasse 22, 6003 Luzern</td>
+            <td>+41 41 234 56 78</td>
+            <td>tim.widmer@zentralmail.ch</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Zigarrenclub Zürich{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<header>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">Zigarrenclub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Navigation umschalten">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.kontakt') }}">Kontakt</a>
+        </li>
+        {% if user %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('main.adress_liste') }}">Adress-Liste</a>
+        </li>
+        {% endif %}
+      </ul>
+
+      <ul class="navbar-nav mb-2 mb-lg-0">
+        {% if user %}
+        <li class="nav-item">
+          <span class="navbar-text text-light me-3">Angemeldet als {{ user }}</span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+</header>
+
+<main class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if not category.startswith('register_') and not category.startswith('reset_') %}
+          <div class="alert alert-{{ 'danger' if 'error' in category else category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
+          </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</main>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('auth.login') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+        <div class="modal-body">
+          <label for="email">E-Mail:</label>
+          <input type="email" class="form-control" name="email" required>
+          <label for="password" class="mt-3">Passwort:</label>
+          <input type="password" class="form-control" name="password" required>
+
+          {% if errors %}
+          <div class="alert alert-danger mt-3">
+            <ul class="mb-0">
+              {% for error in errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          <div class="mt-3 d-flex justify-content-between">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" data-bs-dismiss="modal">Passwort vergessen</a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Registrieren</a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Login</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutConfirmModalLabel">Logout bestätigen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        Möchten Sie sich wirklich ausloggen?
+      </div>
+      <div class="modal-footer">
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">Logout</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Eingeloggt bleiben</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Passwort vergessen Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('auth.forgot_password') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="forgotPasswordModalLabel">Passwort zurücksetzen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+        <div class="modal-body">
+          <label for="resetEmail">E-Mail-Adresse:</label>
+          <input type="email" class="form-control" name="resetEmail" required>
+          <small class="form-text text-muted">Du erhältst eine E-Mail mit einem Link zum Zurücksetzen.</small>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Passwort zurücksetzen</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Registrierung Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('auth.register') }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel">Registrieren</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+        <div class="modal-body">
+          <label for="anrede">Anrede:</label>
+          <select class="form-select" name="anrede" required>
+            <option value="Herr">Herr</option>
+            <option value="Frau">Frau</option>
+          </select>
+
+          <label for="vorname" class="mt-3">Vorname:</label>
+          <input type="text" class="form-control" name="vorname" required>
+
+          <label for="nachname" class="mt-3">Nachname:</label>
+          <input type="text" class="form-control" name="nachname" required>
+
+          <label for="email" class="mt-3">E-Mail-Adresse:</label>
+          <input type="email" class="form-control" name="email" required>
+
+          <label for="passwort" class="mt-3">Passwort:</label>
+          <input type="password" class="form-control" name="passwort" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Registrieren</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% if show_modal %}
+<script>
+    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    loginModal.show();
+</script>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    {% if category == 'register_error' or category == 'register_success' %}
+    <script>
+        const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+        registerModal.show();
+    </script>
+    {% elif category == 'reset_error' or category == 'reset_success' %}
+    <script>
+        const resetModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+        resetModal.show();
+    </script>
+    {% endif %}
+  {% endfor %}
+{% endwith %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const messages = {{ get_flashed_messages(with_categories=true)|tojson }};
+    messages.forEach(([category, message]) => {
+      if (category.startsWith("register")) {
+        const target = document.querySelector("#registerModal .modal-body");
+        if (target) target.insertAdjacentHTML("afterbegin", `<div class='alert alert-${category.includes('error') ? 'danger' : 'success'}'>${message}</div>`);
+      }
+      if (category.startsWith("reset")) {
+        const target = document.querySelector("#forgotPasswordModal .modal-body");
+        if (target) target.insertAdjacentHTML("afterbegin", `<div class='alert alert-${category.includes('error') ? 'danger' : 'success'}'>${message}</div>`);
+      }
+    });
+  });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Zigarrenclub Zürich{% endblock %}
+{% block content %}
+<h1>Willkommen im Zigarrenclub Zürich</h1>
+
+<p>
+    Unser Zigarrenclub vereint Liebhaber feinster Zigarren und guten Gesprächs. Wir treffen uns monatlich zu stilvollen
+    Abenden mit ausgewählten Zigarren, gutem Whiskey und interessanten Persönlichkeiten.
+</p>
+
+<h2>Unsere Werte</h2>
+<ul>
+    <li>Genuss in Gesellschaft</li>
+    <li>Respekt und Diskretion</li>
+    <li>Tradition und Stil</li>
+</ul>
+
+<h2>Mitglied werden</h2>
+<p>
+    Interessiert an einer Mitgliedschaft oder an einem Schnupperabend? Nehmen Sie über die <a href="{{ url_for('main.kontakt') }}">Kontaktseite</a> mit uns Kontakt auf.
+</p>
+
+<img src="{{ url_for('static', filename='zigarren.jpg') }}" alt="Zigarrenrunde" style="width:100%; max-width:600px; margin-top:2rem; border:1px solid #ccc;">
+{% endblock %}
+
+{% if show_modal %}
+<script>
+    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    loginModal.show();
+</script>
+{% endif %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Kontakt</h1>
+<p>Wenn du Fragen hast oder weitere Informationen benötigst, kannst du uns gerne kontaktieren:</p>
+
+<h2>Kontaktinformationen</h2>
+<p><strong>Adresse:</strong> Blumenstrasse 77, 8888 Heiligkreuz</p>
+<p><strong>Telefon:</strong> +41 77 999 55 33</p>
+<p><strong>Email:</strong> info@flaskapp.ch</p>
+
+<!-- Flash-Meldung bei erfolgreicher Formularübermittlung -->
+{% with messages = get_flashed_messages(category_filter=["kontakt"]) %}
+  {% if messages %}
+    <div class="alert alert-success" role="alert">
+      {% for message in messages %}
+        {{ message }}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<h2>Kontaktformular</h2>
+<form action="{{ url_for('kontakt') }}" method="post">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="email">E-Mail:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+        <label for="message">Nachricht:</label>
+        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <button type="submit" class="btn btn-primary mr-2">Absenden</button>
+        <button type="reset" class="btn btn-secondary">Zurücksetzen</button>
+    </div>
+</form>
+{% endblock %}

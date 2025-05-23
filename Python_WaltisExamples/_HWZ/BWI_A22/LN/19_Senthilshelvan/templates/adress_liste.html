@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Adress-Liste{% endblock %}
+
+{% block content %}
+<h1>Adress-Liste</h1>
+<br>
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Adresse</th>
+            <th>Ort</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Anna</td>
+            <td>Muster</td>
+            <td>Musterstrasse 1</td>
+            <td>8000 Zürich</td>
+        </tr>
+        <tr>
+            <td>Max</td>
+            <td>Beispiel</td>
+            <td>Beispielweg 5</td>
+            <td>3000 Bern</td>
+        </tr>
+        <tr>
+            <td>Lena</td>
+            <td>Test</td>
+            <td>Testgasse 10</td>
+            <td>6000 Luzern</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+{% endblock %}

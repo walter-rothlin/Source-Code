@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Kontaktformular</h2>
+    <p>Bitte kontaktieren Sie uns.<br>Ihre Anfrage ist uns wichtig.<br>
+    Bis spätestens 48 Stunden werden Sie von uns lesen.</p>
+
+<form method="post" action="{{ url_for('kontakt') }}" class="mt-4">
+  <div class="mb-3">
+    <label for="name" class="form-label">Ihr Name</label>
+    <input type="text" class="form-control" id="name" name="name" required>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Ihre E-Mail</label>
+    <input type="email" class="form-control" id="email" name="email" required>
+  </div>
+  <div class="mb-3">
+    <label for="nachricht" class="form-label">Nachricht</label>
+    <textarea class="form-control" id="nachricht" name="nachricht" rows="5" required></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Absenden</button>
+</form>
+
+{% if success == True %}
+  <div class="alert alert-success mt-4">Vielen Dank für Ihre Nachricht!</div>
+{% endif %}
+
+{% endblock %}

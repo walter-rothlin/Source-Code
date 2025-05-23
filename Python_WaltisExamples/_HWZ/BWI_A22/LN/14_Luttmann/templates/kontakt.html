@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Kontakt{% endblock %}
+{% block content %}
+
+<h1 class="title">Kontaktdaten</h1>
+
+<!-- Kontaktangaben -->
+<div class="box" style="margin-bottom: 2rem;">
+  <strong>Kai Luttmann</strong><br>
+  HWZ Hochschule für Wirtschaft Zürich<br>
+  Lagerstrasse 5<br>
+  8004 Zürich<br>
+  Schweiz<br>
+  Telefon: <a href="tel:+4112345678">+41 43 322 26 00</a><br>
+  E-Mail: <a href="mailto:kai.luttmann@student.fh-hwz.ch">kai.luttmann@student.fh-hwz.ch</a>
+</div>
+
+<h1 class="title">Kontaktformular</h1>
+
+{% if success %}
+  <div class="notification is-success">
+    Vielen Dank für Ihre Nachricht! Wir haben das Formular erhalten.
+  </div>
+{% endif %}
+
+  <form method="post" action="#">
+  <div class="field">
+    <label class="label">Name</label>
+    <input class="input" type="text" placeholder="Ihr Name">
+  </div>
+  <div class="field">
+    <label class="label">E-Mail</label>
+    <input class="input" type="email" placeholder="Ihre E-Mail">
+  </div>
+  <div class="field">
+    <label class="label">Nachricht</label>
+    <textarea class="textarea" placeholder="Ihre Nachricht"></textarea>
+  </div>
+  <div class="field">
+    <button class="button is-link">Absenden</button>
+  </div>
+</form>
+{% endblock %}

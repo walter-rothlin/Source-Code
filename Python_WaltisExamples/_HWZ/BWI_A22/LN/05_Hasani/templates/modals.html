@@ -1,0 +1,88 @@
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/login">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <input type="email" class="form-control mb-2" name="email" placeholder="E-Mail" required>
+          <div class="input-group mb-2">
+            <input type="password" class="form-control" id="loginPassword" name="password"
+                   placeholder="Passwort" required minlength="6"
+                   title="Mindestens 6 Zeichen erforderlich.">
+            <button type="button" class="btn btn-outline-secondary" onclick="toggleVisibility('loginPassword')">👁</button>
+          </div>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#forgotModal" data-bs-dismiss="modal">Passwort vergessen?</a><br>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Noch kein Konto? Jetzt registrieren</a>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Passwort vergessen Modal -->
+<div class="modal fade" id="forgotModal" tabindex="-1" aria-labelledby="forgotLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/passwort_vergessen">
+        <div class="modal-header">
+          <h5 class="modal-title" id="forgotLabel">Passwort zurücksetzen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <input type="email" class="form-control" name="email" placeholder="E-Mail" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning">Zurücksetzen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Registrierung Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/registrieren">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerLabel">Registrierung</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <select class="form-select mb-2" name="anrede" required>
+            <option value="">Anrede wählen...</option>
+            <option>Herr</option>
+            <option>Frau</option>
+            <option>Keine Angabe</option>
+          </select>
+          <input type="text" class="form-control mb-2" name="vorname" placeholder="Vorname" required>
+          <input type="text" class="form-control mb-2" name="nachname" placeholder="Nachname" required>
+          <input type="email" class="form-control mb-2" name="email" placeholder="E-Mail" required>
+          <div class="input-group mb-2">
+            <input type="password" class="form-control" id="registerPassword" name="password"
+                   placeholder="Passwort" required minlength="6"
+                   title="Mindestens 6 Zeichen erforderlich.">
+            <button type="button" class="btn btn-outline-secondary" onclick="toggleVisibility('registerPassword')">👁</button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Registrieren</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleVisibility(id) {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+</script>

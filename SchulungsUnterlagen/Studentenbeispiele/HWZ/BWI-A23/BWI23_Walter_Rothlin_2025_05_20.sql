@@ -10,6 +10,7 @@
 -- 01-Apr-2025   Walter Rothlin	     SELECT-Statment
 -- 10-Apr-2025   Walter Rothlin	     Joins, Views
 -- 08-May-2025   Walter Rothlin      DDL / New schema
+-- 20-May-2025   Walter Rothlin      Eigenes Schema normalisieren und migrieren
 -- ---------------------------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------------------------
@@ -162,8 +163,6 @@ CREATE TABLE IF NOT EXISTS `Adressen_Rohdaten` (
   `Nachname`  VARCHAR(45) NOT NULL,
   `Strasse`   VARCHAR(45) NULL,
   `HausNr`    VARCHAR(5)  NULL,
-  `PLZ`       VARCHAR(15) NULL,
-  `Ort`       VARCHAR(45) NULL,
   `FK_Ort`    INT         NULL,
   PRIMARY KEY (`id`),
   INDEX `idx_fk_Orte_Rohdaten` (`FK_Ort` ASC) VISIBLE,
@@ -215,3 +214,5 @@ CREATE VIEW `Adressen`  AS
     LEFT OUTER JOIN `Orte_Rohdaten` AS `o` ON `o`.`id` = `a`.`FK_Ort`;
     
     -- SELECT * FROM `Adressen` WHERE `PLZ_Old` <> `PLZ` AND `FK_Ort` <> `Ort`
+    
+    SELECT * FROM adressen;

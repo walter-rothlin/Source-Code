@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+    {% if 'user' in session %}
+        <h2 class="text-center mb-4">Adress-Liste</h2>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped shadow-sm align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>Strasse</th>
+                        <th>PLZ</th>
+                        <th>Ort</th>
+                        <th>Telefon</th>
+                        <th>E-Mail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Anna</td>
+                        <td>Muster</td>
+                        <td>Bahnhofstrasse 1</td>
+                        <td>8001</td>
+                        <td>Zürich</td>
+                        <td>044 123 45 67</td>
+                        <td>anna.muster@example.ch</td>
+                    </tr>
+                    <tr>
+                        <td>Peter</td>
+                        <td>Beispiel</td>
+                        <td>Seestrasse 12</td>
+                        <td>3005</td>
+                        <td>Bern</td>
+                        <td>031 456 78 90</td>
+                        <td>peter.bsp@demo.ch</td>
+                    </tr>
+                    <tr>
+                        <td>Laura</td>
+                        <td>Schmid</td>
+                        <td>Feldweg 8</td>
+                        <td>6003</td>
+                        <td>Luzern</td>
+                        <td>041 789 12 34</td>
+                        <td>laura.schmid@mail.ch</td>
+                    </tr>
+                    <tr>
+                        <td>Lukas</td>
+                        <td>Keller</td>
+                        <td>Industriestrasse 99</td>
+                        <td>9000</td>
+                        <td>St. Gallen</td>
+                        <td>071 333 44 55</td>
+                        <td>lukas.keller@firma.ch</td>
+                    </tr>
+                    <tr>
+                        <td>Mira</td>
+                        <td>Bach</td>
+                        <td>Rheinweg 5</td>
+                        <td>4051</td>
+                        <td>Basel</td>
+                        <td>061 222 33 44</td>
+                        <td>mira.bach@baselmail.ch</td>
+                    </tr>
+                    <tr>
+                        <td>Armin</td>
+                        <td>Huber</td>
+                        <td>Wiesenstrasse 14</td>
+                        <td>5000</td>
+                        <td>Aarau</td>
+                        <td>062 987 65 43</td>
+                        <td>armin.huber@post.ch</td>
+                    </tr>
+                    <tr>
+                        <td>Selina</td>
+                        <td>Vogel</td>
+                        <td>Birkenweg 22</td>
+                        <td>8400</td>
+                        <td>Winterthur</td>
+                        <td>052 334 11 22</td>
+                        <td>selina.v@winti.ch</td>
+                    </tr>
+                    <tr>
+                        <td>Marc</td>
+                        <td>Weber</td>
+                        <td>Alleeweg 3</td>
+                        <td>6300</td>
+                        <td>Zug</td>
+                        <td>041 123 45 67</td>
+                        <td>marc.weber@zugmail.ch</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center mt-4">
+            Du musst eingeloggt sein, um die Adress-Liste zu sehen.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -90,7 +90,7 @@
 #                                   Added get_coordinates_for_adresse()
 # 15-Dec-2024   Walter Rothlin      Added get_sql_string_update_value(), get_sql_float_update_value()
 # 18-Jan-2025   Walter Rothlin      Added search_address_geo_admin()
-# 09-May-2025   Walter Rothlin      Added sis_password_valid()
+# 09-May-2025   Walter Rothlin      Added is_password_valid()
 # ------------------------------------------------------------------
 
 # toDo:

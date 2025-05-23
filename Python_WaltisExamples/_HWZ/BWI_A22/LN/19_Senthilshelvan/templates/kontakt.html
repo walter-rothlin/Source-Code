@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Kontakt{% endblock %}
+
+{% block content %}
+<h1>Kontakt</h1>
+<br>
+<p>Wenn du uns kontaktieren möchtest, kannst du dies über folgende Wege tun:</p>
+
+<div class="mb-4">
+  <p><strong><i class="bi bi-envelope-fill"></i> E-Mail:</strong> support@example.com</p>
+  <p><strong><i class="bi bi-telephone-fill"></i> Telefon:</strong> +41 44 123 45 67</p>
+  <p><strong><i class="bi bi-geo-alt-fill"></i> Adresse:</strong> Musterstrasse 1, 8000 Zürich</p>
+</div>
+
+<h2 class="mt-5">Kontaktformular</h2>
+<form>
+    <div class="form-group">
+        <label for="name">Dein Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="form-group">
+        <label for="email">E-Mail</label>
+        <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <div class="form-group">
+        <label for="message">Nachricht</label>
+        <textarea class="form-control" id="message" name="message" rows="4"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Abschicken</button>
+</form>
+
+{% endblock %}

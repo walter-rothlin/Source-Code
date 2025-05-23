@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Projektkontakte</h1>
+<p>Diese Übersicht zeigt zentrale Ansprechpartner im Rahmen des Projekts. Die Daten sind fiktiv und dienen Demonstrationszwecken. Nur sichtbar nach erfolgreichem Login.</p>
+
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+            <th>Standort</th>
+            <th>Telefon</th>
+            <th>E-Mail</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Elena Ritter</td>
+            <td>Bergstrasse 12, 8004 Zürich</td>
+            <td>+41 44 789 00 12</td>
+            <td>elena.ritter@company.ch</td>
+        </tr>
+        <tr>
+            <td>Jonas Baumgartner</td>
+            <td>Obere Gasse 9, 3013 Bern</td>
+            <td>+41 31 678 99 00</td>
+            <td>jonas.bg@techmail.com</td>
+        </tr>
+        <tr>
+            <td>Nora Almansoor</td>
+            <td>Freilagerstrasse 75, 4055 Basel</td>
+            <td>+41 61 332 45 98</td>
+            <td>n.almansoor@researchhub.org</td>
+        </tr>
+        <tr>
+            <td>Leo Schmid</td>
+            <td>Talacker 17, 9000 St. Gallen</td>
+            <td>+41 71 511 22 33</td>
+            <td>leo.schmid@startupnet.ch</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

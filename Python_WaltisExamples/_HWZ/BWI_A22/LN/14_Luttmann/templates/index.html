@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}WebApp Kai Luttmann{% endblock %}
+{% block content %}
+  <h1 class="title is-size-2 has-text-weight-bold" style="text-transform: uppercase;">
+    Leistungsnachweis Kai Luttmann / 20.05.2025
+  </h1>
+
+  {% if error %}
+    <div class="notification is-danger is-size-7" style="text-transform: lowercase;">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <p class="is-size-7">
+    Auf dieser Web App ist es möglich in einer Menüstruktur zwischen 3 Unterseiten auszuwählen (Home, Kontakt, Login). Sofern man eingeloggt ist hat man zudem noch die Möglichkeit auf die Adress-Liste zuzugreifen (4. Unterseite).
+  </p>
+  <p class="is-size-7 has-text-danger">
+    Roter Content :-)
+  </p>
+
+<!-- Bild in Originalgröße -->
+  <img src="{{ url_for('static', filename='images.jpg') }}" alt="Stilhaus" style="display:block; margin: 24px 0;">
+
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Startseite - Adressverwaltung{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Willkommen zur Adressverwaltung</h1>
+        <p class="lead">Verwalten Sie Ihre Kontakte und Adressen effizient.</p>
+        
+        {% if 'email' not in session %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Neues Konto registrieren</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('register') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Anrede</label>
+                            <select class="form-select" id="title" name="title" required>
+                                <option value="Herr">Herr</option>
+                                <option value="Frau">Frau</option>
+                                <option value="Dr.">Dr.</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">Vorname</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Nachname</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reg_email" class="form-label">E-Mail</label>
+                            <input type="email" class="form-control" id="reg_email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reg_password" class="form-label">Passwort</label>
+                            <input type="password" class="form-control" id="reg_password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrieren</button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Schnellzugriff</h5>
+                    <a href="{{ url_for('adress_liste') }}" class="btn btn-primary">Adress-Liste anzeigen</a>
+                    <a href="{{ url_for('kontakt') }}" class="btn btn-secondary">Support kontaktieren</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Passwort vergessen?</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('password_reset') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="reset_email" class="form-label">E-Mail</label>
+                        <input type="email" class="form-control" id="reset_email" name="email" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Passwort zurücksetzen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

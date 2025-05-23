@@ -1,0 +1,7 @@
+
+database:
+    host: localhost
+    user: Test_APP_2024
+    password: Test_007
+    schema: bzu_blf
+    auth_plugin: mysql_native_password

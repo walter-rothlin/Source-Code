@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Meine WebApp{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<!-- Chat GPT -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-custom mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('home') }}">Golfclub HWZ</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Navigation umschalten">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('kontakt') }}">Kontakt</a>
+                </li>
+
+                {% if session.get('user') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('adress_liste') }}">Mitgliederliste</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            {% if session.get('user') %}
+                <span class="navbar-text text-white">
+                    Eingeloggt als {{ session['user'] }}
+                </span>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="email" class="form-label">E-Mail</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Passwort</label>
+            <input type="password" class="form-control" name="password" required>
+          </div>
+          <div class="d-flex justify-content-between"> <!-- Chat GPT -->
+            <a href="#" data-bs-toggle="modal" data-bs-target="#passwortModal" data-bs-dismiss="modal">Passwort vergessen?</a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Registrieren</a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Einloggen</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Chat GPT -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Logout bestätigen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+      </div>
+      <div class="modal-body">
+        Möchten Sie sich wirklich ausloggen?
+      </div>
+      <div class="modal-footer">
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Eingeloggt bleiben</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Chat GPT -->
+<div class="modal fade" id="passwortModal" tabindex="-1" aria-labelledby="passwortModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ url_for('passwort_vergessen') }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Passwort zurücksetzen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <p>Bitte geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen einen Link zum Zurücksetzen.</p>
+          <input type="email" class="form-control mb-3" name="reset_email" placeholder="Ihre E-Mail-Adresse" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning w-100">Zurücksetzen</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ url_for('registrieren') }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrierung</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label>Anrede</label>
+            <select class="form-select" name="anrede" required>
+              <option>Herr</option>
+              <option>Frau</option>
+              <option>Divers</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label>Vorname</label>
+            <input type="text" class="form-control" name="vorname" required>
+          </div>
+          <div class="mb-2">
+            <label>Nachname</label>
+            <input type="text" class="form-control" name="nachname" required>
+          </div>
+          <div class="mb-2">
+            <label>E-Mail-Adresse</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-2">
+            <label>Passwort</label>
+            <input type="password" class="form-control" name="passwort" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success w-100">Registrieren</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

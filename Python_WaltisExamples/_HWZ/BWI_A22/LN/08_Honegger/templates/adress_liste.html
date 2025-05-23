@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Adress-Liste</h1>
+<p>Diese Seite zeigt eine Liste fiktiver Adressen für den Leistungsnachweis.<br>
+  Sie ist - wie in den Anforderungen vorgegeben - nur nach erfolgreichem Login sichtbar.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Adresse</th>
+            <th>Telefon</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Rosa Beispiel</td>
+            <td>Sonnenhof 16, 8808 Pfäffikon SZ</td>
+            <td>+41 79 123 45 67</td>
+            <td>rosa@beispiel.ch</td>
+        </tr>
+        <tr>
+            <td>Peter Test</td>
+            <td>Hauptstrasse 7, 4000 Basel</td>
+            <td>+41 78 765 43 21</td>
+            <td>peter@test.ch</td>
+        </tr>
+        <tr>
+            <td>Sarah Muster</td>
+            <td>Nussstrasse 14, 8000 Zürich</td>
+            <td>+41 76 555 44 33</td>
+            <td>sarah@muster.ch</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

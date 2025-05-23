@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1 class="text-center mb-4">Willkommen auf meiner Webseite</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Über mich</h5>
+                <p class="card-text">
+                    Willkommen auf meiner Webseite! Hier finden Sie alle wichtigen Informationen
+                    und können sich im System einloggen, um auf weitere Funktionen
+                    zuzugreifen.
+                    Viel Spass! Liebe Grüsse, Daniel
+                </p>
+                {% if not session.email %}
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Jetzt einloggen
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

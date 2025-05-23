@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Kontakt{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Kontakt</h1>
+        <p class="lead">Bei Fragen oder Anregungen können Sie uns gerne kontaktieren:</p>
+        
+        <form class="mt-4">
+            <div class="mb-3">
+                <label for="anrede" class="form-label">Anrede</label>
+                <select class="form-select" id="anrede" required>
+                    <option value="" selected disabled>Bitte wählen</option>
+                    <option value="Herr">Herr</option>
+                    <option value="Frau">Frau</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="tel" class="form-label">Telefon</label>
+                <input type="tel" class="form-control" id="tel">
+                <div class="form-text">Optional, falls Sie lieber telefonisch kontaktiert werden möchten.</div>
+            </div>
+            <div class="mb-3">
+                <label for="betreff" class="form-label">Betreff</label>
+                <input type="text" class="form-control" id="betreff" required>
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Nachricht</label>
+                <textarea class="form-control" id="message" rows="5" required></textarea>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="datenschutz" required>
+                <label class="form-check-label" for="datenschutz">
+                    Ich stimme zu, dass meine Angaben für die Beantwortung meiner Anfrage verarbeitet werden.
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary">Senden</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="h5 mb-0">Kontaktinformationen</h2>
+            </div>
+            <div class="card-body">
+                <address>
+                    <strong>BWI_A22 Hochschule</strong><br>
+                    Beispielstrasse 123<br>
+                    8000 Zürich<br>
+                    Schweiz<br><br>
+                    <abbr title="Phone"><i class="bi bi-telephone"></i></abbr> <a href="tel:+41441234567">+41 44 123 45 67</a><br>
+                    <abbr title="Email"><i class="bi bi-envelope"></i></abbr> <a href="mailto:info@bwi-a22.ch">info@bwi-a22.ch</a>
+                </address>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h5 mb-0">Öffnungszeiten</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tbody>
+                        <tr>
+                            <td>Montag - Freitag</td>
+                            <td>08:00 - 18:00 Uhr</td>
+                        </tr>
+                        <tr>
+                            <td>Samstag</td>
+                            <td>09:00 - 12:00 Uhr</td>
+                        </tr>
+                        <tr>
+                            <td>Sonntag</td>
+                            <td>Geschlossen</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="card-text text-muted mt-3">An Feiertagen können abweichende Öffnungszeiten gelten.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %} 

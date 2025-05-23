@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Adress-Liste{% endblock %}
+
+{% block content %}
+    <h1>Adress-Liste</h1>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Strasse</th>
+                <th>PLZ</th>
+                <th>Ort</th>
+                <th>E-Mail</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Anna Meier</td>
+                <td>Dorfstrasse 1</td>
+                <td>8001</td>
+                <td>Zürich</td>
+                <td>anna.meier@example.ch</td>
+            </tr>
+            <tr>
+                <td>Luca Huber</td>
+                <td>Bahnhofstrasse 45</td>
+                <td>3000</td>
+                <td>Bern</td>
+                <td>luca.huber@example.ch</td>
+            </tr>
+            <tr>
+                <td>Sofia Keller</td>
+                <td>Seestrasse 78</td>
+                <td>6003</td>
+                <td>Luzern</td>
+                <td>sofia.keller@example.ch</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

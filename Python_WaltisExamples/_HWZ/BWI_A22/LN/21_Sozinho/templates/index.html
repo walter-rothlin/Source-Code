@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>Willkommen bei BWI_A22</h1>
+        <p class="lead">Willkommen auf der Webseite des Kurses "Distributed and Mobile-Systems" der BWI-A22.</p>
+        
+        <div class="mt-4">
+            <h2>Über dieses Projekt</h2>
+            <p>Diese Webapplikation wurde im Rahmen des Leistungsnachweises für das Fach "Distributed and Mobile-Systems" erstellt. Sie demonstriert die Kernfunktionalitäten eines modernen Webframeworks.</p>
+            
+            <h3>Verwendete Technologien</h3>
+            <ul>
+                <li><strong>Flask</strong> - Ein leichtgewichtiges Python Web-Framework</li>
+                <li><strong>Jinja2</strong> - Template-Engine für Python</li>
+                <li><strong>Bootstrap 5</strong> - Responsives Frontend-Framework</li>
+                <li><strong>Session Management</strong> - Benutzerverwaltung über Flask-Sessions</li>
+                <li><strong>Formulare</strong> - Benutzerinteraktion über HTML-Formulare</li>
+            </ul>
+            
+            <h3>Funktionalitäten</h3>
+            <p>Die App bietet folgende Kernfunktionen:</p>
+            <ul>
+                <li>Benutzerregistrierung und -anmeldung</li>
+                <li>Passwortverwaltung</li>
+                <li>Kontaktformular</li>
+                <li>Adressverwaltung (nur für angemeldete Benutzer)</li>
+                <li>Responsive Design für verschiedene Geräte</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Schnellzugriff</h5>
+                <p class="card-text">Hier finden Sie wichtige Links und Informationen.</p>
+                <a href="{{ url_for('kontakt') }}" class="btn btn-primary">Kontakt</a>
+                {% if 'email' in session %}
+                <a href="{{ url_for('adress_liste') }}" class="btn btn-secondary">Adress-Liste</a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                Aktuelle Information
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Leistungsnachweis 2025</h5>
+                <p class="card-text">Die Abgabe des Leistungsnachweises erfolgt am 20. Mai 2025.</p>
+                <p class="card-text"><small class="text-muted">Zuletzt aktualisiert: Mai 2025</small></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

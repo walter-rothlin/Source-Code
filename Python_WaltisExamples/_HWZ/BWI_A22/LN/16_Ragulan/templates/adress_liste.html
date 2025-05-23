@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Adress‑Liste{% endblock %}
+{% block content %}
+  <h1>Adress-liste Vorstand</h1>
+  <table class="table table-striped w-75">
+    <thead>
+      <tr><th>Name</th><th>Strasse</th><th>Ort</th><th>Funktion</th></tr>
+    </thead>
+    <tbody>
+      {% for a in addresses %}
+      <tr>
+        <td>{{ a.name }}</td>
+        <td>{{ a.street }}</td>
+        <td>{{ a.city }}</td>
+        <td>{{ a.function }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

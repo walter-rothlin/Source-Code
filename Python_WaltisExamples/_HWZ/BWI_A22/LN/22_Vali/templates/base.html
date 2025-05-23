@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Meine App{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Meine App</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/kontakt">Kontakt</a></li>
+        {% if 'user' in session %}
+          <li class="nav-item"><a class="nav-link" href="/adress_liste">Adress-Liste</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
+        {% endif %}
+      </ul>
+      {% if 'user' in session %}
+        <span class="navbar-text">Eingeloggt als: {{ session['user'] }}</span>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  {% if not session.get('login_error') %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-info mt-3">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+  {% block content %}{% endblock %}
+</div>
+
+<!-- 🔽 Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/login">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+        <div class="modal-body">
+          {% if session.get('login_error') %}
+            <div class="alert alert-danger">
+              {{ session.get('login_error') }}
+            </div>
+          {% endif %}
+          <div class="mb-3">
+            <label for="email" class="form-label">E-Mail</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Passwort</label>
+            <input type="password" class="form-control" name="password" required>
+          </div>
+          <p class="small">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#pwResetModal" data-bs-dismiss="modal">Passwort vergessen?</a> |
+            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Registrieren</a>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Einloggen</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 🔽 Passwort vergessen Modal -->
+<div class="modal fade" id="pwResetModal" tabindex="-1" aria-labelledby="pwResetModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/pw_reset">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pwResetModalLabel">Passwort zurücksetzen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+        <div class="modal-body">
+          <p>Bitte gib deine E-Mail-Adresse ein. Du erhältst einen Link zum Zurücksetzen.</p>
+          <input type="email" class="form-control" name="email" placeholder="E-Mail-Adresse" autocomplete="off" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Link senden</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 🔽 Registrierung Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="/registrieren">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel">Registrieren</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+        </div>
+        <div class="modal-body">
+          {% if session.get('register_error') %}
+            <div class="alert alert-danger">
+              {{ session.get('register_error') }}
+            </div>
+          {% endif %}
+          <div class="mb-3">
+            <label>Anrede</label>
+            <select class="form-select" name="anrede" required>
+              <option value="" disabled selected>Bitte wählen</option>
+              <option>Herr</option>
+              <option>Frau</option>
+              <option>Divers</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label>Vorname</label>
+            <input type="text" class="form-control" name="vorname" required>
+          </div>
+          <div class="mb-3">
+            <label>Nachname</label>
+            <input type="text" class="form-control" name="nachname" required>
+          </div>
+          <div class="mb-3">
+            <label>E-Mail</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label>Passwort</label>
+            <input type="password" class="form-control" name="passwort" required>
+            <div class="form-text">Mindestens 6 Zeichen erforderlich.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Registrieren</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 🔽 Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">Logout bestätigen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body">
+        Möchtest du dich wirklich ausloggen?
+      </div>
+      <div class="modal-footer">
+        <a href="/logout" class="btn btn-danger">Logout</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Eingeloggt bleiben</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("login_failed") === "1") {
+    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    loginModal.show();
+    fetch("/clear_login_error", { method: "POST" });
+  }
+  if (params.get("register_failed") === "1") {
+    const regModal = new bootstrap.Modal(document.getElementById('registerModal'));
+    regModal.show();
+    fetch("/clear_register_error", { method: "POST" });
+  }
+</script>
+
+</body>
+</html>

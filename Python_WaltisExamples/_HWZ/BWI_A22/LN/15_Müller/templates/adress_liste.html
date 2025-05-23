@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card p-4">
+    <h2>Adressliste</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>E-Mail</th>
+                <th>Adresse</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Baresti GmbH</td>
+                <td>info@baresti.ch</td>
+                <td>Spätzstrasse 31, 8810 Horgen</td>
+            </tr>
+            <tr>
+                <td>Tessero GmbH</td>
+                <td>support@hellotess.de</td>
+                <td>Dachauer Str. 15A, 80335 München, Deutschland</td>
+            </tr>
+            <tr>
+                <td>Deniz Müller</td>
+                <td>deniz.mueller@student.fh-hwz.ch</td>
+                <td>Bodenacherring 8E, 8303 Bassersdorf</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

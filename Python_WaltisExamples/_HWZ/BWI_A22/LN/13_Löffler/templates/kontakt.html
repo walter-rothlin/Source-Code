@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Kontakt</h1>
+  <form method="POST" action="{{ url_for('kontakt') }}">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="name"
+        pattern="[A-Za-zÀ-ÿ\s]+"
+        title="Bitte nur Buchstaben und Leerzeichen verwenden."
+        required
+      >
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">E-Mail</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        required
+      >
+    </div>
+    <div class="mb-3">
+      <label for="nachricht" class="form-label">Nachricht</label>
+      <textarea
+        class="form-control"
+        id="nachricht"
+        name="nachricht"
+        rows="4"
+        required
+      ></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Absenden</button>
+  </form>
+{% endblock %}

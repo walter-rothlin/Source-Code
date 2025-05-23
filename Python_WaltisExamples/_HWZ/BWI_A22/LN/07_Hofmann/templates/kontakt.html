@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Kontakt{% endblock %}
+
+{% block content %}
+    <h1>Kontaktformular</h1>
+
+    <form method="POST" action="/kontakt">
+        <label for="name">Ihr Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="nachricht">Nachricht:</label><br>
+        <textarea id="nachricht" name="nachricht" rows="4" cols="40"></textarea><br><br>
+
+        <button type="submit">Absenden</button>
+    </form>
+
+    {% if name and nachricht %}
+        <h2>Vielen Dank, {{ name }}!</h2>
+        <p>Deine Nachricht:</p>
+        <blockquote>{{ nachricht }}</blockquote>
+    {% endif %}
+
+    <hr>
+
+    <h2>Kontaktadresse</h2>
+    <ul>
+        <li><strong>E-Mail:</strong> philipp.hofmann@student.fh-hwz.ch</li>
+        <li><strong>Telefon:</strong> +41 79 394 80 71</li>
+        <li><strong>Adresse:</strong> HWZ, Zürich, Schweiz</li>
+    </ul>
+{% endblock %}

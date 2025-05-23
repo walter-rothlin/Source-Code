@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Adress-Liste{% endblock %}
+
+{% block content %}
+<h1>Adress-Liste</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Anrede</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Email</th>
+                <th>Telefon</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Herr</td>
+                <td>Max</td>
+                <td>Muster</td>
+                <td>max.muster@example.com</td>
+                <td>+41 44 123 45 67</td>
+            </tr>
+            <tr>
+                <td>Frau</td>
+                <td>Anna</td>
+                <td>Beispiel</td>
+                <td>anna.beispiel@example.com</td>
+                <td>+41 44 234 56 78</td>
+            </tr>
+            <tr>
+                <td>Herr</td>
+                <td>Peter</td>
+                <td>Test</td>
+                <td>peter.test@example.com</td>
+                <td>+41 44 345 67 89</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

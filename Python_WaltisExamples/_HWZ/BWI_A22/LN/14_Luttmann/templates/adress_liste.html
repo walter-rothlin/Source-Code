@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="title">Adress-Liste</h1>
+  {% set adress_liste = [
+    {'name':'Max Mustermann','email':'max@mustermann.ch','stadt':'Zürich','strasse':'Bahnhofstrasse','nr':'12a','plz':'8001'},
+    {'name':'Anna Schmidt','email':'anna@schmidt.com','stadt':'Bern','strasse':'Marktgasse','nr':'5','plz':'3000'},
+    {'name':'Peter Müller','email':'peter@mueller.com','stadt':'Basel','strasse':'Spalenring','nr':'25','plz':'4051'}
+  ] %}
+  <table class="table is-fullwidth is-striped is-hoverable">
+    <thead><tr><th>Name</th><th>Email</th><th>Straße</th><th>Nr.</th><th>PLZ</th><th>Stadt</th></tr></thead>
+    <tbody>
+      {% for eintrag in adress_liste %}
+      <tr>
+        <td>{{ eintrag.name }}</td><td>{{ eintrag.email }}</td><td>{{ eintrag.strasse }}</td>
+        <td>{{ eintrag.nr }}</td><td>{{ eintrag.plz }}</td><td>{{ eintrag.stadt }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

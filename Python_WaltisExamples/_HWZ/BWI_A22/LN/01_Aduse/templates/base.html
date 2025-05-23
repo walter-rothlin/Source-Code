@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Web-App</title>
+    <!-- Bulma CSS Framework für die Gestaltung -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+<!-- ==================== NAVIGATION ==================== -->
+<!-- Hauptnavigationsleiste mit dynamischen Menüpunkten je nach Login-Status -->
+<nav class="navbar is-dark">
+    <div class="navbar-menu is-active">
+        <!-- Linke Seite der Navigation -->
+        <div class="navbar-start">
+            <!-- Statische Navigationspunkte, die immer verfügbar sind -->
+            <a class="navbar-item" href="{{ url_for('index') }}">Startseite</a>
+            <a class="navbar-item" href="{{ url_for('kontakt') }}">Kontakt</a>
+
+            <!-- Bedingte Navigation: Nur für eingeloggte Benutzer -->
+            {% if 'email' in session %}
+                <a class="navbar-item" href="{{ url_for('adress_liste') }}">Adress-Liste</a>
+                <!-- Logout-Button (öffnet Bestätigungsmodal) -->
+                <a class="navbar-item" id="trigger-logout">Logout</a>
+            {% else %}
+                <!-- Login-Button für nicht-eingeloggte Benutzer -->
+                <a class="navbar-item" id="open-login">Login</a>
+            {% endif %}
+        </div>
+
+        <!-- Rechte Seite der Navigation: Begrüßung für eingeloggte Benutzer -->
+        {% if 'email' in session %}
+        <div class="navbar-end pr-4">
+            <span class="has-text-white">Willkommen, {{ session['email'] }}!</span>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- ==================== HAUPTINHALT ==================== -->
+<!-- Container für den Hauptinhalt und Flash-Nachrichten -->
+<section class="section">
+    <div class="container">
+        <!-- Flash-Nachrichten System für Benachrichtigungen -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="notification is-info">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Platzhalter für den spezifischen Seiteninhalt -->
+        {% block content %}{% endblock %}
+    </div>
+</section>
+
+<!-- ==================== MODALE DIALOGE ==================== -->
+
+<!-- LOGIN MODAL -->
+<!-- Modal für die Benutzeranmeldung -->
+<div class="modal" id="login-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <!-- Login-Formular -->
+        <form method="POST" action="{{ url_for('login') }}">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Login</p>
+                <!-- Schließen-Button (X) -->
+                <button class="delete" type="button" id="close-login"></button>
+            </header>
+
+            <section class="modal-card-body">
+                <!-- E-Mail Eingabefeld -->
+                <div class="field">
+                    <label class="label">E-Mail</label>
+                    <input class="input" type="email" name="email" required>
+                </div>
+
+                <!-- Passwort Eingabefeld -->
+                <div class="field">
+                    <label class="label">Passwort</label>
+                    <input class="input" type="password" name="password" required>
+                </div>
+
+                <!-- Links zu anderen Aktionen -->
+                <p class="mt-3">
+                    <a id="open-register">Noch kein Konto? Registrieren</a> |
+                    <a id="open-forgot">Passwort vergessen?</a>
+                </p>
+            </section>
+
+            <footer class="modal-card-foot">
+                <!-- Aktions-Buttons -->
+                <button class="button is-primary" type="submit">Login</button>
+                <button class="button" type="button" id="cancel-login">Abbrechen</button>
+            </footer>
+        </form>
+    </div>
+</div>
+
+<!-- LOGOUT BESTÄTIGUNGSMODAL -->
+<!-- Sicherheitsabfrage vor dem Ausloggen -->
+<div class="modal" id="logout-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Logout bestätigen</p>
+            <button class="delete" id="close-logout"></button>
+        </header>
+
+        <section class="modal-card-body">
+            <p>Möchtest du dich wirklich ausloggen?</p>
+        </section>
+
+        <footer class="modal-card-foot">
+            <!-- Bestätigungs- und Abbruch-Buttons -->
+            <a class="button is-danger" href="{{ url_for('logout') }}">Logout</a>
+            <button class="button" id="cancel-logout">Eingeloggt bleiben</button>
+        </footer>
+    </div>
+</div>
+
+<!-- PASSWORT ZURÜCKSETZEN MODAL -->
+<!-- Formular für das Zurücksetzen vergessener Passwörter -->
+<div class="modal" id="forgot-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <form method="POST" action="{{ url_for('forgot_password') }}">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Passwort zurücksetzen</p>
+                <button class="delete" type="button" id="close-forgot"></button>
+            </header>
+
+            <section class="modal-card-body">
+                <!-- E-Mail-Eingabe für Passwort-Reset -->
+                <div class="field">
+                    <label class="label">E-Mail-Adresse</label>
+                    <input class="input" type="email" name="email" required placeholder="Deine E-Mail">
+                </div>
+            </section>
+
+            <footer class="modal-card-foot">
+                <button class="button is-primary" type="submit">Zurücksetzen</button>
+                <button class="button" type="button" id="cancel-forgot">Abbrechen</button>
+            </footer>
+        </form>
+    </div>
+</div>
+
+<!-- REGISTRIERUNGSMODAL -->
+<!-- Formular für neue Benutzerregistrierung -->
+<div class="modal" id="register-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <form method="POST" action="{{ url_for('register') }}">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Registrieren</p>
+                <button class="delete" type="button" id="close-register"></button>
+            </header>
+
+            <section class="modal-card-body">
+                <!-- Registrierungsfelder -->
+                <div class="field">
+                    <label class="label">Anrede</label>
+                    <input class="input" name="anrede" required>
+                </div>
+
+                <div class="field">
+                    <label class="label">Vorname</label>
+                    <input class="input" name="first_name" required>
+                </div>
+
+                <div class="field">
+                    <label class="label">Nachname</label>
+                    <input class="input" name="last_name" required>
+                </div>
+
+                <div class="field">
+                    <label class="label">E-Mail</label>
+                    <input class="input" type="email" name="email" required>
+                </div>
+
+                <div class="field">
+                    <label class="label">Passwort</label>
+                    <input class="input" type="password" name="password" required>
+                </div>
+            </section>
+
+            <footer class="modal-card-foot">
+                <button class="button is-success" type="submit">Registrieren</button>
+                <button class="button" type="button" id="cancel-register">Abbrechen</button>
+            </footer>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<!-- JavaScript für die Modal-Funktionalität -->
+<script>
+// Warten bis das DOM vollständig geladen ist
+document.addEventListener('DOMContentLoaded', () => {
+    /**
+     * Hilfsfunktion zum Ein-/Ausblenden von Modalen
+     * @param {string} id - Die ID des Modal-Elements
+     * @param {boolean} show - true zum Anzeigen, false zum Verstecken
+     */
+    const toggleModal = (id, show) => {
+        const modal = document.getElementById(id);
+        if (modal) modal.classList.toggle('is-active', show);
+    };
+
+    // ========== LOGIN MODAL EVENT LISTENER ==========
+    // Modal öffnen
+    document.getElementById('open-login')?.addEventListener('click', () => toggleModal('login-modal', true));
+    // Modal schließen (X-Button)
+    document.getElementById('close-login')?.addEventListener('click', () => toggleModal('login-modal', false));
+    // Modal abbrechen
+    document.getElementById('cancel-login')?.addEventListener('click', () => toggleModal('login-modal', false));
+
+    // ========== REGISTRIERUNGS MODAL EVENT LISTENER ==========
+    // Von Login zu Registrierung wechseln
+    document.getElementById('open-register')?.addEventListener('click', () => {
+        toggleModal('login-modal', false);    // Login-Modal schließen
+        toggleModal('register-modal', true);  // Registrierungs-Modal öffnen
+    });
+    // Registrierungs-Modal schließen
+    document.getElementById('close-register')?.addEventListener('click', () => toggleModal('register-modal', false));
+    document.getElementById('cancel-register')?.addEventListener('click', () => toggleModal('register-modal', false));
+
+    // ========== PASSWORT VERGESSEN MODAL EVENT LISTENER ==========
+    // Von Login zu Passwort-Reset wechseln
+    document.getElementById('open-forgot')?.addEventListener('click', () => {
+        toggleModal('login-modal', false);  // Login-Modal schließen
+        toggleModal('forgot-modal', true);  // Passwort-Reset-Modal öffnen
+    });
+    // Passwort-Reset-Modal schließen
+    document.getElementById('close-forgot')?.addEventListener('click', () => toggleModal('forgot-modal', false));
+    document.getElementById('cancel-forgot')?.addEventListener('click', () => toggleModal('forgot-modal', false));
+
+    // ========== LOGOUT MODAL EVENT LISTENER ==========
+    // Logout-Bestätigungsmodal öffnen
+    document.getElementById('trigger-logout')?.addEventListener('click', () => toggleModal('logout-modal', true));
+    // Logout-Modal schließen
+    document.getElementById('close-logout')?.addEventListener('click', () => toggleModal('logout-modal', false));
+    document.getElementById('cancel-logout')?.addEventListener('click', () => toggleModal('logout-modal', false));
+});
+</script>
+
+</body>
+</html>

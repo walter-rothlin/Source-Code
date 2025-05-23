@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Meine App{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Eigenes CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <div class="container-fluid">
+
+    <!-- Appname-->
+    <span class="navbar-brand">Flask App</span>
+
+    <!-- Menü Button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar" aria-expanded="false" aria-label="Navigation ein-/ausblenden">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menu anpassbar -->
+    <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
+
+      <!-- 🔹 Linke Seite: Home, Kontakt, Adress-Liste -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/kontakt">Kontakt</a>
+        </li>
+        {% if 'user' in session %}
+          <li class="nav-item">
+            <a class="nav-link" href="/adress_liste">Adressliste</a>
+          </li>
+        {% endif %}
+      </ul>
+
+    <!-- 🔸 Rechte Seite: Login oder Eingeloggt -->
+    <ul class="navbar-nav align-items-center">
+      {% if 'user' in session %}
+        <li class="nav-item me-3">
+          <span class="navbar-text text-white">Eingeloggt als: {{ session['user'] }}</span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link text-white" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+        </li>
+      {% endif %}
+    </ul>
+
+
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="/">
+        <div class="modal-header">
+          <h5 class="modal-title">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">E-Mail-Adresse</label>
+            <input type="email" class="form-control" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Passwort</label>
+            <input type="password" class="form-control" name="password" required>
+          </div>
+          <div class="d-flex justify-content-between">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#resetModal" data-bs-dismiss="modal">Passwort vergessen?</a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Registrieren</a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Einloggen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Logout Bestätigung -->
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Log-Out?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+      </div>
+      <div class="modal-body">
+        Bist du sicher, dass du dich ausloggen möchtest?
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-danger" href="/logout">Logout</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Eingeloggt bleiben</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PW zurücksetzen -->
+<div class="modal fade" id="resetModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form onsubmit="showResetMessage(); return false;">
+        <div class="modal-header">
+          <h5 class="modal-title">Passwort zurücksetzen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <label>E-Mail-Adresse</label>
+          <input type="email" class="form-control" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Passwort zurücksetzen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Registrierungsseite -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form onsubmit="showRegisterMessage(); return false;">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrierung</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+        </div>
+        <div class="modal-body">
+          <select class="form-select mb-3" required>
+            <option value="">Anrede wählen</option>
+            <option>Herr</option>
+            <option>Frau</option>
+          </select>
+          <input type="text" class="form-control mb-3" placeholder="Vorname" required>
+          <input type="text" class="form-control mb-3" placeholder="Nachname" required>
+          <input type="email" class="form-control mb-3" placeholder="E-Mail-Adresse" required>
+          <input type="password" class="form-control mb-3" placeholder="Passwort" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Registrieren</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Link Bootstrap-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+//E-Mail mit Link wurde ausgelöst
+function showResetMessage() {
+  alert("Ein Link zum Zurücksetzen deines Passworts wurde an deine E-Mail gesendet.");
+  bootstrap.Modal.getInstance(document.getElementById('resetModal')).hide();
+}
+
+function showRegisterMessage() {
+  alert("Deine Registrierung war erfolgreich. Eine Bestätigung wurde an deine E-Mail gesendet.");
+  bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+}
+
+ // Reset Registrierungs-Formular
+  const registerModalElement = document.getElementById('registerModal');
+  registerModalElement.addEventListener('hidden.bs.modal', () => {
+    registerModalElement.querySelector('form').reset();
+  });
+
+  // Reset PW vergessen Formular
+  const resetModalElement = document.getElementById('resetModal');
+  resetModalElement.addEventListener('hidden.bs.modal', () => {
+    resetModalElement.querySelector('form').reset();
+  });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Adress-Liste - Adressverwaltung{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title mb-0">Adress-Liste</h2>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+            Neue Adresse hinzufügen
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Anrede</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>E-Mail</th>
+                        <th>Telefon</th>
+                        <th>Adresse</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Beispieldaten - in einer realen Anwendung würden diese aus einer Datenbank kommen -->
+                    <tr>
+                        <td>Herr</td>
+                        <td>Max</td>
+                        <td>Mustermann</td>
+                        <td>max.mustermann@example.com</td>
+                        <td>+41 123 456 789</td>
+                        <td>Musterstrasse 1, Zürich</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Bearbeiten</button>
+                            <button class="btn btn-sm btn-danger">Löschen</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Frau</td>
+                        <td>Anna</td>
+                        <td>Beispiel</td>
+                        <td>anna.beispiel@example.com</td>
+                        <td>+41 987 654 321</td>
+                        <td>Beispielweg 2, Bern</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Bearbeiten</button>
+                            <button class="btn btn-sm btn-danger">Löschen</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Herr</td>
+                        <td>Peter</td>
+                        <td>Schmidt</td>
+                        <td>peter.schmidt@example.com</td>
+                        <td>+41 456 789 123</td>
+                        <td>Bergstrasse 3, Basel</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Bearbeiten</button>
+                            <button class="btn btn-sm btn-danger">Löschen</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Neue Adresse hinzufügen Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neue Adresse hinzufügen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="address_title" class="form-label">Anrede</label>
+                        <select class="form-select" id="address_title" required>
+                            <option value="Herr">Herr</option>
+                            <option value="Frau">Frau</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_first_name" class="form-label">Vorname</label>
+                        <input type="text" class="form-control" id="address_first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_last_name" class="form-label">Nachname</label>
+                        <input type="text" class="form-control" id="address_last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_email" class="form-label">E-Mail</label>
+                        <input type="email" class="form-control" id="address_email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_phone" class="form-label">Telefon</label>
+                        <input type="tel" class="form-control" id="address_phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_street" class="form-label">Strasse</label>
+                        <input type="text" class="form-control" id="address_street" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_city" class="form-label">Ort</label>
+                        <input type="text" class="form-control" id="address_city" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adresse hinzufügen</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

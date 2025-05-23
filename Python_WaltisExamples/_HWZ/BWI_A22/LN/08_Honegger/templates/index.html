@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Willkommen zur Flask-Applikation von Mara Honegger</h1>
+<p>Dies ist die Startseite für den Leistungsnachweis.</p>
+
+<h2>Navigation</h2>
+<ul>
+    <li><strong>Home:</strong> Diese Seite</li>
+    <li><strong>Kontakt:</strong> Informationen und Kontaktformular</li>
+    <li><strong>Adress-Liste:</strong> Nur ersichtlich nach erfolgreichem Login</li>
+    <li><strong>Login:</strong> Modal-Login mit Möglichkeiten für Passwort-Vergessen und Registrierung, nur ersichtlich wenn man ausgeloggt ist</li>
+    <li><strong>Logout:</strong> Nur ersichtlich, wenn man bereits eingeloggt ist</li>
+</ul>
+
+{% if 'email' in session %}
+    <p class="alert alert-success">Du bist eingeloggt als {{ session['email'] }}.</p>
+{% else %}
+    <p class="alert alert-info">Bitte logge dich ein, um alle Funktionen zu nutzen.</p>
+{% endif %}
+{% endblock %}

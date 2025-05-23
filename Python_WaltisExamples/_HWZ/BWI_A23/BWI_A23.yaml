@@ -1,0 +1,6 @@
+database:
+  host: localhost
+  user: BWI_A23
+  password: "123456789"
+  schema: hwz
+  auth_plugin: mysql_native_password

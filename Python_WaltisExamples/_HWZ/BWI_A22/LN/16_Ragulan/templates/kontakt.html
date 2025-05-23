@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Kontakt – BasketBWI Club{% endblock %}
+{% block content %}
+  <h1>Kontakt zum BasketBWI Club</h1>
+  <p>Du möchtest uns kennenlernen, hast Fragen oder willst ein Probetraining vereinbaren? Wir freuen uns über jede Nachricht!</p>
+  <ul>
+    <li><b>Mail:</b> <a href="mailto:demo@example.com">demo@example.com</a></li>
+    <li><b>Adresse:</b> HWZ Sporthalle, 8000 Zürich</li>
+    <li><b>Instagram:</b> <a href="https://instagram.com/" target="_blank">@basketbwi</a></li>
+  </ul>
+  <hr>
+  <h3>Schreib uns direkt:</h3>
+
+  {% if errors %}
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        {% for e in errors %}
+          <li>{{ e }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <form method="post" class="w-50">
+    <div class="mb-3">
+      <label for="email" class="form-label">Deine E‑Mail-Adresse (für Rückfragen):</label>
+      <input
+        name="email"
+        id="email"
+        type="email"
+        class="form-control"
+        required
+        value="{{ request.form.email or '' }}"
+        autocomplete="email"
+      >
+    </div>
+    <div class="mb-3">
+      <label for="msg" class="form-label">Nachricht:</label>
+      <textarea
+        name="msg"
+        id="msg"
+        class="form-control"
+        rows="3"
+        required
+      >{{ request.form.msg or '' }}</textarea>
+    </div>
+    <button class="btn btn-success">Absenden</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Adressliste</h1>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Nachname</th>
+      <th>Vorname</th>
+      <th>Strasse</th>
+      <th>Nr.</th>
+      <th>PLZ</th>
+      <th>Ort</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for eintrag in adressen %}
+    <tr>
+      <td>{{ eintrag.name }}</td>
+      <td>{{ eintrag.vorname }}</td>
+      <td>{{ eintrag.strasse }}</td>
+      <td>{{ eintrag.nr }}</td>
+      <td>{{ eintrag.plz }}</td>
+      <td>{{ eintrag.ort }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+ß

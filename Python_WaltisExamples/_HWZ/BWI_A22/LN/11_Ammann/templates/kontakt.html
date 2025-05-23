@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Kontakt{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-10 offset-md-1">
+        <div class="bg-light p-4 rounded-3 shadow-sm">
+            <h1 class="mb-3 text-primary text-center"><i class="bi bi-envelope-fill me-2"></i>Kontaktieren Sie uns</h1>
+            <p class="text-center text-muted">
+                Sie haben Fragen, Anregungen oder benötigen Unterstützung? Unser Team freut sich auf Ihre Nachricht!
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 offset-md-1 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-chat-dots-fill text-primary me-2"></i>Kontaktformular</h5>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-Mail-Adresse</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Nachricht</label>
+                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send-fill me-1"></i> Nachricht senden
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-0 bg-light shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Adresse</h5>
+                <p class="mb-2">Fabian Ammann<br>
+                Musterstrasse 10<br>
+                8000 Zürich<br>
+                Schweiz</p>
+
+                <h6><i class="bi bi-telephone-fill text-success me-2"></i>Telefon</h6>
+                <p class="mb-2">+41 44 123 45 67</p>
+
+                <h6><i class="bi bi-envelope-at-fill text-info me-2"></i>E-Mail</h6>
+                <p>Fabian@Ammann.ch</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

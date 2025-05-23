@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Willkommen{% endblock %}
+{% block content %}
+  <div class="text-center mb-4">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Basketball.png" width="120" alt="Basketball-Logo" class="mb-2">
+    <h1>Willkommen beim BasketBWI Club!</h1>
+    <p>Der Basketballverein für alle Studierenden der HWZ.</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h3>🏀 Wer wir sind</h3>
+      <p>
+        Wir sind ein engagierter Basketballclub aus Zürich und bieten Trainings, Spiele und Club-Events für unsere Mitglieder an.
+        Egal ob Anfänger:in oder Fortgeschritten – bei uns ist jeder willkommen!
+      </p>
+    </div>
+    <div class="col-md-6">
+      <h3>⏰ Nächstes Training</h3>
+      <ul>
+        <li><b>Datum:</b> Jeden Dienstag</li>
+        <li><b>Zeit:</b> 19:00 – 21:00 Uhr</li>
+        <li><b>Ort:</b> Sporthalle HWZ</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr>
+  <div class="text-center">
+    {% if not session.get('user') %}
+      <p><b>Nur Mitglieder mit Login können die Adressliste und exklusive Clubinfos sehen.</b></p>
+      <!-- Button öffnet das Modal, handled schon in Navbar  von Chatgpt und Chatgpt korrigiert bei fehlern-->
+    {% else %}
+      <p>Hallo {{ session.get('user') }}! Du bist eingeloggt – schau dir die <a href="{{ url_for('adress_liste') }}">Adressliste</a> an.</p>
+    {% endif %}
+  </div>
+{% endblock %}

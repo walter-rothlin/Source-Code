@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Startseite{% endblock %}
+
+{% block content %}
+
+   <!-- Fehlermeldung Login fehlgeschlagen-->
+  {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ error }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schliessen"></button>
+    </div>
+  {% endif %}
+
+  <!-- Login erfolgreich -->
+  {% if success %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ success }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schliessen"></button>
+    </div>
+  {% endif %}
+
+  <!-- Logout meldung -->
+  {% if request.args.get('loggedout') %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+      Erfolgreich ausgeloggt.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schliessen"></button>
+    </div>
+  {% endif %}
+
+  <h1>Willkommen!</h1>
+  <p>Hier ist die Startseite.</p>
+
+  {% if 'user' in session %}
+    <p>Du bist eingeloggt.</p>
+  {% else %}
+    <p>Im Menü kannst du dich über den <strong>Login-Link</strong> einloggen.</p>
+  {% endif %}
+{% endblock %}

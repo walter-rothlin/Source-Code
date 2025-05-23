@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if 'Passwort' in message %}alert-danger{% else %}alert-info{% endif %}">
+          <p>{{ message }}</p>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <h1>Willkommen zur BWI_A22 Flask Applikation von Kim Löffler</h1>
+  <p>Diese Web-App demonstriert Login, Session-Verwaltung und Zusatzfunktionen.</p>
+
+  {% if 'user' in session %}
+    <p>✅ Du bist eingeloggt als <strong>{{ session['user'] }}</strong>.</p>
+  {% else %}
+    <p>🔐 Bitte logge dich ein, um Zugriff auf die Adressliste zu erhalten.</p>
+  {% endif %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Kontakt & Mitgliedschaft{% endblock %}
+{% block content %}
+<h2>Kontaktformular</h2>
+
+<p>Du möchtest uns kontaktieren oder an einem Schnupperabend teilnehmen? Dann fülle bitte das Formular aus:</p>
+
+<form method="post" action="{{ url_for('main.kontakt') }}">
+    <label for="name">Name:</label><br>
+    <input type="text" name="name" id="name" value="{{ request.form.name }}" required><br><br>
+
+    <label for="email">E-Mail-Adresse:</label><br>
+    <input type="email" name="email" id="email" value="{{ request.form.email }}" required><br><br>
+
+    <label for="message">Nachricht:</label><br>
+    <textarea name="message" id="message" rows="5" required>{{ request.form.message }}</textarea><br><br>
+
+    <button type="submit">Nachricht senden</button>
+</form>
+
+{% if success %}
+    <p style="color:green; margin-top:1rem;">Danke für deine Nachricht – wir melden uns bald!</p>
+{% endif %}
+
+{% if errors %}
+    <ul style="color:red; margin-top:1rem;">
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<p style="margin-top: 2rem;">
+    Alternativ kannst du uns auch direkt per E-Mail kontaktieren: <strong><a href="mailto:kontakt@zigarrenclub.ch">kontakt@zigarrenclub.ch</a></strong>
+</p>
+{% endblock %}

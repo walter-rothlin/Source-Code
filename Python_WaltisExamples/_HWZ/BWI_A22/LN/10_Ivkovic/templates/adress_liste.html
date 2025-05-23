@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Adress-Liste{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <h1 class="text-center mb-4">Adress-Liste</h1>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Vorname</th>
+                                <th>Strasse</th>
+                                <th>PLZ</th>
+                                <th>Ort</th>
+                                <th>E-Mail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tosh</td>
+                                <td>Peter</td>
+                                <td>Palmstrasse 3</td>
+                                <td>8002</td>
+                                <td>Zürich</td>
+                                <td>peter.tosh@legalizeit.com</td>
+                            </tr>
+                            <tr>
+                                <td>Hendrix</td>
+                                <td>Jimi</td>
+                                <td>Bahnhofstrasse 12</td>
+                                <td>5683</td>
+                                <td>Andelfingen</td>
+                                <td>jimijames@jmail.com</td>
+                            </tr>
+                            <tr>
+                                <td>Isaacs</td>
+                                <td>Gregory</td>
+                                <td>Seestrasse 234</td>
+                                <td>8038</td>
+                                <td>Zürich</td>
+                                <td>isaacsgregory@reggaemail.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

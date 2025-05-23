@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Adressliste{% endblock %}
+{% block content %}
+<h1>Adressliste</h1>
+<table>
+    <tr><th>Name</th><th>Strasse</th><th>Ort</th></tr>
+    {% for eintrag in adressen %}
+    <tr>
+        <td>{{ eintrag.name }}</td>
+        <td>{{ eintrag.strasse }}</td>
+        <td>{{ eintrag.ort }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

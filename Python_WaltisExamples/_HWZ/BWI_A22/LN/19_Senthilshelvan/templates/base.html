@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Web-Applikation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <a class="navbar-brand ms-3" href="{{ url_for('index') }}">Meine App</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('kontakt') }}">Kontakt</a>
+            </li>
+            {% if 'email' in session %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('adress_liste') }}">Adress-Liste</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+              </li>
+            {% endif %}
+          </ul>
+
+          {% if 'email' in session %}
+            <span class="navbar-text logged-in-info">Eingeloggt als: {{ session['email'] }}</span>
+          {% endif %}
+        </div>
+    </nav>
+    <div class="container mt-5 pt-3">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-info">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="post" action="{{ url_for('login') }}" autocomplete="off">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loginModalLabel">Login</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="email" class="form-label">E-Mail</label>
+                <input type="email" class="form-control" id="email" name="email">
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Passwort</label>
+                <input type="password" class="form-control" id="password" name="password">
+              </div>
+              <div class="d-flex justify-content-between">
+                <a href="#" class="small" data-bs-toggle="modal" data-bs-target="#forgotModal" data-bs-dismiss="modal">Passwort vergessen?</a>
+                <a href="#" class="small" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Registrieren</a>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Einloggen</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotModal" tabindex="-1" aria-labelledby="forgotModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="post" action="{{ url_for('password_reset') }}" autocomplete="off">
+            <div class="modal-header">
+              <h5 class="modal-title" id="forgotModalLabel">Passwort vergessen</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="reset-email" class="form-label">E-Mail-Adresse</label>
+                <input type="email" class="form-control" id="reset-email" name="email" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Passwort zurücksetzen</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="post" action="{{ url_for('register') }}" autocomplete="off">
+            <div class="modal-header">
+              <h5 class="modal-title" id="registerModalLabel">Registrieren</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-2 form-group">
+                <label for="anrede" class="form-label">Anrede</label>
+                <select class="form-select" id="anrede" name="anrede" required>
+                  <option value="" selected disabled hidden>Bitte auswählen</option>
+                  <option value="Herr">Herr</option>
+                  <option value="Frau">Frau</option>
+                  <option value="Divers">Divers</option>
+                </select>
+              </div>
+              <div class="mb-2 form-group">
+                <label for="first_name" class="form-label">Vorname</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" required>
+              </div>
+              <div class="mb-2 form-group">
+                <label for="last_name" class="form-label">Nachname</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" required>
+              </div>
+              <div class="mb-2 form-group">
+                <label for="reg-email" class="form-label">E-Mail</label>
+                <input type="email" class="form-control" id="reg-email" name="email" required>
+              </div>
+              <div class="mb-2 form-group">
+                <label for="reg-password" class="form-label">Passwort</label>
+                <input type="password" class="form-control" id="reg-password" name="password" required minlength="6">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Registrieren</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  <!-- Logout-Bestätigung -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="logoutModalLabel">Logout bestätigen</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Abbrechen"></button>
+          </div>
+          <div class="modal-body">
+            Möchten Sie sich wirklich ausloggen?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Eingelogged bleiben</button>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- /container -->
+</body>
+</html>
