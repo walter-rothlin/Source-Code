@@ -1,6 +1,6 @@
 -- --------------------------------Bitte hier ändern--------------------------------
-SET @vorname  = 'Walter';    -- Durch ihren Vornamen ersetzen
-SET @nachname = 'Rothlin';   -- Durch ihren Namen ersetzen
+SET @vorname  := 'Walter';    -- Durch ihren Vornamen ersetzen
+SET @nachname := 'Rothlin';   -- Durch ihren Namen ersetzen
 -- ---------------------------------------------------------------------------------
 
 -- ------------------------------- Ab hier NICHTS mehr ändern ----------------------

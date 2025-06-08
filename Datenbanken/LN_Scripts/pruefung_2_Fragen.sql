@@ -5,6 +5,14 @@
 -- History:
 -- 24-Apr-2025   Walter Rothlin      Initial Version
 -- 28-Apr-2025   Walter Rothlin      Removed answers
+-- 08-Jun-2025   Walter Rothlin      Added automated testing
+-- ---------------------------------------------------------------------------------
+
+SET @Candidate_Firstname  := 'Walter';       -- Durch ihren Vornamen ersetzen
+SET @Candidate_Name       := 'Rothlin';      -- Durch ihren Namen ersetzen
+SET @Class                := 'TI24_BLe_BMa'; -- z.B. TI24_BLe_BMa oder BWI-A23
+
+SET @Test_Name            := 'DB_Prüfung_2'; -- NICHT ändern
 -- ---------------------------------------------------------------------------------
 -- Normalisieren Sie die personen_liste und erstellen Sie hier ein Migrations-Script.
 --

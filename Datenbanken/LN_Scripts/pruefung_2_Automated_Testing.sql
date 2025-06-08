@@ -9,13 +9,20 @@
 -- Test execution
 -- ==============
 USE `Pruefung_2`;
-SET @Class     := 'TI24_BLe_BMa';
-SET @Test_Name := 'DB_Prüfung_2';
-DELETE FROM `Test_Results`.`Test_Logs` WHERE `Class` = @Class AND `Test_Name` = @Test_Name;
+SET @time_testrun := now();
 
-SET @Candidate_Name      := 'MenaLupa';
-SET @Candidate_Firstname := 'Joan';
-
+INSERT INTO `Test_Results`.`test_definitions` (`Test_Name`, `Max_Points`)
+VALUES ('DB_Prüfung_2', 12)
+ON DUPLICATE KEY UPDATE 
+    `Max_Points` = VALUES(`Max_Points`);
+    
+SET SQL_SAFE_UPDATES = 0;
+DELETE FROM `Test_Results`.`Test_Logs` 
+WHERE  `Class`               = @Class 
+   AND `Test_Name`           = @Test_Name
+   AND `Candidate_Firstname` = @Candidate_Firstname
+   AND `Candidate_Name`      = @Candidate_Name;
+SET SQL_SAFE_UPDATES = 1;
 -- -------------------------------------------------------------------------------------
 SET @test_id  := '1.1 Count Tubles in Personen';
 SET @expected := 1169;
@@ -30,7 +37,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -66,12 +73,12 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 SELECT
-    NOW() AS `Timestamp`,
-    @Class AS `Class`,
-    @Test_Name AS `Test_Name`,
+    @time_testrun        AS `Timestamp`,
+    @Class               AS `Class`,
+    @Test_Name           AS `Test_Name`,
     @Candidate_Firstname AS `Candidate_Firstname`,
-    @Candidate_Name AS `Candidate_Name`,
-    @test_id AS `Testcase`,
+    @Candidate_Name      AS `Candidate_Name`,
+    @test_id             AS `Testcase`,
     CASE 
         WHEN table_exists = 1 THEN 'o.k.'
         ELSE 'Falsch'
@@ -103,12 +110,12 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 SELECT
-    NOW() AS `Timestamp`,
-    @Class AS `Class`,
-    @Test_Name AS `Test_Name`,
+    @time_testrun        AS `Timestamp`,
+    @Class               AS `Class`,
+    @Test_Name           AS `Test_Name`,
     @Candidate_Firstname AS `Candidate_Firstname`,
-    @Candidate_Name AS `Candidate_Name`,
-    @test_id AS `Testcase`,
+    @Candidate_Name      AS `Candidate_Name`,
+    @test_id             AS `Testcase`,
     CASE 
         WHEN `table_exists` = 1 THEN 'o.k.'
         ELSE 'Falsch'
@@ -140,12 +147,12 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 SELECT
-    NOW() AS `Timestamp`,
-    @Class AS `Class`,
-    @Test_Name AS `Test_Name`,
+    @time_testrun        AS `Timestamp`,
+    @Class               AS `Class`,
+    @Test_Name           AS `Test_Name`,
     @Candidate_Firstname AS `Candidate_Firstname`,
-    @Candidate_Name AS `Candidate_Name`,
-    @test_id AS `Testcase`,
+    @Candidate_Name      AS `Candidate_Name`,
+    @test_id             AS `Testcase`,
     CASE 
         WHEN `column_exists` = 1 THEN 'o.k.'
         ELSE 'Falsch'
@@ -178,7 +185,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -215,7 +222,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -255,12 +262,12 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 SELECT
-    NOW() AS `Timestamp`,
-    @Class AS `Class`,
-    @Test_Name AS `Test_Name`,
+    @time_testrun        AS `Timestamp`,
+    @Class               AS `Class`,
+    @Test_Name           AS `Test_Name`,
     @Candidate_Firstname AS `Candidate_Firstname`,
-    @Candidate_Name AS `Candidate_Name`,
-    @test_id AS `Testcase`,
+    @Candidate_Name      AS `Candidate_Name`,
+    @test_id             AS `Testcase`,
     CASE 
         WHEN table_exists = 1 THEN 'o.k.'
         ELSE 'Falsch'
@@ -292,7 +299,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -328,7 +335,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -351,7 +358,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
 	  SELECT COUNT(*) AS `cnt` FROM `Personen_Liste`
 	) AS `sub`;
 -- ------------------------------------------------------------------------------------- 
-SET @test_id  := '5.2  Count Tubles in "Personen_Liste" in "8855 W%"';
+SET @test_id  := '5.2 Count Tubles in "Personen_Liste" in "8855 W%"';
 SET @expected := 703;
 INSERT INTO `Test_Results`.`Test_Logs` (
     `Timestamp`,
@@ -364,7 +371,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -400,7 +407,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -424,7 +431,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
 	) AS `sub`;
 -- -------------------------------------------------------------------------------------    
 SET @test_id  := '4.6 Check "Personen" ob nur die gewünschten "Attributte" vorhanden sind';
-SET @expected := 82;
+SET @expected := 0;
 INSERT INTO `Test_Results`.`Test_Logs` (
     `Timestamp`,
     `Class`,
@@ -436,7 +443,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
     `Test_Kommentar`
 )
 	SELECT
-	  now()                AS `Timestamp`,
+	  @time_testrun        AS `Timestamp`,
 	  @Class               AS `Class`,
       @Test_Name           AS `Test_Name`,
 	  @Candidate_Firstname AS `Candidate_Firstname`,
@@ -479,4 +486,4 @@ WHERE `Class` = @Class AND `Test_Name` = @Test_Name
 ORDER BY `Timestamp`;  
   
 SELECT *
-FROM `Test_Results`.`Test_Statisticts`;   
+FROM `Test_Results`.`Test_Statistics`;   
