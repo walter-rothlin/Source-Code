@@ -10,6 +10,7 @@
 -- 17-Apr-2025 Walter Rothlin	Own Functions
 -- 15-May-2025 Walter Rothlin	Eigenes Schema kreieren und normalisieren
 -- 22-May-2025 Walter Rothlin   Migration: Aufteilen von Strasse_Hausnummer auf zwei Attributte
+-- 12-Jun-2025 Walter Rothlin   Added Search_Fields
 -- ---------------------------------------------------------------------------
 
 
@@ -403,7 +404,12 @@ CREATE VIEW `Adressen`  AS
 		' ',
 		`adr`.`Hausnummer`) AS `Strasse`,
       `o`.`Ortname`         AS `Ort`,
-      `o`.`PLZ`             AS `PLZ`
+      `o`.`PLZ`             AS `PLZ`,
+      CONCAT(`adr`.`Vorname`,';',
+             `adr`.`Nachname`,';',
+             `adr`.`Strassenname`,';',
+             `o`.`Ortname`,';',
+             `o`.`PLZ`)              AS `Search_Field`
     FROM `Adressen_RD` AS `adr`
     INNER JOIN `Orte` AS `o` ON `o`.`ID` = `adr`.`FK_Orte`;
 

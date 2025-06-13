@@ -10,42 +10,188 @@
 # History:
 # 15-May-2025   Walter Rothlin      Initial Version
 # 22-May-2025   Walter Rothlin      Added YAML config file
+# 12-Jun-2025   Walter Rothlin      Added connection into a reusable function
 # ------------------------------------------------------------------
 import mysql.connector
+import sqlparse
 from tabulate import tabulate
 import yaml
+import os
+import re
 
-db_config_json = {}
+# Function to connect to the database using a YAML configuration file
+def db_connect(config_file='App_Config.yaml'):
+    """Connect to the database using configuration from a YAML file."""
+    if not config_file:
+        raise ValueError("Config file path must be provided.")
 
-with open('App_Config.yaml', "r") as file:
-    db_config_json = yaml.safe_load(file)
+    if not os.path.exists(config_file):
+        print(f"❌ Datei '{config_file}' nicht gefunden!")
+        return None
+
+    with open(config_file, "r") as file:
+        db_config = yaml.safe_load(file)
+
+    schema_name = str(db_config['database']['schema'])
+    print(f'Connecting to {schema_name}....', end='', flush=True)
+
+    db_connection = mysql.connector.connect(
+        host=db_config['database']['host'],
+        user=db_config['database']['user'],
+        password=db_config['database']['password'],
+        database=schema_name,
+        auth_plugin=db_config['database']['auth_plugin'],
+    )
+
+    print('completed!')
+    return db_connection
+
+def format_sql_select(sql_query: str, keyword_case: str = 'upper', identifier_case: str = None) -> str:
+    """
+    Formats a raw SQL SELECT query into a more readable format.
+
+    Args:
+        sql_query (str): Raw SQL SELECT query string.
+        keyword_case (str, optional): Case to convert SQL keywords to ('upper', 'lower', 'capitalize', or None).
+        identifier_case (str, optional): Case to convert identifiers (e.g., table/column names).
+                                         Use 'lower', 'upper', or None to preserve case.
+
+    Returns:
+        str: Nicely formatted SQL query.
+    """
+    formatted_query = sqlparse.format(
+        sql_query,
+        reindent=True,
+        keyword_case=keyword_case,
+        identifier_case=identifier_case
+    )
+    return formatted_query
+
+
+def select_from_table(db_connection, table_name='adressen', search_field_name='Search_Field',
+                      fields=None, filter_string=None, search_case_sensitive=False):
+    """
+    Selects records from a specified SQL table with optional filtering and selected fields.
+
+    Parameters
+    ----------
+    db_connection : object
+        A live database connection object that supports the `cursor()` interface.
+
+    table_name : str, optional
+        The name of the table to query from.
+        Must be a valid SQL identifier. Defaults to 'adressen'.
+
+    search_field_name : str, optional
+        The name of the field to search/filter against.
+        Must be a valid SQL identifier. Defaults to 'Search_Field'.
+
+    fields : list[str], optional
+        A list of column names to include in the SELECT statement.
+        Each entry can optionally include an alias using 'AS'.
+        If None or empty, all columns (*) will be selected.
+
+        Examples:
+        ---------
+        - fields = ["Name", "PLZ", "Ort"]
+        - fields = ["Name AS FullName", "Ort AS City"]
+
+    filter_string : str, optional
+        A logical search string used to filter rows via the specified `search_field_name`.
+        Terms are matched using SQL `LIKE` or `LIKE BINARY`.
+
+        Behavior:
+        - Words separated by spaces are treated as AND (e.g., "Berlin Mitte")
+        - You may use `AND` or `OR` explicitly (case-insensitive)
+        - Parentheses or nested expressions are not supported
+
+        Examples:
+        ---------
+        - "Berlin" → matches rows where `Search_Field` contains "Berlin"
+        - "Berlin Mitte" → matches rows containing both "Berlin" AND "Mitte"
+        - "Berlin OR Hamburg" → matches rows containing either "Berlin" OR "Hamburg"
+        - "Berlin AND Mitte OR Kreuzberg" → ((Berlin AND Mitte) OR Kreuzberg)
+
+    search_case_sensitive : bool, default False
+        If True, performs a case-sensitive search using `LIKE BINARY`.
+        If False, uses case-insensitive `LIKE`.
+
+    Returns
+    -------
+    results : list[tuple]
+        The list of rows that match the query conditions.
+
+    description : tuple
+        Metadata about the result columns (name, type, etc.).
+    """
+    # Basic identifier validation (optional)
+    if not re.match(r'^\w+$', table_name):
+        raise ValueError(f"Invalid table name: {table_name}")
+    if not re.match(r'^\w+$', search_field_name):
+        raise ValueError(f"Invalid search field name: {search_field_name}")
+
+    # Prepare SELECT fields
+    if not fields:
+        fields_with_alias = '*'
+    else:
+        fields_with_alias_parts = []
+        for f in fields:
+            match = re.match(r'^(\w+)(\s+AS\s+\w+)?$', f, re.IGNORECASE)
+            if not match:
+                raise ValueError(f"Invalid field syntax: '{f}'")
+            base_field, alias_part = match.group(1), match.group(2)
+            field_sql = f"`{base_field}`"
+            if alias_part:
+                field_sql += alias_part  # ' AS alias'
+            fields_with_alias_parts.append(field_sql)
+        fields_with_alias = ', '.join(fields_with_alias_parts)
+
+    like_operator = 'LIKE BINARY' if search_case_sensitive else 'LIKE'
+    params = []
+
+    # Handle filter string
+    if not filter_string:
+        select_stmt = f"SELECT {fields_with_alias} FROM `{table_name}`;"
+        print(f"Executing SQL: {select_stmt}")
+        cursor = db_connection.cursor(dictionary=False)
+        cursor.execute(select_stmt)
+        results = cursor.fetchall()
+        return results, cursor.description
+
+    # Tokenize filter string
+    tokens = re.findall(r'\w+|AND|OR', filter_string, flags=re.IGNORECASE)
+    where_parts = []
+
+    for token in tokens:
+        upper_token = token.upper()
+        if upper_token in ('AND', 'OR'):
+            where_parts.append(upper_token)
+        else:
+            where_parts.append(f"`{search_field_name}` {like_operator} %s")
+            params.append(f"%{token}%")
+
+    where_clause = " WHERE " + " ".join(where_parts)
+    select_stmt = f"SELECT {fields_with_alias} FROM `{table_name}`{where_clause};"
+
+    print(format_sql_select(select_stmt))
+    print(f"Executing SQL: {select_stmt} with params {params}")
+
+    cursor = db_connection.cursor(dictionary=False)
+    cursor.execute(select_stmt, params)
+    results = cursor.fetchall()
+    return results, cursor.description
+
 
 
 # ================
 # Haupt-Programm
 # ================
-schema_name = str(db_config_json['database']['schema'])
-print(f'Connecting to {schema_name}....', end='', flush=True)
-db_connection = mysql.connector.connect(
-  host        = str(db_config_json['database']['host']),
-  user        = str(db_config_json['database']['user']),
-  password    = str(db_config_json['database']['password']),
-  database    = schema_name,
-  auth_plugin = str(db_config_json['database']['auth_plugin']),
-)
-print('completed!')
+db_connection = db_connect('App_Config.yaml')
 
-
-select_adressen = f"""
-SELECT * FROM adressen;
-"""
-
-my_cursor = db_connection.cursor(dictionary=False)
-my_cursor.execute(select_adressen)
-my_results = my_cursor.fetchall()
-print(my_results)
+my_results, cursor_description = select_from_table(db_connection, table_name='adressen', fields=['Vorname AS Firstname', 'Ort', 'PLZ'], filter_string='Wa OR Et AND Wan', search_case_sensitive=False)
+## print(cursor_description)
 
 # nice table output
-column_names = [desc[0] for desc in my_cursor.description]
+column_names = [desc[0] for desc in cursor_description]
 print("\nAdressen:")
 print(tabulate(my_results, headers=column_names, tablefmt="grid"))

@@ -10,7 +10,7 @@
 
 SET @Candidate_Firstname  := 'Walter';       -- Durch ihren Vornamen ersetzen
 SET @Candidate_Name       := 'Rothlin';      -- Durch ihren Namen ersetzen
-SET @Class                := 'TI24_BLe_BMa'; -- z.B. TI24_BLe_BMa oder BWI-A23
+SET @Class                := 'BWI-A23';      -- z.B. TI24_BLe_BMa oder BWI-A23
 
 SET @Test_Name            := 'DB_Prüfung_2'; -- NICHT ändern
 -- ---------------------------------------------------------------------------------
