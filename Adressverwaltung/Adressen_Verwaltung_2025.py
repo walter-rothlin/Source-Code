@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: Rothlin_Walter_Adressen_2025.py
+# Name: Adressen_Verwaltung_2025.py
 #
 # Description: Applikation für management von Adressen im eigenen Schema.
 #
@@ -67,6 +67,26 @@ def format_sql_select(sql_query: str, keyword_case: str = 'upper', identifier_ca
     )
     return formatted_query
 
+
+def add_indent(multi_line_string, indent_str='   '):
+    """
+    Adds indentation to each line of a multi-line string.
+
+    Parameters
+    ----------
+    multi_line_string : str
+        The string to indent, which may contain multiple lines.
+
+    indent_str : str
+        The string to use for indentation. Defaults to '    '.
+
+    Returns
+    -------
+    str
+        The indented string.
+    """
+
+    return '\n'.join(indent_str + line for line in multi_line_string.splitlines())
 
 
 def select_from_table(db_connection, table_name='adressen', search_field_name='Search_Field',
@@ -187,12 +207,42 @@ def select_from_table(db_connection, table_name='adressen', search_field_name='S
 # ================
 # Haupt-Programm
 # ================
-db_connection = db_connect('App_Config.yaml')
+if __name__ == "__main__":
 
-my_results, cursor_description = select_from_table(db_connection, table_name='adressen', fields=['Vorname AS Firstname', 'Ort', 'PLZ'], filter_string='Wa OR Et AND Wan', search_case_sensitive=False)
-## print(cursor_description)
+    menu_text = f'''
+      Adressverwaltung (V1.0)
+      =======================
+      1: Person suchen
+      2: Neue Person erfassen
+      3: Person löschen
+      4: Person ändern
+    
+      0: Schluss
+    '''
 
-# nice table output
-column_names = [desc[0] for desc in cursor_description]
-print("\nAdressen:")
-print(tabulate(my_results, headers=column_names, tablefmt="grid"))
+    db_connection = db_connect('App_Config.yaml')
+
+    do_loop = True
+    while do_loop:
+        print(menu_text)
+        in_value = input('Bitte Auswahl treffen: ')
+        if in_value == '0':
+            do_loop = False
+            continue
+        elif in_value == '1':
+            search_string = input('Suchbegriff eingeben: ')
+            my_results, cursor_description = select_from_table(db_connection, filter_string=search_string)
+            ## print(cursor_description)
+
+            # nice table output
+            column_names = [desc[0] for desc in cursor_description]
+            print("\nAdressen:")
+            print(tabulate(my_results, headers=column_names, tablefmt="grid"))
+        elif in_value == '2':
+            print('TODO: Neue Person erfassen')
+        elif in_value == '3':
+            print('TODO: Person löschen')
+        elif in_value == '4':
+            print('TODO: Person ändern')
+        else:
+            print(f'ERROR: Ungültige Auswahl {in_value}')
