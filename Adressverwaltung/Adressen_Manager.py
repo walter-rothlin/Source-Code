@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name: Adressen_Verwaltung_2025.py
+# Name: Adressen_Manager.py
 #
 # Description: Applikation für management von Adressen im eigenen Schema.
 #
