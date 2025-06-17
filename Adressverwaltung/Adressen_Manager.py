@@ -202,6 +202,147 @@ def select_from_table(db_connection, table_name='adressen', search_field_name='S
     results = cursor.fetchall()
     return results, cursor.description
 
+def search_ort(db_connection, plz, ort_name):
+    """
+    Searches for a specific postal code (PLZ) and city name (Ort) in the database.
+
+    Parameters:
+        db_connection: The database connection object.
+        plz (str): The postal code to search for.
+        ort_name (str): The name of the city to search for.
+
+    Returns:
+        tuple or None: The matching record as a tuple, or None if no match is found.
+    """
+    cursor = db_connection.cursor()
+    query = (
+        "SELECT * FROM Orte WHERE PLZ = %s AND Ortname = %s LIMIT 1"
+    )
+    cursor.execute(query, (plz, ort_name))
+    result = cursor.fetchone()  # More efficient than fetchall() if only one row is needed
+    return result
+
+
+def read_new_person_data():
+    """
+    Reads new person data from user input.
+
+    Returns:
+        dict: A dictionary containing the new person's data.
+    """
+    new_person = {}
+    new_person['Nachname']     = input('Nachname: ')
+    new_person['Vorname']      = input('Vorname: ')
+    new_person['Strassenname'] = input('Strasse: ')
+    new_person['Hausnummer']   = input('Hausnummer: ')
+    new_person['PLZ']          = input('PLZ: ')
+    new_person['Ort']          = input('Ort: ')
+    return new_person
+
+def insert_new_person(db_connection, person_data):
+    """
+    Inserts a new person into the database using the foreign key FK_Orte
+    referencing the Orte table.
+
+    Parameters:
+        db_connection: The database connection object.
+        person_data (dict): A dictionary containing the person's data.
+
+    Returns:
+        bool: True if the insertion was successful, False otherwise.
+    """
+    cursor = db_connection.cursor()
+
+    # Schritt 1: Ort anhand von PLZ und Ortname suchen
+    ort_record = search_ort(db_connection, person_data['PLZ'], person_data['Ort'])
+
+    if not ort_record:
+        print("Ungültige Kombination aus PLZ und Ort. Eintrag abgebrochen.")
+        return False
+
+    fk_orte_id = ort_record[0]  # Annahme: ID ist die erste Spalte in Orte
+
+    # Schritt 2: Neue Person einfügen
+    insert_stmt = (
+        "INSERT INTO Adressen_RD (Nachname, Vorname, Strassenname, Hausnummer, FK_Orte) "
+        "VALUES (%s, %s, %s, %s, %s)"
+    )
+    values = (
+        person_data['Nachname'],
+        person_data['Vorname'],
+        person_data['Strassenname'],
+        person_data['Hausnummer'],
+        fk_orte_id
+    )
+
+    try:
+        cursor.execute(insert_stmt, values)
+        db_connection.commit()
+        print("Neue Person erfolgreich hinzugefügt.")
+        return True
+    except mysql.connector.Error as err:
+        print(f"Fehler beim Hinzufügen der Person: {err}")
+        db_connection.rollback()
+        return False
+
+def delete_person(db_connection, person_id):
+    """
+    Deletes a person from the database by their ID.
+
+    Parameters:
+        db_connection: The database connection object.
+        person_id (int): The ID of the person to delete.
+
+    Returns:
+        bool: True if the deletion was successful, False otherwise.
+    """
+    cursor = db_connection.cursor()
+    delete_stmt = "DELETE FROM Adressen_RD WHERE id = %s"
+
+    try:
+        cursor.execute(delete_stmt, (person_id,))
+        db_connection.commit()
+        print("Person erfolgreich gelöscht.")
+        return True
+    except mysql.connector.Error as err:
+        print(f"Fehler beim Löschen der Person: {err}")
+        db_connection.rollback()
+        return False
+
+def modify_person(db_connection, person_id, new_data):
+    """
+    Modifies an existing person's data in the database.
+
+    Parameters:
+        db_connection: The database connection object.
+        person_id (int): The ID of the person to modify.
+        new_data (dict): A dictionary containing the new data for the person.
+
+    Returns:
+        bool: True if the modification was successful, False otherwise.
+    """
+    cursor = db_connection.cursor()
+    update_stmt = (
+        "UPDATE Adressen_RD SET Nachname = %s, Vorname = %s, Strassenname = %s, "
+        "Hausnummer = %s WHERE id = %s"
+    )
+    values = (
+        new_data['Nachname'],
+        new_data['Vorname'],
+        new_data['Strassenname'],
+        new_data['Hausnummer'],
+        person_id
+    )
+
+    try:
+        cursor.execute(update_stmt, values)
+        db_connection.commit()
+        print("Person erfolgreich geändert.")
+        return True
+    except mysql.connector.Error as err:
+        print(f"Fehler beim Ändern der Person: {err}")
+        db_connection.rollback()
+        return False
 
 
 # ================
@@ -225,12 +366,12 @@ if __name__ == "__main__":
     do_loop = True
     while do_loop:
         print(menu_text)
-        in_value = input('Bitte Auswahl treffen: ')
+        in_value = input('   Wähle: ')
         if in_value == '0':
             do_loop = False
             continue
         elif in_value == '1':
-            search_string = input('Suchbegriff eingeben: ')
+            search_string = input('Suchmuster (mit AND OR): ')
             my_results, cursor_description = select_from_table(db_connection, filter_string=search_string)
             ## print(cursor_description)
 
@@ -238,11 +379,20 @@ if __name__ == "__main__":
             column_names = [desc[0] for desc in cursor_description]
             print("\nAdressen:")
             print(tabulate(my_results, headers=column_names, tablefmt="grid"))
+
         elif in_value == '2':
-            print('TODO: Neue Person erfassen')
+            insert_new_person(db_connection, read_new_person_data())
+
         elif in_value == '3':
-            print('TODO: Person löschen')
+            delete_id = input('ID der zu löschenden Person: ')
+            if delete_id.isdigit():
+                delete_person(db_connection, int(delete_id))
+            else:
+                print(f'ERROR: Ungültige ID {delete_id}')
+
         elif in_value == '4':
-            print('TODO: Person ändern')
+            modify_id = input('ID der zu ändernden Person: ')
+            modify_person(db_connection, modify_id, read_new_person_data())
+
         else:
             print(f'ERROR: Ungültige Auswahl {in_value}')
