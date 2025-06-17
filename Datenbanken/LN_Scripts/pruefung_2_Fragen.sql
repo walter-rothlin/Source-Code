@@ -7,6 +7,7 @@
 -- 08-Jun-2025   Walter Rothlin      Added automated testing
 -- 15-Jun-2025   Walter Rothlin      Changed it for BWI-A23
 -- 16-Jun-2025   Walter Rothlin      Small corrections
+-- 17-Jun-2025   Walter Rothlin      Small corrections
 -- ---------------------------------------------------------------------------------
 -- -------------- Hier bitte ihre persönlichen Angaben erfassen --------------------
 
@@ -75,7 +76,7 @@ SET @Test_Max_Punkte      := 16;               -- NICHT ändern
 
 
 -- 3.4) Renamen Sie das Attribut "Strasse" zu "Strassenname"
-ALTER TABLE `Personen` RENAME COLUMN `Strasse` TO `Strassenname`;
+
 
 -- 3.5) Passen Sie die Implementation der view "Personen_Liste" entsprechend an, so das in Strasse 
 --      wieder die Strassenbezeichnung und die Hausnummer erscheint.
