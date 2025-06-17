@@ -1,7 +1,7 @@
 
 database:
     host: localhost
-    user: Test_APP_2024
+    user: Adress_Manager
     password: Test_007
-    schema: bzu_blf
+    schema: Adressen_DB
     auth_plugin: mysql_native_password
