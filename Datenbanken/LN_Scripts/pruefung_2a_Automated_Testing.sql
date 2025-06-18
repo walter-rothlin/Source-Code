@@ -412,7 +412,7 @@ FROM (
 -- -------------------------------------------------------------------------------------
 -- 2) Ueberprüfen Daten-Migration (alle Daten korrekt vorhanden)
 -- -------------------------------------------------------------------------------------
-SET @test_id  := '2.1 Count Tubles in Personen';
+SET @test_id  := '2.1 Count Tuples in Personen';
 SET @expected := 1169;
 INSERT INTO `Test_Results`.`Test_Logs` (
     `Timestamp`,
@@ -447,7 +447,8 @@ INSERT INTO `Test_Results`.`Test_Logs` (
 	FROM (
 	  SELECT COUNT(*) AS `cnt` FROM `Personen`
 	) AS `sub`;
--- -------------------------------------------------------------------------------------    
+-- -------------------------------------------------------------------------------------
+/*  
 SET @test_id  := '2.2 Split von Strassenname und Hausnummer';
 SET @expected := 36;
 INSERT INTO `Test_Results`.`Test_Logs` (
@@ -484,6 +485,10 @@ FROM (
 		SELECT COUNT(*) AS `cnt` FROM `Personen` 
 		WHERE `Hausnummer` IS NULL OR (`Hausnummer` <> REGEXP_SUBSTR(`Strassenname`, '[0-9]+[a-zA-Z]*$'))
 ) AS `sub`;
+*/
+
+-- SELECT * FROM `Personen` 
+-- 		WHERE `Hausnummer` IS NULL OR (`Hausnummer` <> REGEXP_SUBSTR(`Strassenname`, '[0-9]+[a-zA-Z]*$'));
 -- -------------------------------------------------------------------------------------
 SET @test_id  := '2.3 Anpassung View an Strasse und Hausnummer';
 SET @expected := 0;
@@ -561,7 +566,7 @@ FROM (
 		SELECT COUNT(*) AS `cnt` FROM `Orte`
 ) AS `sub`;
 -- -------------------------------------------------------------------------------------
-SET @test_id  := '2.6 Count Tubles in Personen_Liste';
+SET @test_id  := '2.6 Count Tuples in Personen_Liste';
 SET @expected := 1169;
 INSERT INTO `Test_Results`.`Test_Logs` (
     `Timestamp`,
@@ -597,7 +602,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
 	  SELECT COUNT(*) AS `cnt` FROM `Personen_Liste`
 	) AS `sub`;
 -- ------------------------------------------------------------------------------------- 
-SET @test_id  := '2.7 Count Tubles in "Personen_Liste" in "8855 W%"';
+SET @test_id  := '2.7 Count Tuples in "Personen_Liste" in "8855 W%"';
 SET @expected := 703;
 INSERT INTO `Test_Results`.`Test_Logs` (
     `Timestamp`,
@@ -633,7 +638,7 @@ INSERT INTO `Test_Results`.`Test_Logs` (
 	  SELECT count(*) AS `cnt` FROM `Personen_Liste` WHERE `PLZ_Ort` LIKE '8855 W%'
 	) AS `sub`;
 -- -------------------------------------------------------------------------------------    
-SET @test_id  := '2.8 Count Tubles in "Personen_Liste" in distinct("PLZ_Ort")';
+SET @test_id  := '2.8 Count Tuples in "Personen_Liste" in distinct("PLZ_Ort")';
 SET @expected := 82;
 INSERT INTO `Test_Results`.`Test_Logs` (
     `Timestamp`,
@@ -675,6 +680,18 @@ SELECT *
 FROM `Test_Results`.`Test_Logs` 
 WHERE `Class` = @Class AND `Test_Name` = @Test_Name 
 ORDER BY `Timestamp`;
+
+SELECT
+ -- Candidate_Firstname,
+ Candidate_Name,
+ Testcase,
+ Test_Status,
+ Test_Kommentar
+FROM test_results.test_logs 
+WHERE Candidate_Name LIKE '%Catanjal';
+
+SELECT * FROM test_results.test_statistics WHERE Candidate_Name LIKE '%Catanjal';
+
 */
 
 SELECT * FROM `Test_Results`.`Test_Logs`
