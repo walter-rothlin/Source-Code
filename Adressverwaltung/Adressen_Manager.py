@@ -89,6 +89,9 @@ def add_indent(multi_line_string, indent_str='   '):
     return '\n'.join(indent_str + line for line in multi_line_string.splitlines())
 
 
+import re
+import shlex
+
 def select_from_table(db_connection, table_name='adressen', search_field_name='Search_Field',
                       fields=None, filter_string=None, search_case_sensitive=False):
     """
@@ -122,16 +125,18 @@ def select_from_table(db_connection, table_name='adressen', search_field_name='S
         Terms are matched using SQL `LIKE` or `LIKE BINARY`.
 
         Behavior:
-        - Words separated by spaces are treated as AND (e.g., "Berlin Mitte")
-        - You may use `AND` or `OR` explicitly (case-insensitive)
-        - Parentheses or nested expressions are not supported
+        ---------
+        - Words separated by spaces are treated as AND (implicit).
+        - You may use `AND` or `OR` explicitly (case-insensitive).
+        - Quoted terms (e.g., "New York") are treated as single terms.
+        - Parentheses or nested expressions are NOT supported.
 
         Examples:
         ---------
         - "Berlin" → matches rows where `Search_Field` contains "Berlin"
         - "Berlin Mitte" → matches rows containing both "Berlin" AND "Mitte"
         - "Berlin OR Hamburg" → matches rows containing either "Berlin" OR "Hamburg"
-        - "Berlin AND Mitte OR Kreuzberg" → ((Berlin AND Mitte) OR Kreuzberg)
+        - "Berlin Mitte OR \"New York\"" → ((Berlin AND Mitte) OR "New York")
 
     search_case_sensitive : bool, default False
         If True, performs a case-sensitive search using `LIKE BINARY`.
@@ -144,8 +149,13 @@ def select_from_table(db_connection, table_name='adressen', search_field_name='S
 
     description : tuple
         Metadata about the result columns (name, type, etc.).
+
+    Raises
+    ------
+    ValueError
+        If SQL identifiers are invalid or the filter string cannot be parsed.
     """
-    # Basic identifier validation (optional)
+    # Validate identifiers
     if not re.match(r'^\w+$', table_name):
         raise ValueError(f"Invalid table name: {table_name}")
     if not re.match(r'^\w+$', search_field_name):
@@ -163,14 +173,14 @@ def select_from_table(db_connection, table_name='adressen', search_field_name='S
             base_field, alias_part = match.group(1), match.group(2)
             field_sql = f"`{base_field}`"
             if alias_part:
-                field_sql += alias_part  # ' AS alias'
+                field_sql += alias_part  # e.g., ' AS City'
             fields_with_alias_parts.append(field_sql)
         fields_with_alias = ', '.join(fields_with_alias_parts)
 
     like_operator = 'LIKE BINARY' if search_case_sensitive else 'LIKE'
     params = []
 
-    # Handle filter string
+    # No filter case
     if not filter_string:
         select_stmt = f"SELECT {fields_with_alias} FROM `{table_name}`;"
         print(f"Executing SQL: {select_stmt}")
@@ -179,28 +189,47 @@ def select_from_table(db_connection, table_name='adressen', search_field_name='S
         results = cursor.fetchall()
         return results, cursor.description
 
-    # Tokenize filter string
-    tokens = re.findall(r'\w+|AND|OR', filter_string, flags=re.IGNORECASE)
-    where_parts = []
+    # Tokenize the filter string using shlex (supports quotes)
+    try:
+        raw_tokens = shlex.split(filter_string)
+    except ValueError as e:
+        raise ValueError(f"Error parsing filter string: {e}")
 
-    for token in tokens:
-        upper_token = token.upper()
-        if upper_token in ('AND', 'OR'):
-            where_parts.append(upper_token)
+    # Insert implicit AND between adjacent terms
+    normalized_tokens = []
+    last_was_term = False
+    for tok in raw_tokens:
+        upper_tok = tok.upper()
+        if upper_tok in ("AND", "OR"):
+            normalized_tokens.append(upper_tok)
+            last_was_term = False
+        else:
+            if last_was_term:
+                normalized_tokens.append("AND")
+            normalized_tokens.append(tok)
+            last_was_term = True
+
+    # Build WHERE clause
+    where_parts = []
+    for tok in normalized_tokens:
+        upper_tok = tok.upper()
+        if upper_tok in ("AND", "OR"):
+            where_parts.append(upper_tok)
         else:
             where_parts.append(f"`{search_field_name}` {like_operator} %s")
-            params.append(f"%{token}%")
+            params.append(f"%{tok}%")
 
     where_clause = " WHERE " + " ".join(where_parts)
     select_stmt = f"SELECT {fields_with_alias} FROM `{table_name}`{where_clause};"
 
-    print(format_sql_select(select_stmt))
-    print(f"Executing SQL: {select_stmt} with params {params}")
+    print(f"Executing SQL: {select_stmt}")
+    print(f"With parameters: {params}")
 
     cursor = db_connection.cursor(dictionary=False)
     cursor.execute(select_stmt, params)
     results = cursor.fetchall()
     return results, cursor.description
+
 
 def search_ort(db_connection, plz, ort_name):
     """
