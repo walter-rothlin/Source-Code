@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 # ------------------------------------------------------------------
-# Name  : pythonBasics_08j_repeating_timer_REST_Controlled.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_08j_repeating_timer_REST_Controlled.py
+# Name  : pythonBasics_08j_RepeatingTimer_REST_Controlled.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_02_BasicPython/pythonBasics_08j_RepeatingTimer_REST_Controlled.py
 #
 # Description: Ruft eine Usr-Funktion in einem festen (ohne drift) Intervall auf.
 #
