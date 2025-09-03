@@ -34,6 +34,8 @@ def getTimestamp(preStr = "", postStr="", formatString="nice"):
 lofFilename = "weatherLog.txt"
 delimiter = "|"
 pollingTime = float(input("Polling-Time [s]           :"))
+
+
 ort_wetterstation = input("Ort                        :")
 language = input("Sprache [de,el,en,fr,hr,it]:")
 if language == '':

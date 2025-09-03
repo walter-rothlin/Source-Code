@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 # ------------------------------------------------------------------
 # Name  : WeatherLogger_00.py
 # Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_05_DataLogger/WeatherLogger_00.py
