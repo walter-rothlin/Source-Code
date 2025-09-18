@@ -28,7 +28,7 @@ class Bruch:
         self.__nenner = nenner
 
     def __eq__(self,bruch_2):
-        return (self.__zaehler == bruch_2.__zaehler and self.__nenner == bruch_2.__nenner)
+        return (self.__zaehler == bruch_2.zaehler and self.__nenner == bruch_2.__nenner)
 
 
     def __str__(self, sep="/", startChr="[", endChar="]"):
@@ -49,7 +49,7 @@ class Bruch:
         """
         # new_bruch = Bruch(self.__zaehler * factor.__zaehler, self.__nenner * factor.__nenner)
         # return new_bruch.kuerzen()
-        self.__zaehler *= factor.__zaehler
+        self.__zaehler *= factor.zaehler
         self.__nenner *= factor.__nenner
         self.kuerzen()
         return self

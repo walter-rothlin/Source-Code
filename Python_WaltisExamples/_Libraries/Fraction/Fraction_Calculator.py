@@ -14,19 +14,45 @@
 # 22-Nov-2023   Walter Rothlin  Implemented TBI 21.11.23
 #
 # ------------------------------------------------------------------
-from waltisLibrary import *
 from Class_Fraction import *
+import pydoc
 
-help(Fraction)
 
-print(unterstreichen("Test-Cases from Bruch_Rechner"))
-bruch1 = Fraction()
-print(bruch1)
-print(bruch1.to_decimal().__doc__)
-print(bruch1)
+def unterstreichen(text, char='='):
+    print(text)
+    print(char * len(text))
+    return text
 
-bruch_1 = Fraction(2, 3)
-bruch_1.reciprocal()
+
+bruch_1 = Fraction(bruch_str='[8/11]')
+print(bruch_1)
+
+bruch_1.nenner = 15
+bruch_1.name = "Bruch 1"
+print(bruch_1, bruch_1.name)
+
+
+bruch_1 = Fraction(9, 10)
 print(bruch_1)
 
 
+print(Fraction.unterstreichen('von Klasse', '?'))
+Fraction.do_trace=False
+
+bruch_2 = Fraction(55, 100)
+print(bruch_1)
+
+"""
+print(unterstreichen("Help für Class Fraction via help()"))
+help(Fraction)
+print('\n\n')
+
+print(unterstreichen("Help für Class Fraction via render_doc()"))
+hilfe_text = pydoc.render_doc(Fraction, title="Hilfe für %s")
+print(hilfe_text)     # zeigt den Help-Text
+print('\n\n')
+
+
+print('=============================')
+print(bruch_1.to_decimal.__doc__)
+"""

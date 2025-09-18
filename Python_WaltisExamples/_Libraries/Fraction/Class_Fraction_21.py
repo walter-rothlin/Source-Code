@@ -85,22 +85,22 @@ class Fraction:
     # binary business methods
     # -----------------------
     def mul(self, factor):
-        self.__zaehler = self.__zaehler * factor.__zaehler
+        self.__zaehler = self.__zaehler * factor.zaehler
         self.__nenner = self.__nenner * factor.__nenner
         return self
 
     def div(self, divisor):
         self.__zaehler = self.__zaehler * divisor.__nenner
-        self.__nenner = self.__nenner * divisor.__zaehler
+        self.__nenner = self.__nenner * divisor.zaehler
         return self
 
     def add(self, summand):
-        self.__zaehler = self.__zaehler * summand.__nenner + summand.__zaehler * self.__nenner
+        self.__zaehler = self.__zaehler * summand.__nenner + summand.zaehler * self.__nenner
         self.__nenner = self.__nenner * summand.__nenner
         return self
 
     def sub(self, subtrahend):
-        self.__zaehler = self.__zaehler * subtrahend.__nenner - subtrahend.__zaehler * self.__nenner
+        self.__zaehler = self.__zaehler * subtrahend.__nenner - subtrahend.zaehler * self.__nenner
         self.__nenner = self.__nenner * subtrahend.__nenner
         return self
 

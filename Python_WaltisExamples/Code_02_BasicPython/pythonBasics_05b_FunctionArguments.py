@@ -11,85 +11,92 @@
 # History:
 # 28-Nov-2021   Walter Rothlin      Initial Version
 # 20-Sep-2023   Walter Rothlin      Added new examples for HBU
+# 18-Sep-2025   Walter Rothlin      Added new examples for HBU
 # ------------------------------------------------------------------
+
+trenner = '-' * 80
+
 print('1) Function Calls')
 print('=================')
 def func1(a):
-    print("1) func1(a)                       -> func1(5)                       ===> a = ", a)
-
-
-def func2(*values):
-    print("2) func2(*values)                 -> func2(1, 2, 3, 4, 5, 6)        ===> values    = ", values)
-
-
-def func3(**keyValues):
-    print("3) func3(**keyValues)             -> func3(a=5, b=6, c=7)           ===> keyValues = ", keyValues)
-
-
-def func4(a, *values):
-    print("4) func4(a, *values)              -> func4(5, 6, 7, 8, 9, 10)       ===> a = ", a, "values = ", values)
-
-
-def func5(*values, **keyValues):
-    print("5) func5(*values, **keyValues)    -> func5(5, 8, a=5, b=3)          ===> values = ", values, "keyValues = ", keyValues)
-
-
-def func6(a, *values, **keyValues):
-    print("6) func6(a, *values, **keyValues) -> func6(2, 5, 6, 7, 8, b=6, c=7) ===> a = ", a, "values = ", values, "keyValues = ", keyValues)
-
-
-def func7(**keyValues):
-    print()
-    print("  7a) ", end="")
-    for key in [*keyValues]:
-        print(key, sep=";", end="")
-
-    print()
-    print("  7b) ", end="")
-    for key in keyValues.keys():
-        print(key, sep=";", end="")
-
+    print(f"1) func1({a})")
 
 func1(5)
-func2(1, 2, 3, 4, 5, 6)
-func3(a=5, b=6, c=7)
-func4(5, 6, 7, 8, 9, 10)
-func5(5, 8, a=5, b=3)
-func6(2, 5, 6, 7, 8, b=6, c=7)
-func7(a=1, b=2, c=3, d=4, e=5)
+func1(a=5)
+func1((10, 6, 9))
+func1({'Anrede': 'Hallo', 'b': 5})
+print(trenner, "\n")
 
-print('\n\n')
-print('2) Function Calls')
-print('=================')
-def function_1(a):
-    print('function_1("' + str(a) + '")')
+
+print('2) Function Calls with variable number of arguments')
+print('===================================================')
+def func2(*values):
+    print(f"2) func2(*values) ==> func2{values}")
+    for v in values:
+        print(f"   Value: {v}")
+    print(f'   {values[-1]} is the last value')
+
+
+func2(5, 7 , 8)
+func2(5, 7 , 8, 9.0, 10, "Uster", 12)
+print('\n')
 
 
 def summe(*values):
-    sum = 0
-    for summand in values:
-        sum += summand
-    return sum
+    sum_value = 0
+    for v in values:
+        sum_value += v
+    return sum_value
+
+print(f"2) summe(5, 7 , 8) = {summe(5, 7 , 8)}")
+
+def average(*values, round_result=False):
+    sum_value = 0
+    for v in values:
+        sum_value += v
+    if round_result:
+        return round(sum_value/len(values), 2)
+    else:
+        return sum_value/len(values)
+
+print(f"2) average(5, 7 , 8) = {average(5, 7 , 8)}")
+print(f"2) average(5, 7 , 8) = {average(5, 7 , 8, round_result=True)}")
+print(trenner, "\n")
 
 
-def function_3(**key_values):
-    print(key_values)
+print('3) Function Calls with variable number of named arguments')
+print('=========================================================')
+def func3(**keyValues):
+    print(f"3) func3(**keyValues)  ==> func3{keyValues}")
+
+func3(pi=3.1415, e=2.78)
+func3(m=3.1415, c=2.788888)
+print(trenner, "\n")
 
 
-def func_super(a, b, *values, **key_values):
-    print('func_super')
-    print('a         :', a)
-    print('b         :', b)
-    print('values    :', values)
-    print('key_values:', key_values)
+
+print('4) Function Calls with variable number of named arguments and normal arguments')
+print('==============================================================================')
+def func4(first_name, *values):
+    print(f"4) func4(first_name, *values)  ===> first_name={first_name}, values={values}")
+
+func4('Hallo', 1, 2, 3, 4, 5)
+print(trenner, "\n")
 
 
-# Main (Fct calls)
-# ================
-function_1('Hallo')
+print('5) Function Calls with variable number of named arguments and normal arguments')
+print('==============================================================================')
+def func5(first_name, **keyValues):
+    print(f"5) func5(first_name, **keyValues)  ===> first_name={first_name}, keyValues={keyValues}")
 
-print(summe(123, 567, 10, -3))
+func5('Hallo', a=1, b=2, c=3, d=4, e=5)
+print(trenner, "\n")
 
-function_3(a=5, b=6, c=7, end='Hallo')
+print('6) Function Calls with normal arguments, variable number of named arguments and normal arguments')
+print('==============================================================================')
+def func6(a, *values, **keyValues):
+    print(f"6) func6(a, *values, **keyValues) ===> a={a}, values={values}, keyValues={keyValues}")
 
-func_super(('Hallo', 'HBU'), 555, 1, 2, 3, 4, aa=5, bb=6, c=7, end='Hallo')
+func6('Peter', 1, 2, 3, 4, 5, pi=3.1415, e=2.78)
+print(trenner, "\n")
+
