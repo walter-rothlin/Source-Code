@@ -18,10 +18,8 @@ from Class_Fraction import *
 import pydoc
 
 
-def unterstreichen(text, char='='):
-    print(text)
-    print(char * len(text))
-    return text
+def unterstreichen(text, aChar='='):
+    return Fraction.unterstreichen(text=text, aChar=aChar)
 
 
 bruch_1 = Fraction(bruch_str='[8/11]')
@@ -42,7 +40,7 @@ Fraction.do_trace=False
 bruch_2 = Fraction(55, 100)
 print(bruch_1)
 
-"""
+
 print(unterstreichen("Help für Class Fraction via help()"))
 help(Fraction)
 print('\n\n')
@@ -55,4 +53,3 @@ print('\n\n')
 
 print('=============================')
 print(bruch_1.to_decimal.__doc__)
-"""

@@ -18,6 +18,7 @@
 # 12-Oct-2022   Walter Rothlin  Simplifying automated testing
 # 21-Nov-2023   Walter Rothlin  HBU Changes
 # 04-Dec-2023   Walter Rothlin  Perform Test in try-except block
+# 22-Sep-2025   Walter Rothlin  Implemented and Tested comparable methods
 #
 # ------------------------------------------------------------------
 class Fraction:
@@ -172,7 +173,10 @@ class Fraction:
         """
         - gibt den Dezimal-Wert des Bruches zurück [1/2] ==> 0.5
         """
-        return round(self.__zaehler / self.__nenner, roundAfter)
+        if roundAfter is not None:
+            return round(self.__zaehler / self.__nenner, roundAfter)
+        else:
+            return self.__zaehler / self.__nenner
 
     def shorten(self, divisor=None):
         """
@@ -241,7 +245,7 @@ class Fraction:
 
 if __name__ == '__main__':
     def unterstreichen(text, aChar='='):
-        return text + '\n' + aChar * len(text)
+        return Fraction.unterstreichen(text=text, aChar=aChar)
 
 
     # static test methods
@@ -362,8 +366,78 @@ if __name__ == '__main__':
         test_cases = """
         Nr|Type    |Fraction_1 |Compareable|Fraction_2 |Expected
         01|Compare |[1/2]      |==         |[1/2]      |True
-
+        02|Compare |[1/2]      |==         |[2/4]      |False
         """
+        if verbal:
+            print("")
+            print(unterstreichen(f"Testsuite: {test_suite}", aChar='='))
+        list_of_test_cases = test_cases.split("\n")
+        for a_test_case in list_of_test_cases[2:-1]:
+            if a_test_case.strip() == "":
+                continue
+            if a_test_case.strip().startswith('#'):
+                if verbal:
+                    sub_title = unterstreichen(a_test_case.strip(), aChar='-')
+                continue
+            # Prepare Test
+            tests_performed += 1
+            list_of_test_values = a_test_case.split("|")
+            test_case = list_of_test_values[0].strip()
+            param_1 = list_of_test_values[2].strip()
+            param_1 = param_1 if param_1 != "" else None
+            compare_op = list_of_test_values[3].strip()
+            compare_op = compare_op if compare_op != "" else None
+            param_3 = list_of_test_values[4].strip()
+            param_3 = None if param_3 == "" else param_3
+            expected_result = list_of_test_values[5].strip()
+
+            print(f"Test Case {test_case}: {param_1} {compare_op} {param_3} {expected_result}")
+            # Perform Test
+            try:
+                if param_1 is not None and param_3 is not None:
+                    bruch_1 = Fraction(bruch_str=param_1)
+                    bruch_3 = Fraction(bruch_str=param_3)
+                    if compare_op == '==':
+                        result = bruch_1 == bruch_3
+                    elif compare_op == '!=':
+                        result = bruch_1 != bruch_3
+                    elif compare_op == '<':
+                        result = bruch_1 < bruch_3
+                    elif compare_op == '<=':
+                        result = bruch_1 <= bruch_3
+                    elif compare_op == '>':
+                        result = bruch_1 > bruch_3
+                    elif compare_op == '>=':
+                        result = bruch_1 >= bruch_3
+                    else:
+                        result = False
+                else:
+                    print('ERROR: Missing parameters')
+                # Compare Test-Result with expectation
+                if str(result) != expected_result:
+                    tests_failed += 1
+                    # print(f"{test_case} ({test_suite}) failed!!")
+                    print(sub_title)
+                    print(list_of_test_cases[1].strip())
+                    print(a_test_case.strip())
+                    print(f"  ==> {param_1} {compare_op} {param_3} = {result}")
+                    print(f"      Result  :'{result}'")
+                    print(f"      Expected:'{expected_result}'")
+                    print()
+            except Exception as e:
+                tests_failed += 1
+                print(sub_title)
+                print(list_of_test_cases[1].strip())
+                print(a_test_case.strip())
+                print(f'   ==> ERROR:{e}')
+                print()
+        if verbal:
+            percent = round(100 - (100 * tests_failed / tests_performed), 1)
+            print("\n")
+            print(f"     Test performed: {tests_performed}")
+            print(f"     Test failed   : {tests_failed}")
+            print(f"     Passed        : {percent}%     Teilnote: {(percent / 20) + 1:1.1f} ")
+            print("\n")
 
 
     def TEST_setter_getter_properties(verbal=False):
@@ -562,7 +636,7 @@ if __name__ == '__main__':
     # print('lcm(30, 90, 60):', lcm)
     # print('gcd(45, 15, 30):', gcd)
     AUTO_TEST_init_str(verbal=True)
-    # AUTO_TEST_compareable(verbal=True)
+    AUTO_TEST_compareable(verbal=True)
     # TEST_setter_getter_properties(verbal=True)
     # TEST_reciprocal_to_decimal_shorten_expand(verbal=True)
     # TEST_mul_div_add_sub(verbal=True)

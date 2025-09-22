@@ -64,7 +64,7 @@ print(f"2) average(5, 7 , 8) = {average(5, 7 , 8, round_result=True)}")
 print(trenner, "\n")
 
 
-print('3) Function Calls with variable number of named arguments')
+print('3) Function calls with variable number of named arguments')
 print('=========================================================')
 def func3(**keyValues):
     print(f"3) func3(**keyValues)  ==> func3{keyValues}")
