@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # ------------------------------------------------------------------
 # Name: Class_Fraction.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_Fraction.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_Libraries/Class_Fraction_LN_1.py
 #
 # Description: Implementiert einen Bruch (Farction) and the basics oparators
 #
