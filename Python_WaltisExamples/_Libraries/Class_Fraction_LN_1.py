@@ -54,7 +54,7 @@ class Fraction:
             elif len(parts) == 2:
                 zaehler = parts[0]
                 nenner = parts[1]
-        self.zaehler = zaehler
+        self.zaehler = nenner
         self.nenner = nenner
         if self.zaehler < 0 and self.nenner < 0:
             self.zaehler = abs(self.zaehler)
