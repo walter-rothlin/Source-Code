@@ -19,10 +19,13 @@
 # 21-Nov-2023   Walter Rothlin  HBU Changes
 # 04-Dec-2023   Walter Rothlin  Perform Test in try-except block
 # 22-Sep-2025   Walter Rothlin  Implemented and Tested comparable methods
-#
+# 24-Sep-2025   Walter Rothlin  Added more test cases and automated tests
+# 24-Sep-2025   Walter Rothlin  Change testcases for Ctr, signs for nenner and zaehler are stored, eliminated via shorten()
 # ------------------------------------------------------------------
+import math
+
 class Fraction:
-    do_trace = True
+    do_trace = False
 
     def unterstreichen(text, aChar='='):
         return text + '\n' + aChar * len(text)
@@ -34,9 +37,9 @@ class Fraction:
 
     def __init__(self, zaehler=0, nenner=1, bruch=None, bruch_str=None):
         """
-        - Check if nenner is not 0
-        - only one sign
-        - only Integers no floats nor string,....
+        - Check if nenner is not 0 sonst auf 1 setzen
+        - nenner und/oder zähler kann negativ - sein
+        - nenner und/oder zähler können integers or floats sein (werden in int umgewandelt)
         """
         if Fraction.do_trace:
             print(f'_init__(self, zaehler={zaehler}, nenner=1, bruch=None, bruch_str=None):')
@@ -51,7 +54,7 @@ class Fraction:
             elif len(parts) == 2:
                 zaehler = parts[0]
                 nenner = parts[1]
-        self.zaehler = zaehler
+        self.zaehler = nenner
         self.nenner = nenner
         if self.zaehler < 0 and self.nenner < 0:
             self.zaehler = abs(self.zaehler)
@@ -67,7 +70,8 @@ class Fraction:
         return self.to_string()
 
     def prettyprint(self):
-        """Gibt den Bruch dreizeilig aus, wobei Zähler und Nenner
+        """
+        Gibt den Bruch dreizeilig aus, wobei Zähler und Nenner
         zentriert gesetzt sind.
         """
         zaehler_str = str(self.__zaehler)
@@ -126,37 +130,37 @@ class Fraction:
         """
         - True if self decimal value < other decimal value
         """
-        return True
+        return self.to_decimal(roundAfter=2) < other.to_decimal(roundAfter=2)
 
     def __gt__(self, other):  # >
         """
         - True if self decimal value > other decimal value
         """
-        return True
+        return self.to_decimal(roundAfter=2) > other.to_decimal(roundAfter=2)
 
     def __le__(self, other):  # <=
         """
         - True if self decimal value <= other decimal value
         """
-        return True
+        return self.to_decimal(roundAfter=2) <= other.to_decimal(roundAfter=2)
 
     def __ge__(self, other):  # >=
         """
         - True if self decimal value >= other decimal value
         """
-        return True
+        return self.to_decimal(roundAfter=2) >= other.to_decimal(roundAfter=2)
 
     def __eq__(self, other):  # ==
         """
         - True if Nenners and Zaehlers are equal (Not decimal value)
         """
-        return True
+        return self.__zaehler == other.__zaehler and self.__nenner == other.__nenner
 
     def __ne__(self, other):  # !=
         """
         - False if Nenners and Zaehlers are equal (Not decimal value)
         """
-        return True
+        return not self.__eq__(other)
 
     # unary business methods
     # ----------------------
@@ -174,28 +178,69 @@ class Fraction:
         - gibt den Dezimal-Wert des Bruches zurück [1/2] ==> 0.5
         """
         if roundAfter is not None:
-            return round(self.__zaehler / self.__nenner, roundAfter)
+            try:
+                roundAfter = int(round(float(roundAfter), 0))
+            except Exception:
+                roundAfter = 2
+
+            return round(self.__nenner / self.__zaehler, roundAfter)
         else:
             return self.__zaehler / self.__nenner
 
     def shorten(self, divisor=None):
         """
         - kürzt self [2/4] mit 2 ==> [1/2]
+        - bei folgenden Bedinungen wird anstelle des Divisor der ggt zum Kürzen genommen:
+            - divisor=None oder keine Zahl
+            - divisor=0 oder divisor=1
+            - der Rest der Ganzzahligen Division von Zähler und Nenner nicht 0 ist
+        - wenn divisor ein float ist, wird dieser gerundet
+        - bei negativen divisor wird der absolut Wert genommen
+
         """
-        if divisor is None:
+        # print('')
+        # print(f'1) shorten(self, divisor={divisor})')
+
+        try:
+            divisor = int(round(float(divisor), 0))
+        except Exception:
             divisor = 1
-        self.__zaehler = int(self.__zaehler / divisor)
-        self.__nenner = int(self.__nenner / divisor)
+        # print(f'2) shorten(self, divisor={divisor})')
+
+        if divisor is None or divisor == 0:
+            divisor = 1
+
+        if self.__zaehler % divisor != 0 or self.__nenner % divisor != 0:
+            divisor = 1
+
+        divisor = abs(divisor)
+        # print(f'3) shorten(self, divisor={divisor})')
+
+        if divisor == 1:
+            divisor = math.gcd(self.__zaehler, self.__nenner)
+
+        self.__zaehler = int(self.__zaehler / 2*divisor)
+        self.__nenner = int(self.__nenner / 2*divisor)
         return self
 
     def expand(self, factor=None):
         """
         - erweitert self [2/4] mit 2 ==> [4/8]
+        - wenn factor=0 oder factor=1 wird mit 1 erweitert (no change)
+        - wenn factor>1 wird mit diesem Wert erweitert
+        - wenn factor ein float ist, wird dieser gerundet
+        - wenn factor<0 wird mit diesem Wert erweitert
         """
-        if factor is None:
+        try:
+            factor = int(round(float(factor), 0))
+        except Exception:
             factor = 1
-        self.__zaehler = int(self.__zaehler * factor)
-        self.__nenner = int(self.__nenner * factor)
+
+        if factor is None or factor == 0:
+            factor = 1
+
+        self.__zaehler = self.__zaehler * 2*factor
+        self.__nenner = self.__nenner * 2*factor
         return self
 
     # binary business methods (Grundoperationen)
@@ -264,13 +309,15 @@ if __name__ == '__main__':
             05|Ctr |2       |7      |          |          |[2/7]
             06|Ctr |55      |72     |          |          |[55/72]
             07|Ctr |23      |       |          |          |[23/1]
-
+            08|Ctr |23.12   |12.6   |          |          |[23/1]
+            09|Ctr |1.6     |4.45   |          |          |[0/45]
+            
             # Negative Nenner und/oder Zähler
             10|Ctr |-5      |40     |          |          |[-5/40]
-            11|Ctr |5       |-40    |          |          |[-5/40]
-            12|Ctr |-5      |-40    |          |          |[5/40]
+            11|Ctr |5       |-40    |          |          |[5/-40]
+            12|Ctr |-5      |-40    |          |          |[-5/-40]
             13|Ctr |-10     |2      |          |          |[-10/2]
-            14|Ctr |88      |-40    |          |          |[-88/40]
+            14|Ctr |88      |-40    |          |          |[88/-40]
 
             # Bruch_Str (Ctr fraction by a string)
             20|Ctr |        |       |          | [7/40]   |[7/40]
@@ -285,7 +332,7 @@ if __name__ == '__main__':
             31|Ctr |        |       |[-3/4]    |          |[-3/4]
             32|Ctr |        |       |[-7/40]   |          |[-7/40]
             33|Ctr |        |       |[-7:40]   |          |[-7/40]
-            34|Ctr |        |       |-7/40     |          |[-7/40]
+            34|Ctr |        |       |-7/-40    |          |[-7/-40]
             35|Ctr |        |       |-7:40     |          |[-7/40]
 
             # Negativ Tests
@@ -304,6 +351,7 @@ if __name__ == '__main__':
                 if verbal:
                     sub_title = unterstreichen(a_test_case.strip(), aChar='-')
                 continue
+
             # Prepare Test
             tests_performed += 1
             list_of_test_values = a_test_case.split("|")
@@ -317,6 +365,9 @@ if __name__ == '__main__':
             param_4 = list_of_test_values[5].strip()
             param_4 = None if param_4 == "" else param_4
             expected_result = list_of_test_values[6].strip()
+
+            if verbal:
+                print(f"Test Case {test_case}: __int__({param_1}, {param_2}, {param_3}, {param_4}) = {expected_result}? ", end="")
             # Perform Test
             try:
                 if param_3 is not None:
@@ -329,7 +380,8 @@ if __name__ == '__main__':
                 # Compare Test-Result with expectation
                 if str(bruch_1) != expected_result:
                     tests_failed += 1
-                    # print(f"{test_case} ({test_suite}) failed!!")
+                    if verbal:
+                        print("FAILED")
                     print(sub_title)
                     print(list_of_test_cases[1].strip())
                     print(a_test_case.strip())
@@ -342,6 +394,9 @@ if __name__ == '__main__':
                     print(f"      Result  :'{bruch_1}'")
                     print(f"      Expected:'{expected_result}'")
                     print()
+                else:
+                    if verbal:
+                        print("OK")
             except Exception as e:
                 tests_failed += 1
                 print(sub_title)
@@ -359,7 +414,6 @@ if __name__ == '__main__':
 
 
     def AUTO_TEST_compareable(verbal=False):
-        # Test Ctr and toString()
         test_suite = 'comparable'
         tests_performed = 0
         tests_failed = 0
@@ -367,11 +421,38 @@ if __name__ == '__main__':
         Nr|Type    |Fraction_1 |Compareable|Fraction_2 |Expected
         01|Compare |[1/2]      |==         |[1/2]      |True
         02|Compare |[1/2]      |==         |[2/4]      |False
+        03|Compare |[1/-2]     |==         |[-1/2]     |False
+        04|Compare |[-1/2]     |==         |[-1/2]     |True
+        05|Compare |[-1/-2]    |==         |[1/2]      |False
+        06|Compare |[-1/-2]    |==         |[2/4]      |False
+        
+        07|Compare |[1/2]      |!=         |[1/2]      |False
+        08|Compare |[1/2]      |!=         |[2/4]      |True
+        09|Compare |[1/-2]     |!=         |[-1/2]     |True
+        10|Compare |[-1/2]     |!=         |[-1/2]     |False
+        11|Compare |[-1/-2]    |!=         |[1/2]      |True
+        12|Compare |[-1/-2]    |!=         |[2/4]      |True
+        
+        13|Compare |[1/2]      |<          |[2/4]      |False
+        14|Compare |[2/8]      |<          |[2/4]      |True
+        
+        15|Compare |[1/2]      |>          |[2/4]      |False
+        16|Compare |[2/4]      |>          |[1/2]      |False
+        17|Compare |[3/4]      |>          |[1/2]      |True
+        
+        18|Compare |[3/4]      |>=         |[1/2]      |True
+        19|Compare |[3/4]      |>=         |[3/4]      |True
+        20|Compare |[3/4]      |>=         |[4/5]      |False
+        
+        21|Compare |[3/4]      |<=         |[1/2]      |False
+        22|Compare |[3/4]      |<=         |[6/8]      |True
+
         """
         if verbal:
             print("")
             print(unterstreichen(f"Testsuite: {test_suite}", aChar='='))
         list_of_test_cases = test_cases.split("\n")
+        sub_title = ''
         for a_test_case in list_of_test_cases[2:-1]:
             if a_test_case.strip() == "":
                 continue
@@ -379,6 +460,7 @@ if __name__ == '__main__':
                 if verbal:
                     sub_title = unterstreichen(a_test_case.strip(), aChar='-')
                 continue
+
             # Prepare Test
             tests_performed += 1
             list_of_test_values = a_test_case.split("|")
@@ -391,7 +473,8 @@ if __name__ == '__main__':
             param_3 = None if param_3 == "" else param_3
             expected_result = list_of_test_values[5].strip()
 
-            print(f"Test Case {test_case}: {param_1} {compare_op} {param_3} {expected_result}")
+            if verbal:
+                print(f"Test Case {test_case}: {param_1} {compare_op} {param_3} = {expected_result}? ", end="")
             # Perform Test
             try:
                 if param_1 is not None and param_3 is not None:
@@ -416,7 +499,8 @@ if __name__ == '__main__':
                 # Compare Test-Result with expectation
                 if str(result) != expected_result:
                     tests_failed += 1
-                    # print(f"{test_case} ({test_suite}) failed!!")
+                    if verbal:
+                        print("FAILED")
                     print(sub_title)
                     print(list_of_test_cases[1].strip())
                     print(a_test_case.strip())
@@ -424,6 +508,9 @@ if __name__ == '__main__':
                     print(f"      Result  :'{result}'")
                     print(f"      Expected:'{expected_result}'")
                     print()
+                else:
+                    if verbal:
+                        print("OK")
             except Exception as e:
                 tests_failed += 1
                 print(sub_title)
@@ -469,60 +556,143 @@ if __name__ == '__main__':
 
 
     def TEST_reciprocal_to_decimal_shorten_expand(verbal=False):
-        error_count = 0
-        test_count = 0
-        # reciprocal
-        bruch = Fraction(7, 8)
-        bruch.reciprocal()
-        expected = "[8/7]"
-        test_count += 1
-        if str(bruch) != expected:
-            print("3." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch)
-            error_count += 1
-        bruch = Fraction(3, 4)
-        bruch.reciprocal()
-        expected = "[4/3]"
-        test_count += 1
-        if str(bruch) != expected:
-            print("3." + str(test_count) + ") ERROR:: Expected: " + expected + "    Actual:", bruch)
-            error_count += 1
-        # to_decimal
-        bruch = Fraction(1, 8)
-        actual = bruch.to_decimal(3)
-        expected = 0.125
-        test_count += 1
-        if actual != expected:
-            print("3." + str(test_count) + ") ERROR:: Expected: " + str(expected) + "    Actual:" + str(actual))
-            error_count += 1
-        bruch = Fraction(1, 3)
-        actual = bruch.to_decimal(2)
-        expected = 0.33
-        test_count += 1
-        if actual != expected:
-            print("3." + str(test_count) + ") ERROR:: Expected: " + str(expected) + "    Actual:" + str(actual))
-            error_count += 1
-        # shorten
-        bruch = Fraction(2, 8)
-        actual = bruch.shorten(2)
-        expected = "[1/4]"
-        test_count += 1
-        if str(bruch) != expected:
-            print("3." + str(test_count) + ") ERROR:: Expected: " + str(expected) + "    Actual:" + str(actual))
-            error_count += 1
-        # expand
-        bruch = Fraction(2, 8)
-        actual = bruch.expand(2)
-        expected = "[4/16]"
-        test_count += 1
-        if str(bruch) != expected:
-            print("3." + str(test_count) + ") ERROR:: Expected: " + str(expected) + "    Actual:" + str(actual))
-            error_count += 1
+        # print(f'5/2 = {5/2}')
+        # print(f'round(5/2, 0) = {round(5/2, 0)}')
+        test_suite = 'shorten / expand / to_decimal / reciprocal'
+        tests_performed = 0
+        tests_failed = 0
+        test_cases = """
+        Nr|Type    |Fraction_1 |factor|NOP_1 |Expected
+        01|shorten |[3/6]      |3     |      |[1/2]
+        02|shorten |[4/6]      |2     |      |[2/3]
+        03|shorten |[10/40]    |10    |      |[1/4]
+        04|shorten |[-10/40]   |10    |      |[-1/4]
+        05|shorten |[-10/40]   |10.2  |      |[-1/4]
+        06|shorten |[-11/33]   |10.5  |      |[-1/3]
+        07|shorten |[20/-80]   |10    |      |[-2/8]
+        08|shorten |[-30/-40]  |10    |      |[3/4]
+        09|shorten |[10/40]    |2     |      |[5/20]
+        10|shorten |[0/40]     |10    |      |[0/4]
+                
+        # Spezialfälle bei denen der ggt genommen wird
+        # --------------------------------------------
+        # Ungültige Divisoren (wird durch ggt ersetzt)
+        20|shorten |[3/6]      |0     |      |[1/2]
+        21|shorten |[6/12]     |1     |      |[1/2]
+        22|shorten |[6/12]     |      |      |[1/2]
+        23|shorten |[6/12]     |None  |      |[1/2]
+        24|shorten |[6/12]     |Eins  |      |[1/2]
+        
+        # Divisor kein Teiler von Zähler und Nenner (wird durch ggt ersetzt)  
+        40|shorten |[3/6]      |5     |      |[1/2]
+        41|shorten |[10/40]    |8     |      |[1/4]
+        42|shorten |[10/40]    |20    |      |[1/4]
+        43|shorten |[10/40]    |3     |      |[1/4]
+        44|shorten |[-10/40]   |10.6  |      |[-1/4]
+        45|shorten |[10/-40]   |12    |      |[-1/4]
+        46|shorten |[-10/-40]  |-13   |      |[1/4]
+        47|shorten |[-10/40]   |-1    |      |[10/-40]
+        48|shorten |[-10/-40]  |-10   |      |[1/4]
+        47|shorten |[10/-40]   |-1    |      |[-10/40]
+
+        100|expand  |[1/2]      |3     |      |[3/6]
+        101|expand  |[2/3]      |2     |      |[4/6]
+        102|expand  |[1/2]      |1     |      |[1/2]
+        103|expand  |[1/2]      |0     |      |[1/2]
+        104|expand  |[1/2]      |5     |      |[5/10]
+        105|expand  |[1/4]      |10    |      |[10/40]
+        106|expand  |[5/20]     |4     |      |[20/80]
+        107|expand  |[-5/20]    |8     |      |[-40/160]
+        108|expand  |[5/-20]    |8     |      |[-40/160]
+        109|expand  |[-5/-20]   |8     |      |[40/160]
+        110|expand  |[3/40]     |-8    |      |[-24/-320]
+        111|expand  |[3/40]     |2.7   |      |[9/120]
+        112|expand  |[6/41]     |-2.4  |      |[-12/-82]
+        
+        # to_decimal Tests
+        200|to_decimal|[1/2]     |2      |     |0.5
+        201|to_decimal|[1/3]     |2      |     |0.33
+        202|to_decimal|[1/3]     |3      |     |0.333
+        203|to_decimal|[2/3]     |4      |     |0.6667
+        204|to_decimal|[2/3]     |3.9    |     |0.6667
+        205|to_decimal|[2/3]     |None   |     |0.67
+        # 206|to_decimal|[5/3]     |0      |     |1.0
+        207|to_decimal|[5/2]     |None   |     |2.5
+        208|to_decimal|[-5/2]    |2      |     |-2.5
+        209|to_decimal|[-5/2]    |3      |     |-2.5
+        
+        """
         if verbal:
-            print("3) Test methode: reciprocal, to_decimal, shorten,  expand")
-            print("---------------------------------------------------------")
-            print(f"     Test performed: {test_count}")
-            print(f"     Test failed   : {error_count}")
-            print(f"     Passed        : {round(100 - (100 * error_count / test_count), 1)}%")
+            print("")
+            print(unterstreichen(f"Testsuite: {test_suite}", aChar='='))
+        list_of_test_cases = test_cases.split("\n")
+        sub_title = ''
+        for a_test_case in list_of_test_cases[2:-1]:
+            if a_test_case.strip() == "":
+                continue
+            if a_test_case.strip().startswith('#'):
+                if verbal:
+                    sub_title = unterstreichen(a_test_case.strip(), aChar='-')
+                continue
+            # Prepare Test
+            tests_performed += 1
+            list_of_test_values = a_test_case.split("|")
+            test_case = list_of_test_values[0].strip()
+            test_type = list_of_test_values[1].strip()
+            test_type = test_type if test_type != "" else None
+            fraction_1 = list_of_test_values[2].strip()
+            fraction_1 = fraction_1 if fraction_1 != "" else None
+            factor = list_of_test_values[3].strip()
+            factor = factor if factor != "" else None
+            # param_3 = list_of_test_values[4].strip()
+            # param_3 = None if param_3 == "" else param_3
+            expected_result = list_of_test_values[5].strip()
+
+            if verbal:
+                print(f"Test Case {test_case}: {fraction_1}.{test_type}({factor}) = {expected_result}? ", end="")
+            # Perform Test
+            try:
+                if fraction_1 is not None:
+                    bruch_1 = Fraction(bruch_str=fraction_1)
+                    factor = factor
+                    if test_type == 'shorten':
+                        result = bruch_1.shorten(divisor=factor)
+                    elif test_type == 'expand':
+                        result = bruch_1.expand(factor=factor)
+                    elif test_type == 'to_decimal':
+                        result = bruch_1.to_decimal(roundAfter=factor)
+                    else:
+                        result = False
+                else:
+                    print('ERROR: Missing parameters')
+                # Compare Test-Result with expectation
+                if str(result) != expected_result:
+                    tests_failed += 1
+                    if verbal:
+                        print("FAILED")
+                    # print(f"{test_case} ({test_suite}) failed!!")
+                    print(sub_title)
+                    print(list_of_test_cases[1].strip())
+                    print(a_test_case.strip())
+                    print(f"  ==>  {fraction_1}.{test_type}({factor}) = {result}")
+                    print(f"      Expected:'{expected_result}'")
+                    print()
+                else:
+                    if verbal:
+                        print("OK")
+            except Exception as e:
+                tests_failed += 1
+                print(sub_title)
+                print(list_of_test_cases[1].strip())
+                print(a_test_case.strip())
+                print(f'   ==> ERROR:{e}')
+                print()
+        if verbal:
+            percent = round(100 - (100 * tests_failed / tests_performed), 1)
+            print("\n")
+            print(f"     Test performed: {tests_performed}")
+            print(f"     Test failed   : {tests_failed}")
+            print(f"     Passed        : {percent}%     Teilnote: {(percent / 20) + 1:1.1f} ")
             print("\n")
 
 
@@ -638,7 +808,7 @@ if __name__ == '__main__':
     AUTO_TEST_init_str(verbal=True)
     AUTO_TEST_compareable(verbal=True)
     # TEST_setter_getter_properties(verbal=True)
-    # TEST_reciprocal_to_decimal_shorten_expand(verbal=True)
+    TEST_reciprocal_to_decimal_shorten_expand(verbal=True)
     # TEST_mul_div_add_sub(verbal=True)
     # TEST_mul_div_add_sub_operators(verbal=True)
 
