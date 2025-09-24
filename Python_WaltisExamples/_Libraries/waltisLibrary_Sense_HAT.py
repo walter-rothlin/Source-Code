@@ -31,7 +31,7 @@ def clearPixel(aSense,x,y):
     aSense.set_pixel(x,y,0,0,0)
 
 def setPixel(aSense,x,y,r=255,g=255,b=255):
-    if ((x>=0) and (x<=7) and (y>=0) and (y<=7)):
+    if 0 <= x <= 7 and 0 <= y <= 7:
         aSense.set_pixel(round(x), round(y), r, g, b)
 
 def drawLine(aSense,x1=0,y1=0,x2=7,y2=7,r=255,g=255,b=255,drawSpeed=0):

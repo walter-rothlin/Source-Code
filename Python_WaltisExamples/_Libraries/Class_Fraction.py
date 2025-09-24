@@ -30,6 +30,12 @@ class Fraction:
     def unterstreichen(text, aChar='='):
         return text + '\n' + aChar * len(text)
 
+    def print_test_statistics(test_results):
+        print(f'Test-Suite')
+        for a_test_statistic in test_results:
+            print(f'{a_test_statistic["Testsuite"]:50s} {a_test_statistic["Test performed"]:5} {a_test_statistic["Test failed"]:5} {a_test_statistic["Passed_in_%"]}')
+        print(test_results)
+
 
     """
     Provides basic support for math operations with fractions
@@ -54,14 +60,24 @@ class Fraction:
             elif len(parts) == 2:
                 zaehler = parts[0]
                 nenner = parts[1]
-        self.zaehler = zaehler
-        self.nenner = nenner
-        if self.zaehler < 0 and self.nenner < 0:
-            self.zaehler = abs(self.zaehler)
-            self.nenner = abs(self.nenner)
-        elif self.zaehler < 0 or self.nenner < 0:
-            self.zaehler = -abs(self.zaehler)
-            self.nenner = abs(self.nenner)
+        if nenner is None or nenner == 0:
+            nenner = 1
+        else:
+            try:
+                nenner = float(nenner)
+            except Exception:
+                nenner = 1
+
+        if zaehler is None:
+            zaehler = 0
+        else:
+            try:
+                zaehler = float(zaehler)
+            except Exception:
+                zaehler = 0
+
+        self.zaehler = int(round(zaehler, 0))
+        self.nenner = int(round(nenner, 0))
 
     def __str__(self):
         """
@@ -183,7 +199,7 @@ class Fraction:
             except Exception:
                 roundAfter = 2
 
-            return round(self.__nenner / self.__zaehler, roundAfter)
+            return round(self.__zaehler / self.__nenner, roundAfter)
         else:
             return self.__zaehler / self.__nenner
 
@@ -219,8 +235,17 @@ class Fraction:
         if divisor == 1:
             divisor = math.gcd(self.__zaehler, self.__nenner)
 
-        self.__zaehler = int(self.__zaehler / 2*divisor)
-        self.__nenner = int(self.__nenner / 2*divisor)
+        self.__zaehler = int(self.__zaehler / divisor)
+        self.__nenner = int(self.__nenner / divisor)
+
+
+        if self.zaehler < 0 and self.nenner < 0:
+            self.zaehler = abs(self.zaehler)
+            self.nenner = abs(self.nenner)
+        elif self.zaehler < 0 or self.nenner < 0:
+            self.zaehler = -abs(self.zaehler)
+            self.nenner = abs(self.nenner)
+
         return self
 
     def expand(self, factor=None):
@@ -239,8 +264,8 @@ class Fraction:
         if factor is None or factor == 0:
             factor = 1
 
-        self.__zaehler = self.__zaehler * 2*factor
-        self.__nenner = self.__nenner * 2*factor
+        self.__zaehler = self.__zaehler * factor
+        self.__nenner = self.__nenner * factor
         return self
 
     # binary business methods (Grundoperationen)
@@ -404,14 +429,20 @@ if __name__ == '__main__':
                 print(a_test_case.strip())
                 print(f'   ==> ERROR:{e}')
                 print()
+
+        percent = round(100 - (100 * tests_failed / tests_performed), 1)
         if verbal:
-            percent = round(100 - (100 * tests_failed / tests_performed), 1)
             print("\n")
-            print(f"     Test performed: {tests_performed}")
-            print(f"     Test failed   : {tests_failed}")
+            print(f"     Test performed: {tests_performed:2}")
+            print(f"     Test failed   : {tests_failed:2}")
             print(f"     Passed        : {percent}%     Teilnote: {(percent / 20) + 1:1.1f} ")
             print("\n")
-
+        return {
+            'Testsuite': test_suite,
+            'Test performed': tests_performed,
+            'Test failed': tests_failed,
+            'Passed_in_%': percent,
+        }
 
     def AUTO_TEST_compareable(verbal=False):
         test_suite = 'comparable'
@@ -505,7 +536,6 @@ if __name__ == '__main__':
                     print(list_of_test_cases[1].strip())
                     print(a_test_case.strip())
                     print(f"  ==> {param_1} {compare_op} {param_3} = {result}")
-                    print(f"      Result  :'{result}'")
                     print(f"      Expected:'{expected_result}'")
                     print()
                 else:
@@ -518,14 +548,20 @@ if __name__ == '__main__':
                 print(a_test_case.strip())
                 print(f'   ==> ERROR:{e}')
                 print()
+
+        percent = round(100 - (100 * tests_failed / tests_performed), 1)
         if verbal:
-            percent = round(100 - (100 * tests_failed / tests_performed), 1)
             print("\n")
-            print(f"     Test performed: {tests_performed}")
-            print(f"     Test failed   : {tests_failed}")
+            print(f"     Test performed: {tests_performed:2}")
+            print(f"     Test failed   : {tests_failed:2}")
             print(f"     Passed        : {percent}%     Teilnote: {(percent / 20) + 1:1.1f} ")
             print("\n")
-
+        return {
+            'Testsuite': test_suite,
+            'Test performed': tests_performed,
+            'Test failed': tests_failed,
+            'Passed_in_%': percent,
+        }
 
     def TEST_setter_getter_properties(verbal=False):
         error_count = 0
@@ -591,9 +627,9 @@ if __name__ == '__main__':
         44|shorten |[-10/40]   |10.6  |      |[-1/4]
         45|shorten |[10/-40]   |12    |      |[-1/4]
         46|shorten |[-10/-40]  |-13   |      |[1/4]
-        47|shorten |[-10/40]   |-1    |      |[10/-40]
+        47|shorten |[-10/40]   |-1    |      |[-1/4]
         48|shorten |[-10/-40]  |-10   |      |[1/4]
-        47|shorten |[10/-40]   |-1    |      |[-10/40]
+        49|shorten |[10/-40]   |-1    |      |[-1/4]
 
         100|expand  |[1/2]      |3     |      |[3/6]
         101|expand  |[2/3]      |2     |      |[4/6]
@@ -603,8 +639,8 @@ if __name__ == '__main__':
         105|expand  |[1/4]      |10    |      |[10/40]
         106|expand  |[5/20]     |4     |      |[20/80]
         107|expand  |[-5/20]    |8     |      |[-40/160]
-        108|expand  |[5/-20]    |8     |      |[-40/160]
-        109|expand  |[-5/-20]   |8     |      |[40/160]
+        108|expand  |[5/-20]    |8     |      |[40/-160]
+        109|expand  |[-5/-20]   |8     |      |[-40/-160]
         110|expand  |[3/40]     |-8    |      |[-24/-320]
         111|expand  |[3/40]     |2.7   |      |[9/120]
         112|expand  |[6/41]     |-2.4  |      |[-12/-82]
@@ -687,14 +723,20 @@ if __name__ == '__main__':
                 print(a_test_case.strip())
                 print(f'   ==> ERROR:{e}')
                 print()
+
+        percent = round(100 - (100 * tests_failed / tests_performed), 1)
         if verbal:
-            percent = round(100 - (100 * tests_failed / tests_performed), 1)
             print("\n")
-            print(f"     Test performed: {tests_performed}")
-            print(f"     Test failed   : {tests_failed}")
+            print(f"     Test performed: {tests_performed:2}")
+            print(f"     Test failed   : {tests_failed:2}")
             print(f"     Passed        : {percent}%     Teilnote: {(percent / 20) + 1:1.1f} ")
             print("\n")
-
+        return {
+            'Testsuite': test_suite,
+            'Test performed': tests_performed,
+            'Test failed': tests_failed,
+            'Passed_in_%': percent,
+        }
 
     def TEST_mul_div_add_sub(verbal=False):
         error_count = 0
@@ -742,8 +784,8 @@ if __name__ == '__main__':
         if verbal:
             print("4) Test method: mul, div, add, sub")
             print("----------------------------------")
-            print(f"     Test performed: {test_count}")
-            print(f"     Test failed   : {error_count}")
+            print(f"     Test performed: {test_count:2}")
+            print(f"     Test failed   : {error_count:2}")
             print(f"     Passed        : {round(100 - (100 * error_count / test_count), 1)}%")
             print("\n")
 
@@ -805,10 +847,12 @@ if __name__ == '__main__':
     # gcd = math.gcd(45, 15, 30)
     # print('lcm(30, 90, 60):', lcm)
     # print('gcd(45, 15, 30):', gcd)
-    AUTO_TEST_init_str(verbal=True)
-    AUTO_TEST_compareable(verbal=True)
+    test_result = []
+    test_result.append(AUTO_TEST_init_str(verbal=False))
+    test_result.append(AUTO_TEST_compareable(verbal=False))
     # TEST_setter_getter_properties(verbal=True)
-    TEST_reciprocal_to_decimal_shorten_expand(verbal=True)
+    test_result.append(TEST_reciprocal_to_decimal_shorten_expand(verbal=False))
     # TEST_mul_div_add_sub(verbal=True)
     # TEST_mul_div_add_sub_operators(verbal=True)
+    Fraction.print_test_statistics(test_result)
 

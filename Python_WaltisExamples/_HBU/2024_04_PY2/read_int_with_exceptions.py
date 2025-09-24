@@ -10,6 +10,7 @@ class TooMany_Tries(Exception):
     def __str__(self):
         return self.message
 
+
 class OutOfRange(Exception):
     def __init__(self, *args):
         if args:

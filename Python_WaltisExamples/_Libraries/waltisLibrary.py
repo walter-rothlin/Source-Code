@@ -391,12 +391,14 @@ def read_Number(type, prompt="Input [{t:1s}{lh:s}]:", preErrorStr="Wrong Format:
                 aString = input(prompt.format(t=type, lh="  " + ".." + str(max)))
             else:
                 aString = input(prompt.format(t=type, lh=""))
+
             if type == "int":
                 userInputZahl = int(aString)
             elif type == "float":
                 userInputZahl = float(aString)
             else:
                 print("Unknown Type")
+
             error = False
             if (min is None) and (max is None):
                 error = False
