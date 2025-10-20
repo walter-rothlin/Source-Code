@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 # ------------------------------------------------------------------
 # Name  : Flask_Session.py
@@ -12,15 +12,16 @@
 #
 # History:
 # 17-Apr-2023   Walter Rothlin      Initial Version
+# 20-Oct_2025   Walter Rothlin      Refactored for HBU PY2
 #
 # ------------------------------------------------------------------
 from flask import Flask, render_template, request, url_for, request, redirect, session
-from flask_session import Session
+
 
 app = Flask(__name__)
+app.secret_key = 'super secret key'
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
 
 
 @app.route("/")
