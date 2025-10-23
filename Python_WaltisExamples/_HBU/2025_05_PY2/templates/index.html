@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>First-Flask</title>
+
+</head>
+<body>
+    <H1>Endpoints</H1>
+    Enpoints called: {{ state }}<BR/>
+    <UL>
+        <LI><A href="/Reihe?maxwert=10">Zahlenreihe 0..9</A></LI>
+        <LI><A href="/adressen_JSON">Adressen JSON</A></LI>
+    </UL>
+    <FORM action="/Reihe" method="post">
+        <LABEL for="maxwert">Maximalwert der Zahlenreihe:</LABEL>
+        <INPUT type="number" id="maxwert" name="maxwert" value="10" min="1" max="{{ default_maxwert }}"/>
+        <INPUT type="submit" value="Absenden"/>
+    </FORM>
+
+</body>
+</html>
