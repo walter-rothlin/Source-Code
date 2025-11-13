@@ -1,7 +1,7 @@
 //
 //
 //
-//   source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/AdresseToKoordinates_04a_Complete.css
+//   source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/AdressLocator/AdresseToKoordinates_04a_Complete.css
 
 
 function updateUI_List(resultList) 

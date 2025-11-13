@@ -1,55 +1,143 @@
 <!doctype html>
+
 <!--
 
-    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/AdresseToKoordinates_05_WithMap.html
+    source:https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/DatenFiles/JS_HTML/AdressLocator/AdresseToKoordinates_05_WithMap.html
 -->
-<html>
+
+<html lang="de">
 <head>
-   	<meta charset="UTF-8">
-   	<title>GeoAdminLocation</title>
-   	<link href = "AdresseToKoordinates_Style.css" rel = "stylesheet" type="text/css">
-   	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-	
-	<script src="AdresseToKoordinates_FindLocation.js">
-	</script>
-	<!--
-	8.888440132141113 / 47.194740295410156     Wangen SZ        WGS 84
-	8.88730239868164  / 47.194541931152344     Peterliwiese 33  WGS 84
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address-Locator mit Karte</title>
 
-	2709775.5 / 1228079.125           Peterliwiese 33  CH1903+/LV95
+    <!-- Font Awesome für das Suchsymbol -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-    REST für Koordinatenumrechnung (https://www.swisstopo.admin.ch/de/karten-daten-online/calculation-services/m2m.html#dokumente_und_publik)
-	lv95 --> wgs84
-	http://geodesy.geo.admin.ch/reframe/lv95towgs84?easting=2600000&northing=1200000&altitude=550.0&format=json
-
-	wgs84 --> lv95
-	http://geodesy.geo.admin.ch/reframe/wgs84tolv95?easting=8.88730239868164&northing=47.194541931152344&altitude=440.0&format=json
+    <!-- Leaflet CSS + JS (OpenStreetMap Karte) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 
+    <!--
+	<script src="AdresseToKoordinates_FindLocation.js"></script>
 	-->
-   
+
+	<!-- Local Recources: URL http://fhoch3.peterliwiese.ch/ -->
+	<link href="AdresseToKoordinates_Style.css" rel="stylesheet" type="text/css">
+	<script src="GeoAdminApi3.js"></script>
+	<script src="AdressToKoordinates_04a_Complete.js"></script>
+
+
 </head>
 
 <body>
-    <h2>Address Locator</h2>
-	<div class = "SearchField">
-		<div class = "SearchBar">
-			<input type="text" id="AdressPattern"  value="peterliwiese" size="30"  >
-			<div class = "fa fa-search"></div>
-		</div>
-		<div class = "Divider"></div>
-		<table id = "ResultSetView" >
-			<tr><td>Peterliwiese 33 8855</td><td>8.88730239868164</td><td>47.194541931152344</td></tr>
-		</table>
-	</div>
-	<BR/>
-	<iframe width="100%" height="300%" src="https://map.geo.admin.ch/embed.html?lang=de&topic=ech&bgLayer=ch.swisstopo.pixelkarte-farbe&E=2628859.57&N=1154531.98&zoom=3"></iframe>
-	<iframe width="100%" height="300%" src="https://map.geo.admin.ch/embed.html?lang=de&topic=ech&bgLayer=ch.swisstopo.pixelkarte-farbe&layers=ch.swisstopo.zeitreihen,ch.bfs.gebaeude_wohnungs_register,ch.bav.haltestellen-oev,ch.swisstopo.swisstlm3d-wanderwege,ch.astra.wanderland-sperrungen_umleitungen&layers_opacity=1,1,1,0.8,0.8&layers_visibility=false,false,false,false,false&layers_timestamp=18641231,,,,&E=2709775.50&N=1228079.13&zoom=10"></iframe>
-	<iframe width="100%" height="300%" src="http://bzu.ch"></iframe>
-	
-</body>
+    <h1>Address-Locator mit Karte (V0.1)</h1>
+    <p>Suche nach einer Adresse (Schweiz). Wenn genau 1 Treffer gefunden wird, wird die Karte angezeigt.</p>
+    <hr>
 
-<script>
-	document.getElementById("AdressPattern").addEventListener('keyup', GetCoordinatesForAdresse);
-</script>
+    <label class="LblSearchStatus" id="LblSearchStatus"></label>
+    <div class="SearchField">
+        <div class="SearchBar">
+            <input type="text" id="AdressPattern" placeholder="Bitte Suchbegriff eingeben (z.B. Bern)" size="30">
+            <div class="fa fa-search"></div>
+        </div>
+        <div class="Divider"></div>
+        <table id="ResultSetView"></table>
+    </div>
+
+    <div id="map"></div>
+
+	<script>
+		document.getElementById("AdressPattern").addEventListener("keyup", textChanged);
+	</script>
+
+
+    <script>
+        const input = document.getElementById("AdressPattern");
+        const resultTable = document.getElementById("ResultSetView");
+        const statusLabel = document.getElementById("LblSearchStatus");
+
+        let map; // Leaflet map instance
+        let marker;
+
+        input.addEventListener("keyup", textChanged);
+
+        async function textChanged() {
+            const pattern = input.value.trim();
+            if (pattern.length < 3) {
+                resultTable.innerHTML = "";
+                statusLabel.textContent = "Bitte mindestens 3 Zeichen eingeben.";
+                document.getElementById("map").style.display = "none";
+                return;
+            }
+
+            statusLabel.textContent = "Suche läuft...";
+
+            try {
+                const url = `https://api3.geo.admin.ch/rest/services/api/SearchServer?searchText=${encodeURIComponent(pattern)}&type=locations&limit=200`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const results = data.results || [];
+                resultTable.innerHTML = "";
+                document.getElementById("map").style.display = "none";
+
+                if (results.length === 0) {
+                    statusLabel.textContent = "Keine Treffer gefunden.";
+                    return;
+                }
+
+                statusLabel.textContent = `${results.length} Treffer gefunden`;
+
+                // Tabelle mit Ergebnissen füllen
+                results.forEach((item, idx) => {
+                    const row = document.createElement("tr");
+                    const cell = document.createElement("td");
+                    const label = item.attrs.label || "Unbekannt";
+                    cell.textContent = label.replace(/<\/?b>/gi, "");
+                    cell.style.cursor = "pointer";
+                    cell.addEventListener("click", () => {
+                        const lat = item.attrs.lat;
+                        const lon = item.attrs.lon;
+                        showOnMap(lat, lon, label);
+                    });
+                    row.appendChild(cell);
+                    resultTable.appendChild(row);
+                });
+
+                // Wenn genau ein Treffer => Karte direkt anzeigen
+                if (results.length === 1) {
+                    const lat = results[0].attrs.lat;
+                    const lon = results[0].attrs.lon;
+                    const label = results[0].attrs.label;
+                    showOnMap(lat, lon, label);
+                }
+
+            } catch (err) {
+                statusLabel.textContent = "Fehler bei der Abfrage.";
+                console.error(err);
+            }
+        }
+
+        function showOnMap(lat, lon, label = "") {
+            const mapDiv = document.getElementById("map");
+            mapDiv.style.display = "block";
+
+            if (!map) {
+                map = L.map("map").setView([lat, lon], 14);
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    attribution: "© OpenStreetMap contributors"
+                }).addTo(map);
+            } else {
+                map.setView([lat, lon], 14);
+                if (marker) marker.remove();
+            }
+
+            marker = L.marker([lat, lon]).addTo(map)
+                .bindPopup(`<b>${label}</b><br>Lat: ${lat}<br>Lon: ${lon}`)
+                .openPopup();
+        }
+    </script>
+</body>
 </html>
