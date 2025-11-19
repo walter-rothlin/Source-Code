@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 # ------------------------------------------------------------------
 # Name  : pythonBasics_01a_Lists.py
@@ -15,6 +15,7 @@
 #
 # History:
 # 30-Dec-2021   Walter Rothlin      Initial Version
+# 19-Nov-2025   Walter Rothlin      Changed for HBU RPi
 #
 # ------------------------------------------------------------------
 

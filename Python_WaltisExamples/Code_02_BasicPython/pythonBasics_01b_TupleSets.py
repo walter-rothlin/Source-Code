@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 # ------------------------------------------------------------------
 # Name  : pythonBasics_01d_TupleSets.py
@@ -10,6 +10,7 @@
 #
 # History:
 # 24-Dec-2022   Walter Rothlin      Initial Version
+# 19-Nov-2025   Walter Rothlin      Changed for HBU RPi
 # ------------------------------------------------------------------
 
 
