@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+    Anmeldeformular für Geschäftsanlasse
+    
+    Autor: Taro Etter
+    Matrikel Nr: 23-252-463
+    Modul: Webtechnology
+    Dozent: Walter Rothlin
+    Hochschule: HWZ Zürich
+    Datum: 09.12.2025
+    
+    Beschreibung:
+    Dieses XHTML-Dokument enthält ein Anmeldeformular für Geschäftsanlasse.
+    Es beinhaltet clientseitige Validierung mittels JavaScript und
+    verwendet CSS für das Styling. Das Formular sendet die Daten an
+    einen externen formHandler auf dem Server von peterliwiese.ch.
+    
+    Ehrenwörtliche Erklärung:
+    Ich, Taro Etter, erkläre hiermit, dass ich diese Arbeit selbstständig
+    und ohne unerlaubte Hilfe angefertigt habe.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Anmeldeformular für Geschäftsanlasse - Taro Etter</title>
+    
+    <!-- Externes CSS vom HWZ-Server einbinden (Aufgabe 5) -->
+    <link rel="stylesheet" type="text/css" href="https://hwz.peterliwiese.ch/examples/CSS_HWZ_Style_01.css" />
+    
+    <!-- 
+        Internes CSS für zusätzliche Styles
+        Hier werden die Validierungs-Icons und Fehlerzustände definiert
+    -->
+    <style type="text/css">
+        /* ===========================================
+           CSS-Styles für das Anmeldeformular
+           =========================================== */
+        
+        /* 
+           Style für die Validierungs-Icons (Aufgabe 9)
+           Die Icons werden neben den Eingabefeldern angezeigt
+           und zeigen den Validierungsstatus an
+        */
+        .validation-icon {
+            width: 20px;           /* Breite des Icons */
+            height: 20px;          /* Höhe des Icons */
+            vertical-align: middle; /* Vertikale Ausrichtung mit dem Text */
+            margin-left: 5px;      /* Abstand zum Eingabefeld */
+        }
+        
+        /* 
+           Style für ungültige Eingabefelder (Aufgabe 10)
+           Felder mit ungültigen Werten werden rot hinterlegt
+        */
+        .invalid-input {
+            background-color: #ffcccc; /* Helles Rot als Hintergrund */
+            border: 1px solid #ff0000; /* Roter Rahmen */
+        }
+        
+        /* 
+           Style für gültige Eingabefelder (Aufgabe 10)
+           Felder mit gültigen Werten werden grün hinterlegt
+        */
+        .valid-input {
+            background-color: #ccffcc; /* Helles Grün als Hintergrund */
+            border: 1px solid #00ff00; /* Grüner Rahmen */
+        }
+        
+        /* 
+           Allgemeines Styling für Formularlabels
+           Sorgt für einheitliche Abstände
+        */
+        .form-label {
+            display: inline-block;
+            width: 120px;          /* Feste Breite für Ausrichtung */
+            margin-bottom: 5px;    /* Abstand nach unten */
+        }
+        
+        /* 
+           Styling für Formularzeilen
+           Jede Zeile hat einen definierten Abstand
+        */
+        .form-row {
+            margin-bottom: 10px;   /* Abstand zwischen den Zeilen */
+        }
+        
+        /* 
+           Styling für den Kommentar-Bereich
+           Der Kommentar-Bereich hat einen eigenen Abstand
+        */
+        .comment-section {
+            margin-top: 15px;      /* Abstand nach oben */
+            margin-bottom: 15px;   /* Abstand nach unten */
+        }
+        
+        /* 
+           Styling für die Buttons
+           Die Buttons haben einen definierten Abstand
+        */
+        .button-section {
+            margin-top: 20px;      /* Abstand nach oben */
+        }
+    </style>
+    
+    <!-- 
+        JavaScript für die clientseitige Validierung
+        Enthält Funktionen zur Überprüfung der Eingabefelder
+    -->
+    <script type="text/javascript">
+    //<![CDATA[
+        /* ===========================================
+           JavaScript-Funktionen für Formularvalidierung
+           =========================================== */
+        
+        /*
+         * Funktion: validatePLZ (Aufgabe 8)
+         * Zweck: Überprüft ob die eingegebene PLZ genau 4 Ziffern enthält
+         * Parameter: keine (liest Wert direkt aus dem Eingabefeld)
+         * Rückgabe: keine (ändert den Feldwert direkt)
+         * 
+         * Diese Funktion wird bei jeder Änderung im PLZ-Feld aufgerufen.
+         * Sie entfernt alle nicht-numerischen Zeichen und begrenzt
+         * die Eingabe auf maximal 4 Ziffern.
+         */
+        function validatePLZ() {
+            // Das PLZ-Eingabefeld aus dem DOM holen
+            var plzField = document.getElementById('plz');
+            
+            // Aktuellen Wert des Feldes auslesen
+            var currentValue = plzField.value;
+            
+            // Alle Zeichen entfernen, die keine Ziffern sind
+            // Der reguläre Ausdruck /[^0-9]/g findet alle Nicht-Ziffern
+            var cleanedValue = currentValue.replace(/[^0-9]/g, '');
+            
+            // Auf maximal 4 Zeichen begrenzen
+            // substr(0, 4) nimmt nur die ersten 4 Zeichen
+            if (cleanedValue.length > 4) {
+                cleanedValue = cleanedValue.substr(0, 4);
+            }
+            
+            // Den bereinigten Wert zurück ins Feld schreiben
+            plzField.value = cleanedValue;
+        }
+        
+        /*
+         * Funktion: validateName (Aufgabe 10)
+         * Zweck: Überprüft ob ein gültiger Name eingegeben wurde
+         * Parameter: keine (liest Wert direkt aus dem Eingabefeld)
+         * Rückgabe: keine (ändert CSS-Klassen und Icon)
+         * 
+         * Regeln für einen gültigen Namen:
+         * - Mindestens 2 Zeichen lang
+         * - Enthält nur Buchstaben, Umlaute, Leerzeichen und Bindestriche
+         */
+        function validateName() {
+            // Das Name-Eingabefeld aus dem DOM holen
+            var nameField = document.getElementById('name');
+            
+            // Das zugehörige Validierungs-Icon holen
+            var nameIcon = document.getElementById('name-icon');
+            
+            // Aktuellen Wert des Feldes auslesen
+            var currentValue = nameField.value;
+            
+            // Regulärer Ausdruck für gültige Namen
+            // Erlaubt: Buchstaben (a-z, A-Z), deutsche Umlaute, Leerzeichen und Bindestrich
+            // ^ = Anfang, + = mindestens ein Zeichen, $ = Ende
+            var namePattern = /^[a-zA-ZäöüÄÖÜ\s\-]+$/;
+            
+            // Prüfen ob der Name gültig ist
+            // Bedingung: mindestens 2 Zeichen UND nur erlaubte Zeichen
+            if (currentValue.length >= 2 && namePattern.test(currentValue)) {
+                // Name ist gültig: grünes Styling anwenden
+                nameField.className = 'valid-input';
+                // Verified-Icon anzeigen
+                nameIcon.src = 'https://www.peterliwiese.ch/img/Verified.svg';
+            } else {
+                // Name ist ungültig: rotes Styling anwenden
+                nameField.className = 'invalid-input';
+                // Warning-Icon anzeigen
+                nameIcon.src = 'https://www.peterliwiese.ch/img/Warning.svg';
+            }
+        }
+        
+        /*
+         * Funktion: validateVorname (Aufgabe 10)
+         * Zweck: Überprüft ob ein gültiger Vorname eingegeben wurde
+         * Parameter: keine (liest Wert direkt aus dem Eingabefeld)
+         * Rückgabe: keine (ändert CSS-Klassen und Icon)
+         * 
+         * Regeln für einen gültigen Vornamen:
+         * - Mindestens 2 Zeichen lang
+         * - Enthält nur Buchstaben, Umlaute, Leerzeichen und Bindestriche
+         */
+        function validateVorname() {
+            // Das Vorname-Eingabefeld aus dem DOM holen
+            var vornameField = document.getElementById('vorname');
+            
+            // Das zugehörige Validierungs-Icon holen
+            var vornameIcon = document.getElementById('vorname-icon');
+            
+            // Aktuellen Wert des Feldes auslesen
+            var currentValue = vornameField.value;
+            
+            // Regulärer Ausdruck für gültige Vornamen
+            // Gleiche Regeln wie beim Namen
+            var namePattern = /^[a-zA-ZäöüÄÖÜ\s\-]+$/;
+            
+            // Prüfen ob der Vorname gültig ist
+            if (currentValue.length >= 2 && namePattern.test(currentValue)) {
+                // Vorname ist gültig: grünes Styling anwenden
+                vornameField.className = 'valid-input';
+                // Verified-Icon anzeigen
+                vornameIcon.src = 'https://www.peterliwiese.ch/img/Verified.svg';
+            } else {
+                // Vorname ist ungültig: rotes Styling anwenden
+                vornameField.className = 'invalid-input';
+                // Warning-Icon anzeigen
+                vornameIcon.src = 'https://www.peterliwiese.ch/img/Warning.svg';
+            }
+        }
+        
+        /*
+         * Funktion: validateEmail (Aufgabe 10)
+         * Zweck: Überprüft ob eine gültige E-Mail-Adresse eingegeben wurde
+         * Parameter: keine (liest Wert direkt aus dem Eingabefeld)
+         * Rückgabe: keine (ändert CSS-Klassen und Icon)
+         * 
+         * Regeln für eine gültige E-Mail:
+         * - Muss ein @ enthalten
+         * - Muss einen Punkt nach dem @ enthalten
+         * - Muss dem grundlegenden E-Mail-Format entsprechen
+         */
+        function validateEmail() {
+            // Das Email-Eingabefeld aus dem DOM holen
+            var emailField = document.getElementById('email');
+            
+            // Das zugehörige Validierungs-Icon holen
+            var emailIcon = document.getElementById('email-icon');
+            
+            // Aktuellen Wert des Feldes auslesen
+            var currentValue = emailField.value;
+            
+            // Regulärer Ausdruck für gültige E-Mail-Adressen
+            // Erklärt:
+            // ^[^\s@]+ = Anfang, mindestens ein Zeichen das kein Leerzeichen oder @ ist
+            // @ = das @-Zeichen
+            // [^\s@]+ = mindestens ein Zeichen das kein Leerzeichen oder @ ist
+            // \. = ein Punkt (escaped weil . normalerweise jedes Zeichen bedeutet)
+            // [^\s@]+ = mindestens ein Zeichen für die Domain-Endung
+            // $ = Ende
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            // Prüfen ob die E-Mail gültig ist
+            if (emailPattern.test(currentValue)) {
+                // E-Mail ist gültig: grünes Styling anwenden
+                emailField.className = 'valid-input';
+                // Verified-Icon anzeigen
+                emailIcon.src = 'https://www.peterliwiese.ch/img/Verified.svg';
+            } else {
+                // E-Mail ist ungültig: rotes Styling anwenden
+                emailField.className = 'invalid-input';
+                // Warning-Icon anzeigen
+                emailIcon.src = 'https://www.peterliwiese.ch/img/Warning.svg';
+            }
+        }
+    //]]>
+    </script>
+</head>
+
+<body>
+    <!-- 
+        Hauptüberschrift des Formulars
+        Wird durch das externe CSS rot dargestellt (Aufgabe 5)
+        Hinweis: Das externe CSS definiert den roten Stil für h2, nicht h1
+    -->
+    <h2>Anmeldeformular für Geschäftsanlasse</h2>
+    
+    <!-- Horizontale Trennlinie zur optischen Gliederung -->
+    <hr />
+    
+    <!-- 
+        Das Anmeldeformular (Aufgabe 4, 6, 7)
+        
+        action: URL des Formhandlers auf dem Server
+        method: POST-Methode für sichere Datenübertragung
+        
+        Die Feldnamen (name-Attribute) wurden so gewählt, dass sie
+        mit den Platzhaltern im Success-Template übereinstimmen (Aufgabe 7)
+    -->
+    <form action="http://www.hwz.peterliwiese.ch/cgi-bin/formHandler.pl" method="post">
+        
+        <!-- Hidden fields to control the formHandler script -->
+        <input type="hidden" name="constrain_PLZ" value="isInteger(XXXX,1000,9999,&lt;B&gt;Postleitzahl&lt;/B&gt; muss zwischen 1000 und 9999 sein)" />
+        <input type="hidden" name="cgiCmdHidden_replyTemplateSuccess" value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html" />
+        <input type="hidden" name="cgiCmdHidden_replyTemplateNotSuccess" value="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html" />
+        <input type="hidden" name="cgiCmdHidden_emailTemplate" value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html" />
+        <input type="hidden" name="cgiCmdHidden_emailSubject" value="Antwort (Default as HTML)" />
+        <input type="hidden" name="cgiCmdHidden_emailToAddrs" value="anmeldung@peterliwiese.ch" />
+        <input type="hidden" name="cgiCmdHidden_emailCcAddrs" value="" />
+        <input type="hidden" name="cgiCmdHidden_emailBccAddrs" value="" />
+        <input type="hidden" name="cgiCmdHidden_emailFromAddr" value="FormField:Email" />
+        <input type="hidden" name="cgiCmdHidden_emailSentAsHTML" value="YES" />
+        <input type="hidden" name="cgiCmdHidden_emailTemplate_1" value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.txt" />
+        <input type="hidden" name="cgiCmdHidden_emailSubject_1" value="Antwort as plain txt mail" />
+        <input type="hidden" name="cgiCmdHidden_emailToAddrs_1" value="FormField:Email" />
+        <input type="hidden" name="cgiCmdHidden_emailFromAddr_1" value="anmeldung@peterliwiese.ch" />
+        <input type="hidden" name="cgiCmdHidden_emailSentAsHTML_1" value="NO" />
+        <input type="hidden" name="cgiCmdHidden_countOfEmails" value="2" />
+        <input type="hidden" name="cgiCmdHidden_doDebug" value="Yes" />
+        
+        <!-- Einleitungstext des Formulars -->
+        <p>Hiermit melde ich mich für den Anlass vom</p>
+        
+        <!-- 
+            Eingabefeld für den Namen
+            - oninput: Eventhandler für Echtzeit-Validierung (Aufgabe 10)
+            - Das Icon dahinter zeigt den Validierungsstatus (Aufgabe 9)
+        -->
+        <div class="form-row">
+            <label class="form-label" for="name">Name:</label>
+            <input type="text" id="name" name="Name" size="20" oninput="validateName()" />
+            <img id="name-icon" class="validation-icon" src="https://www.peterliwiese.ch/img/Warning.svg" alt="Validierungsstatus" />
+        </div>
+        
+        <!-- 
+            Eingabefeld für den Vornamen
+            - oninput: Eventhandler für Echtzeit-Validierung (Aufgabe 10)
+        -->
+        <div class="form-row">
+            <label class="form-label" for="vorname">Vorname:</label>
+            <input type="text" id="vorname" name="Vorname" size="20" oninput="validateVorname()" />
+            <img id="vorname-icon" class="validation-icon" src="https://www.peterliwiese.ch/img/Warning.svg" alt="Validierungsstatus" />
+        </div>
+        
+        <!-- 
+            Eingabefeld für die E-Mail-Adresse
+            - oninput: Eventhandler für Echtzeit-Validierung (Aufgabe 10)
+        -->
+        <div class="form-row">
+            <label class="form-label" for="email">email:</label>
+            <input type="text" id="email" name="Email" size="40" oninput="validateEmail()" />
+            <img id="email-icon" class="validation-icon" src="https://www.peterliwiese.ch/img/Warning.svg" alt="Validierungsstatus" />
+        </div>
+        
+        <!-- 
+            Eingabefelder für PLZ und Ort
+            - onchange und oninput: Eventhandler für PLZ-Validierung (Aufgabe 8)
+            - Die PLZ wird auf genau 4 Ziffern begrenzt
+        -->
+        <div class="form-row">
+            <label class="form-label" for="plz">PLZ:</label>
+            <input type="text" id="plz" name="PLZ" size="4" maxlength="4" onchange="validatePLZ()" oninput="validatePLZ()" />
+            <label for="ort">Ort:</label>
+            <input type="text" id="ort" name="Wohnort" size="25" />
+        </div>
+        
+        <br />
+        
+        <!-- 
+            Radio-Buttons für die ÖV Vergünstigung
+            - Alle haben den gleichen name-Attribut (ov_verguenstigung)
+            - Dadurch kann nur eine Option ausgewählt werden
+            - "Nichts" ist standardmässig ausgewählt (checked)
+        -->
+        <div class="form-row">
+            <label>ÖV Vergünstigung:</label>
+            <!-- Option: Keine Vergünstigung (Standard) -->
+            <input type="radio" id="ov_nichts" name="SbbVaucher" value="Nichts" checked="checked" />
+            <label for="ov_nichts">Nichts</label>
+            
+            <!-- Option: Halbtax -->
+            <input type="radio" id="ov_halbtax" name="SbbVaucher" value="1/2 Preis" />
+            <label for="ov_halbtax">1/2 Preis</label>
+            
+            <!-- Option: Generalabonnement -->
+            <input type="radio" id="ov_ga" name="SbbVaucher" value="GA" />
+            <label for="ov_ga">GA</label>
+        </div>
+        
+        <!-- 
+            Checkbox für veganes Mittagessen
+            - Kann aktiviert oder deaktiviert werden
+        -->
+        <div class="form-row">
+            <label for="mittagessen">Mittagessen:</label>
+            <input type="checkbox" id="mittagessen" name="Vegan" value="on" />
+            <label for="mittagessen">Vegan</label>
+        </div>
+        
+        <!-- 
+            Dropdown-Menü für die Anzahl Begleitpersonen
+            - Ermöglicht die Auswahl von keiner bis drei Begleitpersonen
+        -->
+        <div class="form-row">
+            <label for="begleitung">Ich komme in Begleitung von</label>
+            <select id="begleitung" name="Begleitpersonen">
+                <option value="keiner" selected="selected">keiner</option>
+                <option value="einer">einer</option>
+                <option value="zwei">zwei</option>
+                <option value="drei">drei</option>
+            </select>
+            <label>weiteren Person(en)</label>
+        </div>
+        
+        <br />
+        
+        <!-- 
+            Textbereich für Kommentare
+            - Mehrzeiliges Eingabefeld für zusätzliche Bemerkungen
+            - rows und cols definieren die sichtbare Grösse
+        -->
+        <div class="comment-section">
+            <label for="kommentar">Kommentar</label>
+            <br />
+            <textarea id="kommentar" name="Kommentar" rows="5" cols="50"></textarea>
+        </div>
+        
+        <br />
+        
+        <!-- 
+            Formular-Buttons
+            - Anmelden: Sendet das Formular ab (submit)
+            - Eingaben löschen: Setzt alle Felder zurück (reset)
+        -->
+        <div class="button-section">
+            <input type="submit" value="Anmelden" />
+            <input type="reset" value="Eingaben löschen" />
+        </div>
+    </form>
+    
+    <!-- Horizontale Trennlinie am Ende des Formulars -->
+    <hr />
+    
+    <!-- 
+        Ehrenwörtliche Erklärung (Aufgabe 1)
+        Diese Erklärung bestätigt die selbstständige Bearbeitung
+    -->
+    <p>
+        <em>
+            Ehrenwörtliche Erklärung: Ich, Taro Etter (Matrikel Nr. 23-252-463), 
+            erkläre hiermit, dass ich diese Arbeit selbstständig und ohne 
+            unerlaubte fremde Hilfe angefertigt habe.
+        </em>
+    </p>
+    
+</body>
+</html>

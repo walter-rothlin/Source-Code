@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--   
+	============================================================
+	Dokumentinformationen – Leistungsnachweis Web Technology
+	============================================================
+
+	Name:              Tim Rüegg
+	Matrikelnummer:    23-252-620
+	Studiengang:       Wirtschaftsinformatik Bachelor
+	Modul:             Web Technology
+	Dozent:            Walter Rothlin
+	Dokument:          Leistungsnachweis – Formhandler
+	Datum:             22.12.2025
+    Source:   		   ./DatenFiles/HTML/FormTest_formHandler.html
+    Published:		   https://hwz.peterliwiese.ch/examples/FormTest_formHandler.html
+
+
+
+	Ehrenwörtliche Erklärung
+	------------------------
+   
+	Hiermit bestätige ich, Tim Rüegg, diesen Leistungsnachweis 
+	ohne fremde Hilfe nur mit den erlaubten Hilfsmittel während der offiziellen 
+	vereinbarten Zeitdauer erstellt zu haben.
+
+	Bewertung
+	---------
+	1) Richtiger Filename / Ehrenwörtliche Erklärung
+	2) Korrekte Formatierung
+	3) Korrektes XHTML
+	4) Korrekte zusätzliche Felder (inkl. title und body)
+	5) CSS eingebunden
+	6) Erweitertes Antwort-Template eingebunden
+	7) Feldernamen entsprechend neuem Antwort-Template angepasst
+	8) Postleitzahl wird Clientseitig überprüft (korrigiert)
+	9) Warnungs-Symbol mit CSS-Style zugefügt
+	10) Eventhadler eingebaut und Symbole ändern
+	                                                                 --------
+	                                                         Punkte:
+	                                                                 --------
+	                                       Note = 0.5 * Punkte + 1 =
+	                                                                 ========
+	-->
+
+	
+<!--
+	============================================================
+	Änderungs- und Aufgabennachweis
+	============================================================
+
+	Aufgabe 3 – Korrektes XHTML
+
+	- DOCTYPE exakt und korrekt geschrieben (XHTML ist case-sensitiv)
+	- XML-Namespace (xmlns) im <html>-Tag ergänzt
+	- Zeichencodierung XHTML-konform über meta http-equiv gesetzt
+	- Alle Tags und Attribute konsequent kleingeschrieben
+	- Alle Attributwerte in Anführungszeichen gesetzt
+	- Leere Elemente (br, hr, input) selbstschliessend geschrieben
+	- Nicht erlaubte Zeichen (<, >) in Attributwerten korrekt escaped
+
+
+	Aufgabe 4 – Erweiterung zum Anmeldeformular
+
+	- Formularüberschrift und Einleitung angepasst
+	- Zusätzliche Eingabefelder ergänzt (ÖV-Vergünstigung, Vegan, Begleitpersonen, Kommentar)
+	- Passende Eingabetypen gewählt (Radio-Buttons, Checkbox, Select, Textarea)
+
+
+	Aufgabe 5 – CSS einbinden
+
+	- Einbindung des vorgegebenen externen Stylesheets
+	- Verwendung des <link>-Tags im Head (betrifft gesamtes Dokument)
+	- rel="stylesheet": kennzeichnet die Datei als CSS
+	- type="text/css": klassischer MIME-Type für Stylesheets
+	- href: Verweis auf die externe CSS-Datei (nicht lokal kopiert)
+	- Umsetzung gemäss Aufgabenstellung, ohne Änderungen am CSS
+
+	
+	Aufgabe 6 – Erweitertes Erfolgs-Template
+
+	- Steuerung der Erfolgsseite über das Hidden Field cgiCmdHidden_replyTemplateSuccess
+	- value geändert auf das erweiterte Antwort-Template testSuccessTemplate_01.html
+	- Server verwendet dieses Template nach erfolgreichem Submit
+
+	
+	Aufgabe 7 – Feldnamen & Template-Zuordnung
+
+	- Der Server ersetzt Platzhalter nur, wenn der Feldname exakt übereinstimmt
+	- Feldnamen (name-Attribute) mit den Platzhaltern im Erfolgs-Template abgeglichen und wo nötig angepasst
+	- Gross-/Kleinschreibung berücksichtigt (case-sensitiv)
+
+	
+	Aufgabe 8 – Umsetzung PLZ-Prüfung
+
+	- JavaScript-Funktion checkPLZ() im Head definiert
+	- Aufruf der Funktion über onkeyup im PLZ-Inputfeld
+	- Aktueller Eingabewert wird ausgelesen
+	- Nicht numerische Zeichen entfernt
+	- Eingabe auf max. vier Zeichen begrenzt
+	- Bereinigter Wert direkt ins Feld zurückgeschrieben
+
+	
+	Aufgabe 9 – Warnungs-Symbole
+
+	- Hinter den Feldern Name, Vorname und Email wurden Warnungs-Symbole ergänzt
+	- Die Symbole werden als <img>-Elemente direkt im Body platziert, da es sich um sichtbaren Formularinhalt handelt
+	- Im Head befindet sich nur der CSS-Style für die Darstellung, da der Head für Metadaten und Ressourcen vorgesehen ist
+	- Die Darstellung der Symbole erfolgt über eine eigene CSS-Klasse
+	- Die Symbole sind in diesem Schritt statisch, Logik folgt in Aufgabe 10
+
+	
+	Aufgabe 10 – Eventhandler & dynamischer Symbolwechsel
+
+	- Für die Felder Name, Vorname und Email wurden Eventhandler (onkeyup) ergänzt
+	- Beim Tippen wird jeweils die Funktion updateStatusSymbol() aufgerufen
+	- Die Funktion erhält das aktuelle Eingabefeld sowie die ID des zugehörigen Symbols
+	- Über document.getElementById() wird das passende <img>-Element ermittelt
+	- Abhängig vom aktuellen Feldinhalt wird das Symbol angepasst:
+	- Feld leer: Warnsymbol (Warning.svg)
+	- Feld nicht leer: OK-Symbol (Verified.svg)
+	- Die Prüfung erfolgt rein clientseitig und direkt während der Eingabe
+	-->
+
+
+	<!-- 
+	=========================================================
+	Implementierung / Code
+	========================================================= 
+	-->
+
+
+	<!-- Meta-Informationen gehören in den Head-Bereich -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<!-- Titel des Browser-Tabs -->
+	<title>Kundenformular</title>
+
+	<!-- Einbindung der externen CSS Formatierung-->
+	<link rel="stylesheet" type="text/css" href="https://hwz.peterliwiese.ch/examples/CSS_HWZ_Style_01.css" />
+
+	<!-- Style für Status-Symbole -->
+	<style type="text/css">
+		.statusSymbol {
+			height: 15px;
+			margin-left: 5px;
+			vertical-align: middle;
+		}
+	</style>
+
+	<!-- JS-Funktionen für PLZ-Check und das Update des Statussymbols-->
+	<script type="text/javascript">
+		/*
+			Funktion: checkPLZ
+
+			- Wird beim Tippen im PLZ-Feld aufgerufen
+			- Liest den aktuellen Inhalt des Eingabefeldes
+			- Entfernt alle Zeichen, die keine Ziffern sind
+			- Begrenzt die Eingabe auf maximal vier Zeichen
+			- Schreibt den bereinigten Wert direkt ins Feld zurück
+		*/
+		function checkPLZ(inputField) {
+			// Aktuellen Feldwert auslesen und Nicht-Ziffern entfernen
+			var value = inputField.value.replace(/[^0-9]/g, "");
+
+			// Eingabe auf maximal 4 Zeichen begrenzen
+			if (value.length > 4) {
+				value = value.substring(0, 4);
+			}
+
+			// Bereinigten Wert zurück ins Eingabefeld schreiben
+			inputField.value = value;
+		}
+
+		/*
+			Funktion: updateStatusSymbol
+
+			- Wird beim Tippen in den Feldern Name, Vorname und Email aufgerufen
+			- Über die übergebene Bild-ID wird das zugehörige Status-Symbol ermittelt
+			- Wenn das Eingabefeld nicht leer ist, wird das OK-Symbol angezeigt
+			- Wenn das Eingabefeld leer ist, wird das Warnsymbol angezeigt
+		*/
+		function updateStatusSymbol(inputField, imgId) {
+			// Zugehöriges Symbol anhand der ID ermitteln
+			var symbol = document.getElementById(imgId);
+
+			// Symbol abhängig vom Feldinhalt setzen
+			if (inputField.value.length > 0) {
+				symbol.src = "https://www.peterliwiese.ch/img/Verified.svg";
+			} else {
+				symbol.src = "https://www.peterliwiese.ch/img/Warning.svg";
+			}
+		}
+	</script>
+
+</head>
+
+<body>
+	<!-- Hauptüberschrift der Seite -->
+	<h2>Anmeldeformular für Geschäftsanlässe</h2>
+
+	<p>
+    	Hiermit melde ich mich für den Anlass vom
+	</p>
+
+	
+	<!-- 
+	Formularbeginn
+    Das Formular sendet die eingegebenen Daten per GET an ein externes CGI-Programm auf dem Server.
+	-->
+	<!-- <FORM METHOD="GET" name="adressForm" ACTION="https://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl">  -->
+	<form 	method="get" name="adressForm" 
+			action="https://www.peterliwiese.ch/cgi-bin/formHandler.pl">
+
+		<!-- Tabelle zur strukturierten Darstellung der Formularfelder -->
+		<table>
+			<!-- 
+    		Die name-Attribute der input-Felder sind entscheidend, da sie vom Server zur Weiterverarbeitung und für Templates verwendet werden.
+			-->
+			<tr>
+				<td>Name:</td>
+				<td>	
+					<input type="text" name="Name" value="Muster" onkeyup="updateStatusSymbol(this, 'statusName')" />
+					<img id="statusName"
+						 src="https://www.peterliwiese.ch/img/Warning.svg"
+						 alt="Warnung"
+						 class="statusSymbol" />
+				</td>
+			</tr>
+
+			<tr>
+				<td>Vorname:</td>
+				<td>
+					<input type="text" name="Vorname" value="Claudia" onkeyup="updateStatusSymbol(this, 'statusVorname')"/>
+					<img id="statusVorname"
+						 src="https://www.peterliwiese.ch/img/Warning.svg"
+						 alt="Warnung"
+						 class="statusSymbol" />
+				</td>
+			</tr>		
+	
+			<tr>
+				<td>email:</td>
+				<td>
+					<input type="text" size="30" name="Email" value="Claudia@peterliwiese.ch" onkeyup="updateStatusSymbol(this, 'statusEmail')"/>
+					<img id="statusEmail"
+						 src="https://www.peterliwiese.ch/img/Warning.svg"
+    					 alt="Warnung"
+ 					     class="statusSymbol" />
+				</td>
+			</tr>
+
+			<tr>
+				<td>PLZ:</td>
+				<td>
+					<input type="text" size="4" name="PLZ" value="8855" onkeyup="checkPLZ(this)"/> 
+					Ort:
+					<input type="text" name="Wohnort" value="Wangen (SZ)"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td>ÖV Vergünstigung:</td>
+				<td>
+					<input type="radio" name="SbbVaucher" value="Nichts" /> Nichts
+					<input type="radio" name="SbbVaucher" value="Halbtax" /> 1/2 Preis
+					<input type="radio" name="SbbVaucher" value="GA" /> GA
+				</td>
+			</tr>
+
+			<tr>
+				<td>Mittagessen:</td>
+				<td>
+					<input type="checkbox" name="Vegan" value="Ja" /> Vegan
+				</td>
+			</tr>
+
+			<tr>
+				<td>Begleitpersonen:</td>
+				<td>
+					<select name="Begleitpersonen">
+						<option value="keiner">keiner</option>
+						<option value="einer">einer</option>
+						<option value="zwei">zwei</option>
+						<option value="drei">drei</option>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<td>Kommentar:</td>
+				<td>
+					<textarea name="Kommentar" rows="5" cols="40"></textarea>
+				</td>
+			</tr>
+
+		</table>
+	
+		<!-- Hidden fields to control the formHandler script, steuern das Verhalten des Server-FormHandlers, z.B. welches Erfolgs- oder Fehler-Template verwendet wird. -->
+		<input type="hidden" name="constrain_PLZ"							  value="isInteger(XXXX,1000,9999,&lt;b&gt;Postleitzahl&lt;/b&gt; muss zwischen 1000 und 9999 sein)"/>
+		<input type="hidden" name="cgiCmdHidden_replyTemplateSuccess"	      value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html"/>
+		<input type="hidden" name="cgiCmdHidden_replyTemplateNotSuccess"      value="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html"/>
+		<input type="hidden" name="cgiCmdHidden_emailTemplate"                value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html"/>
+		<input type="hidden" name="cgiCmdHidden_emailSubject"                 value="Antwort (Default as HTML)"/>
+		<input type="hidden" name="cgiCmdHidden_emailToAddrs"                 value="anmeldung@peterliwiese.ch"/>
+		<input type="hidden" name="cgiCmdHidden_emailCcAddrs"                 value=""/>
+		<input type="hidden" name="cgiCmdHidden_emailBccAddrs"                value=""/>
+		<input type="hidden" name="cgiCmdHidden_emailFromAddr"                value="FormField:Email"/>
+		<input type="hidden" name="cgiCmdHidden_emailSentAsHTML"              value="YES"/>
+		<input type="hidden" name="cgiCmdHidden_emailTemplate_1"              value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.txt"/>
+		<input type="hidden" name="cgiCmdHidden_emailSubject_1"               value="Antwort as plain txt mail"/>
+		<input type="hidden" name="cgiCmdHidden_emailToAddrs_1"               value="FormField:Email"/>
+		<input type="hidden" name="cgiCmdHidden_emailFromAddr_1"              value="anmeldung@peterliwiese.ch"/>
+		<input type="hidden" name="cgiCmdHidden_emailSentAsHTML_1"            value="NO"/>
+		<input type="hidden" name="cgiCmdHidden_countOfEmails"                value="2"/>
+		<input type="hidden" name="cgiCmdHidden_doDebug"                      value="Yes"/>
+		<!-- end of hidden fields -->
+		
+		<!-- Formular-Buttons -->
+		<input type="reset" value="Reset"/>	
+		<input type="submit" name="submitted" value="Submit"/>
+		
+		<br/>
+
+	</form>
+	<!-- Formularende -->
+
+	<br/>
+	<hr/>
+	
+	Nach dem Submit werden zwei emails (mit unterschiedlichem Inhalt und Layout) gesendet:
+	<ol>
+		<li>
+			Ein HTML-email an <b>anmeldung@peterliwiese.ch</b> mit Absender der email Adresse vom Formular (Anmeldung)
+		</li>
+		<li>
+			Ein text-email an die email Adresse vom Formular mit Absender <b>anmeldung@peterliwiese.ch</b> (Bestätigung)
+		</li>
+	</ol>
+	
+	Diese emails koennen unter 
+	<a href="http://www.novatrend.ch/" target="_blank">http://www.novatrend.ch/</a> 
+	angeschaut werden.
+
+	<br/>
+	UserId: <b>anmeldung@peterliwiese.ch</b> 
+	Password: <b>Ask your teacher</b> <!-- 800_hsk* -->
+
+	<br/>
+	Die emails an <b>claudia@peterliwiese.ch</b> werden auf <b>anmeldung@peterliwiese.ch</b> umgeleitet.
+
+</body>
+</html>

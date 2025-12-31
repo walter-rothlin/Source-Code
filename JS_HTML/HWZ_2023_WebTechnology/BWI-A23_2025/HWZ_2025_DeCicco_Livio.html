@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--    
+    Source:    ./DatenFiles/HTML/FormTest_formHandler.html
+    Published: https://hwz.peterliwiese.ch/examples/FormTest_formHandler.html
+
+    Ehrenwörtliche Erklärung
+    ------------------------
+
+    Hiermit bestätige ich, Livio De Cicco, diesen Leistungsnachweis 
+    ohne fremde Hilfe nur mit den erlaubten Hilfsmittel während der offiziellen 
+    vereinbarten Zeitdauer erstellt zu haben.
+	
+	Bewertung
+	---------
+	1) Richtiger Filename / Ehrenwörtliche Erklärung
+	2) Korrekte Formatierung
+	3) Korrektes XHTML
+	4) Korrekte zusätzliche Felder (inkl. title und body)
+	5) CSS eingebunden
+	6) Erweitertes Antwort-Template eingebunden
+	7) Feldernamen entsprechend neuem Antwort-Template angepasst
+	8) Postleitzahl wird Clientseitig überprüft (korrigiert)
+	9) Warnungs-Symbol mit CSS-Style zugefügt
+	10) Eventhadler eingebaut und Symbole ändern
+	                                                                 --------
+	                                                         Punkte:
+	                                                                 --------
+	                                       Note = 0.5 * Punkte + 1 =
+	                                                                 ========
+
+-->
+<meta charset="UTF-8" />
+<title>Anmeldeformular für Geschäftsanlasse</title>
+
+<link rel="stylesheet"
+ href="https://hwz.peterliwiese.ch/examples/CSS_HWZ_Style_01.css" />
+
+<style type="text/css">
+  .warnIcon {
+    width: 18px;
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+  .invalidField {
+    background-color: #ffcccc;
+  }
+</style>
+
+<script type="text/javascript">
+  function checkPLZ() {
+    var plz = document.getElementById('plz');
+    var v = plz.value;
+    var ok = /^[0-9]{4}$/.test(v);
+    if (!ok) {
+      plz.className = "invalidField";
+    } else {
+      plz.className = "";
+    }
+    return ok;
+  }
+
+  function validateText(id, iconId) {
+    var f = document.getElementById(id);
+    var icon = document.getElementById(iconId);
+
+    if (f.value.length >= 2) {
+      f.className = "";
+      icon.src = "https://www.peterliwiese.ch/img/Verified.svg";
+    } else {
+      f.className = "invalidField";
+      icon.src = "https://www.peterliwiese.ch/img/Warning.svg";
+    }
+  }
+
+  function validateEmail() {
+    var f = document.getElementById("email");
+    var icon = document.getElementById("emailIcon");
+    var ok = /^[^@]+@[^@]+\.[^@]+$/.test(f.value);
+
+    if (ok) {
+      f.className = "";
+      icon.src = "https://www.peterliwiese.ch/img/Verified.svg";
+    } else {
+      f.className = "invalidField";
+      icon.src = "https://www.peterliwiese.ch/img/Warning.svg";
+    }
+  }
+</script>
+
+</head>
+
+<body>
+<h2>Anmeldeformular für Geschäftsanlasse</h2>
+
+<p>Hiermit melde ich mich für den Anlass vom</p>
+
+<form method="get"
+ action="https://www.peterliwiese.ch/cgi-bin/formHandler.pl"
+ name="anmeldeForm">
+
+<table>
+<tr>
+  <td>Name:</td>
+  <td>
+    <input type="text" id="name" name="Name"
+           value="Walter"
+           onkeyup="validateText('name','nameIcon')" />
+    <img id="nameIcon"
+         src="https://www.peterliwiese.ch/img/Warning.svg"
+         class="warnIcon" alt="Warnsymbol" />
+  </td>
+</tr>
+
+<tr>
+  <td>Vorname:</td>
+  <td>
+    <input type="text" id="vorname" name="Vorname"
+           value="Rothlin"
+           onkeyup="validateText('vorname','vornameIcon')" />
+    <img id="vornameIcon"
+         src="https://www.peterliwiese.ch/img/Warning.svg"
+         class="warnIcon" alt="Warnsymbol" />
+  </td>
+</tr>
+
+<tr>
+  <td>Email:</td>
+  <td>
+    <input type="text" id="email" name="Email"
+           value="walter@rothlin.com"
+           onkeyup="validateEmail()" />
+    <img id="emailIcon"
+         src="https://www.peterliwiese.ch/img/Warning.svg"
+         class="warnIcon" alt="Warnsymbol" />
+  </td>
+</tr>
+
+<tr>
+  <td>PLZ:</td>
+  <td>
+    <input type="text" id="plz" name="PLZ"
+           size="4" value="8855"
+           onchange="checkPLZ()" />
+    Ort:
+    <input type="text" name="Wohnort" value="Wangen (SZ)" />
+  </td>
+</tr>
+
+<tr>
+  <td>ÖV Vergünstigung:</td>
+  <td>
+    <input type="radio" name="SbbVaucher" value="Nichts" checked="checked" /> Nichts
+    <input type="radio" name="SbbVaucher" value="Halbtax" /> 1/2 Preis
+    <input type="radio" name="SbbVaucher" value="GA" /> GA
+  </td>
+</tr>
+
+<tr>
+  <td>Mittagessen:</td>
+  <td>
+    <input type="hidden" name="Vegan" value="nein" />
+	<input type="checkbox" name="Vegan" value="ja" checked="checked" /> Vegan
+
+  </td>
+</tr>
+
+<tr>
+  <td>Begleitung:</td>
+  <td>
+    Ich komme in Begleitung von
+    <select name="Begleitpersonen">
+      <option value="keiner">keiner</option>
+      <option value="einer">einer</option>
+      <option value="zwei">zwei</option>
+      <option value="drei">drei</option>
+    </select>
+    weiteren Person(en)
+  </td>
+</tr>
+
+<tr>
+  <td>Kommentar:</td>
+  <td>
+    <textarea name="Kommentar" rows="5" cols="40"></textarea>
+  </td>
+</tr>
+
+</table>
+
+<!-- Hidden fields for formHandler -->
+<input type="hidden" name="constrain_PLZ"
+ value="isInteger(XXXX,1000,9999,Postleitzahl muss zwischen 1000 und 9999 sein)" />
+
+<input type="hidden" name="cgiCmdHidden_replyTemplateSuccess"
+ value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html" />
+<input type="hidden" name="cgiCmdHidden_replyTemplateNotSuccess"
+ value="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html" />
+
+<input type="hidden" name="cgiCmdHidden_emailTemplate"
+ value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html" />
+<input type="hidden" name="cgiCmdHidden_emailSubject" value="Anmeldung" />
+<input type="hidden" name="cgiCmdHidden_emailToAddrs" value="anmeldung@peterliwiese.ch" />
+<input type="hidden" name="cgiCmdHidden_emailFromAddr" value="FormField:Email" />
+<input type="hidden" name="cgiCmdHidden_emailSentAsHTML" value="YES" />
+
+<br /><br />
+<input type="submit" value="Anmelden" />
+<input type="reset" value="Eingaben löschen" />
+
+</form>
+
+</body>
+</html>

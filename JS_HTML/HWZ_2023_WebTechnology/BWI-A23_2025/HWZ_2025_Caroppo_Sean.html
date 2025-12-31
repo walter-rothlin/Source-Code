@@ -1,0 +1,569 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- Alternativ auch dieser Doc type möglich<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> -->
+
+<!-- saved from url=(0062)https://hwz.peterliwiese.ch/examples/FormTest_formHandler.html -->
+
+<!-- ACHTUNG: Ehrenwörtliche Erklärung ganz nach oben verschoben direkt unter SAVED FROM URL PETERLIWIESE-->
+<!--    
+    Source:    ./DatenFiles/HTML/FormTest_formHandler.html
+    Published: https://hwz.peterliwiese.ch/examples/FormTest_formHandler.html
+
+
+
+	Ehrenwörtliche Erklärung
+	------------------------
+   
+	Hiermit bestätige ich, Sean Caroppo, diesen Leistungsnachweis 
+	ohne fremde Hilfe nur mit den erlaubten Hilfsmittel während der offiziellen 
+	vereinbarten Zeitdauer erstellt zu haben.
+
+	Bewertung
+	---------
+	1) Richtiger Filename / Ehrenwörtliche Erklärung
+	2) Korrekte Formatierung
+	3) Korrektes XHTML
+	4) Korrekte zusätzliche Felder (inkl. title und body)
+	5) CSS eingebunden
+	6) Erweitertes Antwort-Template eingebunden
+	7) Feldernamen entsprechend neuem Antwort-Template angepasst
+	8) Postleitzahl wird Clientseitig überprüft (korrigiert)
+	9) Warnungs-Symbol mit CSS-Style zugefügt
+	10) Eventhadler eingebaut und Symbole ändern
+	                                                                 --------
+	                                                         Punkte:
+	                                                                 --------
+	                                       Note = 0.5 * Punkte + 1 =
+	                                                                 ========
+	-->
+	
+<!-- ACHTUNG: Da het de xml namespace gfählt!!!: Der <html>-Tag muss ein XML-Namespace tragen: <html xmlns="http://www.w3.org/1999/xhtml"> -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+
+<!-- ACHTUN: Head war nicht korrekt formatiert dieser muss nämlich oben sein und eins eingerückt: -->
+	<head>
+		<!-- ACHTUNG: Meta Tag war nicht geschlossen! -->
+		<!-- alt: <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> Alternativ auch charset=ISO-8859-1 möglich ist aber veraltet-->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Anmeldung für Geschäftsanlässe</title> <!-- Titel schön unter meta tag nehmen-->
+		
+		<!-- ACHTUNG: Der Style Tag muss so geschrieben sein: <style type="text/css">  und nicht <style> -->
+		<style type="text/css">
+			  /*<![CDATA[*/
+	
+				/* Select Component Styles */
+				.ZFfasc5f5NTIdwkMzNMy .zhhsfrubRJBf86cRcjeS {
+				height: 32px;
+				font-size: 16px;
+				font-weight: bold;
+				color: rgba(0, 0, 0, 0.88);
+				line-height: 32px;
+				}
+				
+				.ZFfasc5f5NTIdwkMzNMy .TiFcRFnjGcRWQCxcglYv {
+				position: relative;
+				}
+				
+				.ZFfasc5f5NTIdwkMzNMy .TiFcRFnjGcRWQCxcglYv select {
+				width: 100%;
+				height: 32px;
+				border-radius: 6px;
+				opacity: 0.5;
+				border: 1px solid #000000;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				padding: 0 12px;
+				padding-right: 30px;
+				}
+				
+				.ZFfasc5f5NTIdwkMzNMy .TiFcRFnjGcRWQCxcglYv select:focus-visible {
+				outline: none;
+				border: 1px solid #000000;
+				}
+				
+				.ZFfasc5f5NTIdwkMzNMy .TiFcRFnjGcRWQCxcglYv:after {
+				content: "";
+				display: block;
+				width: 0;
+				height: 0;
+				border-left: 4px solid transparent;
+				border-right: 4px solid transparent;
+				border-top: 4px solid rgba(0, 0, 0, 0.5);
+				position: absolute;
+				top: 50%;
+				right: 15px;
+				transform: translateY(-50%);
+				}
+				
+				.ZFfasc5f5NTIdwkMzNMy .TiFcRFnjGcRWQCxcglYv:focus-visible {
+				border: none;
+				background: salmon;
+				}
+				
+				.rxQr7drg0GrqV8vmOncn {
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 24px;
+				}
+				
+				.M2gRdCRtGXZfWo_K9lvd {
+				display: flex;
+				flex-direction: column;
+				}
+				
+				.M2gRdCRtGXZfWo_K9lvd .zhhsfrubRJBf86cRcjeS {
+				font-family: OpenSans-Regular, OpenSans;
+				font-weight: 600;
+				font-size: 14px;
+				color: rgba(0, 0, 0, 0.88);
+				line-height: 16px;
+				}
+				
+				/* Input Component Styles */
+				.IRoWVNnxMESYzrLAb1jW {
+				width: 100%;
+				height: 48px;
+				border-radius: 12px;
+				opacity: 0.5;
+				border: 1px solid #000000;
+				padding: 0 16px;
+				box-sizing: border-box;
+				font-size: 14px;
+				font-family: OpenSans-Regular, OpenSans;
+				font-weight: 400;
+				}
+				
+				.IRoWVNnxMESYzrLAb1jW:focus-visible {
+				outline: none;
+				}
+				
+				/* Radio Button Styles */
+				.Ib6CUk9NvPeuYdBNTyjg {
+				display: flex;
+				align-items: flex-start;
+				}
+				
+				.Ib6CUk9NvPeuYdBNTyjg input[type="radio"] {
+				appearance: none;
+				width: 24px;
+				height: 24px;
+				border-radius: 50%;
+				border: 2px solid #ccc;
+				position: relative;
+				}
+				
+				.Ib6CUk9NvPeuYdBNTyjg input[type="radio"]:checked {
+				border-color: #ff8f00;
+				}
+				
+				.Ib6CUk9NvPeuYdBNTyjg input[type="radio"]:checked::after {
+				content: "";
+				width: 10px;
+				height: 10px;
+				background: #ff8f00;
+				border-radius: 50%;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				}
+				
+				/* Import Product Button Styles */
+				.vsK1fKu8GYkRlcoudhIh {
+				width: 100%;
+				top: 0;
+				left: 0;
+				right: 0;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				position: absolute;
+				z-index: 2;
+				font-family: OpenSans-Bold, OpenSans;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .kNT2mFuNFTBP9Hi7bAC8 {
+				width: 100%;
+				height: 21px;
+				border-top-left-radius: 8px;
+				border-top-right-radius: 8px;
+				display: flex;
+				align-items: center;
+				position: relative;
+				color: #ffffff;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .kNT2mFuNFTBP9Hi7bAC8 .mZYCnZhor58rYAUqK4ng {
+				position: absolute;
+				left: 10px;
+				width: 15px;
+				height: 15px;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .kNT2mFuNFTBP9Hi7bAC8 .mZYCnZhor58rYAUqK4ng g {
+				fill: antiquewhite;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .kNT2mFuNFTBP9Hi7bAC8 .ngtRvSjrm9yOTPcnJvii {
+				flex: 1;
+				text-align: center;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .kNT2mFuNFTBP9Hi7bAC8 .rd0GcjHkbm37tIo1UZkh {
+				min-width: 45px;
+				height: 21px;
+				position: absolute;
+				right: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #11bc57;
+				border-top-right-radius: 8px;
+				border-left: 1px solid #00b050;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .xqJbzeH_Z6QRQ9J1z5UV {
+				background: #2acc6f;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .mmXPLYRJZx8YRhtuZOzD {
+				background: #fb5b28;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .jaTHVmG4yPmCMGNQaqic {
+				display: none;
+				width: 98%;
+				height: 32px;
+				box-shadow:	0px 5px 5px -3px rgba(0, 0, 0, 0.08), 
+							0px 3px 14px 2px rgba(0, 0, 0, 0.04), 
+							0px 8px 10px 1px rgba(0, 0, 0, 0.06);
+				border-radius: 4px;
+				margin-top: 6px;
+				font-size: 12px;
+				font-family: OpenSans-Bold, OpenSans;
+				font-weight: bold;
+				color: #ffffff;
+				line-height: 17px;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .jaTHVmG4yPmCMGNQaqic svg {
+				margin-right: 8px;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .lXitMkUNrxq6Y3RWLqKg {
+				position: absolute;
+				top: 34px;
+				left: 11px;
+				z-index: 99999999;
+				}
+				
+				.vsK1fKu8GYkRlcoudhIh .lXitMkUNrxq6Y3RWLqKg input {
+				width: 18px;
+				height: 18px;
+				}
+				
+				/* Batch Button Box Styles */
+				.NlPS3pzpp0kyiw7u3qbU {
+				width: 200px;
+				height: 36px;
+				background: #ff8f00;
+				border-radius: 8px 8px 8px 8px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: fixed;
+				left: 50%;
+				transform: translateX(-50%);
+				bottom: 20px;
+				}
+				
+				.NlPS3pzpp0kyiw7u3qbU > div {
+				margin-right: 15px;
+				}
+				
+				.NlPS3pzpp0kyiw7u3qbU button {
+				background: #ff8f00;
+				color: #ffffff;
+				}
+				
+				@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+			body { 
+				background-color:#EEEEEE;
+				margin-left:150px;
+				font-family: 'Open Sans', sans-serif;
+				--refScale:50px;
+				--hoverY:1px;
+			}
+			
+			h2 {
+				font-family: 'Open Sans', sans-serif;
+				font-size:300%;
+				color:#FF0000;
+				font-style:italic;
+				border-bottom:solid thin red;
+			}
+			
+			INPUT {
+				transition: all 0.3s ease 0s;
+			}
+			
+			INPUT:hover {
+				transform: translateY(var(--hoverY)) translateX(var(--hoverY));
+			}
+			
+			INPUT:focus {
+				color:#242424;
+				background-color:#FF0000;
+				transform: translateY(var(--hoverY)) translateX(var(--hoverY));
+			}
+			
+			.valid {
+				border-color:green;
+			}
+			
+			.error {
+				border-color:red;
+			}
+			
+			.TextboxShort {
+				width:calc(var(--refScale)* 1);
+			}
+			
+			.TextboxMiddle {
+				width:calc(var(--refScale)* 3);
+			}
+			
+			.TextboxLong {
+				width:calc(var(--refScale)* 5);
+			}
+			
+			.statusSymbol {
+				transform: translateY(2px);
+				height: 15px;
+				margin-left: 2px;
+			}
+    
+				/*]]>*/
+		</style>
+		
+		<script type="text/javascript">
+		// XHTML Parser XHTML wird wie XML geparst wird wie XML geparstu nd XML mag keine < oder & in Textknoten, wenn sie nicht speziell maskiert sind. Er wird auskommentiert und schliesst sich am Schluss. JS ignoriert ihn.
+			// URLS von Walti mit Status Verified und Waring
+			var okIconUrl  = 'https://www.peterliwiese.ch/img/Verified.svg';
+			var warnIconUrl = 'https://www.peterliwiese.ch/img/Warning.svg';
+			
+			// JS Funktion für den Name Verifikation
+			function checkName(field) {
+				var icon = field.parentNode.getElementsByTagName('img')[0]; // gibt eine Liste zurück mit allen Bildern innerhalb des parentNode zurücks (0 ist das Erste)
+				var value = field.value.trim(); // Holt den aktuellen eingegebenen Text vom Name Field und entfernt sämtliche Leerzeichen zwischen Anfanung und Ende mittels Trim Methode
+						
+				// Regex: ist gültig, wenn mindestens 2 Zeichen eingegeben sind, keine Zahlen und Sonderzeichen eingegeben werden können und Umlaute akzeptiert werden und auch Doppelnamen (Van der Waals-Bühler Stolz)
+				//var namePattern = /^[A-Za-zÄÖÜäöüß]+$/;
+				var namePattern = /^[A-Za-zÄÖÜäöüß]+([ -][A-Za-zÄÖÜäöüß]+)*$/;
+	
+				// Falls der Name mindestens 2 Strings hat ist alles ok und wir greifen auf die CSS Klasse valid zu ansonsten greifen wir auf die CSS Klasse error zu und machen 
+				if (value.length >= 2 && namePattern.test(value)) {
+					field.className = 'valid';
+					icon.src = okIconUrl; // Bild von Walti
+				} else {
+					field.className = 'error';
+					icon.src = warnIconUrl; // Bild von Walti
+				}
+			}
+			
+			// JS Funktion für den Vorname Verifikation
+			function checkVorname(field) {
+				var icon = field.parentNode.getElementsByTagName('img')[0]; // gibt eine Liste zurück mit allen Bildern innerhalb des parentNode zurücks (0 ist das Erste)
+				var value = field.value.trim(); // Holt den aktuellen eingegebenen Text vom Name Field und entfernt sämtliche Leerzeichen zwischen Anfanung und Ende mittels Trim Methode
+				
+				// Regex: ist gültig, wenn mindestens 2 Zeichen eingegeben sind, keine Zahlen und Sonderzeichen eingegeben werden können und Umlaute akzeptiert werden und auch Doppelnamen (Sean Loris oder Äiä Suomoleinen)
+				var namePattern = /^[A-Za-zÄÖÜäöüß]+( [A-Za-zÄÖÜäöüß]+)*$/;
+	
+				// Falls der Name mindestens 2 Strings hat ist alles ok und wir greifen auf die CSS Klasse valid zu ansonsten greifen wir auf die CSS Klasse error zu und machen 
+				if (value.length >= 2 && namePattern.test(value)) {
+					field.className = 'valid';
+					icon.src = okIconUrl; // Bild von Walti
+					
+				} else {
+					field.className = 'error';
+					icon.src = warnIconUrl; // Bild von Walti
+				}
+			}
+			
+			// JS Funktion für die PLZ Verifikation
+			function checkPLZ(field) {
+				// Ziffern via field als Parameter übergeben und dann in variable value speichern. Nachher dafür sorgen, dass ausschliesslich Zahlen im Feld sind via REGEX!
+				var value = field.value;
+				var digitsOnly = value.replace(/[^0-9]/g, '');
+				
+				// Via Index die Variable digitsOnly prüfen, welche oben bereits gefiltert wurde. Danach alle Zahlen nach 4 Stellig abschneiden
+				if (digitsOnly.length > 4) {
+					digitsOnly = digitsOnly.substring(0, 4);
+				}
+				
+				// Korrigierte Benutzereingabe wird im Feld bereinigt
+				field.value = digitsOnly;
+				
+				// Falls die PLZ 4 Zahlen hat ist alles ok ansonsten greifen wir auf die CSS Klasse error zu und machen 
+				if (digitsOnly.length === 4) {
+					field.className = 'valid';
+				} 
+				else {
+					field.className = 'error';
+				}
+			}
+			
+			// JS Funktion für Email Verifikation
+			function checkEmail(field) {
+				var icon = field.parentNode.getElementsByTagName('img')[0]; // gibt eine Liste zurück mit allen Bildern innerhalb des parentNode zurücks (0 ist das Erste)
+				var value = field.value.trim(); // Holt den aktuellen eingegebenen Text vom Name Field und entfernt sämtliche Leerzeichen zwischen Anfanung und Ende mittels Trim Methode
+				//Regex: irgendwas vor dem @ (keine Leerzeichen), ein @, irgendwas nach dem @, ein Punkt
+				var emailPattern = /^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/;
+				
+				// Falls der Name mindestens 2 Strings hat ist alles ok und wir greifen auf die CSS Klasse valid zu ansonsten greifen wir auf die CSS Klasse error zu und machen 
+				if (emailPattern.test(value)) {
+					field.className = 'valid';
+					icon.src = okIconUrl; // Bild von Walti
+				} else {
+					field.className = 'error';
+					icon.src = warnIconUrl; // Bild von Walti
+				}
+			}
+				
+			// JS Funktion zum Zurücksetzen aller Icons auf Warning
+			function resetForm() {
+				// Alle Icons zurücksetzen
+				var icons = document.getElementsByClassName('statusSymbol');
+				for (var i = 0; i < icons.length; i++) {
+					icons[i].src = warnIconUrl;
+				}
+				
+				// Alle Input-Felder auf error-Klasse setzen (optional)
+				var inputs = document.querySelectorAll('input[type="TEXT"]');
+				for (var i = 0; i < inputs.length; i++) {
+					inputs[i].className = 'error';
+				}
+			}
+		</script>
+	<!-- Achtung Head Abschluss einrücken -->
+	</head>
+	
+	<body>
+		<h2>Anmeldeformular für Geschäftsanlässe</h2>
+		<!-- Achtung xhtml darf kein freier Text stehen mit p umhüllen! -->
+		<p> Hiermit melde ich mich für den Anlass vom </p>
+		
+		<!--Formularwerte werden zu formHandler.pl auf einem anderen Server gesendet -->
+		<!-- <FORM METHOD="GET" NAME="adressForm" ACTION="https://www.peterliwiese.ch/cgi-bin/waltisExamples/echo.pl">  -->
+		<form method="get" name="adressForm" action="https://www.peterliwiese.ch/cgi-bin/formHandler.pl">
+			<table>
+				<tbody>
+					<tr>
+						<td>Name:</td>
+						<td>
+							<!-- Achtung xhtml muss geschlossen sein: <input type="text" name="Name" value="Muster" /> -->
+							<input type="TEXT" name="Name" value="" oninput="checkName(this)" />
+														
+							<!-- Bild Gemäss Walti einbauen /> -->
+							<img class="statusSymbol" src="https://www.peterliwiese.ch/img/Warning.svg" alt="Warnung" />
+						</td>
+					</tr>
+					<tr>
+						<td>Vorname:</td>
+						<td>
+							<!-- Achtung xhtml muss geschlossen sein: <input type="text" name="Name" value="Muster" /> -->
+							<input type="TEXT" name="Vorname" value="" oninput="checkVorname(this)"/>
+							
+							<!-- Bild Gemäss Walti einbauen /> -->
+							<img class="statusSymbol" src="https://www.peterliwiese.ch/img/Warning.svg" alt="Warnung" />
+						</td>
+					</tr>
+					<tr>
+						<td>email:</td>
+						<td>
+							<!-- Achtung xhtml muss geschlossen sein: <input type="text" name="Name" value="Muster" /> -->
+							<input type="TEXT" size="30" name="Email" value="" oninput="checkEmail(this)" />
+							
+							<!-- Bild Gemäss Walti einbauen /> -->
+							<img class="statusSymbol" src="https://www.peterliwiese.ch/img/Warning.svg" alt="Warnung" />
+						</td>
+					</tr>
+					<tr>
+						<td>PLZ:</td>
+						<td>
+							<!-- Achtung xhtml muss geschlossen sein: <input type="text" name="Name" value="Muster" /> und onchange=checkPLZ ist der Funktionsaufruf mit (this) als Parameter Übergabe -->
+							<input type="TEXT" size="4" name="PLZ" value="" onchange="checkPLZ(this)"/>  
+							<!-- Achtung xhtml muss geschlossen sein: <input type="text" name="Name" value="Muster" /> -->
+							Ort:<input type="TEXT" name="Wohnort" value="" />
+						</td>
+					</tr>				
+				</tbody>
+			</table>
+			<p>
+				Öv Vergünstigung:<input type="radio" id="nichts" name="SbbVaucher" value="Nichts" /> 
+									<label for="html">Nichts</label>
+								 <input type="radio" id="halberpreis" name="SbbVaucher" value="HalberPreis" /> 
+									<label for="html">1/2 Preis</label>
+								 <input type="radio" id="ga" name="SbbVaucher" value="GA" /> 
+									<label for="html">GA</label>
+				
+			<!-- Achtung xhtml <br/> nicht <br> -->
+			</p>			
+			<p>
+				Mittag Essen: <input type="checkbox" id="lunch" name="Vegan" value="Vegan" />
+								<label for="lunch">Vegan</label><br>
+			<!-- Achtung xhtml <br/> nicht <br> -->
+			</p>
+			<p>
+				 <label for="Begleitpersonen">Komme in Begleitung von </label>
+					<select name="Begleitpersonen" id="Begleitpersonen">
+						<option value="keiner">keiner</option>
+						<option value="einer">einer</option>
+						<option value="zwei">zwei</option>
+						<option value="drei">drei</option>
+					</select>weiteren Person(en) 
+			<!-- Achtung xhtml <br/> nicht <br> -->
+			</p>
+			<br />
+			<p>
+				Kommentar: <br />
+				<textarea name="Kommentar" rows="5" cols="50"></textarea>
+			</p>
+			
+			<!-- Hidden fields to control the formHandler script -->
+			<input type="HIDDEN" name="constrain_PLZ" value="isInteger(XXXX,1000,9999,&lt;B&gt;Postleitzahl&lt;/B&gt; muss zwischen 1000 und 9999 sein)" />
+			<!-- <input type="HIDDEN" name="cgiCmdHidden_replyTemplateSuccess" value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate.html" ist das alte von Walti/> -->
+			<input type="HIDDEN" name="cgiCmdHidden_replyTemplateSuccess" value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html" />
+			<input type="HIDDEN" name="cgiCmdHidden_replyTemplateNotSuccess" value="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailTemplate" value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailSubject" value="Antwort (Default as HTML)" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailToAddrs" value="anmeldung@peterliwiese.ch" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailCcAddrs" value="" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailBccAddrs" value="" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailFromAddr" value="FormField:Email" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailSentAsHTML" value="YES" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailTemplate_1" value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.txt" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailSubject_1" value="Antwort as plain txt mail" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailToAddrs_1" value="FormField:Email" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailFromAddr_1" value="anmeldung@peterliwiese.ch" />
+			<input type="HIDDEN" name="cgiCmdHidden_emailSentAsHTML_1" value="NO" />
+			<input type="HIDDEN" name="cgiCmdHidden_countOfEmails" value="2" />
+			<input type="HIDDEN" name="cgiCmdHidden_doDebug" value="Yes" />
+			<!-- end of hidden fields -->
+			
+			<!-- Achtung xhtml muss geschlossen sein: <input type="text" name="Name" value="Muster" /> -->
+			<input type="SUBMIT" name="submitted" value="Anmelden" />
+			<input type="RESET" name="reseted" value="Eingabe löschen" onclick="resetForm()" />
+			<!-- Achtung xhtml <br /> nicht <br> -->
+			<br />
+		</form>
+		<!-- Achtung xhtml <br /> nicht <br> -->
+		<br />
+		<!-- Achtung xhtml <hr /> nicht <hr> -->
+		<hr />		
+	</body>
+</html>

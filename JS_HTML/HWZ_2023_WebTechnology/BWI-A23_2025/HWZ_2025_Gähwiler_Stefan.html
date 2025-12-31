@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!--
+    UTF-8 funktioniert für das html-Formular. Wenn ich aber die Serverantwort anschaue, dann wäre Windows-1252 besser.
+    Ob aber dies sonst noch Auswirkungen haben könnte ist mir nicht bekannt, deshalb auf UTF-8 belassen.
+    -->
+
+    <!--
+        Source: ./DatenFiles/HTML/FormTest_formHandler.html
+        Published: https://hwz.peterliwiese.ch/examples/FormTest_formHandler.html
+
+        Ehrenwörtliche Erklärung
+	------------------------
+
+	Hiermit bestätige ich, STEFAN GÄHWILER, diesen Leistungsnachweis
+	ohne fremde Hilfe nur mit den erlaubten Hilfsmittel während der offiziellen
+	vereinbarten Zeitdauer erstellt zu haben.
+
+	Bewertung
+	---------
+	1) Richtiger Filename / Ehrenwörtliche Erklärung
+	2) Korrekte Formatierung
+	3) Korrektes XHTML
+	4) Korrekte zusätzliche Felder (inkl. title und body)
+	5) CSS eingebunden
+	6) Erweitertes Antwort-Template eingebunden
+	7) Feldernamen entsprechend neuem Antwort-Template angepasst
+	8) Postleitzahl wird Clientseitig überprüft (korrigiert)
+	9) Warnungs-Symbol mit CSS-Style zugefügt
+	10) Eventhadler eingebaut und Symbole ändern
+	                                                                 --------
+	                                                         Punkte:
+	                                                                 --------
+	                                       Note = 0.5 * Punkte + 1 =
+	                                                                 ========
+	-->
+
+   <title>Anmeldeformular</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://hwz.peterliwiese.ch/examples/CSS_HWZ_Style_01.css" />
+
+    <style type="text/css">
+    .statusSymbol {
+        height: 18px;
+        width: 18px;
+        margin-left: 5px;
+        vertical-align: middle;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Anmeldeformular für Geschäftsanlässe</h2>
+
+    <p>Hiermit melde ich mich für den Anlass vom</p>
+
+    <form method="get" name="adressForm"
+          action="https://www.peterliwiese.ch/cgi-bin/formHandler.pl">
+
+        <table>
+            <tbody>
+
+                <tr>
+                    <td>Name:</td>
+                    <td>
+                        <input type="text" name="Name" id="Name" value="" placeholder="Ihr Nachname" onkeyup="validateName();" />
+                        <img src="https://www.peterliwiese.ch/img/Warning.svg" id="nameIcon" class="statusSymbol" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Vorname:</td>
+                    <td>
+                        <input type="text" name="Vorname" id="Vorname" value="" placeholder="Ihr Vorname" onkeyup="validateVorname();" />
+                        <img src="https://www.peterliwiese.ch/img/Warning.svg" id="vornameIcon" class="statusSymbol" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>email:</td>
+                    <td>
+                        <input type="text" name="Email" id="Email" value="" placeholder="name@example.com" onkeyup="validateEmail();" />
+                        <img src="https://www.peterliwiese.ch/img/Warning.svg" id="emailIcon" class="statusSymbol" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>PLZ:</td>
+                    <td>
+                        <input type="text" name="PLZ" id="PLZ" size="4" value="" placeholder="z.B. 8000" onchange="checkPLZ();" />
+                        Ort:
+                        <input type="text" name="Wohnort" value="" placeholder="Wohnort…"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>ÖV Vergünstigung:</td>
+                    <td>
+                        <input type="radio" name="SbbVaucher" value="nichts" checked="checked" /> Nichts
+                        <input type="radio" name="SbbVaucher" value="halb" /> 1/2 Preis
+                        <input type="radio" name="SbbVaucher" value="ga" /> GA
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Mittagessen:</td>
+                    <td>
+                        <!-- Hidden-Feld: wird immer gesendet -->
+                        <input type="hidden" id="VeganHidden" name="Vegan" value="Nein" />
+                        <!-- Checkbox setzt Hidden-Feld auf Ja/Nein -->
+                        <input type="checkbox"
+                               id="VeganCheckbox"
+                               onchange="document.getElementById('VeganHidden').value = this.checked ? 'Ja' : 'Nein';" />
+                        Vegan
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Komme in Begleitung von</td>
+                    <td>
+                        <select name="Begleitpersonen">
+                            <option value="keiner">keiner</option>
+                            <option value="einer">einer</option>
+                            <option value="zwei">zwei</option>
+                            <option value="drei">drei</option>
+                        </select>
+                        weiteren Person(en)
+                    </td>
+                </tr>
+
+                <!-- 2 Leerzeilen -->
+                <tr><td colspan="2">&nbsp;</td></tr>
+                <tr><td colspan="2">&nbsp;</td></tr>
+
+                <!-- Kommentar -->
+                <tr>
+                    <td>Kommentar</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <textarea name="Kommentar" cols="60" rows="6"></textarea>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <!-- Hidden fields to control the formHandler script -->
+        <input type="hidden" name="constrain_PLZ"
+               value="isInteger(XXXX,1000,9999,&lt;B&gt;Postleitzahl&lt;/B&gt; muss zwischen 1000 und 9999 sein)" />
+
+        <input type="hidden" name="cgiCmdHidden_replyTemplateSuccess"
+               value="http://www.hwz.peterliwiese.ch/examples/testSuccessTemplate_01.html" />
+
+        <input type="hidden" name="cgiCmdHidden_replyTemplateNotSuccess"
+               value="http://www.hwz.peterliwiese.ch/examples/testNotSuccessTemplate.html" />
+
+        <input type="hidden" name="cgiCmdHidden_emailTemplate"
+               value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.html" />
+
+        <input type="hidden" name="cgiCmdHidden_emailSubject"
+               value="Antwort (Default as HTML)" />
+
+        <input type="hidden" name="cgiCmdHidden_emailToAddrs"
+               value="anmeldung@peterliwiese.ch" />
+
+        <input type="hidden" name="cgiCmdHidden_emailCcAddrs"
+               value="" />
+
+        <input type="hidden" name="cgiCmdHidden_emailBccAddrs"
+               value="" />
+
+        <input type="hidden" name="cgiCmdHidden_emailFromAddr"
+               value="FormField:Email" />
+
+        <input type="hidden" name="cgiCmdHidden_emailSentAsHTML"
+               value="YES" />
+
+        <input type="hidden" name="cgiCmdHidden_emailTemplate_1"
+               value="http://www.hwz.peterliwiese.ch/examples/testEmailTemplate.txt" />
+
+        <input type="hidden" name="cgiCmdHidden_emailSubject_1"
+               value="Antwort as plain txt mail" />
+
+        <input type="hidden" name="cgiCmdHidden_emailToAddrs_1"
+               value="FormField:Email" />
+
+        <input type="hidden" name="cgiCmdHidden_emailFromAddr_1"
+               value="anmeldung@peterliwiese.ch" />
+
+        <input type="hidden" name="cgiCmdHidden_emailSentAsHTML_1"
+               value="NO" />
+
+        <input type="hidden" name="cgiCmdHidden_countOfEmails"
+               value="2" />
+
+        <input type="hidden" name="cgiCmdHidden_doDebug"
+               value="Yes" />
+
+        <br /><br />
+
+        <input type="submit" value="Anmelden" />
+        <input type="reset" value="Eingaben löschen" onclick="resetIcons();" />
+
+    </form>
+
+    <!-- Aufgabe 8: PLZ-Prüfung -->
+    <script type="text/javascript">
+    function checkPLZ() {
+        var plzField = document.getElementById("PLZ");
+        var plz = plzField.value;
+
+        // Prüfen: nur Ziffern erlaubt
+        if (!/^[0-9]*$/.test(plz)) {
+            alert("PLZ darf nur Ziffern enthalten!");
+            plzField.value = "";
+            return;
+        }
+
+        // Länge prüfen
+        if (plz.length !== 4) {
+            alert("PLZ muss genau 4 Ziffern haben!");
+            plzField.value = "";
+            return;
+        }
+
+        // Bereich prüfen
+        var plzNum = parseInt(plz, 10);
+
+        if (plzNum < 1000 || plzNum > 9999) {
+            alert("PLZ muss zwischen 1000 und 9999 liegen!");
+            plzField.value = "";
+            return;
+        }
+    }
+    </script>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+        validateName();
+        validateVorname();
+        validateEmail();
+    };
+
+    // NAME
+    function validateName() {
+    var f = document.getElementById("Name");
+    var icon = document.getElementById("nameIcon");
+    var v = f.value.trim();
+
+    f.classList.remove("valid");
+    f.classList.remove("error");
+
+    if (v.length < 2) {
+        f.classList.add("error");
+        icon.src = "https://www.peterliwiese.ch/img/Warning.svg";
+        return;
+    }
+
+    f.classList.add("valid");
+    icon.src = "https://www.peterliwiese.ch/img/Verified.svg";
+    }
+
+    // VORNAME
+    function validateVorname() {
+    var f = document.getElementById("Vorname");
+    var icon = document.getElementById("vornameIcon");
+    var v = f.value.trim();
+
+    f.classList.remove("valid");
+    f.classList.remove("error");
+
+    if (v.length < 2) {
+        f.classList.add("error");
+        icon.src = "https://www.peterliwiese.ch/img/Warning.svg";
+        return;
+    }
+
+    f.classList.add("valid");
+    icon.src = "https://www.peterliwiese.ch/img/Verified.svg";
+    }
+
+    // EMAIL
+    function validateEmail() {
+    var f = document.getElementById("Email");
+    var icon = document.getElementById("emailIcon");
+    var v = f.value.trim();
+
+    f.classList.remove("valid");
+    f.classList.remove("error");
+
+    var korrekt = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+    if (!korrekt) {
+        f.classList.add("error");
+        icon.src = "https://www.peterliwiese.ch/img/Warning.svg";
+        return;
+    }
+
+    f.classList.add("valid");
+    icon.src = "https://www.peterliwiese.ch/img/Verified.svg";
+    }
+
+    </script>
+
+    <script type="text/javascript">
+    function resetIcons() {
+        document.getElementById("nameIcon").src =
+            "https://www.peterliwiese.ch/img/Warning.svg";
+
+        document.getElementById("vornameIcon").src =
+            "https://www.peterliwiese.ch/img/Warning.svg";
+
+        document.getElementById("emailIcon").src =
+            "https://www.peterliwiese.ch/img/Warning.svg";
+
+        // Optional: Wenn PLZ auch ein Icon hat
+        var plzIcon = document.getElementById("plzIcon");
+        if (plzIcon) {
+            plzIcon.src = "https://www.peterliwiese.ch/img/Warning.svg";
+        }
+    }
+    </script>
+
+</body>
+</html>
