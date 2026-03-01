@@ -1,0 +1,21 @@
+# <Filename>C:\Users\Landwirtschaft\Documents\SoruceCode\SchulungsUnterlagen\HBU\LNs\Datenlogger-Daten.txt</Filename><Created>2026-01-21 19:15:14</Created>
+timestamp|level|ort|temp|pressure|humidity|main|description
+2026-01-21 19:15:14|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:15|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:16|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:17|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:18|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:19|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:20|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:21|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:23|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:24|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:25|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:26|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:27|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:28|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:29|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:30|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:31|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:32|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
+2026-01-21 19:15:33|INFO|Zuerich|0.2|1001|90|Clear|Klarer Himmel
