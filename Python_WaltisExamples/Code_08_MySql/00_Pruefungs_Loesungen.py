@@ -56,7 +56,8 @@ db_connection = mysql.connector.connect(
     user="root",
     password="admin",
     # database="pruefung_1",
-    database="sakila",
+    # database="sakila",
+    database="adressen_db",
     auth_plugin='mysql_native_password'
 )
 print("completed!")
@@ -72,7 +73,32 @@ GROUP BY `ci`.`country_id`
 ORDER BY `Anzahl Städte` DESC;
 """
 
-
+sql_statement = """
+	SELECT
+		`pers`.`ID`          AS `ID`,
+		`pers`.`Gender`      AS `Gender`,
+        `pers`.`Name`        AS `Name`,
+        `pers`.`Vorname`     AS `Firstname`,
+        `pers`.`Adress_id`   AS `Adress_ID`, 
+		`adr`.`Strasse`      AS `Strasse`,
+		`adr`.`Hausnummer`   AS `Hausnummer`,
+		`adr`.`Strasse_Nr`   AS `Strasse_Nr`,
+		`adr`.`Ort_ID`       AS `Ort_ID`,
+		`adr`.`PLZ`          AS `PLZ`,
+		`adr`.`Orts_Name`    AS `Orts_Name`,
+		`adr`.`Land_code`    AS `Land_Code`,
+        `adr`.`PLZ_Ort`      AS `PLZ_Ort`,
+        `adr`.`PLZ_Ort`      AS `PLZ_Ort`,
+		CASE 
+			WHEN `pers`.`Gender` = 'Herr'    
+				THEN CONCAT('Sehr geehrter Herr ', `pers`.`Name`)
+			WHEN `pers`.`Gender` = 'Frau'    
+				THEN CONCAT('Sehr geehrte Frau ', `pers`.`Name`)
+			ELSE ''
+		END AS `Anrede`
+	FROM `Personen` AS `pers`
+    INNER JOIN `Adressen_Orte_Liste` AS `adr` ON `adr`.`ID` = `pers`.`Adress_ID`;
+"""
 
 rs_as_dict = True
 print(f"{sql_statement}\nResult-Set as Hash: {rs_as_dict}\n")
