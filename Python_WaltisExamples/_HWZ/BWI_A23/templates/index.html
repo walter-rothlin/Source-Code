@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index-Page</title>
+</head>
+<body>
+    <H1>Unser 1.Webservice {{ vorname }}: Count:{{ requestCounter }}</H1>
+    Folgende End-Points sind implementiert
+    <UL>
+        <LI><A href="/">Home</A></LI>
+        <LI><A href="/Test">Test</A></LI>
+    </UL>
+
+    Namensliste:
+    <UL>
+        {% for name in nameListe %}
+        {% if name != "Walter" -%}
+            <LI>{{ name }}</LI>
+        {%- endif %}
+        {% endfor %}
+    </UL>
+
+    Get-Argumente:
+    <UL>
+        {% for key, value in get_params.items() %}
+            <LI>{{ key }} : {{ value }}</LI>
+        {% endfor %}
+    </UL>
+</body>
+</html>
