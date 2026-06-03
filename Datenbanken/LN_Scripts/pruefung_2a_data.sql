@@ -5,6 +5,7 @@
 --
 -- History:
 -- 24-Apr-2025   Walter Rothlin      Initial Version
+-- 03-Jun-2026   Walter Rothlin      Changed for BWI-A24
 -- ---------------------------------------------------------------------------------
 
 SET FOREIGN_KEY_CHECKS = 0;

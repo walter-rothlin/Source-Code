@@ -10,6 +10,7 @@ SET @nachname := 'Rothlin';   -- Durch ihren Namen ersetzen
 --
 -- History:
 -- 24-Apr-2025   Walter Rothlin      Initial Version
+-- 03-Jun-2026   Walter Rothlin      Changed for BWI-A24
 -- ---------------------------------------------------------------------------------
 
 SET NAMES utf8mb4;

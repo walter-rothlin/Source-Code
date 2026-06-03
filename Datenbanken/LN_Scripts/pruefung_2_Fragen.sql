@@ -8,6 +8,7 @@
 -- 15-Jun-2025   Walter Rothlin      Changed it for BWI-A23
 -- 16-Jun-2025   Walter Rothlin      Small corrections
 -- 17-Jun-2025   Walter Rothlin      Small corrections
+-- 03-Jun-2026   Walter Rothlin      Changed for BWI-A24
 -- ---------------------------------------------------------------------------------
 -- -------------- Hier bitte ihre persönlichen Angaben erfassen --------------------
 

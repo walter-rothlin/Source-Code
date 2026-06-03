@@ -5,6 +5,7 @@
 -- History:
 -- 07-Jun-2025   Walter Rothlin      Initial Version
 -- 15-Jun-2025   Walter Rothlin      Simplified Testing (refacotring using stored-procedures)
+-- 03-Jun-2026   Walter Rothlin      Changed for BWI-A24
 -- ---------------------------------------------------------------------------------
 
 -- Test execution
