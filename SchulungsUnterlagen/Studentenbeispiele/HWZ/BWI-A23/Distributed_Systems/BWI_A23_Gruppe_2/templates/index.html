@@ -1,0 +1,18 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+    <h1>Willkommen</h1>
+
+    {% if session.get('user') %}
+       <p> Du bist jetzt eingeloggt!.</p>
+
+    {% endif %}
+    <p> Dies ist die Startseite unserer Flask-Applikation für Distributed and Mobile Systems </p>
+
+{% endblock %}

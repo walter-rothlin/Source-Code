@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+<!-- Welcome-Page: erbt von base.html -->
+
+{% block title %}Home - BWI Solutions AG{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 border">
+    <h1>Willkommen bei der BWI Solutions AG</h1>
+    <p class="lead">
+        Ihre Partnerin für moderne, verteilte Softwarelösungen. Wir entwickeln
+        skalierbare Web-Applikationen mit Fokus auf Zuverlässigkeit und Sicherheit.
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Über uns</h2>
+        <p>Ein junges Team mit Leidenschaft für sauberen Code und gute Architektur.</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Dienstleistungen</h2>
+        <p>Beratung, Entwicklung und Betrieb von Cloud- und Web-Anwendungen.</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Kontakt</h2>
+        <p>Fragen? Besuchen Sie unsere <a href="{{ url_for('kontakt') }}">Kontakt-Seite</a>.</p>
+    </div>
+</div>
+{% endblock %}

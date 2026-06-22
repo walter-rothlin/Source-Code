@@ -1,0 +1,9 @@
+/* Eigene Styles gehören in diese Datei. Bootstrap liefert aktuell das Layout. */
+
+/* Desktop: Dropdown in der Navbar beim Hover öffnen. Mobil bleibt Bootstrap-Klick aktiv. */
+@media (min-width: 992px) {
+    .navbar .dropdown:hover > .dropdown-menu,
+    .navbar .dropdown:focus-within > .dropdown-menu {
+        display: block;
+    }
+}

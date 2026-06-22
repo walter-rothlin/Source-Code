@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Adress-Liste - BWI A23 Gruppe 4{% endblock %}
+
+{% block content %}
+    <h1>Adress-Liste</h1>
+    <p>Diese Seite ist nur für eingeloggte Benutzer sichtbar.</p>
+
+
+    <table class="table table-striped table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Nachname</th>
+                <th>Vorname</th>
+                <th>Ort</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adresse in adressen %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ adresse.nachname }}</td>
+                <td>{{ adresse.vorname }}</td>
+                <td>{{ adresse.ort }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

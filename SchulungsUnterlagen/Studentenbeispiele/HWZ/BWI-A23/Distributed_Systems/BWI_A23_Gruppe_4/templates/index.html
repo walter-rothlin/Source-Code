@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Home - BWI A23 Gruppe 4{% endblock %}
+
+{% block content %}
+    <h1>Willkommen auf unserer Web-Applikation</h1>
+    <p class="lead">
+        Leistungsnachweis im Fach Distributed and Mobile-Systems.
+        Erstellt mit FLASK und JINJA2.
+    </p>
+
+    <p>Diese Startseite wurde bisher <strong>{{ request_counter }}</strong> mal aufgerufen.</p>
+
+    {% if session.login_name %}
+        <div class="alert alert-success">
+            Sie sind eingeloggt. Im Menü ist nun die Adress-Liste sichtbar.
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Sie sind nicht eingeloggt.
+            <a href="{{ url_for('login') }}">Hier einloggen</a>, um die Adress-Liste zu sehen.
+        </div>
+    {% endif %}
+
+    {% if get_params %}
+        <h3 class="mt-4">Übergebene GET-Parameter:</h3>
+        <ul>
+            {% for key, value in get_params.items() %}
+                <li>{{ key }} : {{ value }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+<!-- Adress-Liste: erbt von base.html, nur für eingeloggte Benutzer -->
+
+{% block title %}Adress-Liste - BWI Solutions AG{% endblock %}
+
+{% block content %}
+<h1>Adress-Liste</h1>
+<p>Übersicht unserer fiktiven Kontakte.</p>
+
+<!-- Bootstrap-Tabelle, gefüllt aus der vom Server übergebenen Liste 'addresses' -->
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Ort</th>
+            <!-- E-Mail-Spalte horizontal zentriert (Bootstrap 'text-center') -->
+            <th class="text-center">E-Mail</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for address in addresses %}
+        <tr>
+            <td>{{ address.first_name }}</td>
+            <td>{{ address.last_name }}</td>
+            <td>{{ address.city }}</td>
+            <td class="text-center">{{ address.email }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

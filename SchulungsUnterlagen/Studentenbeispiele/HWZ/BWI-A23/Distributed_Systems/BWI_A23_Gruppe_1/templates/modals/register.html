@@ -1,0 +1,62 @@
+<!-- Registrieren-Modal: Anrede, Vorname, Nachname, E-Mail, Passwort. -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Registrieren</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+            </div>
+            <form method="post" action="{{ url_for('register') }}" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="salutation" class="form-label">Anrede</label>
+                        <!-- Dropdown aus salutation_options; vorige Auswahl bleibt erhalten -->
+                        <select class="form-select {% if register_errors.salutation %}is-invalid{% endif %}"
+                                id="salutation" name="salutation">
+                            <option value="" {% if not register_data.salutation %}selected{% endif %}>Bitte wählen …</option>
+                            {% for option in salutation_options %}
+                            <option value="{{ option }}" {% if register_data.salutation == option %}selected{% endif %}>{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">{{ register_errors.salutation|default('Bitte wählen Sie eine Anrede.') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Vorname</label>
+                        <input type="text" class="form-control {% if register_errors.first_name %}is-invalid{% endif %}"
+                               id="first_name" name="first_name" value="{{ register_data.first_name|default('') }}">
+                        <div class="invalid-feedback">{{ register_errors.first_name|default('Bitte geben Sie Ihren Vornamen ein.') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Nachname</label>
+                        <input type="text" class="form-control {% if register_errors.last_name %}is-invalid{% endif %}"
+                               id="last_name" name="last_name" value="{{ register_data.last_name|default('') }}">
+                        <div class="invalid-feedback">{{ register_errors.last_name|default('Bitte geben Sie Ihren Nachnamen ein.') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="register-email" class="form-label">E-Mail-Adresse</label>
+                        <input type="email" class="form-control {% if register_errors.email %}is-invalid{% endif %}"
+                               id="register-email" name="email" value="{{ register_data.email|default('') }}">
+                        <div class="invalid-feedback">{{ register_errors.email|default('Bitte geben Sie eine gültige E-Mail-Adresse ein.') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="register-password" class="form-label">Passwort</label>
+                        <!-- Live-Prüfung (JS in static/js/main.js) setzt is-valid/is-invalid -> Haken/Kreuz -->
+                        <input type="password" class="form-control {% if register_errors.password %}is-invalid{% endif %}"
+                               id="register-password" name="password">
+                        <div class="invalid-feedback">{% if register_errors.password %}{{ register_errors.password }}{% else %}Das Passwort muss mindestens {{ min_password_length }} Zeichen lang sein.{% endif %}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="register-password-confirm" class="form-label">Passwort wiederholen</label>
+                        <input type="password" class="form-control {% if register_errors.password_confirm %}is-invalid{% endif %}"
+                               id="register-password-confirm" name="password_confirm">
+                        <div class="invalid-feedback">{{ register_errors.password_confirm|default('Die Passwörter stimmen nicht überein.') }}</div>
+                    </div>
+                    <a href="#" class="small" data-switch-modal="#loginModal">Zurück zum Login</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100">Registrieren</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

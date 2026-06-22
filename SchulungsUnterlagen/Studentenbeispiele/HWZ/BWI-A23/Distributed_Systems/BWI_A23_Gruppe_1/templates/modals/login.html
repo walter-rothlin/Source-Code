@@ -1,0 +1,45 @@
+<!-- Login-Modal: enthält das Login-Formular und Links zu den
+     Passwort-Vergessen- und Registrieren-Modals. -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schliessen"></button>
+            </div>
+            <!-- novalidate: HTML5-Browserprüfung aus, damit die serverseitige
+                 Validierung greift und die roten Feldfehler angezeigt werden. -->
+            <form method="post" action="{{ url_for('login') }}" novalidate>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-Mail-Adresse</label>
+                        <input type="email" class="form-control {% if login_errors.email %}is-invalid{% endif %}"
+                               id="email" name="email" value="{{ login_email }}">
+                        {% if login_errors.email %}
+                        <div class="invalid-feedback">{{ login_errors.email }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Passwort</label>
+                        <input type="password" class="form-control {% if login_errors.password %}is-invalid{% endif %}"
+                               id="password" name="password">
+                        {% if login_errors.password %}
+                        <div class="invalid-feedback">{{ login_errors.password }}</div>
+                        {% else %}
+                        <div class="form-text">Das Passwort muss mindestens {{ min_password_length }} Zeichen lang sein.</div>
+                        {% endif %}
+                    </div>
+                    <!-- Links öffnen die jeweiligen Modals; das Umschalten
+                         erledigt das data-switch-modal-Skript in base.html. -->
+                    <div class="d-flex justify-content-between">
+                        <a href="#" class="small" data-switch-modal="#forgotModal">Passwort vergessen?</a>
+                        <a href="#" class="small" data-switch-modal="#registerModal">Registrieren</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100">Einloggen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
