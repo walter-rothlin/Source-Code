@@ -9,6 +9,7 @@
 -- 16-Jun-2025   Walter Rothlin      Small corrections
 -- 17-Jun-2025   Walter Rothlin      Small corrections
 -- 03-Jun-2026   Walter Rothlin      Changed for BWI-A24
+-- 26-Jun-2026   Walter Rothlin      Changed for BWI-A24
 -- ---------------------------------------------------------------------------------
 -- -------------- Hier bitte ihre persönlichen Angaben erfassen --------------------
 
@@ -18,7 +19,7 @@ SET @Class                := 'BWI-A24';   -- z.B. BWI-A23
 
 
 SET @Test_Name            := 'DB_Prüfung_2c';  -- NICHT ändern
-SET @Test_Max_Punkte      := 16;               -- NICHT ändern
+SET @Test_Max_Punkte      := 15;               -- NICHT ändern
 
 -- ---------------------------------------------------------------------------------
 -- Normalisieren Sie die "Personen_Liste" und erstellen Sie hier ein re-runable Migrations-Script.
