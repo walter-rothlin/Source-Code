@@ -13,6 +13,7 @@
 from waltisLibrary import *
 import gzip
 
+meteo_schweiz_url = 'https://www.meteoschweiz.admin.ch/product/output/measured-values/stationsTable/messwerte-lufttemperatur-10min/stationsTable.messwerte-lufttemperatur-10min.de.json'
 class WeatherStation:
     waltisAppID = "144747fd356c86e7926ca91ce78ce170"
     """

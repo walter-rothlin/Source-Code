@@ -17,6 +17,8 @@
 import json
 import requests
 
+meteo_schweiz_url = 'https://www.meteoschweiz.admin.ch/product/output/measured-values/stationsTable/messwerte-lufttemperatur-10min/stationsTable.messwerte-lufttemperatur-10min.de.json'
+
 url_str = "https://api.openweathermap.org/data/2.5/weather?q=Wangen+SZ&units=metric&lang=de&appid=144747fd356c86e7926ca91ce78ce170"
 
 responseStr = requests.get(url_str)
