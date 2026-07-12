@@ -1,0 +1,5 @@
+# <LogInfo FileName="weatherLog.txt" StartTime="2026-07-06 17:24:09"/>
+Timestamp,Level,Temp [C],Druck [hPa],Feuchte [%],Wetter
+2026-07-06 17:24:09,INFO,21.3,1014,74,Bedeckt
+2026-07-06 17:24:19,INFO,21.3,1014,74,Bedeckt
+2026-07-06 17:24:29,INFO,21.3,1014,74,Bedeckt

@@ -1,0 +1,36 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "Python 3 - MLZ",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/python:3-3.14-trixie",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {
+			"ppa": true,
+			"version": "latest"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"charliermarsh.ruff",
+				"Continue.continue"
+			],
+			"settings": {
+				// requiered by Continue to load API key from .env file
+				"python.terminal.useEnvFile": true,
+				// disable GitHub Copilot, since we are using Continue
+				"chat.disableAIFeatures": true,
+				"remote.extensionKind": {
+					// required for discovery of the continue cfg file
+					// within this workspace
+					"Continue.continue": "workspace"
+				}
+			}
+		}
+	},
+	"runArgs": ["--env-file", ".env"],
+	"postCreateCommand": "python -m pip install --user -r requirements.txt"
+}

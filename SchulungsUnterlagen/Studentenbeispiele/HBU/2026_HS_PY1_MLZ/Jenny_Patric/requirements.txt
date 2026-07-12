@@ -1,0 +1,5 @@
+ruff==0.11.10
+debugpy==1.8.14
+pytest==8.3.3
+requests==2.34.2
+datetime==6.0

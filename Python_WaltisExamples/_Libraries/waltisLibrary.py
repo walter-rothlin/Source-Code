@@ -477,7 +477,7 @@ def convert_str_to_int_float_str(a_string_to_cast, default=''):
     return ret_val
 
 
-def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
+def readFloat_tryExcept(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
     error = True
     while error:
         try:
@@ -493,7 +493,7 @@ def readFloat_0(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must b
     return userInputFloat
 
 
-def readFloat_00(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
+def readFloat_regEx(prompt="float=", errPreMsg="Wrong input:", errPostMsg="   Must be a float!"):
     error = True
     while error:
         userInputStr = input(prompt)
