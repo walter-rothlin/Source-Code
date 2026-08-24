@@ -108,39 +108,50 @@ if __name__ == '__main__' and True:
 
 # -------------------------------------------------------------------
 class Car:
-    def __init__(self, marke="Porsche", farbe="grau", leistung=700, anz_tueren=3, car_type="911", bau_jahr=2021, km_stand=10, maxSpeed=300, priviousOwner=None):
+    def __init__(self,
+                 marke="Porsche",
+                 farbe="grau",
+                 leistung=700,
+                 anz_tueren=3,
+                 car_type="911",
+                 bau_jahr=2021,
+                 km_stand=10,
+                 maxSpeed=300,
+                 priviousOwner=None):
+
         self.__marke = marke
-        self.farbe = farbe
-        self.leistung = leistung
-        self.anz_tueren = anz_tueren
-        self.__carType = car_type    # private (only within the class itself)
-        self.baujahr = bau_jahr      # public
-        self._kmStand = km_stand     # protected
-        self.maxSpeed = maxSpeed
+        self.__color = farbe
+        self.__leistung = leistung
+        self.__anz_tueren = anz_tueren
+        self.__carType = car_type
+        self.__baujahr = bau_jahr
+        self.__kmStand = km_stand
+        self.__max_speed = maxSpeed
         self.__priviousOwner = priviousOwner   # has a relation
 
     def __str__(self):
         retStr = "Ein Car\n"
-        retStr += "    Marke     :" + self.__marke + "   " + self.__carType + "   (" + self.farbe + ")\n"
-        retStr += "    Leistung  :" + str(self.leistung) + "\n"
-        retStr += "    Anz Türen :" + str(self.anz_tueren) + "\n"
-        retStr += "    km-Stand  :" + str(self._kmStand) + "\n"
-        retStr += "    maxSpeed  :" + str(self.maxSpeed) + "\n"
-        retStr += "    Baujahr   :" + str(self.baujahr) + "\n"
+        retStr += "    Marke     :" + self.__marke + "   " + self.__carType + "   (" + self.__color + ")\n"
+        retStr += "    Leistung  :" + str(self.__leistung) + "\n"
+        retStr += "    Anz Türen :" + str(self.__anz_tueren) + "\n"
+        retStr += "    km-Stand  :" + str(self.__kmStand) + "\n"
+        retStr += "    maxSpeed  :" + str(self.__max_speed) + "\n"
+        retStr += "    Baujahr   :" + str(self.__baujahr) + "\n"
         retStr += "    Privious Owner:\n" + str(self.__priviousOwner) + "\n"
         return retStr
 
     ''' Setter and getter '''
     def setKmStand(self, neuerKmStand):
-        if self._kmStand < neuerKmStand:
-            self._kmStand = neuerKmStand
+        if self.__kmStand < neuerKmStand:
+            self.__kmStand = neuerKmStand
         else:
             print("Illegal Setting!")
-        return self._kmStand
+        return self.__kmStand
 
     def getKmStand(self):
-        return self._kmStand
+        return self.__kmStand
 
+    km_stand = property(fget=getKmStand, fset=setKmStand)
 
     def setCarType(self, newType):
         self.__carType = newType
@@ -150,12 +161,15 @@ class Car:
         return self.__carType
 
 
-    def setFarbe(self, newColor):
-        self.farbe = newColor
-        return self.farbe
+    @property
+    def farbe(self):
+        print('farbe getter called!!')
+        return self.__color
 
-    def getFarbe(self):
-        return self.farbe
+    @farbe.setter
+    def farbe(self, new_farbe):
+        print('farbe setter called!!')
+        self.__color = new_farbe
 
 
     def setPrivOwner(self, newValue):
@@ -175,19 +189,20 @@ def TEST_ClassCar():
     print(johnsCar)
 
     johnsCar.__carType = "Carrera"
-    print("--> Type set (Carrera) as private attribute  :", johnsCar.__carType)       # it is private, only via setter
+    ## print("--> Type set (Carrera) as private attribute  :", johnsCar.__carType)       # it is private, only via setter
     print("--> Type read via getter                     :", johnsCar.getCarType())
     print("--> Type set  via setter                     :", johnsCar.setCarType("Carrera Turbo"), "\n")
 
-    johnsCar._kmStand = 50005
-    print("--> kmStand read (50005) as protected attribute  :", johnsCar._kmStand)
+    johnsCar.__kmStand = 50005
+    ## print("--> kmStand read (50005) as protected attribute  :", johnsCar.__kmStand)
     print("--> kmStand set                                  :", johnsCar.setKmStand(60000))
     print("--> kmStand set                                  :", johnsCar.setKmStand(30000), "\n")
 
-    johnsCar.farbe = "blau"
-    print("--> Type set (blau) as public attribute  :", johnsCar.farbe)
-    print("--> Type read via getter                 :", johnsCar.getFarbe())
-    print("--> Type set  via setter                 :", johnsCar.setFarbe("Rosa"), "\n")
+    johnsCar.__farbe = "blau"
+    ## print("--> Type set (blau) as public attribute  :", johnsCar.__farbe)
+    print("--> Type read via getter                 :", johnsCar.farbe)
+    johnsCar.farbe = "Rosa"
+    print("--> Type read via getter                 :", johnsCar.farbe)
 
     print(johnsCar)
 
