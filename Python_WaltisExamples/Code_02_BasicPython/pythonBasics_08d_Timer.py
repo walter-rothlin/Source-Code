@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 # ------------------------------------------------------------------
 # Name  : pythonBasics_08d_Timer.py
@@ -10,33 +10,51 @@
 #
 # History:
 # 24-Dec-2022   Walter Rothlin      Initial Version
+# 07-Sep-2026   Walter Rothlin      Version developed with HFU Students
 # ------------------------------------------------------------------
-import time
+from time import sleep
 from threading import Timer
 
 
-def hello(firstname="No", lastName="Name", anz=3, delay=3.0):
-    for i in range(anz):
-        print(i, "Hello", firstname, lastName)
-        time.sleep(delay)
+do_loop = True
+
+def hello(msg, text1):
+    global loopWaitTime
+    global do_loop
+    i = 0
+    while do_loop:
+        print(i, msg, text1)
+        i += 1
+        sleep(loopWaitTime)
+    print("Thread terminated!!!!")
 
 
-# Testf�lle
-hello()
-# hello("Felix")
-# hello("Felix", "Muster", 1)
 
-delayTime = float(input("Delay-Time [s] *6:"))
-anzLoops = int(input("Anzahl Loops *3: "))
-fName = input("Vorname :")
-lName = input("Nachname:")
+if __name__ == '__main__':
+    wakeup_time = float(input('Wakeup-Time [s]:'))
+    loopWaitTime = float(input('Loop Wait-Time [s]:'))
+    msg = input('Meldung:')
 
-t = Timer(delayTime, hello, args=[fName, lName, anzLoops])
-t.start()
-hello("Max", "Meier")
-print("....main is waiting for termination")
-t.join()
-hello("Claudia", "Collet", 5, 0.5)
-print("....main finished!!!")
+    print("Timer set to {dT:3.1f}".format(dT=wakeup_time))
 
+    t  = Timer(wakeup_time, hello, args=[msg, "bei Nacht"])
+    t1 = Timer(wakeup_time/2, hello, args=["HFU", "Studenten"])
 
+    t.start()
+    t1.start()
+
+    print("... main waiting for timer off")
+    for i in range(10):
+        print(f'main-Thread: {i}')
+        sleep(0.5)
+
+    doStop = input("Press any key to stop?")
+    do_loop = False
+
+    print('waiting for t ....')
+    t.join()
+    print('... t.joined')
+
+    t1.join()
+
+    print('main thread stopped!')

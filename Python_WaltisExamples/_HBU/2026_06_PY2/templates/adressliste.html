@@ -1,0 +1,12 @@
+<HMTL>
+	<HEAD> </HEAD>
+	<BODY>
+		<H1>Hallo HFU PY2</H1>
+		<TABLE>
+			<TR><TH>Vorname</TH><TH>Nachname</TH></TR>
+			{% for addr in adress_liste %}
+				<TR><TD>{{ addr.firstname }}</TD><TD>{{ addr.lastname }}</TD></TR>
+			{% endfor %}
+		</TABLE>
+	</BODY>
+</HTML>

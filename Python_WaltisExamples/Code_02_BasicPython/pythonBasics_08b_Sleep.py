@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 # ------------------------------------------------------------------
 # Name  : pythonBasics_08b_Sleep.py
@@ -14,11 +14,11 @@
 from threading import Timer
 from time import sleep
 
-doLoop = True
+do_loop = True
 
 def hello(msg, text1):
     i = 0
-    while doLoop:
+    while do_loop:
         print(i, msg, text1)
         i += 1
         sleep(loopWaitTime)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         sleep(0.5)
 
     doStop = input("Press any key to stop?")
-    doLoop = False
+    do_loop = False
     # t.join()
     print("... main finished!!!!")
 

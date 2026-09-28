@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Adressen</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">Adress-Liste</h1>
+
+    <!-- Suchformular -->
+    <form method="GET" action="/adresse_liste">
+        <div class="row g-2 align-items-center mb-4">
+            <!-- Suchfeld -->
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="search_str"
+                        placeholder="Nachname suchen..."
+                        value="{{ search_str }}">
+                </div>
+            </div>
+
+            <!-- Case-sensitive Checkbox -->
+            <div class="col-md-3">
+                <div class="form-check">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="case_sensitive"
+                        value="1"
+                        id="case_sensitive"
+                        {% if case_sensitive %}checked{% endif %}>
+
+                    <label
+                        class="form-check-label"
+                        for="case_sensitive">
+                        Gross-/Kleinschreibung beachten
+                    </label>
+                </div>
+            </div>
+
+            <!-- Suchen Button -->
+            <div class="col-md-2">
+                <button
+                    type="submit"
+                    class="btn btn-primary w-100">
+                    Suchen
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+
+
+    <!-- Resultat-Tabelle -->
+    <div class="table-responsive">
+
+        <table class="table table-striped table-hover table-bordered">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Vorname</th>
+                    <th>Nachname</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for addr in adress_liste %}
+                <tr>
+                    <td>{{ addr.firstname }}</td>
+                    <td>{{ addr.lastname }}</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
