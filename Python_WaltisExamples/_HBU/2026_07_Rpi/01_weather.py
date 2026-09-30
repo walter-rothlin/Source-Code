@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 
-# source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2026_07_Rpi/01_01_weather.py
+# source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2026_07_Rpi/01_weather.py
 
 
 import json
