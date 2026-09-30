@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 
-# source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2026_07_Rpi/01_weather.py     
+# source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2026_07_Rpi/01_weather.py
 
 
 import json
@@ -17,22 +17,23 @@ def get_timestamp():
 
 
 def limit_lines_in_logfile(filename, max_lines=10, anzahl_header_lines=2):
-    # print(f"limit_lines_in_logfile({filename}, {max_lines})")
-    with open(filename, "r", encoding='utf-8') as datei:
-        log_zeilen = datei.readlines()
-        # for a_log_line in log_zeilen:
-            # print(a_log_line, end='')
-        # print('===>> ', len(log_zeilen))
+    if max_lines > 0:
+        # print(f"limit_lines_in_logfile({filename}, {max_lines})")
+        with open(filename, "r", encoding='utf-8') as datei:
+            log_zeilen = datei.readlines()
+            # for a_log_line in log_zeilen:
+                # print(a_log_line, end='')
+            # print('===>> ', len(log_zeilen))
 
-    if len(log_zeilen) >= max_lines + anzahl_header_lines:
-        log_lines_to_keep = log_zeilen[0:anzahl_header_lines] + log_zeilen[-max_lines+1:]
-        with open(logFilename, "w", encoding='utf-8') as datei:
-            datei.writelines(log_lines_to_keep)
+        if len(log_zeilen) >= max_lines + anzahl_header_lines:
+            log_lines_to_keep = log_zeilen[0:anzahl_header_lines] + log_zeilen[-max_lines:]
+            with open(logFilename, "w", encoding='utf-8') as datei:
+                datei.writelines(log_lines_to_keep)
 
 
 
 log_always = True
-log_lines_max = 10
+log_lines_max = 9
 
 logFilename = "weatherLog.txt"
 sep = "|"
@@ -128,8 +129,7 @@ while doLoop:
         else:
             print('.', end='', flush=True)
 
-        if log_lines_max > 0:
-            limit_lines_in_logfile(logFilename, max_lines=log_lines_max)
+        limit_lines_in_logfile(logFilename, max_lines=log_lines_max)
 
         time.sleep(polling_time)
     else:

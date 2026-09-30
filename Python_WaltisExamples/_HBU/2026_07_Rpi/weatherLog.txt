@@ -1,0 +1,11 @@
+# 2026-09-30 18:08:30: Uster (8.7209 / 47.3471), standard, de
+Timestamp           |Temp     |Einheit_Temp|Druck|Einheit_Druck|Feuchtigkeit|Einheit_Feuchtigkeit|Bezeichnung|Beschreibung
+2026-09-30 18:09:29|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:30|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:31|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:32|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:34|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:35|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:36|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:37|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
+2026-09-30 18:09:38|   299.16|K|1019|mBar|43|%|Clear|Klarer Himmel
