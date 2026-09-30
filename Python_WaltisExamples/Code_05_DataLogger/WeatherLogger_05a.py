@@ -1,5 +1,26 @@
 #!/usr/bin/python
 
+# ------------------------------------------------------------------
+# Name  : WeatherLogger_05a.py
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/Code_05_DataLogger/WeatherLogger_05a.py
+#
+# Description: Logs weather data received from a REST-Service (JSON)
+#
+# Autor: Walter Rothlin
+#
+# History:
+# 03-Dec-2020   Walter Rothlin      Initial Version (Polling REST Service and write values to console)
+# 04-Dec-2020   Walter Rothlin      Writes JSON Values to a text-file
+# 25-Sep-2023   Walter Rothlin      Changes for HBU / RPI
+# 30-Sep-2026   Walter Rothlin      Added limit_lines_in_logfile()
+# ------------------------------------------------------------------
+
+import json
+import requests
+import time
+import datetime
+from urllib.parse import quote
+
 import json
 import requests
 import time
@@ -11,15 +32,25 @@ def get_timestamp():
     formatStr = '{:%Y-%m-%d %H:%M:%S}'
     return formatStr.format(datetime.datetime.now())
 
+def limit_lines_in_logfile(filename, max_lines=10, anzahl_header_lines=2):
+    if max_lines > 0:
+        # print(f"limit_lines_in_logfile({filename}, {max_lines})")
+        with open(filename, "r", encoding='utf-8') as datei:
+            log_zeilen = datei.readlines()
+            # for a_log_line in log_zeilen:
+                # print(a_log_line, end='')
+            # print('===>> ', len(log_zeilen))
 
-def limit_lines_in_logfile(filename, max_lines=10):
-    print(f"limit_lines_in_logfile({filename}, {max_lines})")
-    with open(filename, "r", encoding="utf-8") as datei:
-        log_zeilen = datei.readlines()
-        print(log_zeilen)
+        if len(log_zeilen) >= max_lines + anzahl_header_lines:
+            log_lines_to_keep = log_zeilen[0:anzahl_header_lines] + log_zeilen[-max_lines:]
+            with open(logFilename, "w", encoding='utf-8') as datei:
+                datei.writelines(log_lines_to_keep)
+
 
 
 log_always = True
+log_lines_max = 9
+
 logFilename = "weatherLog.txt"
 sep = "|"
 waltis_app_id = '144747fd356c86e7926ca91ce78ce170'
@@ -64,11 +95,12 @@ response_daten = response.json()
 print(f"{response_daten['cod']}: {response_daten.get('message', 'OK')}")
 weather_json = json.loads(response.text)
 
-fHandler = open(logFilename, "w")
-comment = f"# {get_timestamp()}: {ort_wetterstation} ({weather_json['coord']['lon']} / {weather_json['coord']['lat']}), {units}, {language}"
-fHandler.write(comment + '\n')
-header = f"Timestamp          {sep}Temp     {sep}Einheit_Temp{sep}Druck{sep}Einheit_Druck{sep}Feuchtigkeit{sep}Einheit_Feuchtigkeit{sep}Bezeichnung{sep}Beschreibung"
-fHandler.write(header + '\n')
+fHandler = open(logFilename, "w", encoding='utf-8')
+comment = f"# {get_timestamp()}: {ort_wetterstation} ({weather_json['coord']['lon']} / {weather_json['coord']['lat']}), {units}, {language}\n"
+fHandler.write(comment)
+
+header = f"Timestamp           {sep}Temp     {sep}Einheit_Temp{sep}Druck{sep}Einheit_Druck{sep}Feuchtigkeit{sep}Einheit_Feuchtigkeit{sep}Bezeichnung{sep}Beschreibung\n"
+fHandler.write(header)
 fHandler.close()
 
 doLoop = False
@@ -84,7 +116,12 @@ elif response.status_code == 404:
 
 else:
     print(f"ERROR: HTTP {response.status_code}: {response_daten.get('message', 'OK')}")
+print('\n\n\n\n\n')
 
+
+
+print(comment, end='')
+print(header, end='')
 logStrOld = ''
 while doLoop:
     response = requests.get(url_end_point, params=params_end_point)
@@ -98,17 +135,18 @@ while doLoop:
         beschreibung = weather_json['weather'][0]['description']
 
         # print(weather_json)
-        logStr = f"{sep}{temp:9.2f}{sep}{temp_einheit}{sep}{pressure}{sep}mBar{sep}{humidity}{sep}%{sep}{bezeichnung}{sep}{beschreibung}"
+        logStr = f"{sep}{temp:9.2f}{sep}{temp_einheit}{sep}{pressure}{sep}mBar{sep}{humidity}{sep}%{sep}{bezeichnung}{sep}{beschreibung}\n"
         if log_always or logStr != logStrOld:
-            print(f"\n{get_timestamp()}:{logStr}")
-            fHandler = open(logFilename, "a")
-            fHandler.write(f'{get_timestamp()}{logStr}\n')
+            print(f"{get_timestamp()}:{logStr}", end='')
+            fHandler = open(logFilename, "a", encoding='utf-8')
+            fHandler.write(f'{get_timestamp()}{logStr}')
             fHandler.close()
             logStrOld = logStr
         else:
             print('.', end='', flush=True)
 
-        limit_lines_in_logfile(logFilename, max_lines=5)
+        limit_lines_in_logfile(logFilename, max_lines=log_lines_max)
+
         time.sleep(polling_time)
     else:
         doLoop = False

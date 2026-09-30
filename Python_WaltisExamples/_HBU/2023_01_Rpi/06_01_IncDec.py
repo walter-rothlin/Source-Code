@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------
 # Name  : 06_01_IncDec.py
-# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/_HBU/2023_Rpi/06_01_IncDec
+# Source: https://raw.githubusercontent.com/walter-rothlin/Source-Code/master/Python_WaltisExamples/_HBU/2023_01_Rpi/06_01_IncDec.py
 #
 # Description: Classe eines inc/decrementers
 #

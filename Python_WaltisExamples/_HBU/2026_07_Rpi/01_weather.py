@@ -15,7 +15,6 @@ def get_timestamp():
     formatStr = '{:%Y-%m-%d %H:%M:%S}'
     return formatStr.format(datetime.datetime.now())
 
-
 def limit_lines_in_logfile(filename, max_lines=10, anzahl_header_lines=2):
     if max_lines > 0:
         # print(f"limit_lines_in_logfile({filename}, {max_lines})")
