@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block y %}
+
+   {% if session.username %}
+	  Hallo {{ session.user_firstname }} {{ session.user_lastname }} ({{ session.user_id }})</BR>
+      You are Loged-In with {{ session.username }} <BR/><BR/><BR/>
+	  Priviliges: {{ session.privilege }}<BR/><BR/>
+	  
+	  
+	  <a href="/logout">logout</a>.
+   {% else %}
+      You are not Loged-In. <a href="/login">login</a>.
+   {% endif %}
+
+{% endblock %}

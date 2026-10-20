@@ -1,0 +1,10 @@
+{% for addr in adressliste %}
+
+Sehr geehrter {{ addr.firstname }} {{ addr.lastname }},
+herzlich wilkommen.
+
+Freundliche Grüsse
+{{ sender_firstname }} {{ sender_lastname }}
+
+{% endfor %}
+

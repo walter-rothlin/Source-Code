@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 # ------------------------------------------------------------------
 # Name  : Flask_Session_Simple.py
@@ -11,7 +11,7 @@
 # 20-Oct_2025   Walter Rothlin      Initial Version
 #
 # ------------------------------------------------------------------
-#!/usr/bin/python
+
 from flask import Flask, request, render_template, url_for, session, redirect
 import requests
 import json

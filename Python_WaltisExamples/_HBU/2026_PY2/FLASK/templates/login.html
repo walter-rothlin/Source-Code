@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block y %}
+
+<h1> Login-Screen </h1>
+
+<form action="/login" method="POST">
+	<input placeholder="User-Name" autocomplete="off" type="text" name="user_name"> (info@admotion.ch webmaster@admotion.ch)<BR/><BR/>
+	<input placeholder="Pass-Word" autocomplete="off" type="text" name="password"> (alpen20blick)<BR/><BR/><BR/>
+	<input type="submit" name="Login_Btn" value="Login">
+</form>
+
+{% endblock %}
