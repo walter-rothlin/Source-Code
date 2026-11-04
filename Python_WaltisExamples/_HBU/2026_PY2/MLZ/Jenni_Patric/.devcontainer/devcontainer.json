@@ -1,0 +1,33 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "Python 2 - MLZ",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/python:3-3.14-trixie",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {
+			"ppa": true,
+			"version": "latest"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"github.copilot.chat.commitMessageGeneration.instructions": [
+					{
+						"text": "Use Conventional Commits. Format: type(scope): summary. Keep summary under 72 chars. Imperative mood. Mention why in body when needed."
+					}
+				]
+			},
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"charliermarsh.ruff",
+				"vivswan.litellm-vscode-chat"
+			]
+		}
+	},
+	// install dependencies defined in requirements.txt after the container is created
+	// to avoid running pip as root, we use the --user flag to install packages in the user's home directory
+	"postCreateCommand": "python -m pip install --user -r requirements.txt"
+}
